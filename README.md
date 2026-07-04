@@ -5,7 +5,7 @@
 
 A configurable engine for chromatic music notation in LilyPond.
 
-CNB is not a single notation system — it is infrastructure that can produce multiple chromatic notation systems (Kite, Clairnote SN, Chromatic Lyre, and others) from declarative configuration. The goal is shared infrastructure so that designing a new notation means writing a config file, not building a rendering engine from scratch.
+CNB is not a single notation system — it is infrastructure for building chromatic notation systems from declarative configuration, rather than bespoke rendering code. **Kite notation** — an original system devised for this project (see the disambiguation note in [Acknowledgments](#acknowledgments); it is not affiliated with the unrelated xenharmonic/microtonal theorist who separately publishes work under the same name) — is the only notation system with a complete, working configuration in this repo today (`Kite-4-369-Notation-Procedure.ly`). The architecture is also designed with an eye toward supporting systems with characteristics similar to Paul Morris's Clairnote SN and Jan Braunstein's Chromatic Lyre Notation, cited below as examples of what a config-driven chromatic notation can look like — no working configuration for either exists in this repo yet, and neither author has reviewed or endorsed this project. The goal is shared infrastructure so that designing a new notation means writing a config file, not building a rendering engine from scratch.
 
 
 ## Three-Tool Pipeline
@@ -281,11 +281,40 @@ See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md) for full document
 
 ## Acknowledgments
 
-- **Paul Morris** — Clairnote music notation and LilyPond implementation
-- **Jan Braunstein** — Chromatic Lyre (LyreBird) notation and LilyPond implementation
-- **The Music Notation Project** — Criteria and community for alternative notation systems
+A few of this engine's LilyPond modules (`cnb/articulations.ly`,
+`cnb/beams.ly`, `cnb/stems.ly`, `cnb/ledgers.ly`) were written after
+studying how other chromatic-notation LilyPond implementations solve the
+same rendering problems (ledger-line collision avoidance, beam/stem
+compensation on compressed staves). Each of those files documents which
+prior art informed it and, where relevant, how this engine's implementation
+differs. None of them share code with, or are translations of, the
+projects below — see each file's header comment for specifics.
+
+- **Paul Morris** — creator of Clairnote SN notation
+  ([clairnote.org](https://clairnote.org); the notation system design and
+  site content are CC BY-SA 4.0). His separate LilyPond implementation,
+  [`clairnote.ly`](https://github.com/PaulMorris/LilyPond-Clairnote), is
+  licensed **GPL v3** — a different, stronger-copyleft license than the
+  notation design itself. This project is not affiliated with or endorsed
+  by Paul Morris.
+- **Jan Braunstein** — creator of Chromatic Lyre Notation, documented via
+  [The Music Notation Project](https://musicnotation.org/system/chromatic-lyre-notation-by-jan-braunstein/),
+  with a separate LilyPond implementation
+  ([`lyrebird.ly`](https://github.com/scaleshift-scores/scaleshift_conversion_scripts/blob/main/chromaticlyre.ly))
+  that carries no license header. This project is not affiliated with or
+  endorsed by Jan Braunstein.
+- **The Music Notation Project** — criteria and community for alternative
+  notation systems.
+
+No configuration in this repo reproduces Clairnote SN or Chromatic Lyre
+Notation, and no code from either project's LilyPond implementation is
+copied or translated here.
+
+> **Naming note:** "Kite notation" in this repo (`Kite-4-369-Notation-*.ly`) is an original system devised for this project. It is unrelated to Kite Giedraitis, a xenharmonic/microtonal music theorist who separately publishes notation and tuning work under the name "Kite."
 
 
 ## License
 
-This work is dedicated to the public domain under the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license. To the extent possible under law, the author has waived all copyright and related or neighboring rights to this work.
+This work is dedicated to the public domain under the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license — see the [`LICENSE`](LICENSE) file for the full legal text. To the extent possible under law, the author has waived all copyright and related or neighboring rights to this work.
+
+Note: this dedication covers this project's own original code only. LilyPond itself (which renders the `.ly` files here) is separately licensed GPL v2+; authoring input/config files that LilyPond processes is the standard, well-established case of *not* creating a derivative work of LilyPond (comparable to writing a document in a GPL word processor) — no obligation flows from LilyPond's license onto this repo's own files.

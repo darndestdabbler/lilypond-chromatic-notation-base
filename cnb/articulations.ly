@@ -63,10 +63,13 @@
 %%    the result to our callback as default-value. We return the
 %%    adjusted value.
 %%
-%%  ADAPTED FROM:
-%%    Clairnote's cn-script-y-offset-callback (clairnote.ly line 1712).
-%%    Simplified to work with our proximity rule instead of Clairnote's
-%%    recipe system, and to not require eval of a quoted lambda.
+%%  RELATED PRIOR ART (no shared code):
+%%    Clairnote's cn-script-y-offset-callback (clairnote.ly, GPL v3)
+%%    solves the same problem via the same LilyPond mechanism
+%%    (a grob-transformer on Script.Y-offset). This function is an
+%%    independent implementation: different algorithm (our proximity
+%%    rule vs. Clairnote's recipe system), different data flow, and it
+%%    does not require eval of a quoted lambda the way Clairnote's does.
 %%
 %% ============================================================================
 
