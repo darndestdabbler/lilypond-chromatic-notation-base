@@ -72,9 +72,10 @@
 %%         keyAlterations, converts to pitch classes, checks membership.
 %%       - Procedure model: looks up each note's config cache entry
 %%         and reads the off-key-mark field.
-%%    3. For flagged notes: sets after-line-breaking to a callback
-%%       that adds the flag stencil to the (now-resolved) notehead
-%%       stencil.
+%%    3. For flagged notes: chains a callback onto after-line-breaking
+%%       (via cnb:chain-after-line-breaking!, preserving any callback
+%%       another module installed) that adds the flag stencil to the
+%%       (now-resolved) notehead stencil.
 %%
 %%  WHY after-line-breaking?
 %%    At acknowledger time, our custom notehead stencil may not yet
@@ -277,7 +278,7 @@
                           ;; If config says to mark this note, apply the flag
                           (if off-key-mark
                               (let ((mark off-key-mark))
-                                (ly:grob-set-property! grob 'after-line-breaking
+                                (cnb:chain-after-line-breaking! grob
                                   (lambda (g)
                                     (cnb:apply-off-key-mark g mark)))))))
                       note-heads)
@@ -301,8 +302,8 @@
 
                             ;; If this pitch class is NOT in the current key, flag it
                             (if (and semi (not (memv semi in-key-pcs)))
-                                (ly:grob-set-property! grob 'after-line-breaking
-                                                       cnb:apply-off-key-flag))))
+                                (cnb:chain-after-line-breaking! grob
+                                                                cnb:apply-off-key-flag))))
                         note-heads)))
 
                 (set! note-heads '()))))))))

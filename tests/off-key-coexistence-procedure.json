@@ -1,0 +1,47 @@
+{
+  "test_name": "Off-key mark and test-id coexistence — procedure model (callback chaining)",
+  "input_file": "off-key-coexistence-procedure.ly",
+  "description": "Procedure-model companion to off-key-coexistence.json. cnb:use-procedure-model is #t and the config procedure assigns off-key-mark 'dot to any pitch class outside the key, so the engraver's procedure-model branch (not the vector branch) chains the mark callback onto after-line-breaking. With test-ids.ly also active, the F#4 NoteHead must carry both the test-id tag and the off-key dot.",
+
+  "assertions": [
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "All 4 noteheads present and tagged by test-ids",
+      "expect": {
+        "type": ["count('notehead') == 4"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-66-0",
+      "description": "F#4 notehead: test-id tag present (id resolves, data-* correct)",
+      "expect": {
+        "type":              ["== 'notehead'"],
+        "data.midi":         ["== '66'"],
+        "data.pitch-class":  ["== '6'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-66-0",
+      "description": "F#4 notehead: off-key dot present (bbox taller than in-key C4)",
+      "expect": {
+        "visual.bbox.h": [
+          "v > prop('nh-1-0.000-60-0', 'visual.bbox.h') * 1.15"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 (in key): no off-key mark, bbox is plain notehead height",
+      "expect": {
+        "visual.bbox.h": [
+          "abs(v - prop('nh-1-0.250-62-0', 'visual.bbox.h')) < 0.05",
+          "abs(v - prop('nh-1-0.750-67-0', 'visual.bbox.h')) < 0.05"
+        ]
+      }
+    }
+  ]
+}

@@ -54,9 +54,12 @@
 %%    data-pitch-class: pitch class 0-11 (for pitched grobs)
 %%
 %%  KNOWN LIMITATIONS:
-%%    1. This module sets after-line-breaking on grobs. If other modules
-%%       (e.g., off-key.ly) also set after-line-breaking, the last one
-%%       wins. Test with off-key-indicator = 'none, or merge callbacks.
+%%    1. (RESOLVED) This module hooks after-line-breaking on Beam/Tie/Slur
+%%       grobs. It now registers those hooks via
+%%       cnb:chain-after-line-breaking! (cnb/utils.ly), which composes
+%%       with any callback another module (e.g., off-key.ly) already
+%%       installed instead of overwriting it — so both modules' hooks
+%%       fire on the same grob.
 %%    2. StaffSymbol is a single grob spanning the system; it gets one id.
 %%       Individual staff LINES don't have separate grobs â€” their positions
 %%       are encoded in the StaffSymbol's line-positions property. The
@@ -65,8 +68,9 @@
 %%       lines for a column. We tag it with the notehead's info.
 %%    4. Beam IDs use after-line-breaking (not the acknowledger) so that
 %%       the ID reflects the first stem's timing. This means beams depend
-%%       on stems already having their output-attributes set. If another
-%%       module also sets after-line-breaking on beams, the last one wins.
+%%       on stems already having their output-attributes set. The hook is
+%%       registered with cnb:chain-after-line-breaking!, so another
+%%       module's beam callback is preserved rather than overwritten.
 %%
 %% ============================================================================
 
@@ -491,7 +495,7 @@
           (cnb:test-id-flag context grob))
 
          ((beam-interface engraver grob source-engraver)
-          (ly:grob-set-property! grob 'after-line-breaking
+          (cnb:chain-after-line-breaking! grob
             cnb:test-id-beam-after-break))
 
          ((rest-interface engraver grob source-engraver)
@@ -516,11 +520,11 @@
           (cnb:test-id-ledger context grob))
 
          ((tie-interface engraver grob source-engraver)
-          (ly:grob-set-property! grob 'after-line-breaking
+          (cnb:chain-after-line-breaking! grob
             cnb:test-id-tie-after-break))
 
          ((slur-interface engraver grob source-engraver)
-          (ly:grob-set-property! grob 'after-line-breaking
+          (cnb:chain-after-line-breaking! grob
             cnb:test-id-slur-after-break))
        ))))
 

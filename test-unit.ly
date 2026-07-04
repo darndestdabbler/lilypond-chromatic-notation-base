@@ -160,6 +160,51 @@
 %% tested without a rendering context. This is a Tier 2 test candidate.
 #(ly:message "  SKIP: duration-category requires LilyPond Duration objects")
 
+#(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")
+%% The composer is pure: it takes the property's current value and a new
+%% callback and returns one procedure. We verify composition and ordering
+%% by having each callback append a tag to a shared list; the "grob"
+%% argument can be any value since these test callbacks just record it.
+
+%% Unset property ('() is what an unset grob property reads as):
+%% the new callback is returned as-is, no wrapper.
+#(let ((cb (lambda (g) g)))
+   (cnb:assert-true "unset ('()) existing returns new callback unchanged"
+     (eq? (cnb:compose-after-line-breaking '() cb) cb)))
+#(let ((cb (lambda (g) g)))
+   (cnb:assert-true "#f existing returns new callback unchanged"
+     (eq? (cnb:compose-after-line-breaking #f cb) cb)))
+
+%% Existing procedure: both callbacks fire, existing first.
+#(let* ((calls '())
+        (existing (lambda (g) (set! calls (cons 'existing calls))))
+        (new-cb   (lambda (g) (set! calls (cons 'new calls))))
+        (composed (cnb:compose-after-line-breaking existing new-cb)))
+   (composed 'dummy-grob)
+   (cnb:assert-equal "existing fires first, then new (registration order)"
+     (reverse calls) '(existing new)))
+
+%% Three-deep chain (module A, then B, then C on the same grob property).
+#(let* ((calls '())
+        (tag (lambda (name) (lambda (g) (set! calls (cons name calls)))))
+        (chained (cnb:compose-after-line-breaking
+                   (cnb:compose-after-line-breaking
+                     (cnb:compose-after-line-breaking '() (tag 'a))
+                     (tag 'b))
+                   (tag 'c))))
+   (chained 'dummy-grob)
+   (cnb:assert-equal "three-deep chain fires a, b, c in order"
+     (reverse calls) '(a b c)))
+
+%% The grob argument reaches every callback in the chain.
+#(let* ((seen '())
+        (existing (lambda (g) (set! seen (cons g seen))))
+        (new-cb   (lambda (g) (set! seen (cons g seen))))
+        (composed (cnb:compose-after-line-breaking existing new-cb)))
+   (composed 'the-grob)
+   (cnb:assert-equal "grob argument passed to both callbacks"
+     seen '(the-grob the-grob)))
+
 
 %% =========================================================================
 %%  TEST: cnb/path-geometry.ly — Winding detection and path manipulation

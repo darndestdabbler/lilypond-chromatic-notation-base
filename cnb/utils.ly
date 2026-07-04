@@ -325,3 +325,58 @@
                   (floor (/ (numerator dur) 2))))
           (clamped (max 0 (min 3 (inexact->exact (round raw))))))
      clamped))
+
+
+%% ---------------------------------------------------------------------------
+%%  GROB CALLBACK CHAINING
+%%
+%%  Several CNB modules hook a grob's after-line-breaking property to run
+%%  side-effecting callbacks: off-key.ly adds mark stencils to NoteHeads,
+%%  test-ids.ly tags Beams/Ties/Slurs with output-attributes. LilyPond
+%%  stores ONE value per grob property, so a bare
+%%
+%%    (ly:grob-set-property! grob 'after-line-breaking new-callback)
+%%
+%%  silently discards whatever callback another module installed earlier —
+%%  whichever module runs last wins. These helpers compose callbacks
+%%  instead of replacing them, so any number of modules can share the
+%%  same grob's after-line-breaking hook.
+%% ---------------------------------------------------------------------------
+
+%% Compose two after-line-breaking callbacks into one.
+%%
+%% ARGUMENTS:
+%%   existing     — the property's current stored value: a procedure, or
+%%                  any non-procedure (usually '() when unset)
+%%   new-callback — procedure of one argument (the grob)
+%%
+%% RETURNS:
+%%   A single procedure. If there is no existing procedure, this is just
+%%   new-callback. Otherwise the composed procedure calls the EXISTING
+%%   callback first, then the new one — so modules take effect in the
+%%   order they registered. CNB's callbacks side-effect independent
+%%   properties (off-key mutates 'stencil, test-ids sets
+%%   'output-attributes), so relative order does not change their results;
+%%   first-registered-first is simply the least surprising rule.
+%%
+%% This is a pure function — unit-testable without a grob.
+#(define (cnb:compose-after-line-breaking existing new-callback)
+   (if (procedure? existing)
+       (lambda (grob)
+         (existing grob)
+         (new-callback grob))
+       new-callback))
+
+%% Install new-callback on a grob's after-line-breaking property,
+%% chaining with any callback already present instead of overwriting it.
+%%
+%% IMPORTANT: reads the current value with ly:grob-property-data, NOT
+%% ly:grob-property — the latter EVALUATES property callbacks on access,
+%% which would fire the existing after-line-breaking hook prematurely
+%% (before line breaking). ly:grob-property-data returns the stored
+%% value untouched.
+#(define (cnb:chain-after-line-breaking! grob new-callback)
+   (ly:grob-set-property! grob 'after-line-breaking
+     (cnb:compose-after-line-breaking
+       (ly:grob-property-data grob 'after-line-breaking)
+       new-callback)))
