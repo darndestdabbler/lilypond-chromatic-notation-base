@@ -1281,7 +1281,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 34.765,
           "y": 19.456,
@@ -1315,7 +1315,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 61.634,
           "y": 23.539,
@@ -1485,7 +1485,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 47.718,
           "y": 21.789,
@@ -1553,7 +1553,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 86.474,
           "y": 19.456,
@@ -1621,7 +1621,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 94.691,
           "y": 19.456,
@@ -3071,7 +3071,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 42.333,
           "y": 36.639,
@@ -3173,7 +3173,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 102.184,
           "y": 38.973,
@@ -3411,7 +3411,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 59.778,
           "y": 38.973,
@@ -3479,7 +3479,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 84.739,
           "y": 36.639,
@@ -3893,7 +3893,7 @@
         "horizontal": 0.7516
       },
       "visual": {
-        "path_hash": "3a7232e89e0d",
+        "path_hash": "19483cbe6f86",
         "bbox": {
           "x": 43.839,
           "y": 59.365,
@@ -4492,7 +4492,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 88.786,
           "y": 57.906,
@@ -4526,7 +4526,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 68.35,
           "y": 56.156,
@@ -4560,7 +4560,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 47.284,
           "y": 56.156,
@@ -4594,7 +4594,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 97.035,
           "y": 57.906,
@@ -4696,7 +4696,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 105.284,
           "y": 57.906,
@@ -4764,7 +4764,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 80.537,
           "y": 57.906,
@@ -5169,7 +5169,7 @@
         "horizontal": 0.6652
       },
       "visual": {
-        "path_hash": "0d7c64d152e3",
+        "path_hash": "3f67a69eea19",
         "bbox": {
           "x": 28.219,
           "y": 77.131,
@@ -5200,7 +5200,7 @@
         "horizontal": 0.0965
       },
       "visual": {
-        "path_hash": "9849fbeb15e4",
+        "path_hash": "7becf4ffbf37",
         "bbox": {
           "x": 39.288,
           "y": 68.381,
@@ -5260,7 +5260,7 @@
         "horizontal": 0.0856
       },
       "visual": {
-        "path_hash": "928049bfbeef",
+        "path_hash": "60f9b9fa8ba0",
         "bbox": {
           "x": 58.989,
           "y": 75.381,
@@ -5852,7 +5852,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 64.867,
           "y": 73.34,
@@ -5886,7 +5886,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 50.061,
           "y": 71.006,
@@ -5988,7 +5988,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 74.163,
           "y": 73.34,
@@ -6056,7 +6056,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 17.829,
           "y": 73.34,
@@ -6124,7 +6124,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 90.14,
           "y": 75.09,
@@ -6158,7 +6158,7 @@
       },
       "visual": {
         "color": "rgb(80.0000%, 47.4510%, 65.4902%)",
-        "path_hash": "3e3eefc5449a",
+        "path_hash": "b8a59fb7c758",
         "bbox": {
           "x": 30.553,
           "y": 75.09,

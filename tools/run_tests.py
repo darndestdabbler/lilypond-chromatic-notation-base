@@ -568,7 +568,9 @@ def main():
         if os.path.isfile(path) and path.endswith(".json"):
             spec_files.append(path)
         elif os.path.isdir(path):
-            spec_files.extend(sorted(glob.glob(os.path.join(path, "*.json"))))
+            spec_files.extend(sorted(
+                f for f in glob.glob(os.path.join(path, "*.json"))
+                if not f.endswith(".harvested.json")))
         else:
             print(f"Warning: Skipping '{path}' (not a .json file or directory)")
 

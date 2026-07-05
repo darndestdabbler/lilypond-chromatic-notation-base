@@ -304,7 +304,7 @@
         "horizontal": null
       },
       "visual": {
-        "path_hash": "3347bca3a548",
+        "path_hash": "971eed77a469",
         "bbox": {
           "x": 37.238,
           "y": 6.464,
@@ -335,7 +335,7 @@
         "horizontal": 0.3543
       },
       "visual": {
-        "path_hash": "f3c2c4c41063",
+        "path_hash": "3c0b3676af76",
         "bbox": {
           "x": 30.637,
           "y": 7.367,
@@ -690,7 +690,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 28.467,
           "y": 10.045,
@@ -724,7 +724,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 26.517,
           "y": 11.045,
@@ -860,7 +860,7 @@
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 22.212,
           "y": 12.045,

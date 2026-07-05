@@ -198,11 +198,30 @@ def extract_path_data_deep(element):
     return None
 
 
+def _canonical_number(match):
+    """Rewrite one numeric token in canonical form: rounded to 4 decimals,
+    trailing zeros stripped, -0 folded to 0."""
+    value = round(float(match.group(0)), 4)
+    if value == 0:
+        value = 0.0  # fold -0.0 to 0.0
+    text = f"{value:.4f}".rstrip("0").rstrip(".")
+    return text or "0"
+
+
 def hash_path(path_d):
-    """Compute a short hash of path data for shape identity comparison."""
+    """Compute a short hash of path data for shape identity comparison.
+
+    Numeric tokens are canonicalized first so the hash reflects geometry
+    rather than the emitter's number formatting: two configs that author
+    the same shape as "-0.0000" vs "0" (or with different trailing-zero
+    padding) hash identically.
+    """
     if not path_d:
         return None
-    normalized = re.sub(r'\s+', ' ', path_d.strip())
+    normalized = re.sub(
+        r'-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?', _canonical_number,
+        path_d.strip())
+    normalized = re.sub(r'\s+', ' ', normalized)
     return hashlib.sha256(normalized.encode()).hexdigest()[:12]
 
 

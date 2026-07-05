@@ -153,3 +153,75 @@ No rendering discrepancies. Items for Session 2, with ownership:
 Progress keys logged to `activity-log.json`:
 `session-001/preflight-gate-passed`, `session-001/exported-config-rendered`,
 `session-001/baseline-diff-recorded`.
+
+---
+
+## 7. Session 2 resolution (2026-07-05)
+
+Every item from §5 is resolved; the release criterion is met.
+
+1. **E1 — RESOLVED (engine repo).** `tests/joy-to-the-world.ly` migrated to
+   the current include (`Kite-4-369-Notation-Procedure.ly`) and renamed
+   colors (`cnb:0-skyblue`/`cnb:1-rose`/`cnb:2-black`), matching the
+   top-level `joy-to-the-world.ly` (vector define + procedure
+   registrations). The same staleness was found and fixed in
+   `tests/example-notes.ly` (same rename, same include). The stale
+   working-tree `tests/joy-to-the-world.svg` and the stale checked-in
+   harvests were replaced by fresh renders/harvests from the fixed
+   sources. The checked-in golden suite now compiles and passes as
+   checked in: 74/74 on the flagship spec, no SKIPs anywhere.
+2. **D3 — RESOLVED (engine repo).** `tools/harvest_svg.py` now
+   canonicalizes numeric tokens in path text before hashing (round to 4
+   decimals, strip trailing zeros, fold `-0` to `0`), so the hash reflects
+   geometry rather than the emitter's number formatting. Verified root
+   cause first: the golden config's kite-down path (`M-0.0000 0.6667…`)
+   and the Configurator's (`M0 0.6667…`) differ **only** in `-0.0000`/
+   `0.0000` vs `0` tokens (the current engine config pre-bakes rotation —
+   no `rotate()` groups remain in fresh renders). After normalization the
+   element-level diff between the golden and Configurator-exported
+   harvests is **completely clean**: 191/191 ids, 0 differing fields
+   *including `path_hash`*, staff geometry and all 19 measure boundaries
+   equal. Session 1's "accepted cosmetic difference" no longer exists.
+   All checked-in `*.harvested.json` snapshots regenerated under the new
+   hashing (hash-only diffs; `c-major-scale` also picked up the current
+   harvester's `systems` block it predated).
+   Bonus harness fix: `tools/run_tests.py` directory discovery no longer
+   ingests `*.harvested.json` snapshots as test specs (the default
+   `run_tests.py` all-tests invocation crashed on them; 11 "specs" → 5).
+3. **README render-side walkthrough — DONE.** New section "End-to-End
+   Walkthrough: Rendering an Exported Config" (install → obtain exported
+   config → include from score → render with/without
+   `cnb:use-accessible-colors` → verify against the golden baseline),
+   cross-linking the Configurator README's design half per the 007
+   handoff. The accessible-colors hand-off was smoke-tested live:
+   `#(define cnb:use-accessible-colors #t)` before the `\include` renders
+   the exported config's CB-safe palette (and the `set!` misuse fails,
+   confirming the documented define-before-include contract). README
+   status/counters refreshed: release criterion met (July 2026), 179 unit
+   + 231 integration assertions, callback-collision known issue removed
+   (fixed by set 002), accessible-colors moved from planned to shipped.
+4. **LY spec 1.2.1 sync — DONE (merged, not copied).** The Configurator's
+   1.2.1 amendments (always-emitted `cnb:use-procedure-model #t` §5.1 +
+   Appendix A, half-staff-space conversion note, 1.2.1 changelog row) are
+   merged into `docs/CNB-LY-EXPORT-SPEC-v1_2.md`. A straight copy would
+   have **lost** engine-side content: this repo's copy documents the
+   `repeat` field (§6.2, defaults, Appendix passthrough row) which the
+   Configurator's copy lacks. **FYI for the Configurator repo:** its spec
+   copy should pick up the `repeat`-field documentation from ours.
+5. **FYI — vector-model removal** remains out of scope; README's Planned
+   Features now records it as unblocked with the coordination caveat
+   (`cnb:use-procedure-model` must stay assignable until both repos move
+   together).
+
+**Full-suite confirmation (Session 2, post-changes):** integration
+231 passed / 0 failed (317 assertions, all 5 specs, no skips); unit
+179 passed / 0 failed.
+
+**Release criterion (project plan §1): MET.** A Configurator-exported
+config renders `joy-to-the-world` through this engine identically to the
+golden baseline — 74/74 golden assertions and hash-identical harvests
+with zero accepted differences.
+
+Progress keys logged to `activity-log.json`:
+`session-002/discrepancies-resolved`, `session-002/workflow-documented`,
+`session-002/release-criterion-met`.

@@ -1,5 +1,6 @@
 {
   "source_file": "c-major-scale.svg",
+  "num_systems": 1,
   "staff": {
     "top_line_y": 8.05,
     "bottom_line_y": 12.05,
@@ -7,16 +8,42 @@
     "center_y": 10.05,
     "line_count": 5
   },
+  "systems": [
+    {
+      "system": 0,
+      "top_line_y": 8.05,
+      "bottom_line_y": 12.05,
+      "staff_height": 4.0,
+      "center_y": 10.05,
+      "line_count": 5,
+      "measures": {
+        "1": {
+          "left_x": 11.794,
+          "right_x": 23.197,
+          "width": 11.403,
+          "system": 0
+        },
+        "2": {
+          "left_x": 23.197,
+          "right_x": 33.608,
+          "width": 10.411,
+          "system": 0
+        }
+      }
+    }
+  ],
   "measures": {
     "1": {
       "left_x": 11.794,
       "right_x": 23.197,
-      "width": 11.403
+      "width": 11.403,
+      "system": 0
     },
     "2": {
       "left_x": 23.197,
       "right_x": 33.608,
-      "width": 10.411
+      "width": 10.411,
+      "system": 0
     }
   },
   "elements": [
@@ -32,6 +59,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 1.0012,
         "staff_spaces_from_center": 2.005,
         "horizontal": 0.5725
@@ -58,6 +86,7 @@
       },
       "staff_relative": {
         "measure": "3",
+        "system": 0,
         "vertical": 1.0012,
         "staff_spaces_from_center": 2.005,
         "horizontal": null
@@ -84,6 +113,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 1.0012,
         "staff_spaces_from_center": 2.005,
         "horizontal": 0.0
@@ -112,6 +142,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 1.0012,
         "staff_spaces_from_center": 2.005,
         "horizontal": 0.385
@@ -140,6 +171,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 0.7512,
         "staff_spaces_from_center": 1.005,
         "horizontal": 0.1499
@@ -168,6 +200,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 0.5012,
         "staff_spaces_from_center": 0.005,
         "horizontal": 0.7546
@@ -196,6 +229,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 1.2512,
         "staff_spaces_from_center": 3.005,
         "horizontal": 0.6202
@@ -224,6 +258,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.1262,
         "staff_spaces_from_center": -1.495,
         "horizontal": 0.4197
@@ -252,6 +287,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.1238,
         "staff_spaces_from_center": -2.495,
         "horizontal": 0.2051
@@ -278,6 +314,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.5012,
         "staff_spaces_from_center": 0.005,
         "horizontal": -0.1519
@@ -305,6 +342,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.5012,
         "staff_spaces_from_center": 0.005,
         "horizontal": -0.3638
@@ -333,6 +371,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.2512,
         "staff_spaces_from_center": -0.995,
         "horizontal": -0.6179
@@ -361,6 +400,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.5012,
         "staff_spaces_from_center": 0.005,
         "horizontal": 0.8272
@@ -389,6 +429,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": 0.3762,
         "staff_spaces_from_center": -0.495,
         "horizontal": 0.6344
@@ -417,6 +458,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.2238,
         "staff_spaces_from_center": -2.895,
         "horizontal": 0.729
@@ -448,13 +490,14 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 0.3762,
         "staff_spaces_from_center": -0.495,
         "horizontal": 0.5847
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 28.784,
           "y": 10.045,
@@ -481,6 +524,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.4988,
         "staff_spaces_from_center": -3.995,
         "horizontal": 0.602
@@ -514,6 +558,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.9988,
         "staff_spaces_from_center": -5.995,
         "horizontal": 0.1726
@@ -547,6 +592,7 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 0.5012,
         "staff_spaces_from_center": 0.005,
         "horizontal": 0.8026
@@ -580,13 +626,14 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.3738,
         "staff_spaces_from_center": -3.495,
         "horizontal": 0.7947
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 20.356,
           "y": 13.045,
@@ -613,6 +660,7 @@
       },
       "staff_relative": {
         "measure": "1",
+        "system": 0,
         "vertical": -0.7488,
         "staff_spaces_from_center": -4.995,
         "horizontal": 0.3873
@@ -646,13 +694,14 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": 0.1262,
         "staff_spaces_from_center": -1.495,
         "horizontal": 0.3495
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 26.336,
           "y": 11.045,
@@ -679,13 +728,14 @@
       },
       "staff_relative": {
         "measure": "2",
+        "system": 0,
         "vertical": -0.1238,
         "staff_spaces_from_center": -2.495,
         "horizontal": 0.1144
       },
       "visual": {
         "color": "rgb(0.0000%, 0.0000%, 0.0000%)",
-        "path_hash": "120f6fc7eb39",
+        "path_hash": "fb60ba55dac2",
         "bbox": {
           "x": 23.887,
           "y": 12.045,
