@@ -1,0 +1,41 @@
+{
+  "sessionSetName": "004-end-to-end-pipeline-verification",
+  "createdDate": "2026-07-05T16:42:52.562914+00:00",
+  "totalSessions": 0,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-05T16:42:52.578792+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/preflight-gate-passed",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "Pre-flight gate: Configurator modular-rewrite exporter confirmed landed (cnb/src/cnb-lilypond.js; its set 003 complete, release-gate set 007 complete/VERIFIED). Banner already removed from spec per its own instruction.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 2,
+      "stepKey": "session-001/exported-config-rendered",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "Generated kite-4-369-from-configurator.ly (7665 bytes) via node cnb/fixtures/export-kite-4-369.mjs from kite-4-369-config.json; rendered tests/joy-to-the-world-configurator.ly with lilypond -dbackend=svg and harvested 191 identified elements.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 3,
+      "stepKey": "session-001/baseline-diff-recorded",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "74/74 golden assertions passed (101 expressions) via tools/run_tests.py on tests/joy-to-the-world-configurator.json; element-level diff vs checked-in golden harvest: 191/191 ids match, staff geometry and all 19 measure boundaries identical, 21 kite-down noteheads differ only in visual.path_hash (runtime-rotated vs pre-baked path text; geometry verified identical). Findings recorded in findings.md.",
+      "status": "complete"
+    }
+  ]
+}
