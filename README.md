@@ -213,6 +213,9 @@ Before the procedure, the config file registers named definitions that the proce
 | `cnb:register-attachment!` | Register stem attachment points (4-point model) | `cnb:attachment-defs` |
 | `cnb:register-color!` | Register a named color | `cnb:color-defs` |
 | `cnb:register-off-key-mark!` | Register a custom off-key mark | `cnb:off-key-mark-defs` |
+| `cnb:register-clef!` | Register a custom clef glyph (path + top-edge anchor) | `cnb:clef-defs` |
+
+A custom clef definition is an alist: required `(path . <command list>)` (same format as notehead paths) and `(anchor-semitones . <number>)` — the semitone position of the glyph's **top edge**, a float per the Configurator's anchor contract — plus optional `(height-semitones . <positive number>)` (design height; the explicit `cnb:clef-size-semitones` override wins) and `(color . "#RRGGBB")`. Select it with `cnb:clef-style 'custom` + `cnb:clef-name`.
 
 ### Engine Settings
 
@@ -226,9 +229,11 @@ Before the procedure, the config file registers named definitions that the proce
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
 | `cnb:off-key-indicator` | `'none` | Off-key flag mode |
-| `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), or `'none` (no clef stencil) |
+| `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), `'none` (no clef stencil), or `'custom` (registered glyph named by `cnb:clef-name`) |
 | `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |
-| `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces, whatever that spans on the current staff) |
+| `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces for `'dozenal`/`'text`, or the registered definition's own height for `'custom`) |
+| `cnb:clef-name` | `#f` | Which registered custom clef to display in `'custom` style (see `cnb:register-clef!`) |
+| `cnb:clef-gutter-semitones` | `#f` | Extra blank space after the clef, in semitones (`#f` = legacy spacing); applies to every rendered clef style |
 | `cnb:use-accessible-colors` | `#f` | Use a config's colorblind-safe alternative palette (see below) |
 | `cnb:indent` | `0` | First system left indent (staff-spaces) |
 | `cnb:file-suffix` | `"-Oval-2-024-Notation"` | Appended to output filenames |
@@ -257,7 +262,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ```
 ├── ChromaticNotationBase.ly          Main engine entry point
 ├── Kite-4-369-Notation-Procedure.ly  Reference config (Kite notation, procedure model)
-├── test-unit.ly                      Unit test suite (209 assertions)
+├── test-unit.ly                      Unit test suite (254 assertions)
 ├── README.md                         This file
 │
 ├── cnb/                              Engine modules (17 files, loaded in dependency order)
@@ -313,7 +318,7 @@ off-key.ly → layout.ly
 lilypond test-unit.ly
 ```
 
-209 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, and clef style/size settings.
+254 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, clef style/size settings, and custom-clef registration (anchor placement, size precedence, gutter padding, stencil geometry).
 
 ### Integration Tests
 

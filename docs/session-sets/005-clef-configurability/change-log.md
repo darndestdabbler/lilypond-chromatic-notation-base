@@ -83,3 +83,97 @@
   baseline drift with default settings.
 - `README.md`: three new rows in the Engine Settings table; unit
   assertion count refreshed to 209.
+
+## Session 2 (2026-07-07) — Custom-clef registration hook
+
+**Orchestrator:** claude-code / anthropic (lightweight tier, no metered calls)
+
+### Registration hook — `session-002/register-clef-hook`
+
+- `cnb/clefs.ly`: new **`cnb:register-clef!`** `(name def)` — a
+  two-argument hook mirroring `cnb:register-path!` (deviation from the
+  backlog's proposed single-list `'(name path-data)` shape, recorded
+  for the Session 3 handoff). `def` is an alist:
+  `(path . <command list>)` (required; same nested format as
+  `cnb:notehead-shape-path`), `(anchor-semitones . <number>)`
+  (required; float per the 009 contract), optional
+  `(height-semitones . <positive number>)` (design height), optional
+  `(color . "#RRGGBB")`. Definitions live in a new `cnb:clef-defs`
+  hash table in `cnb/clefs.ly` (not `procedure.ly` — everything else
+  clef-shaped is in this module; decision recorded). Structurally
+  invalid defs (including the backlog's bare-list shape) **warn and
+  are not registered** — the validator checks alist shape first so
+  malformed input degrades instead of crashing `assq-ref`.
+- **Selection:** `cnb:clef-style` grew a `'custom` value +
+  new `cnb:config.ly` setting **`cnb:clef-name`** (symbol, default
+  `#f`). New `cnb:clef-effective-style` downgrades `'custom` with a
+  missing/invalid registration to `'dozenal` with a warning — a broken
+  config renders today's display, never an empty clef slot or a crash.
+
+### Anchor contract + gutter — `session-002/anchor-contract-implemented`
+
+- **Anchor contract as implemented** (Configurator 009 s1 record:
+  `anchorSemi` = FLOAT semitone of the glyph's TOP edge):
+  `anchor-semitones` uses the engine's pitch-semitone coordinate — the
+  same one the notehead engraver renders on (`ly:pitch-semitones`
+  units, middle C = 0). Placement reuses the notehead position formula
+  verbatim (pure helper `cnb:clef-anchor-y-offset`):
+  `Y-offset = (anchor + 2·middleCPosition) / cnb:semitones-per-staff-space
+  × staff-space`, so the top edge lands where a notehead of that pitch
+  position would center, dividing through sps correctly on any staff
+  design. `middleCPosition` is used as-is (includes any active ottava
+  shift, exactly like noteheads — recorded for the handoff).
+- The custom stencil (`cnb:build-custom-clef-stencil`) is built with
+  its top edge at y = 0 (scaled uniformly, then translated by
+  −top-extent); the engraver Y-offsets the grob to the anchor.
+  Verified end-to-end: anchor 16 on the default sps-2 treble staff
+  harvests the bbox top edge at the top staff line (8.045 vs 8.05).
+- **Size precedence (recorded decision):** explicit
+  `cnb:clef-size-semitones` (score-level override) > the definition's
+  `height-semitones` (design height) > native path scale (1 path unit
+  = 1 staff-space) — pure helper `cnb:clef-custom-target-semitones`.
+  Scaling is uniform (aspect ratio preserved); font magnification
+  scales the glyph exactly as the dozenal/text builders do.
+- **Gutter padding:** new `cnb:config.ly` setting
+  **`cnb:clef-gutter-semitones`** (default `#f` = legacy spacing).
+  A number N widens the built stencil's right X-extent by
+  N/sps × mag staff-spaces of blank space (`cnb:clef-apply-gutter`,
+  pure math in `cnb:clef-gutter-pad`). Applies to every rendered
+  style, not just `'custom` (recorded decision). Measured effect:
+  4 semitones (2 staff-spaces) shifts the first notehead +1.5
+  staff-space units — LilyPond's elastic spacing absorbs part of the
+  extent, so the spec pins the deterministic rendered position rather
+  than a naive gap = gutter equality.
+- **Cache extension (spec step 3):** the Session 1 cache key grew two
+  fields — the custom clef name (participates only under `'custom`,
+  so dozenal/text entries are not invalidated by name switches) and
+  the gutter setting. `cnb:register-clef!` **clears the whole stencil
+  cache**, because re-registration mutates what an existing `'custom`
+  key would render.
+
+### Tests + docs — `session-002/tests-green`
+
+- `test-unit.ly`: 45 new assertions — registration/lookup (incl. the
+  pinned "FLOAT anchor-semitones is accepted" test mirroring the
+  Configurator's, re-registration, and four invalid-def rejections),
+  `'custom` style resolution + fallback, anchor math at sps-1/2/3 with
+  fractional anchors and mcp interaction (anchor 16 ≡ top staff line
+  on treble sps-2), size precedence, gutter math, and real stencil
+  geometry via `make-path-stencil` (top edge at y = 0, height/width,
+  override wins, native scale, magnification, gutter X-extent).
+  **Unit suite: 254/254 passed** (was 209).
+- New integration spec `tests/clef-custom.json` (+ `.ly`): a
+  registered 1×2 rectangle clef at anchor 16 / height 8 / gutter 4 —
+  asserts the harvested bbox top edge on the TOP staff line and bottom
+  edge on the BOTTOM line (path stencils harvest real outlines, unlike
+  the dozenal text anchors), exact 4-staff-space height, uniform
+  width, and the gutter-shifted first-notehead x (14.762 vs 13.262
+  no-gutter counterfactual, measured this session).
+- **Full integration suite: 245/245 passed (343 assertions, 9 specs)**
+  including both golden joy-to-the-world specs; `git status` shows no
+  modified golden SVGs/harvests — **zero baseline drift** with default
+  settings.
+- `README.md`: `cnb:register-clef!` added to the Registration API
+  table with a definition-format note; two new Engine Settings rows
+  (`cnb:clef-name`, `cnb:clef-gutter-semitones`); `cnb:clef-style` /
+  `cnb:clef-size-semitones` rows updated; assertion counts refreshed.

@@ -1,0 +1,71 @@
+{
+  "test_name": "Custom clef registration hook: anchor, size, gutter (set 005 s2)",
+  "input_file": "clef-custom.ly",
+  "description": "A registered 1x2 rectangle path clef with anchor-semitones 16, height-semitones 8, and cnb:clef-gutter-semitones 4, on the default sps-2 staff with the default treble context (middleCPosition -6). The set-009 anchor contract puts the glyph TOP edge at semitone 16 = +2 staff-spaces = the TOP staff line; height 8 semitones = 4 staff-spaces means the bottom edge lands exactly on the BOTTOM line. Path stencils harvest real outline geometry (unlike the dozenal text anchors), so the bbox is asserted directly against the harvested staff geometry. The gutter is asserted via the first notehead's x: an identical render without the gutter setting places nh-1-0.000-60-0 at x = 13.262 (measured 2026-07-07); the 4-semitone gutter pushes it to 14.762.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE CUSTOM CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The registered custom clef is engraved in measure 1",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE ANCHOR CONTRACT (TOP EDGE AT SEMITONE 16) ==="},
+
+    {
+      "id": "cl-1",
+      "description": "Glyph TOP edge lands on the top staff line (anchor semitone 16 at sps-2, treble mcp -6) and the bottom edge on the bottom line (height 8 semitones = the full 4-space staff)",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v - staff['top_line_y']) < 0.05",
+          "abs(v + prop('cl-1', 'visual.bbox.h') - staff['bottom_line_y']) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: SEMITONE-DENOMINATED SIZE AND UNIFORM SCALE ==="},
+
+    {
+      "id": "cl-1",
+      "description": "height-semitones 8 at sps-2 renders exactly 4 staff-spaces tall",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 4.0) < 0.05"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The 1x2 path scales uniformly: height 4 staff-spaces implies width 2",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 2.0) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 4: GUTTER PADDING PUSHES THE MUSIC RIGHT ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "First notehead sits at x = 14.762: 1.5 units right of the identical no-gutter render (13.262), the 4-semitone gutter's spacing contribution",
+      "expect": {
+        "visual.bbox.x": ["abs(v - 14.762) < 0.1", "v > 14.0"]
+      }
+    },
+
+    {"_comment": "=== SECTION 5: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the custom clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}

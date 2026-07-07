@@ -113,8 +113,11 @@
 %%              (a configured register label, e.g. an octave numeral
 %%              or letter — "glyph-free clef").
 %%   'none    — suppress the clef entirely (no stencil is engraved).
+%%   'custom  — render the registered clef glyph named by cnb:clef-name
+%%              (register glyphs with cnb:register-clef!, cnb/clefs.ly).
 %%
-%% Any other value warns and falls back to 'dozenal.
+%% Any other value warns and falls back to 'dozenal. 'custom with no
+%% valid registration under cnb:clef-name also falls back to 'dozenal.
 #(define cnb:clef-style 'dozenal)
 
 %% The label rendered when cnb:clef-style is 'text.
@@ -135,8 +138,28 @@
 %%   number N — the display renders N semitones tall regardless of
 %%              cnb:semitones-per-staff-space.
 %%
-%% Applies to both 'dozenal and 'text styles.
+%% Applies to the 'dozenal, 'text, and 'custom styles. For 'custom it
+%% is an explicit override: it wins over the registered definition's
+%% own height-semitones field (see cnb:register-clef!, cnb/clefs.ly).
 #(define cnb:clef-size-semitones #f)
+
+%% Which registered custom clef to display when cnb:clef-style is
+%% 'custom. A symbol naming a definition previously registered with
+%% cnb:register-clef! (cnb/clefs.ly), or #f (default — none selected).
+%% Ignored unless cnb:clef-style is 'custom.
+#(define cnb:clef-name #f)
+
+%% Extra blank horizontal space after the clef (gutter padding), in
+%% SEMITONES — i.e. the same physical distance the clef occupies
+%% vertically per semitone, so the gutter scales with the staff design
+%% exactly like the size setting does.
+%%
+%%   #f       — legacy default: no extra space (today's spacing).
+%%   number N — widen the clef stencil's right extent by
+%%              N / cnb:semitones-per-staff-space staff-spaces.
+%%
+%% Applies to every rendered style ('dozenal, 'text, 'custom).
+#(define cnb:clef-gutter-semitones #f)
 
 
 %% ---------------------------------------------------------------------------

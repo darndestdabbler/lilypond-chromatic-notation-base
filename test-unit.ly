@@ -1218,6 +1218,271 @@
 
 
 %% =========================================================================
+%%  TEST: cnb/config.ly — Custom clef setting defaults (set 005 s2)
+%% =========================================================================
+
+#(cnb:test-group "config.ly — custom clef setting defaults")
+
+#(cnb:assert-true "cnb:clef-name is defined"
+   (defined? 'cnb:clef-name))
+#(cnb:assert-equal "cnb:clef-name defaults to #f"
+   cnb:clef-name #f)
+#(cnb:assert-true "cnb:clef-gutter-semitones is defined"
+   (defined? 'cnb:clef-gutter-semitones))
+#(cnb:assert-equal "cnb:clef-gutter-semitones defaults to #f"
+   cnb:clef-gutter-semitones #f)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Custom clef registration and lookup
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:register-clef! / cnb:clef-lookup")
+
+%% A 1-wide × 2-tall rectangle in the notehead path command format.
+#(define cnb:test-clef-path
+   '((moveto 0 0) (lineto 1 0) (lineto 1 2) (lineto 0 2) (closepath)))
+
+#(cnb:assert-false "lookup of an unregistered name returns #f"
+   (cnb:clef-lookup 'never-registered))
+#(cnb:assert-false "lookup of a non-symbol (#f) returns #f"
+   (cnb:clef-lookup #f))
+
+#(cnb:register-clef! 'ut-clef
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 4)))
+#(cnb:assert-true "minimal valid def (path + anchor) registers"
+   (cnb:clef-lookup 'ut-clef))
+#(cnb:assert-equal "registered anchor is readable from the def"
+   (assq-ref (cnb:clef-lookup 'ut-clef) 'anchor-semitones) 4)
+
+%% The 009-pinned contract: anchorSemi is a FLOAT (fractional anchors
+%% express interior-feature registration — Bravura/Clairnote designs)
+#(cnb:register-clef! 'ut-clef-float
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 22.784)))
+#(cnb:assert-near "FLOAT anchor-semitones is accepted and preserved"
+   (assq-ref (cnb:clef-lookup 'ut-clef-float) 'anchor-semitones)
+   22.784 0.0001)
+
+%% Re-registration under the same name replaces the definition
+#(cnb:register-clef! 'ut-clef
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 7)
+         (cons 'height-semitones 5.5)))
+#(cnb:assert-equal "re-registration replaces the stored anchor"
+   (assq-ref (cnb:clef-lookup 'ut-clef) 'anchor-semitones) 7)
+#(cnb:assert-equal "fractional height-semitones is accepted"
+   (assq-ref (cnb:clef-lookup 'ut-clef) 'height-semitones) 5.5)
+
+%% Invalid definitions warn and are NOT registered
+#(cnb:register-clef! 'ut-bad-bare-list (list 'name cnb:test-clef-path))
+#(cnb:assert-false "a bare non-alist list is rejected"
+   (cnb:clef-lookup 'ut-bad-bare-list))
+#(cnb:register-clef! 'ut-bad-no-anchor
+   (list (cons 'path cnb:test-clef-path)))
+#(cnb:assert-false "a def without anchor-semitones is rejected"
+   (cnb:clef-lookup 'ut-bad-no-anchor))
+#(cnb:register-clef! 'ut-bad-no-path
+   (list (cons 'anchor-semitones 4)))
+#(cnb:assert-false "a def without a path is rejected"
+   (cnb:clef-lookup 'ut-bad-no-path))
+#(cnb:register-clef! 'ut-bad-height
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 4)
+         (cons 'height-semitones 0)))
+#(cnb:assert-false "a def with a non-positive height is rejected"
+   (cnb:clef-lookup 'ut-bad-height))
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Style resolution with 'custom
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-effective-style ('custom)")
+
+#(define cnb:saved-clef-style cnb:clef-style)
+#(define cnb:saved-clef-name cnb:clef-name)
+
+#(set! cnb:clef-style 'custom)
+#(cnb:assert-equal "'custom is a recognized cnb:clef-style value"
+   (cnb:clef-resolved-style) 'custom)
+
+%% Unregistered name → warn and degrade to 'dozenal (never an empty slot)
+#(set! cnb:clef-name 'no-such-clef)
+#(cnb:assert-equal "'custom with an unregistered name degrades to 'dozenal"
+   (cnb:clef-effective-style) 'dozenal)
+
+#(set! cnb:clef-name #f)
+#(cnb:assert-equal "'custom with cnb:clef-name #f degrades to 'dozenal"
+   (cnb:clef-effective-style) 'dozenal)
+
+#(set! cnb:clef-name 'ut-clef)
+#(cnb:assert-equal "'custom with a registered name is effective"
+   (cnb:clef-effective-style) 'custom)
+
+#(set! cnb:clef-style 'dozenal)
+#(cnb:assert-equal "non-custom styles ignore cnb:clef-name"
+   (cnb:clef-effective-style) 'dozenal)
+
+#(set! cnb:clef-style cnb:saved-clef-style)
+#(set! cnb:clef-name cnb:saved-clef-name)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Anchor placement math (set-009 contract)
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-anchor-y-offset (fractional anchors, per-sps)")
+
+%% The formula is the notehead engraver's own position formula
+%% (cnb/noteheads.ly): (anchor + 2*middleCPosition) / sps staff-spaces.
+#(set! cnb:semitones-per-staff-space 1)
+#(cnb:assert-equal "sps-1: anchor 5.5, mcp 0 → 5.5 staff-spaces"
+   (cnb:clef-anchor-y-offset 5.5 0) 5.5)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "sps-2: anchor 5.5, mcp 0 → 2.75 staff-spaces"
+   (cnb:clef-anchor-y-offset 5.5 0) 2.75)
+#(cnb:assert-equal "sps-2: anchor 0 (middle C), treble mcp -6 → -6 staff-spaces"
+   (cnb:clef-anchor-y-offset 0 -6) -6)
+#(cnb:assert-equal "sps-2: anchor 16 on treble = top staff line (+2 staff-spaces)"
+   (cnb:clef-anchor-y-offset 16 -6) 2)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-near "sps-3: fractional anchor 22.784, mcp 0 → 22.784/3"
+   (cnb:clef-anchor-y-offset 22.784 0) 7.594667 0.0001)
+#(cnb:assert-equal "sps-3: anchor 6, mcp 2 → 10/3 staff-spaces"
+   (cnb:clef-anchor-y-offset 6 2) 10/3)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Custom size precedence and gutter math
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-custom-target-semitones (precedence)")
+
+#(define cnb:ut-def-with-height
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 4)
+         (cons 'height-semitones 4)))
+#(define cnb:ut-def-no-height
+   (list (cons 'path cnb:test-clef-path)
+         (cons 'anchor-semitones 4)))
+
+%% Recorded set-005 decision: explicit cnb:clef-size-semitones wins
+%% over the definition's own height-semitones; with neither, #f = the
+%% path renders at its native coordinate scale.
+#(set! cnb:clef-size-semitones 6)
+#(cnb:assert-equal "explicit cnb:clef-size-semitones overrides def height"
+   (cnb:clef-custom-target-semitones cnb:ut-def-with-height) 6)
+#(cnb:assert-equal "explicit size also applies to a def without height"
+   (cnb:clef-custom-target-semitones cnb:ut-def-no-height) 6)
+#(set! cnb:clef-size-semitones #f)
+#(cnb:assert-equal "size #f defers to the def's height-semitones"
+   (cnb:clef-custom-target-semitones cnb:ut-def-with-height) 4)
+#(cnb:assert-equal "size #f + no def height → #f (native path scale)"
+   (cnb:clef-custom-target-semitones cnb:ut-def-no-height) #f)
+
+#(cnb:test-group "clefs.ly — cnb:clef-gutter-pad")
+
+#(define cnb:saved-gutter cnb:clef-gutter-semitones)
+
+#(cnb:assert-equal "default #f → no gutter padding"
+   (cnb:clef-gutter-pad 1) 0)
+#(set! cnb:clef-gutter-semitones 3)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "3 semitones at sps-2 = 3/2 staff-spaces"
+   (cnb:clef-gutter-pad 1) 3/2)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "3 semitones at sps-3 = 1 staff-space"
+   (cnb:clef-gutter-pad 1) 1)
+#(set! cnb:semitones-per-staff-space 1)
+#(cnb:assert-equal "2 semitones at sps-1 = 2 staff-spaces"
+   (begin (set! cnb:clef-gutter-semitones 2) (cnb:clef-gutter-pad 1)) 2)
+#(set! cnb:semitones-per-staff-space 2)
+#(set! cnb:clef-gutter-semitones 3)
+#(cnb:assert-equal "gutter padding scales with font magnification"
+   (cnb:clef-gutter-pad 2) 3)
+#(set! cnb:clef-gutter-semitones cnb:saved-gutter)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Custom clef stencil geometry
+%%  (make-path-stencil needs no grob, so the real builder is testable)
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:build-custom-clef-stencil (top edge at y=0)")
+
+%% Test path is a 1×2 rectangle (y 0..2), so heights are exact.
+#(set! cnb:semitones-per-staff-space 2)
+#(set! cnb:clef-size-semitones #f)
+
+%% height-semitones 4 at sps-2 = 2 staff-spaces tall
+#(define cnb:ut-stencil-a
+   (cnb:build-custom-clef-stencil cnb:ut-def-with-height 1))
+#(cnb:assert-near "anchor contract: scaled glyph TOP edge sits at y = 0"
+   (cdr (ly:stencil-extent cnb:ut-stencil-a 1)) 0 0.001)
+#(cnb:assert-near "def height 4 at sps-2 renders 2 staff-spaces tall"
+   (- (cdr (ly:stencil-extent cnb:ut-stencil-a 1))
+      (car (ly:stencil-extent cnb:ut-stencil-a 1)))
+   2 0.001)
+#(cnb:assert-near "uniform scale: 1×2 path at height 2 renders 1 wide"
+   (- (cdr (ly:stencil-extent cnb:ut-stencil-a 0))
+      (car (ly:stencil-extent cnb:ut-stencil-a 0)))
+   1 0.001)
+
+%% Explicit cnb:clef-size-semitones overrides the def height in the
+%% actual stencil, not just the pure helper
+#(set! cnb:clef-size-semitones 8)
+#(define cnb:ut-stencil-b
+   (cnb:build-custom-clef-stencil cnb:ut-def-with-height 1))
+#(cnb:assert-near "explicit 8 semitones at sps-2 renders 4 staff-spaces tall"
+   (- (cdr (ly:stencil-extent cnb:ut-stencil-b 1))
+      (car (ly:stencil-extent cnb:ut-stencil-b 1)))
+   4 0.001)
+#(set! cnb:clef-size-semitones #f)
+
+%% No height anywhere: native path scale (1 path unit = 1 staff-space)
+#(define cnb:ut-stencil-c
+   (cnb:build-custom-clef-stencil cnb:ut-def-no-height 1))
+#(cnb:assert-near "native scale: the 2-unit-tall path renders 2 staff-spaces"
+   (- (cdr (ly:stencil-extent cnb:ut-stencil-c 1))
+      (car (ly:stencil-extent cnb:ut-stencil-c 1)))
+   2 0.001)
+#(cnb:assert-near "native scale keeps the top edge at y = 0 too"
+   (cdr (ly:stencil-extent cnb:ut-stencil-c 1)) 0 0.001)
+
+%% Magnification scales the stencil like the dozenal/text builders
+#(define cnb:ut-stencil-d
+   (cnb:build-custom-clef-stencil cnb:ut-def-with-height 2))
+#(cnb:assert-near "font magnification 2 doubles the rendered height"
+   (- (cdr (ly:stencil-extent cnb:ut-stencil-d 1))
+      (car (ly:stencil-extent cnb:ut-stencil-d 1)))
+   4 0.001)
+
+#(cnb:test-group "clefs.ly — cnb:clef-apply-gutter")
+
+#(set! cnb:clef-gutter-semitones 3)
+#(define cnb:ut-stencil-g (cnb:clef-apply-gutter cnb:ut-stencil-a 1))
+#(cnb:assert-near "gutter 3 at sps-2 widens the right X-extent by 3/2"
+   (cdr (ly:stencil-extent cnb:ut-stencil-g 0))
+   (+ (cdr (ly:stencil-extent cnb:ut-stencil-a 0)) 3/2) 0.001)
+#(cnb:assert-near "gutter padding leaves the Y-extent alone"
+   (cdr (ly:stencil-extent cnb:ut-stencil-g 1))
+   (cdr (ly:stencil-extent cnb:ut-stencil-a 1)) 0.001)
+#(set! cnb:clef-gutter-semitones #f)
+#(cnb:assert-near "gutter #f leaves the X-extent alone"
+   (cdr (ly:stencil-extent (cnb:clef-apply-gutter cnb:ut-stencil-a 1) 0))
+   (cdr (ly:stencil-extent cnb:ut-stencil-a 0)) 0.001)
+
+%% Restore config state
+#(set! cnb:clef-gutter-semitones cnb:saved-gutter)
+#(set! cnb:clef-size-semitones cnb:saved-clef-size)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
+
+%% =========================================================================
 %%  SUMMARY
 %% =========================================================================
 
