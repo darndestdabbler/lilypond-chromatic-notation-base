@@ -177,3 +177,66 @@
   table with a definition-format note; two new Engine Settings rows
   (`cnb:clef-name`, `cnb:clef-gutter-semitones`); `cnb:clef-style` /
   `cnb:clef-size-semitones` rows updated; assertion counts refreshed.
+
+## Session 3 (2026-07-07) — Configurator handoff record
+
+**Orchestrator:** claude-code / anthropic (lightweight tier, no metered calls)
+
+### Handoff recorded — `session-003/handoff-recorded`
+
+- Wrote **`configurator-handoff.md`** — the engine-side mirror of the
+  Configurator's `009-custom-clefs/s1-engine-coordination.md`. It
+  enumerates the full landed engine contract: every new `cnb:` setting
+  (name, type, default, semantics, `config.ly` line), the
+  `cnb:register-clef! name def` two-argument signature (the recorded
+  deviation from the backlog's proposed single-list `'(name path-data)`
+  shape), the definition alist fields, the size/gutter precedence, the
+  cache-key rework, and the **anchor contract as implemented**
+  (`anchor-semitones` = FLOAT semitone of the glyph's TOP edge, on the
+  notehead engraver's middle-C = 0 pitch axis; placement reuses the
+  notehead position formula).
+- **Cross-checked against the Configurator's set-009 records** at
+  `d:\Projects\chromatic-notation-configurator` (the moved repo — not the
+  stale `source\repos` path). Produced a field-mapping table
+  (`enabled:false` → `'none`, `kind:"glyph"` → `'custom`, `kind:"text"` →
+  `'text`; `'dozenal` is the engine-native default with no Configurator
+  `kind`) and, per the spec's "flag mismatches explicitly rather than
+  silently adapt" rule, six labelled reconciliation flags for the
+  Configurator author:
+  - **A** — `anchorSemi` origin: the Configurator defines it only in its
+    internal semitone grid; the engine binds it to middle C = 0, so the
+    exporter must emit on that axis.
+  - **B** — gutter divergence: Configurator `gutter.paddingH` is **pixels,
+    both sides**; engine `cnb:clef-gutter-semitones` is **semitones, right
+    edge only** — the exporter must convert and choose a mapping.
+  - **C** — path format: the engine consumes only the `lilypondPath`
+    command-list format (same as `cnb:notehead-shape-path`), never raw
+    `svgPath`; and it self-measures the path extent, so
+    `naturalHeight`/`naturalWidth`/`viewBox*` need not be exported.
+  - **D** — text color/font: reproduce the Configurator's `color`/
+    `fontFamily` by emitting `cnb:clef-text` as a **markup**, not a bare
+    string.
+  - **E** — no `'standard` native-glyph escape hatch was requested or
+    added (consistent both sides).
+  - **F** — no preview-vs-engine placement divergence analogous to the
+    keysig `tonicOctave` case; the anchor contract is the shared law once
+    emission lands.
+
+### Backlog updated + final verification — `session-003/backlog-updated`
+
+- **`docs/planning/configurator-coordination-backlog.md`:** items 1.1–1.4
+  marked **resolved** — a RESOLVED banner on the §1 header, a ✅ on the
+  scheduling table row, and a new **§5** subsection enumerating the four
+  deliverables with a pointer to `configurator-handoff.md` and the
+  Configurator-side follow-ons still owed (lift the "exports nothing for
+  clefs" pin, author the LY export-spec addendum, add the emit-if-changed
+  exporter lines).
+- Per the spec and the cross-repo rule of engagement,
+  **`docs/CNB-LY-EXPORT-SPEC-v1_2.md` was NOT bumped** here — the addendum
+  is synced back Configurator-side later, as 1.2.1 was for set 004.
+- **Final verification (spec step 3):** re-ran the FULL suites once more —
+  unit **254/254**, integration **245/245** (343 assertions, 9 specs)
+  including both golden `joy-to-the-world` specs. `git status` shows **zero
+  modified golden SVGs/harvests** — the baseline is byte-stable with
+  default settings. No engine code changed this session (documentation
+  only).

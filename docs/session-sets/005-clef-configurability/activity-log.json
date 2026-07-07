@@ -68,6 +68,22 @@
       "dateTime": "2026-07-07T05:15:44.842784-04:00",
       "description": "Unit suite 254/254 (was 209; +45 assertions: registration/lookup incl. pinned FLOAT-anchor test, invalid-def rejections, custom style resolution/fallback, anchor math at sps-1/2/3, size precedence, gutter math, real stencil geometry via make-path-stencil). Integration suite 245/245 (343 assertions, 9 specs) incl. new tests/clef-custom.json (bbox top edge on the top staff line, height 4 staff-spaces, uniform width, gutter-shifted notehead x) and both golden joy-to-the-world specs; zero golden-baseline drift. README updated.",
       "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 1,
+      "stepKey": "session-003/handoff-recorded",
+      "dateTime": "2026-07-07T18:40:00.000000-04:00",
+      "description": "Wrote docs/session-sets/005-clef-configurability/configurator-handoff.md: the engine-side mirror of the Configurator 009 s1 record. Enumerates every new cnb: setting (name/type/default/semantics/file-line), the two-arg cnb:register-clef! deviation, the def alist fields, and the anchor contract as implemented (anchor-semitones = FLOAT top edge on the notehead middle-C=0 axis). Cross-checked against d:/Projects/chromatic-notation-configurator/docs/session-sets/009-custom-clefs (via subagent): field mapping table (enabled:false -> 'none, kind:glyph -> 'custom, kind:text -> 'text, dozenal = engine-native default) plus SIX explicitly flagged reconciliation points for the Configurator author - (A) anchorSemi origin must be emitted on the middle-C=0 axis, (B) gutter unit+sidedness divergence (px both-sides vs semitones right-only), (C) engine consumes only the lilypondPath command-list format not svgPath, and self-measures extent so naturalHeight/viewBox need not be exported, (D) text color/font need a markup cnb:clef-text, (E) no 'standard escape hatch - consistent, (F) no preview-vs-engine placement divergence.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 2,
+      "stepKey": "session-003/backlog-updated",
+      "dateTime": "2026-07-07T18:45:00.000000-04:00",
+      "description": "Marked backlog items 1.1-1.4 resolved in docs/planning/configurator-coordination-backlog.md: added a RESOLVED banner to the S1 header, a scheduling-table checkmark, and a new S5 subsection enumerating the four deliverables with a pointer to configurator-handoff.md and the still-owed Configurator-side follow-ons (lift the exports-nothing pin, LY-spec addendum, emit-if-changed lines). Re-ran the FULL suites once more: unit 254/254, integration 245/245 (343 assertions, 9 specs); git status shows zero modified golden SVGs/harvests - baseline byte-stable with defaults. Per the spec, docs/CNB-LY-EXPORT-SPEC-v1_2.md NOT bumped (addendum synced Configurator-side later).",
+      "status": "complete"
     }
   ]
 }
