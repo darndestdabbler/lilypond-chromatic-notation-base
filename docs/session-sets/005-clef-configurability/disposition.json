@@ -1,32 +1,18 @@
 {
   "status": "completed",
-  "summary": "Session 2 of 3: custom-clef registration hook implementing the Configurator set-009 anchor contract (backlog item 1.2). New cnb:register-clef! (name def) in cnb/clefs.ly mirrors cnb:register-path! - a deliberate two-argument deviation from the backlog's proposed single-list '(name path-data) shape, recorded for the Session 3 handoff. def is an alist: required path (same nested command format as cnb:notehead-shape-path) and anchor-semitones (a FLOAT per the 009 contract - the semitone position of the glyph's TOP edge), optional height-semitones (design height) and color. Definitions live in a new cnb:clef-defs hash table in clefs.ly (not procedure.ly - recorded decision); structurally invalid defs (including the bare-list shape) warn and are not registered. Selection: cnb:clef-style 'custom + new cnb:clef-name setting (default #f); cnb:clef-effective-style degrades a missing/invalid registration to 'dozenal with a warning so a broken config renders today's display, never an empty slot or a crash. Anchor semantics: anchor-semitones is in the notehead engraver's own pitch coordinate (ly:pitch-semitones, middle C = 0); placement reuses the notehead position formula verbatim via pure helper cnb:clef-anchor-y-offset - Y-offset = (anchor + 2*middleCPosition)/cnb:semitones-per-staff-space * staff-space - so the top edge divides through sps correctly on any staff design; middleCPosition is used as-is (includes ottava, exactly like noteheads - recorded for the handoff). The stencil is built with its top edge at y=0 (uniform scale, aspect preserved). Size precedence (recorded decision): explicit cnb:clef-size-semitones > def height-semitones > native path scale (1 path unit = 1 staff-space). New cnb:clef-gutter-semitones (default #f = legacy spacing; number N widens the built stencil's right X-extent by N/sps * mag staff-spaces of blank space, all rendered styles). Cache handling per spec step 3: the S1 cache key grew the custom clef name ('custom only) and gutter fields, and cnb:register-clef! clears the whole stencil cache since re-registration mutates what a cached 'custom key renders. Tests: unit suite 254/254 (was 209; +45 assertions incl. the pinned 'FLOAT anchor-semitones is accepted' test mirroring the Configurator's, four invalid-def rejections, effective-style fallback, anchor math at sps-1/2/3 with fractional anchors, size precedence, gutter math, and real stencil geometry via make-path-stencil). New integration spec tests/clef-custom.json: a registered 1x2 rectangle clef at anchor 16/height 8/gutter 4 on the default sps-2 treble staff harvests its bbox top edge on the TOP staff line (8.045 vs 8.05) and bottom edge on the BOTTOM line, exact 4-staff-space height, uniform width 2.0, and the gutter-shifted first-notehead x (14.762 vs 13.262 measured no-gutter counterfactual). Integration suite 245/245 (343 assertions, 9 specs) incl. both golden joy-to-the-world specs; zero golden-baseline drift with defaults. README: cnb:register-clef! row + def-format note in the Registration API section, two new Engine Settings rows, style/size rows updated, assertion counts refreshed. Deliverable commit 4e3dd2f.",
+  "summary": "Session 3 of 3 (final): the Configurator handoff record for set 005 (clef configurability). Documentation only - no engine code changed. Wrote docs/session-sets/005-clef-configurability/configurator-handoff.md, the engine-side mirror of the Configurator's 009-custom-clefs/s1-engine-coordination.md: it enumerates the full landed engine contract - every new cnb: clef setting with exact name/type/default/semantics and config.ly line (cnb:clef-style :121, cnb:clef-text :127, cnb:clef-size-semitones :144, cnb:clef-name :150, cnb:clef-gutter-semitones :162), the cnb:register-clef! name def two-argument signature (the recorded deviation from the backlog's proposed single-list '(name path-data)), the definition alist fields (required path in the notehead command-list format + float anchor-semitones, optional height-semitones and color), the size/gutter precedence, the cache-key rework, and the anchor contract as implemented (anchor-semitones = FLOAT semitone of the glyph's TOP edge on the notehead engraver's middle-C=0 pitch axis; placement reuses the notehead position formula via cnb:clef-anchor-y-offset). Cross-checked against the moved Configurator repo (d:/Projects/chromatic-notation-configurator, set 009 - NOT the stale source/repos path) via a read-only subagent: produced a field-mapping table (enabled:false -> 'none, kind:glyph -> 'custom, kind:text -> 'text, dozenal = engine-native default with no Configurator kind) and, per the spec's flag-mismatches-explicitly rule, six labelled reconciliation flags for the Configurator author: (A) anchorSemi origin - the Configurator defines it only in its internal semitone grid, so the exporter must emit on the middle-C=0 axis; (B) gutter divergence - Configurator gutter.paddingH is pixels applied both sides vs the engine's cnb:clef-gutter-semitones in semitones on the right edge only; (C) path format - the engine consumes only the lilypondPath command-list format (never raw svgPath) and self-measures the extent so naturalHeight/viewBox need not be exported; (D) text color/font - reproduce via a markup cnb:clef-text, not a bare string; (E) no 'standard native-glyph escape hatch requested or added (consistent); (F) no preview-vs-engine placement divergence analogous to the keysig tonicOctave case. Marked backlog items 1.1-1.4 resolved in docs/planning/configurator-coordination-backlog.md (RESOLVED header banner + scheduling-table checkmark + new section-5 subsection enumerating the four deliverables, a pointer to configurator-handoff.md, and the still-owed Configurator-side follow-ons: lift the exports-nothing pin, LY export-spec addendum, emit-if-changed exporter lines). Per the cross-repo rule of engagement, docs/CNB-LY-EXPORT-SPEC-v1_2.md was NOT bumped here (the addendum is synced Configurator-side later, as 1.2.1 was for set 004). Final verification (spec step 3): re-ran the FULL suites once more - unit 254/254, integration 245/245 (343 assertions, 9 specs) including both golden joy-to-the-world specs; git status shows zero modified golden SVGs/harvests, so the baseline is byte-stable with default settings. Note: docs/planning/ was untracked in git before this session; the backlog file was newly added to tracking to satisfy the spec's commit step. Deliverable commit 9377949.",
   "files_changed": [
-    "cnb/config.ly",
-    "cnb/clefs.ly",
-    "test-unit.ly",
-    "test-unit.pdf",
-    "README.md",
-    "tests/clef-custom.ly",
-    "tests/clef-custom.json",
-    "tests/clef-custom.svg",
-    "tests/clef-custom.harvested.json",
+    "docs/session-sets/005-clef-configurability/configurator-handoff.md",
+    "docs/planning/configurator-coordination-backlog.md",
     "docs/session-sets/005-clef-configurability/change-log.md",
     "docs/session-sets/005-clef-configurability/activity-log.json",
+    "docs/session-sets/005-clef-configurability/session-events.jsonl",
     "docs/session-sets/005-clef-configurability/session-state.json",
-    "docs/session-sets/005-clef-configurability/session-events.jsonl"
+    "docs/session-sets/005-clef-configurability/disposition.json"
   ],
   "verification_method": "skipped",
   "verification_message_ids": [],
-  "next_orchestrator": {
-    "engine": "claude-code",
-    "provider": "anthropic",
-    "model": "claude-fable-5",
-    "effort": "medium",
-    "reason": {
-      "code": "continue-current-trajectory",
-      "specifics": "Session 2 landed the full engine-side clef contract (style/text/size from S1 + registration/anchor/gutter from S2) with zero baseline drift and every decision point recorded in the change log. Session 3 is the Configurator handoff record - pure documentation cross-checked against d:/Projects/chromatic-notation-configurator's set-009 records, best authored by the same orchestrator that made the S1/S2 contract decisions."
-    }
-  },
-  "blockers": []
+  "next_orchestrator": null,
+  "blockers": [],
+  "verification_verdict": null
 }
