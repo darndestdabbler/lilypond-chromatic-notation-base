@@ -34,6 +34,7 @@
 \include "cnb/path-geometry.ly"
 \include "cnb/ledgers.ly"
 \include "cnb/off-key.ly"
+\include "cnb/clefs.ly"
 
 
 %% =========================================================================
@@ -1091,6 +1092,129 @@
 
 %% Restore the default procedure
 #(set! cnb:get-notehead-config cnb:saved-get-notehead-config)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Dozenal clef number calculation
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:dozenal-clef")
+
+%% Standard clef mappings (middleCPosition, ottava 0) per the module header
+#(cnb:assert-equal "treble (mcp -6) → 50"   (cnb:dozenal-clef -6 0) 50)
+#(cnb:assert-equal "soprano (mcp -4) → 46"  (cnb:dozenal-clef -4 0) 46)
+#(cnb:assert-equal "mezzo (mcp -2) → 46"    (cnb:dozenal-clef -2 0) 46)
+#(cnb:assert-equal "alto (mcp 0) → 40"      (cnb:dozenal-clef 0 0)  40)
+#(cnb:assert-equal "tenor (mcp 2) → 36"     (cnb:dozenal-clef 2 0)  36)
+#(cnb:assert-equal "baritone (mcp 4) → 36"  (cnb:dozenal-clef 4 0)  36)
+#(cnb:assert-equal "bass (mcp 6) → 30"      (cnb:dozenal-clef 6 0)  30)
+
+%% Ottava offsets shift the register (pinning current arithmetic)
+#(cnb:assert-equal "treble + offset 3 → 56"  (cnb:dozenal-clef -6 3) 56)
+#(cnb:assert-equal "treble + offset -3 → 46" (cnb:dozenal-clef -6 -3) 46)
+#(cnb:assert-equal "bass + offset -3 → 26"   (cnb:dozenal-clef 6 -3) 26)
+
+
+%% =========================================================================
+%%  TEST: cnb/config.ly — Clef display setting defaults (set 005)
+%% =========================================================================
+
+#(cnb:test-group "config.ly — clef setting defaults")
+
+#(cnb:assert-true "cnb:clef-style is defined"
+   (defined? 'cnb:clef-style))
+#(cnb:assert-equal "cnb:clef-style defaults to 'dozenal"
+   cnb:clef-style 'dozenal)
+#(cnb:assert-true "cnb:clef-text is defined"
+   (defined? 'cnb:clef-text))
+#(cnb:assert-equal "cnb:clef-text defaults to empty string"
+   cnb:clef-text "")
+#(cnb:assert-true "cnb:clef-size-semitones is defined"
+   (defined? 'cnb:clef-size-semitones))
+#(cnb:assert-equal "cnb:clef-size-semitones defaults to #f"
+   cnb:clef-size-semitones #f)
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Style resolution
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-resolved-style")
+
+#(cnb:assert-equal "default resolves to 'dozenal"
+   (cnb:clef-resolved-style) 'dozenal)
+
+#(set! cnb:clef-style 'text)
+#(cnb:assert-equal "'text resolves to 'text"
+   (cnb:clef-resolved-style) 'text)
+
+#(set! cnb:clef-style 'none)
+#(cnb:assert-equal "'none resolves to 'none"
+   (cnb:clef-resolved-style) 'none)
+
+%% This will produce a warning — that's expected
+#(set! cnb:clef-style 'bogus-style)
+#(cnb:assert-equal "unrecognized value falls back to 'dozenal"
+   (cnb:clef-resolved-style) 'dozenal)
+
+#(set! cnb:clef-style 'dozenal) %% reset
+
+
+%% =========================================================================
+%%  TEST: cnb/clefs.ly — Semitone-denominated size math
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-target-height (default #f = 3 staff-spaces)")
+
+%% Save config state
+#(define cnb:saved-clef-size cnb:clef-size-semitones)
+#(define cnb:saved-sps cnb:semitones-per-staff-space)
+
+%% Default (#f): 3 staff-spaces regardless of semitones-per-staff-space
+#(set! cnb:clef-size-semitones #f)
+#(set! cnb:semitones-per-staff-space 1)
+#(cnb:assert-equal "sps-1: default height is 3 staff-spaces"
+   (cnb:clef-target-height 1) 3)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "sps-2: default height is 3 staff-spaces"
+   (cnb:clef-target-height 1) 3)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "sps-3: default height is 3 staff-spaces"
+   (cnb:clef-target-height 1) 3)
+#(cnb:assert-equal "default height scales with font magnification"
+   (cnb:clef-target-height 2) 6)
+
+#(cnb:test-group "clefs.ly — cnb:clef-target-height (explicit semitone size)")
+
+%% Explicit size N: N semitones = N/sps staff-spaces, so the same N
+%% yields different staff-space heights on different staff designs
+#(set! cnb:clef-size-semitones 6)
+#(set! cnb:semitones-per-staff-space 1)
+#(cnb:assert-equal "6 semitones at sps-1 = 6 staff-spaces"
+   (cnb:clef-target-height 1) 6)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "6 semitones at sps-2 = 3 staff-spaces"
+   (cnb:clef-target-height 1) 3)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "6 semitones at sps-3 = 2 staff-spaces"
+   (cnb:clef-target-height 1) 2)
+
+%% On the Kite sps-3 staff, 9 semitones reproduces the legacy height
+#(set! cnb:clef-size-semitones 9)
+#(cnb:assert-equal "9 semitones at sps-3 = legacy 3 staff-spaces"
+   (cnb:clef-target-height 1) 3)
+
+%% Fractional staff-space results and magnification interaction
+#(set! cnb:clef-size-semitones 3)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "3 semitones at sps-2 = 3/2 staff-spaces"
+   (cnb:clef-target-height 1) 3/2)
+#(cnb:assert-equal "explicit size scales with font magnification"
+   (cnb:clef-target-height 2) 3)
+
+%% Restore config state
+#(set! cnb:clef-size-semitones cnb:saved-clef-size)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
 
 
 %% =========================================================================

@@ -226,6 +226,9 @@ Before the procedure, the config file registers named definitions that the proce
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
 | `cnb:off-key-indicator` | `'none` | Off-key flag mode |
+| `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), or `'none` (no clef stencil) |
+| `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |
+| `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces, whatever that spans on the current staff) |
 | `cnb:use-accessible-colors` | `#f` | Use a config's colorblind-safe alternative palette (see below) |
 | `cnb:indent` | `0` | First system left indent (staff-spaces) |
 | `cnb:file-suffix` | `"-Oval-2-024-Notation"` | Appended to output filenames |
@@ -254,7 +257,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ```
 ├── ChromaticNotationBase.ly          Main engine entry point
 ├── Kite-4-369-Notation-Procedure.ly  Reference config (Kite notation, procedure model)
-├── test-unit.ly                      Unit test suite (179 assertions)
+├── test-unit.ly                      Unit test suite (209 assertions)
 ├── README.md                         This file
 │
 ├── cnb/                              Engine modules (17 files, loaded in dependency order)
@@ -310,7 +313,7 @@ off-key.ly → layout.ly
 lilypond test-unit.ly
 ```
 
-179 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, and config caching.
+209 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, and clef style/size settings.
 
 ### Integration Tests
 

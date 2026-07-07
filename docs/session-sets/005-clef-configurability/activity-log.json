@@ -1,0 +1,49 @@
+{
+  "sessionSetName": "005-clef-configurability",
+  "createdDate": "2026-07-07T08:20:40.636225+00:00",
+  "totalSessions": 0,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-07T08:20:40.656926+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/preflight-verified",
+      "dateTime": "2026-07-07T04:24:50.380412-04:00",
+      "description": "Pre-flight: all six backlog engine facts re-verified against cnb/clefs.ly, cnb/layout.ly, cnb/config.ly with zero drift (engraver replaces every Clef grob via middleCPosition+ottava, clefs.ly:151-162; unconditional Staff install, layout.ly:46; zero clef settings in config.ly; no path hook; size hard-coded (* 3 mag)/height at clefs.ly:124; cache keyed (middleCPosition . ottava) at clefs.ly:108). Configurator 009 s1 record does not request a standard-glyph escape hatch (its clef kinds are glyph/text only). Noted: test-unit.ly does not currently include cnb/clefs.ly - will be added for the new assertions.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 2,
+      "stepKey": "session-001/clef-style-and-text",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Added cnb:clef-style (dozenal default / text / none; unknown values warn and fall back to dozenal) and cnb:clef-text (string renders bold, markup as-is, zero-height guard) to cnb/config.ly; cnb/clefs.ly restructured into cnb:build-dozenal-clef-stencil + cnb:build-text-clef-stencil with a none branch in the engraver setting stencil #f. standard escape hatch deliberately omitted (not requested by Configurator 009 record).",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 3,
+      "stepKey": "session-001/clef-size-semitones",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Added cnb:clef-size-semitones (default #f = legacy 3 staff-spaces; number N = N semitones tall regardless of cnb:semitones-per-staff-space) via pure helper cnb:clef-target-height. Cache key reworked from (middleCPosition . ottava) to (style, mcp, ottava, text[text-style only], size, sps, mag) - also fixes latent font-size staleness.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 4,
+      "stepKey": "session-001/tests-green",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Unit suite 209/209 (was 179; +30 clef assertions, cnb/clefs.ly now included in test-unit.ly). Integration suite 239/239 (332 expressions, 8 specs) incl. new clef-none, clef-text-size, clef-size-dozenal specs and both golden joy-to-the-world specs; regenerated golden SVGs/harvests byte-identical (zero drift with defaults). README Engine Settings table updated.",
+      "status": "complete"
+    }
+  ]
+}

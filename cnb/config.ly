@@ -102,6 +102,44 @@
 
 
 %% ---------------------------------------------------------------------------
+%%  CLEF DISPLAY SETTINGS
+%%  Control what the clef engraver renders in the clef slot.
+%% ---------------------------------------------------------------------------
+
+%% What to render in the clef slot. A symbol:
+%%   'dozenal — the computed two-digit dozenal register numeral
+%%              (default — today's behavior).
+%%   'text    — render cnb:clef-text instead of the computed numeral
+%%              (a configured register label, e.g. an octave numeral
+%%              or letter — "glyph-free clef").
+%%   'none    — suppress the clef entirely (no stencil is engraved).
+%%
+%% Any other value warns and falls back to 'dozenal.
+#(define cnb:clef-style 'dozenal)
+
+%% The label rendered when cnb:clef-style is 'text.
+%% A string (rendered bold, matching the dozenal numeral's weight) or
+%% a markup (used as-is, for full control over styling).
+%% Ignored unless cnb:clef-style is 'text.
+#(define cnb:clef-text "")
+
+%% Height of the clef display, in SEMITONES (the Configurator's
+%% canonical unit), so the clef reads consistently across staff designs
+%% with different cnb:semitones-per-staff-space values.
+%%
+%%   #f       — legacy default: 3 staff-spaces tall, whatever number of
+%%              semitones that spans on the current staff (this is
+%%              (* 3 cnb:semitones-per-staff-space) semitones, so the
+%%              default cannot be a fixed semitone count without
+%%              changing behavior on non-default staves).
+%%   number N — the display renders N semitones tall regardless of
+%%              cnb:semitones-per-staff-space.
+%%
+%% Applies to both 'dozenal and 'text styles.
+#(define cnb:clef-size-semitones #f)
+
+
+%% ---------------------------------------------------------------------------
 %%  NOTEHEAD PATH DATA
 %%  These define the geometric shapes used to draw noteheads.
 %%  Paths are lists of SVG-like drawing commands.
