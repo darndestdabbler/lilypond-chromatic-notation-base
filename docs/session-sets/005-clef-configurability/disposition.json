@@ -1,25 +1,16 @@
 {
   "status": "completed",
-  "summary": "Session 1 of 3: clef display modes, text mode, and semitone-denominated size (backlog items 1.1, 1.3, 1.4). Pre-flight re-verified all six backlog engine facts with zero drift; the 'standard escape hatch was checked against the Configurator 009 s1 record, found not requested, and deliberately omitted (valueset kept to dozenal/text/none - recorded for the Session 3 handoff). New settings in cnb/config.ly, all defaulting to today's behavior: cnb:clef-style (dozenal default; text renders cnb:clef-text - string renders bold, markup as-is, zero-height guard; none engraves no stencil so a clef-disabled Configurator config matches its preview; unknown values warn and fall back to dozenal), cnb:clef-text (default empty string), cnb:clef-size-semitones (default #f = legacy 3 staff-spaces; number N = N semitones tall regardless of cnb:semitones-per-staff-space, via pure helper cnb:clef-target-height). Stencil construction split into dozenal/text builders; the clef stencil cache key grew from (middleCPosition . ottava) to (style, mcp, ottava, text [text-style only], size, sps, mag), also fixing a latent font-size staleness. Tests: test-unit.ly now includes cnb/clefs.ly (+30 assertions: register mapping, defaults, style resolution, size math at sps-1/2/3), unit suite 209/209; three new integration specs (clef-none absence, clef-text-size presence/position with an observability caveat - single-text stencils harvest as 0x0 anchor bboxes, so size flow is asserted via the dozenal display's size-proportional bbox width in clef-size-dozenal: 8 semitones = 4/3 of legacy = width 1.102 -> 1.469); integration suite 239/239 (332 expressions, 8 specs) with the re-rendered golden SVGs/harvests byte-identical to what is checked in (zero baseline drift with defaults). README Engine Settings table gained the three rows; unit count refreshed. Deliverable commit 2b04361.",
+  "summary": "Session 2 of 3: custom-clef registration hook implementing the Configurator set-009 anchor contract (backlog item 1.2). New cnb:register-clef! (name def) in cnb/clefs.ly mirrors cnb:register-path! - a deliberate two-argument deviation from the backlog's proposed single-list '(name path-data) shape, recorded for the Session 3 handoff. def is an alist: required path (same nested command format as cnb:notehead-shape-path) and anchor-semitones (a FLOAT per the 009 contract - the semitone position of the glyph's TOP edge), optional height-semitones (design height) and color. Definitions live in a new cnb:clef-defs hash table in clefs.ly (not procedure.ly - recorded decision); structurally invalid defs (including the bare-list shape) warn and are not registered. Selection: cnb:clef-style 'custom + new cnb:clef-name setting (default #f); cnb:clef-effective-style degrades a missing/invalid registration to 'dozenal with a warning so a broken config renders today's display, never an empty slot or a crash. Anchor semantics: anchor-semitones is in the notehead engraver's own pitch coordinate (ly:pitch-semitones, middle C = 0); placement reuses the notehead position formula verbatim via pure helper cnb:clef-anchor-y-offset - Y-offset = (anchor + 2*middleCPosition)/cnb:semitones-per-staff-space * staff-space - so the top edge divides through sps correctly on any staff design; middleCPosition is used as-is (includes ottava, exactly like noteheads - recorded for the handoff). The stencil is built with its top edge at y=0 (uniform scale, aspect preserved). Size precedence (recorded decision): explicit cnb:clef-size-semitones > def height-semitones > native path scale (1 path unit = 1 staff-space). New cnb:clef-gutter-semitones (default #f = legacy spacing; number N widens the built stencil's right X-extent by N/sps * mag staff-spaces of blank space, all rendered styles). Cache handling per spec step 3: the S1 cache key grew the custom clef name ('custom only) and gutter fields, and cnb:register-clef! clears the whole stencil cache since re-registration mutates what a cached 'custom key renders. Tests: unit suite 254/254 (was 209; +45 assertions incl. the pinned 'FLOAT anchor-semitones is accepted' test mirroring the Configurator's, four invalid-def rejections, effective-style fallback, anchor math at sps-1/2/3 with fractional anchors, size precedence, gutter math, and real stencil geometry via make-path-stencil). New integration spec tests/clef-custom.json: a registered 1x2 rectangle clef at anchor 16/height 8/gutter 4 on the default sps-2 treble staff harvests its bbox top edge on the TOP staff line (8.045 vs 8.05) and bottom edge on the BOTTOM line, exact 4-staff-space height, uniform width 2.0, and the gutter-shifted first-notehead x (14.762 vs 13.262 measured no-gutter counterfactual). Integration suite 245/245 (343 assertions, 9 specs) incl. both golden joy-to-the-world specs; zero golden-baseline drift with defaults. README: cnb:register-clef! row + def-format note in the Registration API section, two new Engine Settings rows, style/size rows updated, assertion counts refreshed. Deliverable commit 4e3dd2f.",
   "files_changed": [
     "cnb/config.ly",
     "cnb/clefs.ly",
     "test-unit.ly",
     "test-unit.pdf",
     "README.md",
-    "tests/clef-none.ly",
-    "tests/clef-none.json",
-    "tests/clef-none.svg",
-    "tests/clef-none.harvested.json",
-    "tests/clef-text-size.ly",
-    "tests/clef-text-size.json",
-    "tests/clef-text-size.svg",
-    "tests/clef-text-size.harvested.json",
-    "tests/clef-size-dozenal.ly",
-    "tests/clef-size-dozenal.json",
-    "tests/clef-size-dozenal.svg",
-    "tests/clef-size-dozenal.harvested.json",
-    "docs/session-sets/005-clef-configurability/spec.md",
+    "tests/clef-custom.ly",
+    "tests/clef-custom.json",
+    "tests/clef-custom.svg",
+    "tests/clef-custom.harvested.json",
     "docs/session-sets/005-clef-configurability/change-log.md",
     "docs/session-sets/005-clef-configurability/activity-log.json",
     "docs/session-sets/005-clef-configurability/session-state.json",
@@ -34,7 +25,7 @@
     "effort": "medium",
     "reason": {
       "code": "continue-current-trajectory",
-      "specifics": "Session 1 landed clean with zero baseline drift and the style/text/size contract now pinned by tests. Session 2 (custom-clef registration hook + anchorSemi contract) builds directly on the cache-key and stencil-builder structure introduced this session; same lightweight-tier orchestrator continues with full context."
+      "specifics": "Session 2 landed the full engine-side clef contract (style/text/size from S1 + registration/anchor/gutter from S2) with zero baseline drift and every decision point recorded in the change log. Session 3 is the Configurator handoff record - pure documentation cross-checked against d:/Projects/chromatic-notation-configurator's set-009 records, best authored by the same orchestrator that made the S1/S2 contract decisions."
     }
   },
   "blockers": []
