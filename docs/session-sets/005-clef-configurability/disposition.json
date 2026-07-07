@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "summary": "Session 1 of 3: clef display modes, text mode, and semitone-denominated size (backlog items 1.1, 1.3, 1.4). Pre-flight re-verified all six backlog engine facts with zero drift; the 'standard escape hatch was checked against the Configurator 009 s1 record, found not requested, and deliberately omitted (valueset kept to dozenal/text/none - recorded for the Session 3 handoff). New settings in cnb/config.ly, all defaulting to today's behavior: cnb:clef-style (dozenal default; text renders cnb:clef-text - string renders bold, markup as-is, zero-height guard; none engraves no stencil so a clef-disabled Configurator config matches its preview; unknown values warn and fall back to dozenal), cnb:clef-text (default empty string), cnb:clef-size-semitones (default #f = legacy 3 staff-spaces; number N = N semitones tall regardless of cnb:semitones-per-staff-space, via pure helper cnb:clef-target-height). Stencil construction split into dozenal/text builders; the clef stencil cache key grew from (middleCPosition . ottava) to (style, mcp, ottava, text [text-style only], size, sps, mag), also fixing a latent font-size staleness. Tests: test-unit.ly now includes cnb/clefs.ly (+30 assertions: register mapping, defaults, style resolution, size math at sps-1/2/3), unit suite 209/209; three new integration specs (clef-none absence, clef-text-size presence/position with an observability caveat - single-text stencils harvest as 0x0 anchor bboxes, so size flow is asserted via the dozenal display's size-proportional bbox width in clef-size-dozenal: 8 semitones = 4/3 of legacy = width 1.102 -> 1.469); integration suite 239/239 (332 expressions, 8 specs) with the re-rendered golden SVGs/harvests byte-identical to what is checked in (zero baseline drift with defaults). README Engine Settings table gained the three rows; unit count refreshed. Deliverable commit 2b04361.",
+  "files_changed": [
+    "cnb/config.ly",
+    "cnb/clefs.ly",
+    "test-unit.ly",
+    "test-unit.pdf",
+    "README.md",
+    "tests/clef-none.ly",
+    "tests/clef-none.json",
+    "tests/clef-none.svg",
+    "tests/clef-none.harvested.json",
+    "tests/clef-text-size.ly",
+    "tests/clef-text-size.json",
+    "tests/clef-text-size.svg",
+    "tests/clef-text-size.harvested.json",
+    "tests/clef-size-dozenal.ly",
+    "tests/clef-size-dozenal.json",
+    "tests/clef-size-dozenal.svg",
+    "tests/clef-size-dozenal.harvested.json",
+    "docs/session-sets/005-clef-configurability/spec.md",
+    "docs/session-sets/005-clef-configurability/change-log.md",
+    "docs/session-sets/005-clef-configurability/activity-log.json",
+    "docs/session-sets/005-clef-configurability/session-state.json",
+    "docs/session-sets/005-clef-configurability/session-events.jsonl"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": {
+    "engine": "claude-code",
+    "provider": "anthropic",
+    "model": "claude-fable-5",
+    "effort": "medium",
+    "reason": {
+      "code": "continue-current-trajectory",
+      "specifics": "Session 1 landed clean with zero baseline drift and the style/text/size contract now pinned by tests. Session 2 (custom-clef registration hook + anchorSemi contract) builds directly on the cache-key and stencil-builder structure introduced this session; same lightweight-tier orchestrator continues with full context."
+    }
+  },
+  "blockers": []
+}
