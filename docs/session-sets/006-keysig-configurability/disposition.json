@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "summary": "Session 1 of 2 for set 006 (key-signature configurability, engine side). Landed backlog §2 items 2.1 (enable/style switch), 2.2 (separator-bar styling), and 2.4 (tonic-octave anchor); item 2.3 was already cancelled in the spec. Pre-flight re-verified all engine facts against the working tree with zero drift (notehead-chord engraver + gold bar in cnb/keysig.ly, unconditional Staff install in cnb/layout.ly:49, zero prior keysig settings in cnb/config.ly, hard-coded cnb:gold + thickness 4, ±1-octave bar extent, middle-C-derived tonic octave, keySignature-only cache) and confirmed the Configurator set-010 D10 note that the bar draws through the horizontal MIDDLE of the two columns, not the right edge (the code comment is misleading; code is authoritative). Per spec step 2, checked the Configurator's set-010 s2 records (D11/D12): it ships the notehead chord as its SOLE style and defers custom signatures, so there is NO consumer for a 'standard LilyPond-native escape hatch — it was NOT added; cnb:keysig-style stays a symbol ('chord/'none) so the valueset can grow. New engine contract, all defaulting to today's behavior: cnb:keysig-style (default 'chord; 'none sets stencil #f in the engraver, mirroring the clef 'none, so keys.keySignature.enabled: false is honored); cnb:keysig-bar-color (default cnb:gold); cnb:keysig-bar-thickness (default 4, #:draw-line units); cnb:keysig-bar-extent-semis (default 12 = ±1 octave on any staff via new helper cnb:keysig-bar-half-extent = extent-semis / semitones-per-staff-space); cnb:keysig-tonic-octave (default #f = derive from middleCPosition; integer anchors the tonic notehead at that ly:make-pitch octave). cnb:keysig-pitches gained a fourth tonic-octave-override parameter. The stencil cache key was expanded from the bare keySignature to a composite covering every stencil input (keySignature, middleCPosition, font mag, cnb:semitones-per-staff-space, and all four new settings), closing the documented stale-stencil leak. cnb/layout.ly needed no change (suppression lives in the engraver). test-unit.ly now includes cnb/keysig.ly (previously untested) for +33 assertions on the pure helpers. Verification (lightweight tier, out-of-band-or-none, no metered calls): full suites re-run green — unit 287/287, integration 250/250 (353 assertions, 11 specs, +2 new: keysig-none proving 'none removes the key-signature element while noteheads render; keysig-bar-style proving an overridden blue color and extent-24 bbox reach the rendered stencil). Every pre-existing golden SVG/harvest is byte-identical (git status shows zero modified goldens), so the baseline is byte-stable with default settings. README updated with five config-table rows. Deliverable commit 60cce87.",
+  "files_changed": [
+    "cnb/config.ly",
+    "cnb/keysig.ly",
+    "test-unit.ly",
+    "test-unit.pdf",
+    "README.md",
+    "tests/keysig-none.ly",
+    "tests/keysig-none.json",
+    "tests/keysig-none.svg",
+    "tests/keysig-none.harvested.json",
+    "tests/keysig-bar-style.ly",
+    "tests/keysig-bar-style.json",
+    "tests/keysig-bar-style.svg",
+    "tests/keysig-bar-style.harvested.json",
+    "docs/session-sets/006-keysig-configurability/change-log.md",
+    "docs/session-sets/006-keysig-configurability/disposition.json",
+    "docs/session-sets/006-keysig-configurability/session-state.json",
+    "docs/session-sets/006-keysig-configurability/session-events.jsonl",
+    "docs/session-sets/006-keysig-configurability/activity-log.json"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": {
+    "engine": "claude-code",
+    "provider": "anthropic",
+    "model": "claude-fable-5",
+    "effort": "medium",
+    "reason": {
+      "code": "continue-current-trajectory",
+      "specifics": "Session 2 is the Configurator handoff record — pure documentation enumerating the exact engine contract this session landed (every new cnb:keysig setting with name/type/default/units/semantics/file references) and mapping engine units to the Configurator's separator.thicknessPct / extentSemis / placement.tonicOctave fields, cross-checked against d:/Projects/chromatic-notation-configurator's set-010 records. Best authored by the same orchestrator that made the S1 contract decisions (the thicknessPct unit conversion and the 'standard-hatch omission were deferred to the handoff here) so nothing is re-derived. No metered calls; same lightweight flow.",
+      "specifics_addendum": "Session 2 also marks backlog items 2.1/2.2/2.4 resolved (2.3 already cancelled) and creates configurator-handoff.md; per the cross-repo rule of engagement it must NOT bump docs/CNB-LY-EXPORT-SPEC-v1_2.md (the addendum is synced Configurator-side later)."
+    }
+  },
+  "blockers": []
+}
