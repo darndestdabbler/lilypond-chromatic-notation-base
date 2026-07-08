@@ -163,6 +163,66 @@
 
 
 %% ---------------------------------------------------------------------------
+%%  KEY SIGNATURE DISPLAY SETTINGS
+%%  Control the notehead-chord key signature (cnb/keysig.ly): whether it
+%%  renders at all, the separator bar's appearance, and where its octave
+%%  is anchored. Every setting defaults to today's behavior — with no
+%%  overrides the golden baseline renders with zero drift.
+%% ---------------------------------------------------------------------------
+
+%% What to render for the key signature. A symbol:
+%%   'chord — the notehead-chord display (default — today's behavior:
+%%            two interleaved columns of real noteheads plus the
+%%            separator bar).
+%%   'none  — suppress the key signature entirely (no stencil is
+%%            engraved), so a Configurator config with
+%%            keys.keySignature.enabled: false becomes emittable.
+%%
+%% Kept a SYMBOL (not a boolean) so the valueset can grow as new styles
+%% are implemented. Any other value warns and falls back to 'chord.
+%%
+%% NOTE: there is deliberately no 'standard (LilyPond-native sharps/flats)
+%% value — the Configurator's set-010 ships the notehead chord as its sole
+%% key-signature style (D11) and defers richer custom signatures (D12), so
+%% no consumer exists for a native escape hatch. Add one here only when a
+%% consumer does.
+#(define cnb:keysig-style 'chord)
+
+%% Color of the vertical separator bar drawn through the middle of the two
+%% notehead columns. A color value (as produced by colors.ly). Default is
+%% cnb:gold (#ffd42a), today's hard-coded bar color.
+%% Maps to the Configurator's keySignature.separator.color.
+#(define cnb:keysig-bar-color cnb:gold)
+
+%% Thickness of the separator bar, in LilyPond #:draw-line thickness units
+%% (multiples of the output's line-thickness; the bar is then scaled by the
+%% font magnification like the rest of the display). Default 4 is today's
+%% hard-coded value (≈ 0.4 staff-space before magnification).
+%% Maps to the Configurator's keySignature.separator.thicknessPct — see the
+%% Session-2 handoff record for the exact unit conversion.
+#(define cnb:keysig-bar-thickness 4)
+
+%% Vertical half-extent of the separator bar, in SEMITONES: the bar spans
+%% from -N to +N semitones around the staff center. Default 12 (= ±1
+%% octave) reproduces today's ±(cnb:spaces-per-octave) geometry on ANY
+%% staff, because the extent is divided through cnb:semitones-per-staff-space
+%% exactly like note positions are.
+%% Maps to the Configurator's keySignature.separator.extentSemis.
+#(define cnb:keysig-bar-extent-semis 12)
+
+%% Anchor for the key signature's tonic octave.
+%%   #f       — derive the octave from middleCPosition (default — today's
+%%              behavior in cnb:keysig-pitches: middle-C anchoring).
+%%   integer  — anchor the tonic notehead at this LilyPond octave (the
+%%              ly:make-pitch octave value, where 0 is the octave starting
+%%              at middle C), regardless of middleCPosition. Lets the
+%%              Configurator emit keySignature.placement.tonicOctave and
+%%              close the documented preview/engine placement divergence
+%%              for non-C tonics (see cnb/keysig.ly).
+#(define cnb:keysig-tonic-octave #f)
+
+
+%% ---------------------------------------------------------------------------
 %%  NOTEHEAD PATH DATA
 %%  These define the geometric shapes used to draw noteheads.
 %%  Paths are lists of SVG-like drawing commands.

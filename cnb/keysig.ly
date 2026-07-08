@@ -48,6 +48,29 @@
 
 
 %% ---------------------------------------------------------------------------
+%%  KEY SIGNATURE SETTING RESOLVERS (pure helpers)
+%% ---------------------------------------------------------------------------
+
+%% Validate cnb:keysig-style. Unrecognized values warn and fall back to
+%% 'chord so a typo degrades to today's display instead of erroring.
+#(define (cnb:keysig-resolved-style)
+   (if (memq cnb:keysig-style '(chord none))
+       cnb:keysig-style
+       (begin
+         (ly:warning
+           "cnb:keysig-style ~a not recognized (expected chord or none); using chord"
+           cnb:keysig-style)
+         'chord)))
+
+%% Vertical half-extent of the separator bar, in staff-spaces, from
+%% cnb:keysig-bar-extent-semis. Divides through cnb:semitones-per-staff-space
+%% exactly like note positions, so the default 12 semitones reproduces
+%% (cnb:spaces-per-octave) — today's ±1-octave geometry — on any staff.
+#(define (cnb:keysig-bar-half-extent)
+   (/ cnb:keysig-bar-extent-semis cnb:semitones-per-staff-space))
+
+
+%% ---------------------------------------------------------------------------
 %%  CALCULATE KEY SIGNATURE PITCHES
 %%
 %%  Given the alteration list (sharps/flats) and the tonic pitch,
@@ -58,13 +81,21 @@
 %%                          list of (scale-degree . alteration) pairs
 %%    tonic-pitch        — the tonic as a LilyPond pitch object
 %%    middle-c-position  — clef-dependent offset for positioning
+%%    tonic-octave-override — #f to derive the octave from middle-c-position
+%%                          (today's behavior), or an integer to anchor the
+%%                          tonic notehead at that LilyPond ly:make-pitch
+%%                          octave (0 = the octave starting at middle C).
+%%                          This is cnb:keysig-tonic-octave; an explicit
+%%                          value closes the preview/engine placement
+%%                          divergence for non-C tonics.
 %%
 %%  RETURNS:
 %%    A list of 8 LilyPond pitch objects representing the key signature
 %%    noteheads, starting from near middle C.
 %% ---------------------------------------------------------------------------
 
-#(define (cnb:keysig-pitches alteration-alist tonic-pitch middle-c-position)
+#(define (cnb:keysig-pitches alteration-alist tonic-pitch middle-c-position
+                             tonic-octave-override)
    (let* (
            (semi                (ly:pitch-semitones tonic-pitch))
            (tonic-steps         (floor (ly:pitch-steps tonic-pitch)))
@@ -72,7 +103,9 @@
            (tonic-alteration    (ly:pitch-alteration tonic-pitch))
            (tonic-tones-asc     (+ tonic-steps 7))
            (octaves-above-mid-c (floor (/ (* -1 middle-c-position) 6)))
-           (current-octave      (+ tonic-octave octaves-above-mid-c)))
+           (current-octave      (if (integer? tonic-octave-override)
+                                    tonic-octave-override
+                                    (+ tonic-octave octaves-above-mid-c))))
       (map (lambda (t)
              (let* (
                      (tonic-idx-tmp    (+ t tonic-tones-asc))
@@ -171,8 +204,8 @@
            (base-x-offset         (* mag 1))
            (cumulative-stencil    #f)
            (bar-stencil           #f)
-           (bar-y-max             (cnb:spaces-per-octave))
-           (bar-y-min             (* -1 (cnb:spaces-per-octave)))
+           (bar-y-max             (cnb:keysig-bar-half-extent))
+           (bar-y-min             (* -1 (cnb:keysig-bar-half-extent)))
            (custom-ledger-cnt     (cnb:custom-ledger-count))
            (x-offset              #f)
            (max-notehead-width    0)
@@ -228,8 +261,8 @@
               (ly:stencil-scale
                 (grob-interpret-markup grob
                   (markup
-                    #:with-color cnb:gold
-                    #:override `((thickness . 4))
+                    #:with-color cnb:keysig-bar-color
+                    #:override `((thickness . ,cnb:keysig-bar-thickness))
                     #:translate `(0 . ,bar-y-min)
                     #:draw-line `(0 . ,(* 2 bar-y-max))))
                 mag mag)
@@ -243,39 +276,64 @@
 %% ---------------------------------------------------------------------------
 %%  KEY SIGNATURE CACHE AND ENGRAVER
 %%
-%%  BUG FIX: Cache now uses assoc-ref (equal? comparison) instead of
-%%  assq-ref (eq? comparison) for the keySignature key, since
-%%  keySignature is a list that needs structural comparison.
+%%  The cache uses assoc-ref (equal? comparison) instead of assq-ref
+%%  (eq? comparison) because the key is a list that needs structural
+%%  comparison.
+%%
+%%  CACHE KEY: covers EVERY input the stencil depends on — the score's
+%%  keySignature, the two positioning inputs the engraver reads per grob
+%%  (middleCPosition and font magnification), the staff geometry
+%%  (cnb:semitones-per-staff-space), and all of the key-signature display
+%%  settings (tonic-octave anchor, and the three separator-bar settings).
+%%  Before set 006 the key was ONLY keySignature, which would leak a stale
+%%  stencil the moment any of those changed (e.g. a different setting, or
+%%  the same key on a second staff with a different clef). 'none never
+%%  reaches here — the engraver suppresses that case before caching.
 %% ---------------------------------------------------------------------------
 
 #(define cnb:key-signature-stencil-cache '())
 
 #(define (cnb:get-key-signature-stencil grob context)
    (let* (
-           (keySignature   (ly:context-property context 'keySignature))
-           (cached         (assoc-ref cnb:key-signature-stencil-cache keySignature)))
+           (keySignature    (ly:context-property context 'keySignature))
+           (mag             (magstep (ly:grob-property grob 'font-size 0.0)))
+           (middleCPosition (ly:context-property context 'middleCPosition))
+           (cache-key       (list keySignature
+                                  middleCPosition
+                                  mag
+                                  cnb:semitones-per-staff-space
+                                  cnb:keysig-tonic-octave
+                                  cnb:keysig-bar-color
+                                  cnb:keysig-bar-thickness
+                                  cnb:keysig-bar-extent-semis))
+           (cached          (assoc-ref cnb:key-signature-stencil-cache cache-key)))
 
       (if cached
           cached
           (let* (
                   (alteration-alist (ly:grob-property grob 'alteration-alist))
                   (tonic-pitch      (ly:context-property context 'tonic))
-                  (mag              (magstep (ly:grob-property grob 'font-size 0.0)))
-                  (middleCPosition  (ly:context-property context 'middleCPosition))
                   (keysig-pitches   (cnb:keysig-pitches alteration-alist
                                                          tonic-pitch
-                                                         middleCPosition))
+                                                         middleCPosition
+                                                         cnb:keysig-tonic-octave))
                   (stencil          (cnb:keysig-markup-list
                                      keysig-pitches middleCPosition mag grob)))
 
             (set! cnb:key-signature-stencil-cache
-                  (assoc-set! cnb:key-signature-stencil-cache keySignature stencil))
+                  (assoc-set! cnb:key-signature-stencil-cache cache-key stencil))
             stencil))))
 
+%% The engraver replaces every KeySignature grob's stencil with the
+%% notehead-chord display, or — when cnb:keysig-style is 'none — suppresses
+%% it entirely (stencil #f, mirroring the clef engraver's 'none), so a
+%% config with keys.keySignature.enabled: false renders no key signature.
 #(define cnb-key-signature-engraver
    (lambda (context)
      (make-engraver
        (acknowledgers
          ((key-signature-interface engraver grob source-engraver)
-           (let* ((stencil (cnb:get-key-signature-stencil grob context)))
-             (ly:grob-set-property! grob 'stencil stencil)))))))
+           (if (eq? (cnb:keysig-resolved-style) 'none)
+               (ly:grob-set-property! grob 'stencil #f)
+               (let* ((stencil (cnb:get-key-signature-stencil grob context)))
+                 (ly:grob-set-property! grob 'stencil stencil))))))))

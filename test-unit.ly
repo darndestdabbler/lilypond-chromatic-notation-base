@@ -35,6 +35,7 @@
 \include "cnb/ledgers.ly"
 \include "cnb/off-key.ly"
 \include "cnb/clefs.ly"
+\include "cnb/keysig.ly"
 
 
 %% =========================================================================
@@ -1480,6 +1481,164 @@
 #(set! cnb:clef-gutter-semitones cnb:saved-gutter)
 #(set! cnb:clef-size-semitones cnb:saved-clef-size)
 #(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
+
+%% =========================================================================
+%%  TEST: cnb/config.ly — Key signature setting defaults (set 006 s1)
+%%
+%%  Backward-compatibility invariant: every new key-signature setting
+%%  defaults to today's behavior, so the golden baseline is byte-stable.
+%% =========================================================================
+
+#(cnb:test-group "config.ly — keysig setting defaults")
+
+#(cnb:assert-true "cnb:keysig-style is defined"
+   (defined? 'cnb:keysig-style))
+#(cnb:assert-equal "cnb:keysig-style defaults to 'chord"
+   cnb:keysig-style 'chord)
+#(cnb:assert-true "cnb:keysig-bar-color is defined"
+   (defined? 'cnb:keysig-bar-color))
+#(cnb:assert-equal "cnb:keysig-bar-color defaults to cnb:gold"
+   cnb:keysig-bar-color cnb:gold)
+#(cnb:assert-true "cnb:keysig-bar-thickness is defined"
+   (defined? 'cnb:keysig-bar-thickness))
+#(cnb:assert-equal "cnb:keysig-bar-thickness defaults to 4 (today's hard-coded value)"
+   cnb:keysig-bar-thickness 4)
+#(cnb:assert-true "cnb:keysig-bar-extent-semis is defined"
+   (defined? 'cnb:keysig-bar-extent-semis))
+#(cnb:assert-equal "cnb:keysig-bar-extent-semis defaults to 12 (±1 octave)"
+   cnb:keysig-bar-extent-semis 12)
+#(cnb:assert-true "cnb:keysig-tonic-octave is defined"
+   (defined? 'cnb:keysig-tonic-octave))
+#(cnb:assert-equal "cnb:keysig-tonic-octave defaults to #f (derive from middleCPosition)"
+   cnb:keysig-tonic-octave #f)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — Style resolution
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-resolved-style")
+
+#(define cnb:saved-keysig-style cnb:keysig-style)
+
+#(cnb:assert-equal "default resolves to 'chord"
+   (cnb:keysig-resolved-style) 'chord)
+#(set! cnb:keysig-style 'none)
+#(cnb:assert-equal "'none resolves to 'none"
+   (cnb:keysig-resolved-style) 'none)
+#(set! cnb:keysig-style 'chord)
+#(cnb:assert-equal "'chord resolves to 'chord"
+   (cnb:keysig-resolved-style) 'chord)
+%% This will produce a warning — that's expected
+#(set! cnb:keysig-style 'bogus-style)
+#(cnb:assert-equal "unrecognized value falls back to 'chord"
+   (cnb:keysig-resolved-style) 'chord)
+#(set! cnb:keysig-style cnb:saved-keysig-style)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — Separator-bar half-extent (semitone-denominated)
+%%
+%%  The bar spans ±cnb:keysig-bar-extent-semis semitones around the staff
+%%  center; the default 12 must reproduce (cnb:spaces-per-octave) — today's
+%%  ±1-octave geometry — on ANY staff, because it divides through
+%%  cnb:semitones-per-staff-space exactly like note positions do.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-bar-half-extent (default = spaces-per-octave)")
+
+#(define cnb:saved-keysig-sps cnb:semitones-per-staff-space)
+#(define cnb:saved-keysig-extent cnb:keysig-bar-extent-semis)
+
+#(set! cnb:keysig-bar-extent-semis 12)
+#(set! cnb:semitones-per-staff-space 1)
+#(cnb:assert-equal "sps-1: default 12 semis = 12 staff-spaces = spaces-per-octave"
+   (cnb:keysig-bar-half-extent) (cnb:spaces-per-octave))
+#(cnb:assert-equal "sps-1: default half-extent is 12"
+   (cnb:keysig-bar-half-extent) 12)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "sps-2: default 12 semis = 6 staff-spaces = spaces-per-octave"
+   (cnb:keysig-bar-half-extent) (cnb:spaces-per-octave))
+#(cnb:assert-equal "sps-2: default half-extent is 6"
+   (cnb:keysig-bar-half-extent) 6)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "sps-3 (Kite): default 12 semis reproduces spaces-per-octave"
+   (cnb:keysig-bar-half-extent) (cnb:spaces-per-octave))
+#(cnb:assert-equal "sps-3: default half-extent is 4"
+   (cnb:keysig-bar-half-extent) 4)
+
+#(cnb:test-group "keysig.ly — cnb:keysig-bar-half-extent (explicit non-default)")
+
+%% A non-default extent detaches from the ±1-octave geometry
+#(set! cnb:keysig-bar-extent-semis 6)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "6 semis at sps-2 = 3 staff-spaces (half the default)"
+   (cnb:keysig-bar-half-extent) 3)
+#(set! cnb:keysig-bar-extent-semis 24)
+#(cnb:assert-equal "24 semis at sps-2 = 12 staff-spaces (±2 octaves)"
+   (cnb:keysig-bar-half-extent) 12)
+
+#(set! cnb:keysig-bar-extent-semis cnb:saved-keysig-extent)
+#(set! cnb:semitones-per-staff-space cnb:saved-keysig-sps)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — Tonic-octave anchor (item 2.4)
+%%
+%%  cnb:keysig-pitches computes the 8 key-signature noteheads. The first
+%%  pitch is the tonic notehead; its octave is derived from middleCPosition
+%%  (middle-C anchoring, today's behavior) when the override is #f, or set
+%%  explicitly by an integer override. The explicit form is what closes the
+%%  preview/engine placement divergence for non-C tonics.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-pitches tonic octave (derived vs explicit)")
+
+%% C-major-style tonic: C natural at ly:make-pitch octave 0. C-major
+%% alterations are empty.
+#(define cnb:ut-tonic-c (ly:make-pitch 0 0 0))
+%% D tonic (non-C), same octave — exercises the placement divergence.
+#(define cnb:ut-tonic-d (ly:make-pitch 0 1 0))
+
+%% Every call returns exactly 8 pitches (two stacked 7th chords).
+#(cnb:assert-equal "keysig-pitches returns 8 noteheads"
+   (length (cnb:keysig-pitches '() cnb:ut-tonic-c 0 #f)) 8)
+
+%% Derived (#f): the tonic notehead octave tracks middleCPosition.
+%% octaves-above-mid-c = floor(-mcp/6), added to the tonic's own octave.
+#(cnb:assert-equal "C tonic, derived, mcp 0 → tonic notehead octave 0"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-c 0 #f))) 0)
+#(cnb:assert-equal "C tonic, derived, mcp -6 → tonic notehead octave 1 (mcp shifts it)"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-c -6 #f))) 1)
+
+%% Explicit integer override: the tonic notehead octave is anchored, and
+%% middleCPosition no longer affects it.
+#(cnb:assert-equal "C tonic, explicit 2, mcp 0 → tonic notehead octave 2"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-c 0 2))) 2)
+#(cnb:assert-equal "C tonic, explicit 2, mcp -6 → octave 2 (override ignores mcp)"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-c -6 2))) 2)
+
+%% The override shifts absolute pitch by whole octaves only: the tonic
+%% notehead's semitone value moves by 12 per octave of override.
+#(cnb:assert-equal "C tonic derived mcp 0 → tonic semitones 0"
+   (ly:pitch-semitones (car (cnb:keysig-pitches '() cnb:ut-tonic-c 0 #f))) 0)
+#(cnb:assert-equal "C tonic explicit 2 → tonic semitones 24 (two octaves up)"
+   (ly:pitch-semitones (car (cnb:keysig-pitches '() cnb:ut-tonic-c 0 2))) 24)
+
+%% Non-C tonic: the placement divergence. Derived anchoring puts the D
+%% tonic where middle-C anchoring lands it; an explicit octave moves it to
+%% exactly where the Configurator's placement.tonicOctave asks.
+#(cnb:assert-equal "D tonic, derived, mcp 0 → tonic notehead octave 0"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 #f))) 0)
+#(cnb:assert-equal "D tonic, explicit 4 → tonic notehead octave 4 (divergence closed)"
+   (ly:pitch-octave (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 4))) 4)
+%% The tonic notehead is still D (step 1) either way — the override moves
+%% only the octave, never the interval structure.
+#(cnb:assert-equal "D tonic notehead stays step 1 (D) under derived anchoring"
+   (ly:pitch-notename (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 #f))) 1)
+#(cnb:assert-equal "D tonic notehead stays step 1 (D) under explicit anchoring"
+   (ly:pitch-notename (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 4))) 1)
 
 
 %% =========================================================================
