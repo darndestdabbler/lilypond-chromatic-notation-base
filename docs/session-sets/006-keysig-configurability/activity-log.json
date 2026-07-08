@@ -1,7 +1,7 @@
 {
   "sessionSetName": "006-keysig-configurability",
   "createdDate": "2026-07-08T06:28:44.685462+00:00",
-  "totalSessions": 0,
+  "totalSessions": 2,
   "entries": [
     {
       "sessionNumber": 1,
@@ -12,6 +12,22 @@
       "status": "complete",
       "kind": "verification_mode",
       "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 1,
+      "stepKey": "session-002/handoff-recorded",
+      "dateTime": "2026-07-08T05:22:38.887170-04:00",
+      "description": "Wrote configurator-handoff.md: every new cnb:keysig-* setting (name/type/default/units/semantics + cnb/config.ly & cnb/keysig.ly file/line refs) mapped to the Configurator keys.keySignature fields. Resolved the two S1-deferred mappings \u2014 thicknessPct unit conversion (thickness = thicknessPct / (10*semitones-per-staff-space)) and the tonicOctave-1 octave-numbering offset \u2014 and flagged separator.enabled as having no direct engine toggle. Cross-checked vs Configurator set-010 records (s1-engine-coordination.md, s2-notes.md D10-D12, cnb/src/cnb-config.js, cnb/src/cnb-key-signature.js).",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 2,
+      "stepKey": "session-002/backlog-updated",
+      "dateTime": "2026-07-08T05:22:38.887170-04:00",
+      "description": "configurator-coordination-backlog.md: \u00a72 RESOLVED header note + new \u00a75 subsection marking items 2.1/2.2/2.4 resolved by set 006 (2.3 stays cancelled). Full suites re-run green (unit 287/287, integration 250/250); golden baseline byte-stable with defaults. Does NOT bump docs/CNB-LY-EXPORT-SPEC-v1_2.md (Configurator-side per the cross-repo rule of engagement).",
+      "status": "complete"
     }
   ]
 }
