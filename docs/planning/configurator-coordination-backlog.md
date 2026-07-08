@@ -16,7 +16,7 @@ session set — run them in `NNN` order per `docs/dabbler/start-here.md`:
 | Backlog items | Session set |
 |---|---|
 | §1.1–1.4 (clefs) | `docs/session-sets/005-clef-configurability/` ✅ resolved (see §5) |
-| §2.1–2.4 (key signatures) | `docs/session-sets/006-keysig-configurability/` |
+| §2.1, 2.2, 2.4 (key signatures; 2.3 cancelled) | `docs/session-sets/006-keysig-configurability/` |
 | §3.1 (vector-model removal) | `docs/session-sets/007-vector-model-removal/` |
 | §4 (toolkit minim anchors) | not this repo — no set (by design) |
 
@@ -83,6 +83,12 @@ today.
 
 ## 2. Key signatures
 
+> **RESOLVED (2026-07-08) by set `006-keysig-configurability`** — the three
+> live items (2.1, 2.2, 2.4) landed engine-side with zero golden-baseline
+> drift; 2.3 was cancelled (see below). See §5 and
+> `docs/session-sets/006-keysig-configurability/configurator-handoff.md` for
+> the exact new engine contract. Kept here for source traceability.
+
 Source: `chromatic-notation-configurator/docs/session-sets/010-custom-key-signatures/s1-engine-coordination.md`
 (2026-07-07). Engine facts recorded there: `cnb-key-signature-engraver`
 (cnb/keysig.ly) already renders notehead-chord key signatures — the
@@ -106,11 +112,29 @@ cnb/keysig.ly. Would let the Configurator emit its
 `keySignature.separator` fields (color, thicknessPct, extentSemis) as
 Section B variables.
 
-### 2.3 Simple-mark ("dot") key-signature mode
-An engine counterpart to the Configurator's preview-only
+### 2.3 Simple-mark ("dot") key-signature mode — ❌ CANCELLED (2026-07-08)
+Was: an engine counterpart to the Configurator's preview-only
 `style: "dot"` (one filled circle per scale degree at the same grid
-positions). Optional — only if the simple-mark style is wanted in
-engraved output.
+positions) — flagged "Optional, only if the simple-mark style is wanted
+in engraved output."
+
+**Cancelled.** The Configurator's set 010 **session 2** UAT settled this:
+the task owner evaluated the dot style (and two other simple-mark
+alternatives) and **rejected all of them**, choosing the notehead-chord
+note stack as the *sole* style. The Configurator's `keySignature.style`
+is now a single-value vocabulary (`"notehead-chords"`) — there is no
+`style: "dot"` to match, so an engine `'dot` mode has no consumer. Source:
+`chromatic-notation-configurator/docs/session-sets/010-custom-key-signatures/s2-uat.md`
++ `s2-notes.md` (decision D11).
+
+Note — NOT the same as the deferred custom-symbol work: the Configurator
+separately **deferred** generalized custom-symbol key signatures
+("Clairnote-style": user-defined SVG symbols + when/where rules) to a
+future Configurator set (`s2-design-consult.md`). If/when that lands it
+will need a *mark-list* rendering hook (the engine resolving explicit
+per-key `{symbol, semitone, column}` marks), NOT a `'dot` style — so this
+cancellation does not pre-empt it. Re-open as a new backlog item when that
+Configurator set is scheduled.
 
 ### 2.4 Anchor-octave control
 The keysig tonic octave is derived from `middleCPosition`
@@ -182,6 +206,39 @@ engagement):** lift the "exports nothing for clefs" pin, add the LY
 export-spec addendum, and add the emit-if-changed exporter lines — see the
 handoff's §5 flags (esp. gutter px→semitone conversion, `lilypondPath`
 command-list format, and the `anchorSemi` middle-C = 0 origin).
+
+### §2 Key signatures — set `006-keysig-configurability` (2026-07-08)
+
+Items **2.1, 2.2, 2.4** landed engine-side with zero golden-baseline drift
+(unit 287/287, integration 250/250); **2.3 is cancelled** (see §2.3 — no
+consumer for a `'dot` style). Full contract (names, types, defaults,
+units, the field mappings, and the Configurator cross-check flags) is in
+`docs/session-sets/006-keysig-configurability/configurator-handoff.md`.
+
+- **2.1 disable/select the key-signature display** — `cnb:keysig-style`
+  (`'chord` default / `'none`); `'none` engraves no stencil, so
+  `keys.keySignature.enabled: false` is finally honored engine-side.
+  Kept a symbol (not a boolean) so the valueset can grow; no `'standard`
+  native escape hatch (no consumer — Configurator 010 D11/D12).
+- **2.2 separator-bar styling** — `cnb:keysig-bar-color` (default
+  `cnb:gold`), `cnb:keysig-bar-thickness` (default `4`, `#:draw-line`
+  units), `cnb:keysig-bar-extent-semis` (default `12` = ±1 octave, in
+  semitones). Maps to the Configurator's `separator.color` /
+  `thicknessPct` / `extentSemis` — color is a direct hex passthrough,
+  `extentSemis` is 1:1, and `thicknessPct` converts as
+  `thickness = thicknessPct / (10 × semitones-per-staff-space)` (`160`→`4`
+  at the default staff).
+- **2.4 anchor-octave control** — `cnb:keysig-tonic-octave` (`#f` = derive
+  from `middleCPosition`, today's behavior; integer = anchor at that
+  `ly:make-pitch` octave). Closes the placement divergence for non-C
+  tonics.
+
+**Configurator follow-ons still owed (their side, per the rule of
+engagement):** lift the "exports nothing for key signatures" pin, add the
+LY export-spec addendum, and add the emit-if-changed exporter lines — see
+the handoff's §3 flags, especially the **`tonicOctave − 1`** octave-
+numbering offset, the `thicknessPct` unit conversion, and
+`separator.enabled: false` having no direct engine toggle.
 
 ---
 

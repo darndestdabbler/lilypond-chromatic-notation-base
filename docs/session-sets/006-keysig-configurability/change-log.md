@@ -128,3 +128,66 @@ each default reproduces today's geometry exactly:
 `tests/keysig-bar-style.{ly,json}` (+ rendered SVG/harvest artifacts).
 `cnb/layout.ly` needed **no** change — the `'none` suppression lives in
 the engraver, as with the clef module.
+
+## Session 2 (2026-07-08) — Configurator handoff record
+
+**Orchestrator:** claude-code / anthropic (lightweight tier, no metered calls)
+
+### Handoff record — `session-002/handoff-recorded`
+
+Wrote `configurator-handoff.md` enumerating the exact new engine contract
+from Session 1 (every `cnb:keysig-*` setting with name/type/default/units/
+semantics and `cnb/config.ly` + `cnb/keysig.ly` file/line references) and
+mapping each to the Configurator's `keys.keySignature` fields. Cross-checked
+against the Configurator's set-010 records
+(`d:/Projects/chromatic-notation-configurator/.../010-custom-key-signatures/`,
+`s1-engine-coordination.md`, `s2-notes.md` D10–D12, and
+`cnb/src/cnb-config.js:171-185` / `cnb/src/cnb-key-signature.js:157-169`).
+
+**Field mappings resolved (the two deferred from S1, plus new flags):**
+
+- **`separator.thicknessPct` → `cnb:keysig-bar-thickness`:** derived
+  `thickness = thicknessPct / (10 × semitones-per-staff-space)`; anchor
+  `160 / 40 = 4` at the default staff is exact/byte-verified, off-anchor
+  scaling rests on the ~0.1-staff-space-per-`#:draw-line`-unit basis
+  (matches set-010's SVG measurement of 0.4 staff-space at `thickness 4`).
+- **`placement.tonicOctave` → `cnb:keysig-tonic-octave`:** flagged an
+  **octave-numbering mismatch** — the Configurator numbers octaves so its
+  `absoluteSemi(pc, oct) = pc + oct·12` puts middle C at octave **1**
+  (grid semitone 12); the engine uses the raw `ly:make-pitch` octave where
+  middle C is octave **0**. The exporter must emit
+  `cnb:keysig-tonic-octave = placement.tonicOctave − 1`. Verified against
+  `test-unit.ly` (C tonic explicit `2` → semitones `24`; derived at `mcp 0`
+  → octave `0`). Residual `middleCPosition` (clef) dependence noted for
+  non-default clefs.
+- **`separator.enabled: false`:** no direct engine bar-only toggle;
+  flagged with the `cnb:keysig-bar-thickness 0` workaround (unverified) as
+  an option for the Configurator side. `gutter.paddingH`, `dot.radiusPct`,
+  and non-`"scale-from-tonic"` `placement.rule` values are preview-only.
+- **`separator.color`:** direct hex passthrough (engine colors are hex
+  strings; `#ffd42a` = `cnb:gold`). **`separator.extentSemis`:** 1:1.
+
+### Backlog updated — `session-002/backlog-updated`
+
+`docs/planning/configurator-coordination-backlog.md`: §2 gained a RESOLVED
+header note; a new §5 subsection records items **2.1, 2.2, 2.4** resolved
+by this set (with the contract summary and the Configurator follow-ons
+still owed). Item **2.3** remains recorded as cancelled (spec revision,
+2026-07-08).
+
+### Verification (lightweight tier, out-of-band-or-none)
+
+Full suites re-run green — **unit 287/287**, **integration 250/250** (353
+assertions, 11 specs). Golden baseline **byte-stable** with default
+settings: `git status` shows zero modified `tests/*.svg` / `*.harvested.json`
+(the regenerated `test-unit.pdf` build artifact was reverted to keep this
+commit scoped to docs).
+
+**Per the cross-repo rule of engagement, this set does NOT bump
+`docs/CNB-LY-EXPORT-SPEC-v1_2.md`** — the export-spec addendum and the
+emit-if-changed exporter lines are authored Configurator-side from this
+handoff.
+
+**Creates:** `configurator-handoff.md`. **Touches:**
+`docs/planning/configurator-coordination-backlog.md`,
+`docs/session-sets/006-keysig-configurability/change-log.md`.
