@@ -1,0 +1,35 @@
+{
+  "status": "completed",
+  "summary": "Session 1 of 2 for set 007 (legacy vector-cycling model removal). Migration + default-flip session: leaves zero in-repo consumers of the vector path and makes the procedure model the default, with the vector engine code still present but unreferenced (removed in Session 2). Pre-flight re-verified the full vector-path inventory and recorded it in change-log.md as Session 2's execution list (config.ly sequence vectors + flag; stencils.ly build-base-stencils / modulus helpers / base-stencil-vector / the if-use-procedure-model branches at 354 & 396; stems.ly stem-attachment-modulus + vector branch; off-key.ly vector arms at 242/249; noteheads.ly branch at 93; layout.ly + procedure.ly doc refs). Changes: (1) cnb/config.ly cnb:use-procedure-model default #f -> #t with a keep-forever comment (Configurator exports set! it per LY export spec 1.2.1 §5.1) — 'default flip only' per the spec Touches, sequence vectors untouched. (2) Retired the vector-model reference config Kite-4-369-Notation-Clean.ly (procedure-model Kite-4-369-Notation-Procedure.ly already exists); fixed the dangling pointer in ChromaticNotationBase.ly and added a README retirement note. (3) Removed the dead 'REMOVE WHEN VECTOR-MODEL IS OBSOLETE' cnb:notehead-color-sequence blocks from joy-to-the-world.ly, tests/joy-to-the-world.ly, tests/example-notes.ly (all already include the procedure config; rendering unchanged). (4) Migrated tests/off-key-coexistence.ly from the vector off-key indicator to the procedure-model off-key-mark, keeping its unique measure-2 beam/slur/tie chained-hook coverage; retired the now-strict-subset tests/off-key-coexistence-procedure.{ly,json}. (5) Re-baselined tests/clef-custom.json's pinned first-notehead x (14.762 -> 15.151): the procedure default renders the default oval full-size where the vector model scaled it 0.75, so absolutes shift ~0.39, but the 4-semitone gutter delta under test stays +1.5 (re-measured no-gutter 13.651 / gutter 15.151). test-unit.ly had zero cycling-vector assertions (Step 3 no-op); its only vector-adjacent assertion (off-key-indicator default, line 506) stays valid and is flagged for Session 2. Bare-default notehead height consequently changed 2.0 -> 2.666 semitones (documented, real configs unaffected); flagged for Session 2: default-oval sizing vs the README's documented 2-semitone default, and the fate of cnb:off-key-indicator. Verification (lightweight tier, out-of-band-or-none, no metered calls): full suites re-run green — unit 287/287, integration 246/246 (349 assertions, 10 specs; -4 assertions / -1 spec = the retired off-key-coexistence-procedure.json, its coverage absorbed by the migrated test). The set-004 round-trip golden (joy-to-the-world-configurator) is byte-stable and passes (spec constraint 2); the bare-default fixture SVG/harvest baselines were intentionally regenerated for the vector->procedure default flip. Deliverable commit bb2b37a.",
+  "files_changed": [
+    "cnb/config.ly",
+    "ChromaticNotationBase.ly",
+    "README.md",
+    "Kite-4-369-Notation-Clean.ly",
+    "joy-to-the-world.ly",
+    "tests/example-notes.ly",
+    "tests/joy-to-the-world.ly",
+    "tests/clef-custom.json",
+    "tests/off-key-coexistence.ly",
+    "tests/off-key-coexistence.json",
+    "tests/off-key-coexistence-procedure.ly",
+    "tests/off-key-coexistence-procedure.json",
+    "docs/session-sets/007-vector-model-removal/change-log.md",
+    "docs/session-sets/007-vector-model-removal/disposition.json",
+    "docs/session-sets/007-vector-model-removal/session-state.json",
+    "docs/session-sets/007-vector-model-removal/session-events.jsonl"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": {
+    "engine": "claude-code",
+    "provider": "anthropic",
+    "model": "claude-fable-5",
+    "effort": "medium",
+    "reason": {
+      "code": "continue-current-trajectory",
+      "specifics": "Session 2 removes the vector code paths against the inventory this session recorded in change-log.md (make the procedure branches in stencils.ly/stems.ly/off-key.ly/noteheads.ly unconditional; delete the sequence vectors + build-base-stencils/base-stencil-vector/modulus helpers; keep cnb:use-procedure-model defined), updates the dual-model docs + project-plan Known Issue #2, re-runs the full suites, re-runs the set-004 round-trip, and marks backlog §3.1 resolved. Best authored by the same orchestrator that produced the removal inventory and flagged the two open questions (default-oval sizing to restore the documented 2-semitone default; whether cnb:off-key-indicator and its test-unit.ly:506 assertion are removed with the vector off-key branch), so nothing is re-derived. Same lightweight, no-metered-calls flow."
+    }
+  },
+  "blockers": []
+}
