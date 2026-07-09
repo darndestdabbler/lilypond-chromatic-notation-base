@@ -28,19 +28,18 @@
 %%    note is outside the key" restores some of that cognitive advantage,
 %%    especially for diatonic music.
 %%
-%%  MODES (set via cnb:off-key-indicator in config):
+%%  MARKS (chosen per note by the configuration procedure):
 %%
-%%    'none       — Default. No flags, no accidentals. Pure chromatic
-%%                  reading. Good for atonal music or experienced
-%%                  chromatic-staff readers.
+%%    The configuration procedure (cnb:get-notehead-config, procedure.ly)
+%%    returns an `off-key-mark` field for each (semitone, duration, key).
+%%    The engraver just executes what the config decided — it holds no
+%%    detection logic of its own ("dumb engraver" philosophy). Recognized
+%%    mark values:
 %%
-%%    'standard   — LilyPond's built-in accidental symbols (♯ ♭ ♮).
-%%                  Traditional symbols, traditional behavior.
-%%                  Preserves enharmonic distinction.
+%%    #f          — No mark. (Pure chromatic reading.)
 %%
 %%    'dot        — Small filled dot above/below the notehead.
-%%                  Minimal, unobtrusive. Binary signal only:
-%%                  in-key or out-of-key. No enharmonic distinction.
+%%                  Minimal, unobtrusive. Binary in-key/out-of-key signal.
 %%
 %%    'ring       — Thin circle drawn around the notehead.
 %%                  More visible than dot, but busier.
@@ -48,31 +47,16 @@
 %%    'tick       — Small tick mark above/below the notehead.
 %%                  Similar to TwinNote's "matchstick" concept.
 %%
-%%    'custom     — User-provided flag via cnb:off-key-flag-stencil.
-%%                  The function receives the NoteHead grob and
+%%    a procedure — A custom generator: receives the NoteHead grob and
 %%                  returns a stencil to combine with the notehead.
-%%
-%%  DUAL MODEL SUPPORT:
-%%
-%%    VECTOR MODEL (cnb:use-procedure-model = #f):
-%%      The engraver detects off-key notes itself using the current
-%%      keyAlterations and cnb:off-key-indicator setting.
-%%
-%%    PROCEDURE MODEL (cnb:use-procedure-model = #t):
-%%      The engraver reads the off-key-mark field from the config cache
-%%      for each note. The configuration procedure has already decided
-%%      whether and how to mark each note — the engraver just executes.
-%%      This is the "dumb engraver" philosophy: no detection logic,
-%%      just follow the config's instructions.
+%%                  (Register named custom marks with
+%%                  cnb:register-off-key-mark!, see procedure.ly.)
 %%
 %%  HOW IT WORKS:
 %%    1. An engraver collects NoteHead grobs during each timestep.
-%%    2. At the end of the timestep:
-%%       - Vector model: reads the current key from LilyPond's
-%%         keyAlterations, converts to pitch classes, checks membership.
-%%       - Procedure model: looks up each note's config cache entry
-%%         and reads the off-key-mark field.
-%%    3. For flagged notes: chains a callback onto after-line-breaking
+%%    2. At the end of the timestep it looks up each note's config cache
+%%       entry and reads the off-key-mark field.
+%%    3. For marked notes: chains a callback onto after-line-breaking
 %%       (via cnb:chain-after-line-breaking!, preserving any callback
 %%       another module installed) that adds the flag stencil to the
 %%       (now-resolved) notehead stencil.
@@ -84,11 +68,9 @@
 %%    stencil object that we can combine with the flag.
 %%
 %%  INTERACTION WITH ACCIDENTAL SUPPRESSION:
-%%    In 'none, 'dot, 'ring, 'tick, and 'custom modes:
-%%      LilyPond's built-in Accidental.stencil is suppressed (= ##f).
-%%    In 'standard mode:
-%%      LilyPond's built-in accidentals are shown normally.
-%%    This is handled in layout.ly.
+%%    LilyPond's built-in Accidental.stencil is always suppressed (= ##f)
+%%    on the chromatic staff — pitch is fully specified by position, so
+%%    native accidentals are never needed. This is handled in layout.ly.
 %%
 %% ============================================================================
 
@@ -152,14 +134,10 @@
 
 
 %% ---------------------------------------------------------------------------
-%%  FLAG APPLICATION CALLBACKS
+%%  FLAG APPLICATION CALLBACK
 %%
-%%  VECTOR MODEL: cnb:apply-off-key-flag
-%%    Set as after-line-breaking on off-key noteheads.
-%%    Reads the flag type from cnb:off-key-indicator.
-%%
-%%  PROCEDURE MODEL: cnb:apply-off-key-mark
-%%    Set as after-line-breaking on notes whose config has off-key-mark.
+%%  cnb:apply-off-key-mark
+%%    Set as after-line-breaking on notes whose config has an off-key-mark.
 %%    Takes the mark type as a parameter (captured in a closure by the
 %%    engraver), so it doesn't depend on a global variable.
 %%
@@ -167,27 +145,6 @@
 %%  so we can safely read it and combine it with the flag.
 %% ---------------------------------------------------------------------------
 
-%% VECTOR MODEL callback
-#(define (cnb:apply-off-key-flag grob)
-   (let* (
-           (stencil (ly:grob-property grob 'stencil))
-           (flag-stencil
-             (cond
-               ((eq? cnb:off-key-indicator 'dot)    (cnb:off-key-dot grob))
-               ((eq? cnb:off-key-indicator 'ring)   (cnb:off-key-ring grob))
-               ((eq? cnb:off-key-indicator 'tick)   (cnb:off-key-tick grob))
-               ((eq? cnb:off-key-indicator 'custom)
-                (if (procedure? cnb:off-key-flag-stencil)
-                    (cnb:off-key-flag-stencil grob)
-                    empty-stencil))
-               (else empty-stencil))))
-     (if (and (ly:stencil? stencil)
-              (ly:stencil? flag-stencil)
-              (not (ly:stencil-empty? flag-stencil)))
-         (ly:grob-set-property! grob 'stencil
-               (ly:stencil-add stencil flag-stencil)))))
-
-%% PROCEDURE MODEL callback
 %% Takes the mark type (a symbol) as a parameter.
 %% Built-in symbols: 'dot, 'ring, 'tick
 %% If the mark is a procedure, it's called as a custom generator.
@@ -212,19 +169,10 @@
 %%  THE OFF-KEY ENGRAVER
 %%
 %%  Runs in the Staff context. Collects noteheads during each timestep,
-%%  then at stop-translation-timestep checks each against the current key.
-%%  Off-key noteheads get tagged with an after-line-breaking callback.
-%%
-%%  VECTOR MODEL:
-%%    The engraver is a no-op when cnb:off-key-indicator is 'none or
-%%    'standard (in 'standard mode, LilyPond's built-in accidentals
-%%    handle everything).
-%%
-%%  PROCEDURE MODEL:
-%%    The engraver always collects noteheads and checks the config cache.
-%%    If the off-key-mark field is not #f, it applies the corresponding
-%%    flag. The engraver has no opinion about WHY the mark is there —
-%%    the configuration procedure decided.
+%%  then at stop-translation-timestep reads each note's off-key-mark from
+%%  the config cache. If the mark is not #f, it chains an after-line-breaking
+%%  callback that draws the flag. The engraver has no opinion about WHY the
+%%  mark is there — the configuration procedure decided.
 %% ---------------------------------------------------------------------------
 
 #(define cnb-off-key-engraver
@@ -234,76 +182,44 @@
 
          (acknowledgers
            ((note-head-interface engraver grob source-engraver)
-            (cond
-              ;; PROCEDURE MODEL: always collect noteheads
-              (cnb:use-procedure-model
-               (set! note-heads (cons grob note-heads)))
-              ;; VECTOR MODEL: only collect in flag modes
-              ((memq cnb:off-key-indicator '(dot ring tick custom))
-               (set! note-heads (cons grob note-heads))))))
+            (set! note-heads (cons grob note-heads))))
 
          ((stop-translation-timestep engraver)
           (if (not (null? note-heads))
               (begin
 
-                (if cnb:use-procedure-model
-
-                    ;; === PROCEDURE MODEL ===
-                    ;; Read off-key-mark from config cache for each note.
-                    ;; The config procedure has already decided what to mark.
-                    (for-each
-                      (lambda (grob)
-                        (let* (
-                                (cause    (ly:grob-property grob 'cause))
-                                (pitch    (if (ly:stream-event? cause)
-                                             (ly:event-property cause 'pitch)
-                                             #f))
-                                (semi     (if pitch
-                                             (modulo (ly:pitch-semitones pitch) 12)
-                                             #f))
-                                (dur-prop (if (and (ly:stream-event? cause) pitch)
-                                             (ly:event-property cause 'duration)
-                                             #f))
-                                (dur-cat  (if dur-prop
-                                             (cnb:duration-category dur-prop)
-                                             3))
-                                (config   (if semi
-                                             (cnb:lookup-config semi dur-cat)
-                                             #f))
-                                (off-key-mark
-                                          (if config
-                                             (assq-ref config 'off-key-mark)
-                                             #f)))
-
-                          ;; If config says to mark this note, apply the flag
-                          (if off-key-mark
-                              (let ((mark off-key-mark))
-                                (cnb:chain-after-line-breaking! grob
-                                  (lambda (g)
-                                    (cnb:apply-off-key-mark g mark)))))))
-                      note-heads)
-
-                    ;; === VECTOR MODEL ===
-                    ;; Detect off-key notes using keyAlterations
+                ;; Read off-key-mark from config cache for each note.
+                ;; The config procedure has already decided what to mark.
+                (for-each
+                  (lambda (grob)
                     (let* (
-                            (key-alts   (ly:context-property context 'keyAlterations '()))
-                            (in-key-pcs (cnb:get-key-pitch-classes key-alts)))
+                            (cause    (ly:grob-property grob 'cause))
+                            (pitch    (if (ly:stream-event? cause)
+                                         (ly:event-property cause 'pitch)
+                                         #f))
+                            (semi     (if pitch
+                                         (modulo (ly:pitch-semitones pitch) 12)
+                                         #f))
+                            (dur-prop (if (and (ly:stream-event? cause) pitch)
+                                         (ly:event-property cause 'duration)
+                                         #f))
+                            (dur-cat  (if dur-prop
+                                         (cnb:duration-category dur-prop)
+                                         3))
+                            (config   (if semi
+                                         (cnb:lookup-config semi dur-cat)
+                                         #f))
+                            (off-key-mark
+                                      (if config
+                                         (assq-ref config 'off-key-mark)
+                                         #f)))
 
-                      (for-each
-                        (lambda (grob)
-                          (let* (
-                                  (cause (ly:grob-property grob 'cause))
-                                  (pitch (if (ly:stream-event? cause)
-                                             (ly:event-property cause 'pitch)
-                                             #f))
-                                  (semi  (if pitch
-                                             (modulo (ly:pitch-semitones pitch) 12)
-                                             #f)))
-
-                            ;; If this pitch class is NOT in the current key, flag it
-                            (if (and semi (not (memv semi in-key-pcs)))
-                                (cnb:chain-after-line-breaking! grob
-                                                                cnb:apply-off-key-flag))))
-                        note-heads)))
+                      ;; If config says to mark this note, apply the flag
+                      (if off-key-mark
+                          (let ((mark off-key-mark))
+                            (cnb:chain-after-line-breaking! grob
+                              (lambda (g)
+                                (cnb:apply-off-key-mark g mark)))))))
+                  note-heads)
 
                 (set! note-heads '()))))))))

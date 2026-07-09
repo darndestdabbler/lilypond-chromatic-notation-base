@@ -76,7 +76,7 @@ These are injected alongside the `id` on each tagged grob:
 
 ### Known Limitations
 
-1. The engraver sets `after-line-breaking` on some grobs. If another module (e.g., `off-key.ly`) also sets it, the last one wins. Test with `off-key-indicator = 'none` or merge callbacks.
+1. Multiple modules may set `after-line-breaking` on the same grob (e.g., `off-key.ly` and `test-ids.ly`). They cooperate via `cnb:chain-after-line-breaking!` (set 002), which preserves any previously-installed callback rather than overwriting it. Off-key marks are driven per note by the config procedure's `off-key-mark` field; a config that returns `#f` for every note installs no off-key callback at all.
 2. `StaffSymbol` is a single grob spanning the system. Individual staff lines don't have separate grobs.
 3. `LedgerLineSpanner` creates one grob for all ledger lines in a column, tagged with the first notehead's info.
 

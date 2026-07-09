@@ -175,3 +175,133 @@ removed with the vector off-key branch. **Assertion count unchanged: 287.**
 default; full suite green; committed. Vector code still present, unreferenced —
 Session 2 removes it and resolves the two flagged open questions
 (default-oval sizing; `cnb:off-key-indicator` fate).
+
+---
+
+## Session 2 (2026-07-09) — Remove the vector code paths and re-verify
+
+**Orchestrator:** claude-code / anthropic (lightweight tier, no metered calls)
+
+**Goal met:** the vector-cycling implementation is gone from every engine
+module; the procedure model is the only model; `cnb:use-procedure-model` is
+kept as a permanent no-op; docs and backlog updated; full suites green and the
+set-004 round-trip re-verified byte-stable. **This is the final session — set
+007 is ready to close.**
+
+---
+
+### Open questions resolved (both flagged by Session 1)
+
+**Q1 — default-oval sizing (`session-002/vector-code-removed`).** Chose to
+**pre-scale the default paths**, not to update the README. `cnb:notehead-shape-path`
+and `cnb:notehead-hollow-path` are now stored at their final rendered size
+(the oval spans ±0.5 in Y = 1.0 staff-space = **2 semitones** at the default
+`cnb:semitones-per-staff-space 2`) — i.e. the former vector-model `0.75` build-
+time scaling is baked into the coordinates. Rationale: the notation's entire
+identity encodes 2 semitones (`cnb:notation-label` "Oval 2-024 Notation",
+`cnb:file-suffix` "-Oval-2-024-Notation", the footnote, the README). Changing
+docs to 2.666 would contradict the name. This is a pure default-data change:
+real configs register their own paths and never use `default-oval`, so the
+golden baseline is unaffected. Consequence: the bare-default fixtures render
+back at 2 semitones (undoing Session 1's temporary 2.666 state), and
+`tests/clef-custom.json`'s absolute first-notehead pin reverts `15.151 → 14.762`
+(no-gutter reference `13.651 → 13.262`); the 4-semitone gutter delta under test
+stays exactly **+1.5** — re-measured, unchanged.
+
+**Q2 — fate of `cnb:off-key-indicator` (`session-002/vector-code-removed`).**
+**Removed** it and `cnb:off-key-flag-stencil` entirely — both are vector-model-
+only scalars (the Configurator emits neither; the export spec drives off-key
+marking through the per-note `off-key-mark` field, and no procedure config uses
+the scalar flag). Accidental suppression in `cnb/layout.ly`, which was the only
+non-vector reader of the flag, is now **unconditional** (`\override
+Accidental.stencil = ##f`) — correct for a chromatic engine where every pitch
+has its own position, and a no-op for the golden (every real config already ran
+at the default `'none` = suppressed). The `test-unit.ly:506` assertion on the
+flag's default was removed with it (**unit count 287 → 286**).
+
+---
+
+### Vector code removed (`session-002/vector-code-removed`)
+
+Executed against Session 1's recorded inventory:
+
+- **`cnb/config.ly`** — deleted the seven cycling sequence vectors
+  (`cnb:notehead-color/-shape/-hollow/-rotation/-scaling/-offset-sequence`,
+  `cnb:stem-attachment-sequence`), `cnb:off-key-indicator`, and
+  `cnb:off-key-flag-stencil`. Pre-scaled `cnb:notehead-shape-path` /
+  `cnb:notehead-hollow-path` (Q1). Rewrote the model-flag comment into a
+  KEEP-FOREVER note; `#(define cnb:use-procedure-model #t)` retained.
+- **`cnb/stencils.ly`** — deleted the six `cnb:notehead-*-modulus` helpers,
+  `cnb:rotate-stencil`, `cnb:build-base-stencils`, `cnb:base-stencil-vector` +
+  `cnb:get-base-stencils`. The two `(if cnb:use-procedure-model …)` branches
+  (`cnb:get-note-stencil`, `cnb:get-keysig-note-stencil`) are now unconditional
+  config-cache reads. `cnb:build-stencil-from-config` (the procedure path) is
+  unchanged.
+- **`cnb/stems.ly`** — deleted `cnb:stem-attachment-modulus` and the vector
+  branch/cache-miss fallback of `cnb:stem-attachment`; the config-cache read is
+  unconditional, with a small centered-side literal as the cache-miss fallback.
+- **`cnb/off-key.ly`** — deleted `cnb:apply-off-key-flag` and the engraver's
+  vector arm (both the `memq cnb:off-key-indicator` acknowledger branch and the
+  `keyAlterations`-based detection `else`). The engraver now always collects
+  noteheads and reads `off-key-mark` from the cache.
+- **`cnb/noteheads.ly`** — `cnb:handle-key-change` is now called
+  unconditionally (was guarded by `cnb:use-procedure-model`).
+- **`cnb/layout.ly`** — accidental suppression unconditional (Q2).
+- **Doc-only header updates:** `cnb/procedure.ly` (dropped the COEXISTENCE
+  note), `cnb/colors.ly` (dropped "legacy vector model" aside), and the
+  DUAL-MODEL header blocks in `stencils.ly`/`stems.ly`/`off-key.ly`/`noteheads.ly`.
+
+Post-removal grep: `cnb:use-procedure-model` / `-sequence` / `off-key-indicator`
+/ `build-base-stencils` appear in engine `cnb/*.ly` only as the kept flag's
+definition and as historical "removed in set 007" comments; the two procedure
+configs still `set!` the flag; no code reads a vector symbol.
+
+### Docs + backlog updated (`session-002/backlog-updated`)
+
+- **`README.md`** — feature bullet no longer says "replacing the legacy vector-
+  cycling model"; removed the `cnb:off-key-indicator` config-table row; rewrote
+  the model **Note** to "procedure model is the only model" + the kept-no-op
+  explanation; deleted Known Issue #3 (vector coexistence) and the "Vector model
+  removal" roadmap bullet; corrected the stale unit-assertion count to 286.
+- **`docs/planning/project-plan.md`** — **Known Issue #2 marked ✅ RESOLVED**
+  (set 007, 2026-07-09); current-state and deferred-scope paragraphs updated to
+  single-model; the "6 off-key indicator modes" line rephrased to the per-note
+  `off-key-mark` field. *(This planning file is untracked in this repo — as it
+  was through Session 1, which likewise edited it without committing — so the
+  edit is applied but not part of the deliverable commit. The authoritative,
+  committed resolution record is the backlog §5 entry above.)*
+- **`docs/planning/configurator-coordination-backlog.md`** — **§3.1 marked
+  resolved**, header table row flagged ✅, and a new **§5 "Vector-model removal"**
+  entry records the removal, both honored constraints, the default-oval
+  restoration, and — per spec step 5 — that **no Configurator-side action is
+  required** (the emitted `#(set! cnb:use-procedure-model #t)` line stays valid).
+- **`docs/CNB-LY-EXPORT-SPEC-v1_2.md`** — the §5.1 D1 rationale and the
+  Engine-Settings default (`#f → #t`) annotated with the engine-side set-007
+  note (always-emit contract unchanged; line now a harmless no-op).
+- **`docs/INTEGRATION-TESTING.md`** — the stale off-key/callback limitation note
+  (named the removed flag) rewritten around `cnb:chain-after-line-breaking!` and
+  the per-note `off-key-mark` field.
+
+---
+
+### Verification (lightweight, `out-of-band-or-none`, no metered calls)
+
+- **Unit:** `lilypond test-unit.ly` → **286 passed, 0 failed** (287 → 286: the
+  retired `off-key-indicator` default assertion).
+- **Integration:** `python tools/run_tests.py` → **246 passed, 0 failed
+  (349 assertions, 10 specs)** — same counts Session 1 left.
+- **Spec constraint 2 (golden must not move):** the set-004 round-trip golden
+  `tests/joy-to-the-world-configurator` is **byte-stable** — its committed
+  `.svg` and `.harvested.json` are unchanged (git-clean) — and passes **74/74
+  (101 assertions)** on its own. `tests/joy-to-the-world` (procedure Kite) is
+  likewise byte-stable.
+- **Regenerated fixtures (expected, from Q1):** the **bare-default** fixtures
+  that use `default-oval` — `c-major-scale`, `clef-custom/-none/-size-dozenal/
+  -text-size`, `keysig-bar-style/-none`, `off-key-coexistence` — have updated
+  `.svg` / `.harvested.json` because the default notehead returned from 2.666 to
+  2 semitones. Their JSON assertions are relative and still pass; only
+  `clef-custom.json`'s one absolute pin was updated (14.762, see Q1).
+
+**Ends with:** single-model engine; `cnb:use-procedure-model` kept as a
+documented no-op; full suites green; set-004 round-trip byte-stable; docs +
+backlog + project-plan updated; **set 007 complete.**

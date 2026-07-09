@@ -49,22 +49,18 @@
     \consists \cnb-staff-symbol-engraver
 
 
-    %% --- ACCIDENTALS ---
     %% --- ACCIDENTAL HANDLING ---
-    %% In 'standard mode, let LilyPond's built-in accidentals through.
-    %% In all other modes (none, dot, ring, tick, custom), suppress them —
-    %% either because no accidental info is wanted ('none), or because
-    %% our off-key flag system provides an alternative indicator.
-    #(if (not (eq? cnb:off-key-indicator 'standard))
-      #{
-        \override Accidental.stencil = ##f
-      #})
+    %% LilyPond's built-in accidentals (♯ ♭ ♮) are always suppressed on the
+    %% chromatic staff: every pitch has its own staff position, so accidental
+    %% symbols are never needed to specify pitch. Out-of-key notes are marked
+    %% instead by the off-key engraver, driven per note by the config's
+    %% off-key-mark field.
+    \override Accidental.stencil = ##f
 
 
     %% --- OFF-KEY NOTE FLAGS ---
-    %% The off-key engraver detects notes outside the current key
-    %% and attaches visual flags. It's a no-op when mode is 'none
-    %% or 'standard.
+    %% The off-key engraver reads each note's off-key-mark from the config
+    %% cache and attaches a visual flag when it is not #f.
     \consists \cnb-off-key-engraver
 
 

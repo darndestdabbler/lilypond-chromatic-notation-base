@@ -244,19 +244,26 @@
 %%   Y range is roughly -0.67 to +0.67
 %%
 %% NOTE FOR YOUR JS CONFIG GENERATOR:
-%%   Output SVG paths in this nested-list format.
-%%   The stencil builder will:
-%%     1. Apply rotation and scaling to these coordinates
-%%     2. Flatten them for make-path-stencil
-%%   So paths should be defined in their UNROTATED, UNSCALED form.
+%%   Output SVG paths in this nested-list format, already at final size.
+%%   In the procedure model the stencil builder applies NO rotation or
+%%   scaling — paths are used exactly as defined (rotation is baked into
+%%   named shapes, scaling into the coordinates). So define paths in their
+%%   final rendered geometry.
+%%
+%% SIZE: This default oval spans +/- 0.5 in Y (height 1.0 staff-space =
+%%   2 semitones at the default cnb:semitones-per-staff-space 2), which is
+%%   the "notehead height = 2 semitones" documented in cnb:notation-footnote
+%%   and the README. (The retired vector model stored a +/-0.6667 oval and
+%%   scaled it 0.75 at build time via cnb:notehead-scaling-sequence; with
+%%   the vector model removed in set 007 the scaling is baked in here.)
 #(define cnb:notehead-shape-path '(
-    (moveto -0.6667 -0.2269)
-    (curveto -0.6667 -0.5271 -0.4512 -0.6667 -0.2242 -0.6667)
-    (curveto -0.0553 -0.6667 0.1077 -0.6038 0.2475 -0.4991)
-    (curveto 0.4396 -0.3595 0.6667 -0.1152 0.6667 0.2269)
-    (curveto 0.6667 0.5271 0.4512 0.6667 0.2242 0.6667)
-    (curveto 0.0553 0.6667 -0.1077 0.6038 -0.2475 0.4991)
-    (curveto -0.4396 0.3595 -0.6667 0.1152 -0.6667 -0.2269)
+    (moveto -0.5 -0.1702)
+    (curveto -0.5 -0.3953 -0.3384 -0.5 -0.1682 -0.5)
+    (curveto -0.0415 -0.5 0.0808 -0.4528 0.1856 -0.3743)
+    (curveto 0.3297 -0.2696 0.5 -0.0864 0.5 0.1702)
+    (curveto 0.5 0.3953 0.3384 0.5 0.1682 0.5)
+    (curveto 0.0415 0.5 -0.0808 0.4528 -0.1856 0.3743)
+    (curveto -0.3297 0.2696 -0.5 0.0864 -0.5 -0.1702)
     (closepath)))
 
 %% The hollow cutout shape for half notes.
@@ -283,13 +290,13 @@
 %%   Define your hollow path in whatever winding direction feels natural.
 %%   The engine handles reversal automatically when needed.
 #(define cnb:notehead-hollow-path '(
-    (moveto 0.5269 0.3665)
-    (curveto 0.5793 0.2548 0.556 0.1152 0.4571 0.0454)
-    (lineto -0.2649 -0.4503)
-    (curveto -0.3581 -0.5131 -0.4745 -0.4782 -0.5269 -0.3665)
-    (curveto -0.5793 -0.2548 -0.5502 -0.1152 -0.4571 -0.0454)
-    (lineto 0.2649 0.4503)
-    (curveto 0.3697 0.5201 0.4745 0.4782 0.5269 0.3665)
+    (moveto 0.3952 0.2749)
+    (curveto 0.4345 0.1911 0.417 0.0864 0.3428 0.0341)
+    (lineto -0.1987 -0.3377)
+    (curveto -0.2686 -0.3848 -0.3559 -0.3587 -0.3952 -0.2749)
+    (curveto -0.4345 -0.1911 -0.4127 -0.0864 -0.3428 -0.0341)
+    (lineto 0.1987 0.3377)
+    (curveto 0.2773 0.3901 0.3559 0.3587 0.3952 0.2749)
     (closepath)))
 
 
@@ -320,28 +327,25 @@
 
 
 %% ---------------------------------------------------------------------------
-%%  PROCEDURE MODEL FLAG
+%%  PROCEDURE MODEL FLAG — KEEP FOREVER, DO NOT DELETE
 %%
-%%  When #t, the engine uses the procedure-oriented configuration model:
-%%    - Stencils are built from the config cache (populated by
+%%  The procedure-oriented configuration model is the ONLY model:
+%%    - Stencils are built from the config cache (populated by the
 %%      cnb:get-notehead-config procedure)
 %%    - Stem attachment is read from the config cache
 %%    - Off-key marks are read from the config cache
 %%    - The config cache is rebuilt on key changes
 %%
-%%  When #f (default), the engine uses the vector-cycling model:
-%%    - Stencils are built from the cycling sequence vectors
-%%    - Stem attachment cycles through cnb:stem-attachment-sequence
-%%    - Off-key detection uses cnb:off-key-indicator
-%%
-%%  Notation configs that use the procedure model should set this to #t.
-%%  The vector sequences are ignored when this is #t.
-%%
-%%  DEFAULT FLIPPED TO #t (set 007, session 1): the procedure model is now
-%%  the default and the only model going forward. Every Configurator export
-%%  still emits #(set! cnb:use-procedure-model #t) (LY export spec 1.2.1
-%%  §5.1), so this variable MUST remain defined — see the keep-forever note
-%%  at its definition. The vector-cycling code paths are retired in session 2.
+%%  WHY THIS VARIABLE STILL EXISTS (set 007 removed the vector-cycling
+%%  model it once toggled): every Configurator export unconditionally emits
+%%    #(set! cnb:use-procedure-model #t)
+%%  as its first engine directive (LY export spec 1.2.1 §5.1). A set! to an
+%%  already-defined variable is a harmless no-op, but a set! to an UNDEFINED
+%%  variable is an error — so deleting this define would break every existing
+%%  export in the wild. It is therefore a permanent, documented no-op: the
+%%  engine no longer branches on it. Removing it requires a coordinated
+%%  Configurator spec + exporter change (drop the emitted line), which is out
+%%  of scope for this repo. Leave it defined.
 #(define cnb:use-procedure-model #t)
 
 
@@ -380,91 +384,16 @@
 %%  produce monochrome output per Music Notation Project criteria:
 %%  notation should be readable without color.
 %%
-%%  Used by procedure-model configs. Vector-model configs use
-%%  cnb:notehead-color-sequence directly (which serves the same role).
+%%  The configuration procedure (cnb:get-notehead-config) may reference
+%%  palette entries by integer index; the resolver in procedure.ly reads
+%%  from this vector. Named color references (cnb:register-color!) are the
+%%  recommended approach — see procedure.ly.
 %%
 %%  EXAMPLE OVERRIDE IN SCORE FILE:
 %%    #(set! cnb:color-palette (vector cnb:blue cnb:rose cnb:black))
 %% ---------------------------------------------------------------------------
 
 #(define cnb:color-palette (vector cnb:black))
-
-
-%% ---------------------------------------------------------------------------
-%%  NOTEHEAD SEQUENCES
-%%  These vectors define how notehead properties cycle through pitch classes.
-%%  Index 0 = C natural, index 1 = C#/Db, ..., index 11 = B.
-%%  If the vector is shorter than 12, it wraps using modulo arithmetic.
-%% ---------------------------------------------------------------------------
-
-%% COLOR SEQUENCE: What color is each pitch class?
-%% Default: all black (monochrome). Override in config for color coding.
-%%
-%% EXAMPLE for 3-color system (wraps every 3 pitches):
-%%   (vector cnb:purple cnb:red cnb:green)
-%%   => C=purple, C#=red, D=green, D#=purple, E=red, F=green, ...
-#(define cnb:notehead-color-sequence (vector cnb:black))
-
-%% SHAPE SEQUENCE: Which outline path does each pitch class use?
-%% Default: same oval shape for all pitches.
-%% You could alternate between different shapes (oval, diamond, triangle).
-#(define cnb:notehead-shape-sequence (vector cnb:notehead-shape-path))
-
-%% HOLLOW SEQUENCE: Which pitches get a hollow cutout?
-%% #f means solid (no cutout).
-%% A path value means draw the hollow cutout for that pitch class.
-%% Default: alternates solid/hollow every pitch.
-%%
-%% EXAMPLE (default):
-%%   C=solid, C#=hollow, D=solid, D#=hollow, ...
-#(define cnb:notehead-hollow-sequence (vector
-    #f
-    cnb:notehead-hollow-path))
-
-%% ROTATION SEQUENCE: Rotation angle (degrees) for each pitch class.
-%% 0 = upright. 180 = upside-down.
-%% The rotation is applied to the path coordinates BEFORE building
-%% the stencil, so the result is a cleanly rotated shape.
-%%
-%% EXAMPLE for Kite notation (wraps every 4 pitches):
-%%   (vector 180 0 0 180)
-%%   => C=inverted, C#=upright, D=upright, D#=inverted, ...
-#(define cnb:notehead-rotation-sequence (vector 0))
-
-%% SCALING SEQUENCE: (x-scale . y-scale) pairs for each pitch class.
-%% (1 . 1) = no scaling. (0.75 . 0.75) = 75% size.
-%% The scaling is applied to path coordinates, not the stencil,
-%% so it happens before stencil construction.
-#(define cnb:notehead-scaling-sequence (vector '(0.75 . 0.75)))
-
-%% OFFSET SEQUENCE: (x-offset . y-offset) pairs for optical adjustment.
-%% (0 . 0) = no offset. Use small values to nudge noteheads for
-%% better visual alignment when shapes aren't perfectly centered.
-%% The offset is applied via ly:stencil-translate AFTER construction.
-#(define cnb:notehead-offset-sequence (vector '(0 . 0)))
-
-
-%% ---------------------------------------------------------------------------
-%%  STEM ATTACHMENT SEQUENCE
-%%  Defines where stems connect to noteheads, per pitch class.
-%%
-%%  Each entry is an alist with four keys:
-%%    crotchet-up    — stem-up attachment for quarter notes and shorter
-%%    crotchet-down  — stem-down attachment for quarter notes and shorter
-%%    minim-up       — stem-up attachment for half notes and longer
-%%    minim-down     — stem-down attachment for half notes and longer
-%%
-%%  Values are (x . y) pairs in notehead-relative coordinates:
-%%    x: -1 = left edge, 0 = center, 1 = right edge
-%%    y: -1 = bottom, 0 = center, 1 = top
-%% ---------------------------------------------------------------------------
-
-#(define cnb:stem-attachment-sequence (vector
-     `(
-        (crotchet-up . (1 . 0))
-        (crotchet-down . (-1 . 0))
-        (minim-up . (1 . 0))
-        (minim-down . (-1 . 0)))))
 
 
 %% ---------------------------------------------------------------------------
@@ -482,34 +411,22 @@
 
 %% ---------------------------------------------------------------------------
 %%  OFF-KEY NOTE FLAGS
-%%  Visual indicators for notes that fall outside the current key signature.
 %%
 %%  On a chromatic staff, accidentals are never needed to specify pitch
-%%  (every pitch has its own position). But flagging out-of-key notes
-%%  helps musicians anticipate which notes belong to the current key —
-%%  a cognitive advantage that diatonic staves provide automatically.
+%%  (every pitch has its own position). Flagging out-of-key notes still
+%%  helps musicians anticipate which notes belong to the current key.
 %%
-%%  MODES:
-%%    'none      — No flags, no accidentals. Pure chromatic reading.
-%%                 This is the default.
-%%    'standard  — Show LilyPond's built-in accidental symbols (♯ ♭ ♮).
-%%                 Traditional symbols with enharmonic distinction.
-%%    'dot       — Small filled dot above the notehead.
-%%    'ring      — Thin circle around the notehead.
-%%    'tick      — Small tick mark above the notehead.
-%%    'custom    — User-provided stencil via cnb:off-key-flag-stencil.
+%%  In the procedure model this is expressed PER NOTE, not by a global
+%%  flag: the configuration procedure (cnb:get-notehead-config) returns an
+%%  `off-key-mark` field for each (semitone, duration, key) — #f for none,
+%%  or a built-in symbol ('dot, 'ring, 'tick), or a registered custom mark
+%%  (cnb:register-off-key-mark!), or a procedure. The off-key engraver in
+%%  cnb/off-key.ly reads that field and draws the mark; it holds no
+%%  detection logic of its own. See cnb/off-key.ly and cnb/procedure.ly.
 %%
-%%  NOTE: 'standard mode does NOT modify the key signature — your
-%%  notehead-based key signatures remain unchanged. It only controls
-%%  whether individual notes get accidental marks.
+%%  LilyPond's native accidentals (♯ ♭ ♮) are always suppressed on the
+%%  chromatic staff (cnb/layout.ly) — pitch is fully specified by position.
 %% ---------------------------------------------------------------------------
-
-#(define cnb:off-key-indicator 'none)
-
-%% Custom flag stencil callback for 'custom mode.
-%% Receives a NoteHead grob, returns a stencil to overlay on the notehead.
-%% Ignored unless cnb:off-key-indicator is 'custom.
-#(define cnb:off-key-flag-stencil #f)
 
 
 %% ---------------------------------------------------------------------------

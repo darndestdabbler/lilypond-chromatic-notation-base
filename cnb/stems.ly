@@ -14,13 +14,9 @@
 %%    (left/right edges for up/down stems). Custom noteheads need
 %%    custom attachment points, or stems will connect at wrong positions.
 %%
-%%    VECTOR MODEL: The attachment points cycle through pitch classes
-%%    just like notehead shapes, because different shapes may need
-%%    different connection points (e.g., a diamond vs. an oval).
-%%
-%%    PROCEDURE MODEL: The attachment data comes from the resolved
-%%    config cache, which already contains the correct attachment
-%%    alist for the given (pitch-class, duration) combination.
+%%    The attachment data comes from the resolved config cache, which
+%%    already contains the correct attachment alist for the given
+%%    (pitch-class, duration) combination.
 %%
 %%  WHY STEM LENGTH COMPENSATION:
 %%    When we compress the staff (staff-space < 1), LilyPond's automatic
@@ -45,13 +41,9 @@
 %%
 %%  Returns an (x . y) pair in notehead-relative coordinates.
 %%
-%%  DUAL MODEL:
-%%    Vector model: indexes into cnb:stem-attachment-sequence by pitch class
-%%    Procedure model: reads attachment alist from config cache
+%%  The attachment alist is read from the resolved config cache for the
+%%  note's (pitch-class, duration) combination.
 %% ---------------------------------------------------------------------------
-
-#(define (cnb:stem-attachment-modulus)
-   (vector-length cnb:stem-attachment-sequence))
 
 #(define (cnb:stem-attachment grob)
    (let* (
@@ -63,23 +55,16 @@
            (logdur    (note-head::calc-duration-log grob))
            (pitch-class (modulo semi 12))
 
-           ;; Get the attachment record from the appropriate source
+           ;; Read the attachment record from the config cache. On a cache
+           ;; miss (shouldn't happen) fall back to a centered side attachment.
            (record
-             (if cnb:use-procedure-model
-
-                 ;; PROCEDURE MODEL: read from config cache
-                 (let* ((dur-prop  (ly:event-property event 'duration))
-                        (dur-cat   (cnb:duration-category dur-prop))
-                        (config    (cnb:lookup-config pitch-class dur-cat)))
-                   (if config
-                       (assq-ref config 'attachment)
-                       ;; Fallback to vector model if cache miss
-                       (vector-ref cnb:stem-attachment-sequence
-                                   (modulo semi (cnb:stem-attachment-modulus)))))
-
-                 ;; VECTOR MODEL: index into sequence
-                 (vector-ref cnb:stem-attachment-sequence
-                             (modulo semi (cnb:stem-attachment-modulus))))))
+             (let* ((dur-prop  (ly:event-property event 'duration))
+                    (dur-cat   (cnb:duration-category dur-prop))
+                    (config    (cnb:lookup-config pitch-class dur-cat)))
+               (if config
+                   (assq-ref config 'attachment)
+                   '((crotchet-up . (1 . 0)) (crotchet-down . (-1 . 0))
+                     (minim-up . (1 . 0)) (minim-down . (-1 . 0)))))))
 
        (cond
          ((eq? logdur 2)

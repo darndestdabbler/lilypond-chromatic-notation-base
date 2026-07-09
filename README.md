@@ -50,7 +50,7 @@ CNB is one part of a three-tool workflow. Each tool has a focused responsibility
 ## What CNB Provides
 
 - **Chromatic staff positioning** — configurable semitones-per-staff-space (any integer)
-- **Procedure-oriented configuration** — a single `(semitone, duration, key) → config` procedure with named symbolic references, replacing the legacy vector-cycling model
+- **Procedure-oriented configuration** — a single `(semitone, duration, key) → config` procedure with named symbolic references drives all notehead rendering
 - **Custom notehead stencils** — shape, color, and hollow cycling by pitch class, duration, and key
 - **Double/quadruple noteheads** — half notes render as 2 noteheads, whole notes as 4 (configurable)
 - **Proximity-based ledger lines** — ledger visibility determined by notehead proximity to staff
@@ -228,7 +228,6 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:false-hollow` | `#f` | Use white-overlay hollows for angular shapes |
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
-| `cnb:off-key-indicator` | `'none` | Off-key flag mode |
 | `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), `'none` (no clef stencil), or `'custom` (registered glyph named by `cnb:clef-name`) |
 | `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |
 | `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces for `'dozenal`/`'text`, or the registered definition's own height for `'custom`) |
@@ -245,7 +244,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:notation-label` | `"Oval 2-024 Notation"` | Human-readable notation name |
 | `cnb:notation-footnote` | *(descriptive string)* | Footnote text for notation parameters |
 
-> **Note:** The engine currently supports both the procedure model (`cnb:use-procedure-model #t`, now the default) and a legacy vector-cycling model. The reference config uses the procedure model. Vector model support is being removed (set 007); its vector-model reference config `Kite-4-369-Notation-Clean.ly` has been retired in favor of `Kite-4-369-Notation-Procedure.ly`.
+> **Note:** The procedure model is the engine's only configuration model. Off-key marking is expressed per note by the configuration procedure's `off-key-mark` field (not a global flag) — see [CNB-LY-EXPORT-SPEC-v1_2.md](docs/CNB-LY-EXPORT-SPEC-v1_2.md) and `cnb/procedure.ly`. Every Configurator export begins with `#(set! cnb:use-procedure-model #t)`; that variable is retained as a permanent, documented no-op so existing exports keep working, but the engine no longer branches on it. The legacy vector-cycling model was removed in set 007 (its reference config `Kite-4-369-Notation-Clean.ly` was retired in favor of `Kite-4-369-Notation-Procedure.ly`).
 
 ### Accessible Colors
 
@@ -267,7 +266,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ```
 ├── ChromaticNotationBase.ly          Main engine entry point
 ├── Kite-4-369-Notation-Procedure.ly  Reference config (Kite notation, procedure model)
-├── test-unit.ly                      Unit test suite (254 assertions)
+├── test-unit.ly                      Unit test suite (286 assertions)
 ├── README.md                         This file
 │
 ├── cnb/                              Engine modules (17 files, loaded in dependency order)
@@ -350,13 +349,6 @@ See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md) for full document
 1. **Comment syntax in Scheme blocks** — Inside `#(define ...)` blocks, use `;;` for comments, not `%%`. The `%%` style is only valid in LilyPond context. If you see "source expression failed to match any pattern", check for stray `%%` inside Scheme code.
 
 2. **Multi-system SVG harvesting** — Edge cases exist with elements spanning system breaks. The harvester handles multiple systems but some boundary conditions may produce incorrect staff-relative coordinates.
-
-3. **Legacy vector model coexistence** — The engine still contains the vector-cycling configuration model alongside the procedure model. Both code paths are maintained until the vector model is removed in a future release.
-
-
-## Planned Features
-
-- **Vector model removal** — Now unblocked: the Configurator generates procedure-model configs end-to-end (verified 2026-07-05). The legacy vector-cycling branches will be stripped from all engine modules in a coordinated pass (the exported `#(set! cnb:use-procedure-model #t)` line must stay assignable until both repos move together).
 
 
 ## Related Projects

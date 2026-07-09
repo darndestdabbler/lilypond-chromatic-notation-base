@@ -19,8 +19,8 @@
 %%
 %%  TWO COLOR SYSTEMS:
 %%
-%%    Hand-coded configs (legacy vector model or hand-written procedures)
-%%    can reference these named constants directly:
+%%    Hand-written notation configs can reference these named constants
+%%    directly:
 %%      #(cnb:register-color! 'my-primary cnb:0-purple)
 %%
 %%    Configurator-generated configs use the palette-based system:

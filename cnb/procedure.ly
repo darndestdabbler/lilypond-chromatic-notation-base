@@ -4,9 +4,9 @@
 %%  Procedure-oriented configuration infrastructure
 %%
 %%  WHAT THIS FILE DOES:
-%%    Provides the new configuration model where a single Scheme procedure
-%%    (semitone, duration, key) → config replaces the separate cycling
-%%    vectors. This module defines:
+%%    Provides the configuration model where a single Scheme procedure
+%%    (semitone, duration, key) → config drives all notehead rendering.
+%%    This module defines:
 %%
 %%      1. Named definition tables — map symbols to path/attachment data
 %%      2. Registration functions — populate the tables
@@ -16,7 +16,7 @@
 %%
 %%  DEPENDENCIES: utils.ly (for cnb:make-cache-key, cnb:in?)
 %%                colors.ly (for color variables)
-%%                config.ly (for default path data, cnb:use-procedure-model)
+%%                config.ly (for default path data)
 %%
 %%  ALSO PROVIDES:
 %%    cnb:step-to-semitone and cnb:get-key-pitch-classes — key pitch class
@@ -34,11 +34,6 @@
 %%    4. The engine calls cnb:build-config-cache at engraving start,
 %%       which evaluates the procedure and resolves all references.
 %%    5. During engraving, cnb:lookup-config fetches pre-resolved configs.
-%%
-%%  COEXISTENCE:
-%%    This module exists alongside the current vector-cycling model.
-%%    The engraver continues to use vectors until Phase 2, when it
-%%    switches to reading from the config cache.
 %%
 %% ============================================================================
 

@@ -36,27 +36,24 @@
 %%      semitones-per-staff-space = how compressed the staff is
 %%      staff-space = the actual pixel size of one staff space
 %%
-%%  KEY-CHANGE TRACKING (PROCEDURE MODEL):
-%%    When cnb:use-procedure-model is #t, the engraver monitors the
-%%    keyAlterations context property. On change, it rebuilds both the
-%%    procedure config cache and the stencil cache, since stencil
-%%    appearance may depend on the current key (e.g., off-key notes
-%%    rendered in different colors).
+%%  KEY-CHANGE TRACKING:
+%%    The engraver monitors the keyAlterations context property. On change,
+%%    it rebuilds both the procedure config cache and the stencil cache,
+%%    since stencil appearance may depend on the current key (e.g., off-key
+%%    notes rendered in different colors).
 %%
 %%  PERFORMANCE NOTE:
-%%    The stencil returned by cnb:get-note-stencil is pre-computed
-%%    (via make-path-stencil at init time) and cached by pitch+duration.
-%%    This engraver's per-note cost is: one hash lookup + one Y-offset
-%%    assignment. No markup interpretation happens here.
-%%
-%%    In procedure model, an additional equal? comparison on
-%%    keyAlterations is done per note — negligible cost.
+%%    The stencil returned by cnb:get-note-stencil is built on demand from
+%%    the config cache and cached by pitch+duration. This engraver's
+%%    per-note cost is: one equal? comparison on keyAlterations, one hash
+%%    lookup, and one Y-offset assignment. No markup interpretation happens
+%%    here.
 %%
 %% ============================================================================
 
 
 %% ---------------------------------------------------------------------------
-%%  KEY-CHANGE TRACKING (PROCEDURE MODEL)
+%%  KEY-CHANGE TRACKING
 %%
 %%  Tracks the last-seen keyAlterations value. When it changes:
 %%    1. Computes the new key's pitch classes
@@ -89,9 +86,8 @@
        (acknowledgers
          ((note-head-interface engraver grob source-engraver)
 
-           ;; In procedure model, ensure config cache is current
-           (if cnb:use-procedure-model
-               (cnb:handle-key-change context))
+           ;; Ensure the config cache is current for the active key
+           (cnb:handle-key-change context)
 
            (let* (
                    (note-stencil   (cnb:get-note-stencil grob))

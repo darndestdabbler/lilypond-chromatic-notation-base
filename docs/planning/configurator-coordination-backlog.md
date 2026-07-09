@@ -17,7 +17,7 @@ session set — run them in `NNN` order per `docs/dabbler/start-here.md`:
 |---|---|
 | §1.1–1.4 (clefs) | `docs/session-sets/005-clef-configurability/` ✅ resolved (see §5) |
 | §2.1, 2.2, 2.4 (key signatures; 2.3 cancelled) | `docs/session-sets/006-keysig-configurability/` |
-| §3.1 (vector-model removal) | `docs/session-sets/007-vector-model-removal/` |
+| §3.1 (vector-model removal) | `docs/session-sets/007-vector-model-removal/` ✅ resolved (see §5) |
 | §4 (toolkit minim anchors) | not this repo — no set (by design) |
 
 Each set's final session moves its items to §5 here when they resolve.
@@ -153,6 +153,13 @@ default 4-8 staff).
 Source: `chromatic-notation-configurator/docs/session-sets/007-end-to-end-pipeline-verification/s2-cross-repo-coordination.md`
 (2026-07-05), item 5.
 
+> **RESOLVED (2026-07-09) by set `007-vector-model-removal`** — the legacy
+> vector-cycling model is gone; the procedure model is the only model.
+> `cnb:use-procedure-model` was kept (permanent no-op, default `#t`), so **no
+> Configurator-side action is required** — the emitted
+> `#(set! cnb:use-procedure-model #t)` line remains valid. See §5 and
+> `docs/session-sets/007-vector-model-removal/`.
+
 ### 3.1 Vector-model removal
 This repo's README marks the removal as **unblocked** (engine set 004:
 the 007/004 round-trip renders a Configurator-generated procedure-model
@@ -239,6 +246,35 @@ LY export-spec addendum, and add the emit-if-changed exporter lines — see
 the handoff's §3 flags, especially the **`tonicOctave − 1`** octave-
 numbering offset, the `thicknessPct` unit conversion, and
 `separator.enabled: false` having no direct engine toggle.
+
+### §3 Vector-model removal — set `007-vector-model-removal` (2026-07-09)
+
+**3.1 done.** The legacy vector-cycling model was removed from every engine
+module (`config.ly` sequence vectors + `cnb:off-key-indicator`;
+`stencils.ly` `build-base-stencils` / `base-stencil-vector` / modulus
+helpers; `stems.ly` `stem-attachment-modulus` + vector branch; `off-key.ly`
+vector detection arm + `apply-off-key-flag`; the `(if cnb:use-procedure-model …)`
+branches in `stencils.ly`/`stems.ly`/`off-key.ly`/`noteheads.ly` are now
+unconditional). The procedure model is the sole model.
+
+- **Constraint honored — `cnb:use-procedure-model` kept.** It stays defined
+  (default `#t`) as a permanent, documented no-op. The engine no longer
+  branches on it; it exists only so the `#(set! cnb:use-procedure-model #t)`
+  line every export emits (LY export spec 1.2.1 §5.1) stays a harmless
+  assignment to a defined variable.
+- **Constraint honored — golden baseline did not move.** The set-004
+  round-trip (`tests/joy-to-the-world-configurator`) is byte-stable and
+  passes (74/74); full suites green (unit 286/286, integration 246/246).
+- **Default oval restored to 2 semitones.** Removing the vector model dropped
+  its build-time `0.75` scaling of the default oval; that scaling is now baked
+  into `cnb:notehead-shape-path`/`-hollow-path`, so the bare-default notehead
+  height returns to the documented 2 semitones (the "Oval 2-024" identity).
+  Real configs register their own paths and are unaffected.
+
+**No Configurator-side action required.** The emitted `set!` line remains
+valid — that is the whole point of the keep-forever constraint. Removing the
+variable entirely would need a coordinated Configurator spec + exporter change
+and is explicitly out of scope.
 
 ---
 

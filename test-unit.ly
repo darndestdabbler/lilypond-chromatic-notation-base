@@ -503,8 +503,6 @@
    (>= (length cnb:staff-line-positions) 2))
 #(cnb:assert-true "default-magnify > 0"
    (> cnb:default-magnify 0))
-#(cnb:assert-equal "off-key-indicator defaults to 'none"
-   cnb:off-key-indicator 'none)
 #(cnb:assert-equal "false-hollow defaults to #f"
    cnb:false-hollow #f)
 #(cnb:assert-equal "ledger-positions defaults to empty"

@@ -2,7 +2,7 @@
 
 **Version:** 1.2.1 (Cumulative Rules & Accessible Color Switching; 007 round-trip corrections)
 **Date:** July 5, 2026 (1.2: February 24, 2026)
-**Status:** Updated for cumulative notehead rules, palette-based color system, accessible color switching, and inline staff/ledger styling. Procedure model is the only model the Configurator exports — and, per 1.2.1 (D1), the export must say so explicitly: the ENGINE still defaults to its vector model, so `#(set! cnb:use-procedure-model #t)` is always emitted (§5.1).
+**Status:** Updated for cumulative notehead rules, palette-based color system, accessible color switching, and inline staff/ledger styling. Procedure model is the only model the Configurator exports — and, per 1.2.1 (D1), the export must say so explicitly: `#(set! cnb:use-procedure-model #t)` is always emitted (§5.1). (As of engine set 007, 2026-07-09, the engine defaults this flag to `#t` and has removed the vector model; the always-emit rule still holds — the line is now a harmless no-op kept for contract stability. See §5.1.)
 **Companion document:** CNB-PROJECT-PLAN-20260224.md
 **Reference implementation:** `Kite-4-369-Notation-Procedure.ly`
 
@@ -204,11 +204,15 @@ Only needed for custom off-key marks. Built-in marks do not need registration.
 #(set! cnb:notation-label "My Notation System")
 ```
 
-**`cnb:use-procedure-model` (added 1.2.1; 007-s1 discrepancy D1):** the
-engine defaults this flag to `#f` (vector model) and silently ignores
-Sections A and C without it. Every Configurator export is procedure-model
-by construction, so the flag is emitted unconditionally, before the staff
-geometry block.
+**`cnb:use-procedure-model` (added 1.2.1; 007-s1 discrepancy D1):** every
+Configurator export is procedure-model by construction, so this flag is
+emitted unconditionally, before the staff geometry block. **Keep emitting
+it.** (Engine-side note, set 007, 2026-07-09: the engine now *defaults* this
+flag to `#t` and has removed the legacy vector model entirely, so the line is
+a harmless no-op rather than functionally required. It stays in the contract
+because the variable is kept permanently defined; a `set!` to it is always
+valid. Historically — the D1 discrepancy — the engine defaulted to `#f`
+(vector model) and ignored Sections A and C without this line.)
 
 **`cnb:staff-line-positions` units (clarified 1.2.1; 007-s1 discrepancy
 D2):** LilyPond staff positions are HALF-staff-spaces from the center.
@@ -404,7 +408,7 @@ Warnings (non-blocking):
 
 | Variable | Type | Default | Required |
 |----------|------|---------|----------|
-| `cnb:use-procedure-model` | Boolean | `#f` | Always (`#t`) — **new 1.2.1** |
+| `cnb:use-procedure-model` | Boolean | `#t` (engine set 007; was `#f`) | Always (`#t`) — **new 1.2.1** |
 | `cnb:semitones-per-staff-space` | Integer | `2` | Always |
 | `cnb:staff-line-positions` | List | `'(-4 -2 0 2 4)` | Always |
 | `cnb:false-hollow` | Boolean | `#f` | If changed |
