@@ -245,7 +245,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:notation-label` | `"Oval 2-024 Notation"` | Human-readable notation name |
 | `cnb:notation-footnote` | *(descriptive string)* | Footnote text for notation parameters |
 
-> **Note:** The engine currently supports both the procedure model (`cnb:use-procedure-model #t`) and a legacy vector-cycling model. The reference config uses the procedure model. Vector model support will be removed in a future release.
+> **Note:** The engine currently supports both the procedure model (`cnb:use-procedure-model #t`, now the default) and a legacy vector-cycling model. The reference config uses the procedure model. Vector model support is being removed (set 007); its vector-model reference config `Kite-4-369-Notation-Clean.ly` has been retired in favor of `Kite-4-369-Notation-Procedure.ly`.
 
 ### Accessible Colors
 

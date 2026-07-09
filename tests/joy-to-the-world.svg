@@ -197,7 +197,7 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ks-1" data-type="key-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:48:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:37:5:6">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(100.0000%, 83.1373%, 16.4706%)">
 <g transform="translate(7.0212, 15.4510)">
@@ -360,7 +360,7 @@ tspan { white-space: pre; }
 </a>
 </g>
 <g id="ts-1" data-type="time-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:49:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:38:5:6">
 <g transform="translate(16.7527, 20.0392)">
 <path transform="scale(0.0070, -0.0070)" d="M87 126c12 3 25 5 38 5c32 0 67 -10 101 -33c23 -16 49 -25 70 -25c20 0 37 8 42 28c1 6 6 8 10 8c5 0 11 -4 11 -10c0 -63 -85 -99 -132 -99c-35 0 -69 14 -94 42c-14 16 -32 23 -50 23c-30 0 -59 -21 -62 -55c-1 -7 -5 -10 -10 -10s-11 3 -11 10c0 174 232 167 232 345
 c0 60 -19 124 -71 124c-24 0 -46 -15 -46 -37c0 -27 35 -41 35 -68c0 -38 -31 -69 -69 -69s-68 31 -68 69c0 74 70 126 148 126c93 0 180 -58 180 -145c0 -156 -160 -160 -254 -229z" fill="currentColor"/>
@@ -389,7 +389,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 <g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
 </g>
 <g id="nh-1-0.438-71-0" data-type="notehead" data-measure="1" data-beat="0.438" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:16:17">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:16:17">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(20.5326, 11.7843)">
@@ -405,7 +405,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-3-0.250-64-0" data-type="notehead" data-measure="3" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:36:37">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:36:37">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(35.8860, 14.1177)">
@@ -416,7 +416,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-4-0.000-62-0" data-type="notehead" data-measure="4" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:40:41">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:40:41">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(41.1850, 14.7843)">
@@ -427,7 +427,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-1-0.000-74-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:5:6">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.0655, 10.7843)">
@@ -438,7 +438,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-3-0.000-66-0" data-type="notehead" data-measure="3" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:31:32">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:31:32">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(31.9907, 13.4510)">
@@ -449,7 +449,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-4-0.375-69-0" data-type="notehead" data-measure="4" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:44:45">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:44:45">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(46.0234, 12.4510)">
@@ -465,7 +465,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-2-0.375-67-0" data-type="notehead" data-measure="2" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:26:27">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:26:27">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(27.9339, 13.1177)">
@@ -481,7 +481,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-6-0.375-73-0" data-type="notehead" data-measure="6" data-beat="0.375" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:66:67">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:66:67">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(63.5564, 11.1177)">
@@ -497,7 +497,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-5-0.000-71-0" data-type="notehead" data-measure="5" data-beat="0.000" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:51:52">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:51:52">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(50.0802, 11.7843)">
@@ -513,7 +513,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-2-0.000-69-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:22:23">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:22:23">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(23.3812, 12.4510)">
@@ -529,7 +529,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-5-0.375-71-0" data-type="notehead" data-measure="5" data-beat="0.375" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:55:56">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:55:56">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(54.7757, 11.7843)">
@@ -545,7 +545,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-6-0.000-73-0" data-type="notehead" data-measure="6" data-beat="0.000" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:60:61">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:60:61">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(58.8609, 11.1177)">
@@ -561,7 +561,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-1-0.250-73-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:50:10:11">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:10:11">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(17.1037, 11.1177)">
@@ -667,14 +667,14 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-8-0.250-71-0" data-type="slur" data-measure="8" data-beat="0.250" data-midi="71" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:23:24">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:23:24">
 <g transform="translate(43.5000, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1903 2.6251C0.7388 4.0968 2.9165 4.6463 4.4326 3.7918L4.4326 3.7918C2.9678 4.4427 0.7902 3.8931 -0.1903 2.6251z"/>
 </g>
 </a>
 </g>
 <g id="sl-8-0.000-74-0" data-type="slur" data-measure="8" data-beat="0.000" data-midi="74" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:15:16">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:15:16">
 <g transform="translate(33.7541, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0925 -3.2253C1.5202 -4.3501 3.8292 -4.0737 4.9654 -2.6419L4.9654 -2.6419C3.8042 -3.8652 1.4953 -4.1416 0.0925 -3.2253z"/>
 </g>
@@ -686,7 +686,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-9-0.000-69-0" data-type="slur" data-measure="9" data-beat="0.000" data-midi="69" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:33:34">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:33:34">
 <g transform="translate(55.2381, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1529 3.7918C1.4789 6.0094 6.2131 6.9588 8.5739 5.5418L8.5739 5.5418C6.2544 6.7529 1.5202 5.8035 -0.1529 3.7918z"/>
 </g>
@@ -706,7 +706,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-10-0.000-74-0" data-type="slur" data-measure="10" data-beat="0.000" data-midi="74" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:51:52">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:51:52">
 <g transform="translate(76.1600, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0925 -3.2253C1.5202 -4.3501 3.8292 -4.0737 4.9654 -2.6419L4.9654 -2.6419C3.8042 -3.8652 1.4953 -4.1416 0.0925 -3.2253z"/>
 </g>
@@ -718,7 +718,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-10-0.250-71-0" data-type="slur" data-measure="10" data-beat="0.250" data-midi="71" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:59:60">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:59:60">
 <g transform="translate(85.9059, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1903 2.6251C0.7388 4.0968 2.9165 4.6463 4.4326 3.7918L4.4326 3.7918C2.9678 4.4427 0.7902 3.8931 -0.1903 2.6251z"/>
 </g>
@@ -730,7 +730,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-11-0.000-69-0" data-type="slur" data-measure="11" data-beat="0.000" data-midi="69" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:69:70">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:69:70">
 <g transform="translate(97.6440, 37.2227)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1529 3.7918C1.4789 6.0094 6.2131 6.9588 8.5739 5.5418L8.5739 5.5418C6.2544 6.7529 1.5202 5.8035 -0.1529 3.7918z"/>
 </g>
@@ -1005,7 +1005,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="nh-11-0.375-66-0" data-type="notehead" data-measure="11" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:81:82">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:81:82">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(63.5678, 23.2701)">
@@ -1016,7 +1016,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-10-0.375-69-0" data-type="notehead" data-measure="10" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:61:62">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:61:62">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(51.7308, 22.2701)">
@@ -1032,7 +1032,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-8-0.250-71-0" data-type="notehead" data-measure="8" data-beat="0.250" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:22:23">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:22:23">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(24.8571, 21.6035)">
@@ -1048,7 +1048,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-9-0.000-69-0" data-type="notehead" data-measure="9" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:30:31">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:30:31">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(31.5646, 22.2701)">
@@ -1064,7 +1064,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-10-0.000-74-0" data-type="notehead" data-measure="10" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:50:51">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:50:51">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(43.5200, 20.6035)">
@@ -1075,7 +1075,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-11-0.188-67-0" data-type="notehead" data-measure="11" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:71:72">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:71:72">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(59.0576, 22.9368)">
@@ -1091,7 +1091,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-7-0.375-74-0" data-type="notehead" data-measure="7" data-beat="0.375" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:9:10">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:9:10">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(15.3176, 20.6035)">
@@ -1102,7 +1102,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-8-0.375-69-0" data-type="notehead" data-measure="8" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:25:26">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:25:26">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(27.4988, 22.2701)">
@@ -1118,7 +1118,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-11-0.000-69-0" data-type="notehead" data-measure="11" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:66:67">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:66:67">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(55.7966, 22.2701)">
@@ -1134,7 +1134,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-7-0.000-74-0" data-type="notehead" data-measure="7" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:5:6">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(10.8547, 20.6035)">
@@ -1145,7 +1145,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-10-0.125-73-0" data-type="notehead" data-measure="10" data-beat="0.125" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:53:54">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:53:54">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(46.3045, 20.9368)">
@@ -1161,7 +1161,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-8-0.125-73-0" data-type="notehead" data-measure="8" data-beat="0.125" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:17:18">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:17:18">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(22.0726, 20.9368)">
@@ -1177,7 +1177,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-9-0.188-67-0" data-type="notehead" data-measure="9" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:35:36">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:35:36">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(34.8257, 22.9368)">
@@ -1193,7 +1193,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-9-0.375-74-0" data-type="notehead" data-measure="9" data-beat="0.375" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:45:46">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:45:46">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(39.4788, 20.6035)">
@@ -1204,7 +1204,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-10-0.250-71-0" data-type="notehead" data-measure="10" data-beat="0.250" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:58:59">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:58:59">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(49.0891, 21.6035)">
@@ -1220,7 +1220,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-8-0.000-74-0" data-type="notehead" data-measure="8" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:14:15">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:14:15">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(19.2881, 20.6035)">
@@ -1231,7 +1231,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-11-0.250-66-0" data-type="notehead" data-measure="11" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:75:76">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:75:76">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(60.7833, 23.2701)">
@@ -1242,7 +1242,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-9-0.250-66-0" data-type="notehead" data-measure="9" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:51:39:40">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:39:40">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(36.5514, 23.2701)">
@@ -1321,7 +1321,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-12-0.375-66-0" data-type="slur" data-measure="12" data-beat="0.375" data-midi="66" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:22:23">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:22:23">
 <g transform="translate(43.7429, 54.4062)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0957 5.5418C1.4888 6.5732 3.7043 6.2987 4.8036 4.9585L4.8036 4.9585C3.6784 6.0903 1.4630 6.3648 0.0957 5.5418z"/>
 </g>
@@ -1336,7 +1336,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-13-0.375-67-0" data-type="slur" data-measure="13" data-beat="0.375" data-midi="67" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:36:37">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:36:37">
 <g transform="translate(69.5172, 54.4062)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0957 4.9585C1.0037 6.2987 3.2191 6.5732 4.6123 5.5418L4.6123 5.5418C3.2449 6.3648 1.0295 6.0903 -0.0957 4.9585z"/>
 </g>
@@ -1356,7 +1356,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-14-0.375-64-0" data-type="slur" data-measure="14" data-beat="0.375" data-midi="64" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:55:56">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:55:56">
 <g transform="translate(106.4508, 54.4062)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.1782 6.7085C1.7625 7.6319 4.1298 7.0749 5.1361 5.5418L5.1361 5.5418C4.0817 6.8705 1.7144 7.4275 0.1782 6.7085z"/>
 </g>
@@ -1598,7 +1598,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="nh-12-0.125-66-0" data-type="notehead" data-measure="12" data-beat="0.125" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:9:10">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:9:10">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(15.5684, 33.0893)">
@@ -1609,7 +1609,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-12-0.375-66-0" data-type="notehead" data-measure="12" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:17:18">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:17:18">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(24.9959, 33.0893)">
@@ -1620,7 +1620,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-14-0.125-64-0" data-type="notehead" data-measure="14" data-beat="0.125" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:48:49">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:48:49">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(51.4016, 33.7559)">
@@ -1631,7 +1631,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-13-0.375-67-0" data-type="notehead" data-measure="13" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:33:34">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:33:34">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(39.7241, 32.7559)">
@@ -1647,7 +1647,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-12-0.438-67-0" data-type="notehead" data-measure="12" data-beat="0.438" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:24:25">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:24:25">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(27.6862, 32.7559)">
@@ -1663,7 +1663,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-14-0.250-64-0" data-type="notehead" data-measure="14" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:50:51">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:50:51">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(56.1153, 33.7559)">
@@ -1674,7 +1674,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-13-0.438-66-0" data-type="notehead" data-measure="13" data-beat="0.438" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:38:39">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:38:39">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(42.4143, 33.0893)">
@@ -1685,7 +1685,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-12-0.250-66-0" data-type="notehead" data-measure="12" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:13:14">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:13:14">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(20.2822, 33.0893)">
@@ -1696,7 +1696,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-14-0.375-64-0" data-type="notehead" data-measure="14" data-beat="0.375" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:52:53">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:52:53">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(60.8290, 33.7559)">
@@ -1707,7 +1707,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-12-0.000-66-0" data-type="notehead" data-measure="12" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:5:6">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(10.8547, 33.0893)">
@@ -1718,7 +1718,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-14-0.000-64-0" data-type="notehead" data-measure="14" data-beat="0.000" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:45:46">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:45:46">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(46.6878, 33.7559)">
@@ -1729,7 +1729,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-13-0.000-69-0" data-type="notehead" data-measure="13" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:29:30">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:29:30">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(31.9460, 32.0893)">
@@ -1745,7 +1745,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-14-0.438-66-0" data-type="notehead" data-measure="14" data-beat="0.438" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:52:57:58">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:57:58">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(63.6621, 33.0893)">
@@ -1829,14 +1829,14 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-15-0.375-66-0" data-type="slur" data-measure="15" data-beat="0.375" data-midi="66" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:14:15">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:14:15">
 <g transform="translate(28.4825, 71.5897)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.2637 5.5418C0.3238 6.7379 1.7585 7.2549 2.9739 6.7085L2.9739 6.7085C1.8297 7.0573 0.3950 6.5403 -0.2637 5.5418z"/>
 </g>
 </a>
 </g>
 <g id="sl-16-0.000-62-0" data-type="slur" data-measure="16" data-beat="0.000" data-midi="62" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:23:24">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:23:24">
 <g transform="translate(37.5398, 71.5897)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M1.7477 0.2915C1.8081 -1.5111 3.4972 -3.1750 5.3005 -3.2085L5.3005 -3.2085C3.6446 -3.0254 1.9555 -1.3615 1.7477 0.2915z"/>
 </g>
@@ -1851,7 +1851,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </g>
 </g>
 <g id="sl-17-0.000-69-0" data-type="slur" data-measure="17" data-beat="0.000" data-midi="69" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:38:39">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:38:39">
 <g transform="translate(59.1178, 71.5897)">
 <path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1290 3.7918C1.7904 6.1853 7.6776 7.1757 10.2745 5.5418L10.2745 5.5418C7.7125 6.9686 1.8252 5.9783 -0.1290 3.7918z"/>
 </g>
@@ -2118,7 +2118,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 <g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
 </g>
 <g id="nh-19-0.000-62-0" data-type="notehead" data-measure="19" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:64:65">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:64:65">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(59.4810, 44.2417)">
@@ -2134,7 +2134,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-17-0.000-69-0" data-type="notehead" data-measure="17" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:35:36">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:35:36">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(33.7816, 41.9084)">
@@ -2150,7 +2150,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-17-0.188-67-0" data-type="notehead" data-measure="17" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:40:41">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:40:41">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(37.7336, 42.5751)">
@@ -2166,7 +2166,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-16-0.375-71-0" data-type="notehead" data-measure="16" data-beat="0.375" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:30:31">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:30:31">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(29.2727, 41.2417)">
@@ -2182,7 +2182,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-17-0.250-66-0" data-type="notehead" data-measure="17" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:44:45">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:44:45">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(39.7265, 42.9084)">
@@ -2193,7 +2193,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-16-0.125-74-0" data-type="notehead" data-measure="16" data-beat="0.125" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:25:26">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:25:26">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(24.7704, 40.2417)">
@@ -2204,7 +2204,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-17-0.375-67-0" data-type="notehead" data-measure="17" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:50:51">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:50:51">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(43.0456, 42.5751)">
@@ -2220,7 +2220,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-18-0.000-66-0" data-type="notehead" data-measure="18" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:55:56">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:55:56">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(47.6728, 42.9084)">
@@ -2231,7 +2231,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-15-0.000-67-0" data-type="notehead" data-measure="15" data-beat="0.000" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:5:6">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:5:6">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(10.8547, 42.5751)">
@@ -2247,7 +2247,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-16-0.000-62-0" data-type="notehead" data-measure="16" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:21:22">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:21:22">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(21.4513, 44.2417)">
@@ -2258,7 +2258,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-18-0.250-64-0" data-type="notehead" data-measure="18" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:60:61">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:60:61">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(52.1751, 43.5751)">
@@ -2269,7 +2269,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-15-0.438-64-0" data-type="notehead" data-measure="15" data-beat="0.438" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:16:17">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:16:17">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(80.0000%, 47.4510%, 65.4902%)">
 <g transform="translate(18.1257, 43.5751)">
@@ -2280,7 +2280,7 @@ c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 
 </a>
 </g>
 <g id="nh-15-0.375-66-0" data-type="notehead" data-measure="15" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:53:9:10">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:9:10">
 <g transform="scale(1.7500, 1.7500)">
 <g color="rgb(31.3725%, 70.5882%, 91.3725%)">
 <g transform="translate(16.2757, 42.9084)">

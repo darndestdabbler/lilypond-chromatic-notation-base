@@ -3,17 +3,7 @@
 \include "Kite-4-369-Notation-Procedure.ly"
 \include "cnb/test-ids.ly"
 
-%% color-blind-friendly scheme
-%% vector model version
-%% TODO: REMOVE WHEN VECTOR-MODEL IS OBSOLETE
- #(define cnb:notehead-color-sequence (vector
-    cnb:0-skyblue  ;; semitone mod 3 = 0 (C, D#, F#, A), skyblue
-    cnb:1-rose     ;; semitone mod 3 = 1 (C#, E, G, A#), rose
-    cnb:2-black    ;; semitone mod 3 = 2 (D, F, G#, B),  black
-    ))
-
-%% color-blind-friendly scheme
-%% procedure model version
+%% color-blind-friendly scheme (procedure model)
 #(cnb:register-color! 'kite-color-primary   cnb:0-skyblue) %% C, D#, F#, A
 #(cnb:register-color! 'kite-color-secondary cnb:1-rose)    %% C#, E, G, A#
 #(cnb:register-color! 'kite-color-tertiary  cnb:2-black)   %% D, F, G#, B

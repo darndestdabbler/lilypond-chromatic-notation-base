@@ -30,7 +30,7 @@
 %%        \include "MyNotation.ly"
 %%        { c'4 d' e' f' ... }
 %%
-%%   See Kite-4-369-Notation-Clean.ly for a complete config example.
+%%   See Kite-4-369-Notation-Procedure.ly for a complete config example.
 %%
 %% BASE PROPERTIES (defaults, overridable in config files):
 %%   - Dozenal clef notation (numbers instead of clef symbols)

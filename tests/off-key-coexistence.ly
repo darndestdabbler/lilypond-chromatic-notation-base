@@ -10,7 +10,9 @@
 %%
 %% This score activates BOTH modules at once:
 %%   - test-ids.ly tags every grob with SVG ids/data attributes
-%%   - off-key.ly ('dot mode) adds a dot stencil to off-key noteheads
+%%   - the procedure model's off-key-mark ('dot) adds a dot stencil to
+%%     off-key noteheads (the engraver's procedure-model branch chains the
+%%     mark callback onto after-line-breaking)
 %%
 %% The F# in measure 1 is off-key in C major. The paired JSON spec asserts
 %% that its notehead carries BOTH effects: the test-id tag (id + data-*)
@@ -18,11 +20,25 @@
 %%
 %% Measure 2 adds a beam, a slur, and a tie so that test-ids.ly's three
 %% chained after-line-breaking hooks (Beam/Tie/Slur) all execute too.
+%%
+%% Migrated to the procedure model in set 007 (the legacy vector-model
+%% off-key indicator was retired); this test previously covered the
+%% vector-model off-key call site, which no longer exists.
 
 \include "ChromaticNotationBase.ly"
 
-%% Enable the vector-model off-key indicator (default is 'none)
-#(set! cnb:off-key-indicator 'dot)
+#(set! cnb:use-procedure-model #t)
+
+%% Default config plus a key-aware off-key-mark: any pitch class outside
+%% the current key gets 'dot.
+#(set! cnb:get-notehead-config
+   (lambda (semitone duration key)
+     `((shape        . default-oval)
+       (color        . ,cnb:black)
+       (hollow       . ,(if (odd? semitone) 'default-oval-cutout #f))
+       (attachment   . default-side)
+       (off-key-mark . ,(if (cnb:in? semitone key) #f 'dot))
+       (repeat       . #t))))
 
 \include "cnb/test-ids.ly"
 

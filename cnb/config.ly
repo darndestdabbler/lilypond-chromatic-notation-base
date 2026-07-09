@@ -336,7 +336,13 @@
 %%
 %%  Notation configs that use the procedure model should set this to #t.
 %%  The vector sequences are ignored when this is #t.
-#(define cnb:use-procedure-model #f)
+%%
+%%  DEFAULT FLIPPED TO #t (set 007, session 1): the procedure model is now
+%%  the default and the only model going forward. Every Configurator export
+%%  still emits #(set! cnb:use-procedure-model #t) (LY export spec 1.2.1
+%%  §5.1), so this variable MUST remain defined — see the keep-forever note
+%%  at its definition. The vector-cycling code paths are retired in session 2.
+#(define cnb:use-procedure-model #t)
 
 
 %% ---------------------------------------------------------------------------

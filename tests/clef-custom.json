@@ -1,7 +1,7 @@
 {
   "test_name": "Custom clef registration hook: anchor, size, gutter (set 005 s2)",
   "input_file": "clef-custom.ly",
-  "description": "A registered 1x2 rectangle path clef with anchor-semitones 16, height-semitones 8, and cnb:clef-gutter-semitones 4, on the default sps-2 staff with the default treble context (middleCPosition -6). The set-009 anchor contract puts the glyph TOP edge at semitone 16 = +2 staff-spaces = the TOP staff line; height 8 semitones = 4 staff-spaces means the bottom edge lands exactly on the BOTTOM line. Path stencils harvest real outline geometry (unlike the dozenal text anchors), so the bbox is asserted directly against the harvested staff geometry. The gutter is asserted via the first notehead's x: an identical render without the gutter setting places nh-1-0.000-60-0 at x = 13.262 (measured 2026-07-07); the 4-semitone gutter pushes it to 14.762.",
+  "description": "A registered 1x2 rectangle path clef with anchor-semitones 16, height-semitones 8, and cnb:clef-gutter-semitones 4, on the default sps-2 staff with the default treble context (middleCPosition -6). The set-009 anchor contract puts the glyph TOP edge at semitone 16 = +2 staff-spaces = the TOP staff line; height 8 semitones = 4 staff-spaces means the bottom edge lands exactly on the BOTTOM line. Path stencils harvest real outline geometry (unlike the dozenal text anchors), so the bbox is asserted directly against the harvested staff geometry. The gutter is asserted via the first notehead's x: an identical render without the gutter setting places nh-1-0.000-60-0 at x = 13.651; the 4-semitone gutter pushes it to 15.151, a +1.5 unit gutter contribution. Baseline re-measured 2026-07-08 under the procedure-model default (set 007 s1): the procedure model renders the default notehead at full size rather than the vector model's 0.75 scaling, shifting both absolute x values up ~0.39 while the gutter delta stays 1.5.",
 
   "assertions": [
 
@@ -51,9 +51,9 @@
 
     {
       "id": "nh-1-0.000-60-0",
-      "description": "First notehead sits at x = 14.762: 1.5 units right of the identical no-gutter render (13.262), the 4-semitone gutter's spacing contribution",
+      "description": "First notehead sits at x = 15.151: 1.5 units right of the identical no-gutter render (13.651), the 4-semitone gutter's spacing contribution",
       "expect": {
-        "visual.bbox.x": ["abs(v - 14.762) < 0.1", "v > 14.0"]
+        "visual.bbox.x": ["abs(v - 15.151) < 0.1", "v > 14.0"]
       }
     },
 
