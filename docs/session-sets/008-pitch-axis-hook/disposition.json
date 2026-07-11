@@ -1,0 +1,34 @@
+{
+  "status": "completed",
+  "summary": "Session 1 of 3 for set 008 (pitch-axis hook, backlog 6.1/E13-1). Pre-flight re-verified every backlog section-6 engine fact against the tree with NO drift (noteheads.ly 83-109 is the single primary site, sets Y-offset from the linear formula and never writes staff-position; keysig.ly 224/248 and clefs.ly 207-261 are the two secondary sites; ledgers are geometry-driven; collision thresholds at layout.ly 97-98). Landed cnb:get-pitch-staff-position in cnb/config.ly (default #f, staff-geometry section) documented with the Configurator unit contract verbatim: the procedure receives the note's absolute semitone (integer, middle C = 0, ly:pitch-semitones) and returns the LilyPond staff position in half-staff-spaces from the staff center, octave anchor baked in (config's staff.midpoint at position 0), result used AS-IS and never adjusted by middleCPosition (precedent cnb:keysig-tonic-octave); may be many-to-one and non-uniform. cnb/noteheads.ly consults it in the acknowledger: procedure -> Y-offset = (hook note-semis) * 0.5 * staff-space; #f -> the literal pre-hook formula kept verbatim. Spec step-3 decision recorded (change-log + site comment): the hook path does NOT write staff-position this session - that write is one of 6.2's two candidate chord-arrangement mechanisms and is decided in Session 2 with its own evidence (also keeps this session's 013-parity comparison exact, since the spike left staff-position untouched). test-unit.ly gained 2 default assertions (286->288); README gained the Engine Settings row and refreshed counts. Evidence (a) hook unset, zero drift: unit 288/288, integration 246/246 (349 assertions, 10 specs); committed golden SVGs/harvests (both Kite 4-369 joy-to-the-world specs incl. the set-004 round-trip) byte-identical per git status. Evidence (b) spike parity through the REAL hook (no score-level coercion): s1-evidence/hook-parity.ly renders the 013 spike's exact axis (pc-axis [0,0,1,2,2,3,3,4,5,5,6,6], stride 7, middle C -> -4, staff (-3 -1 1 4 6 8)) and note-for-note music with cnb:get-pitch-staff-position set; harvested with tools/harvest_svg.py and measured by s1-evidence/measure_hook_parity.py (adapted from the 013 instruments; transcript with exit 0 in s1-evidence/measure_transcript.txt): 35/35 noteheads at mapped positions (uniform +0.010 harvest artifact, same as 013), all three shared-position chord pairs dpos 0.000, 7/7 ledger rects with the exact 013 multiset {-5:4, -7:1, +10:2}, 30/30 stems with single-note directions flipping at LilyPond position 0 (f'/fis' at -1 up, g' at 0 down) and the spanning chord <c' g'> drawing one stem -4 -> +7 - all matching the 013 record's measured tables. The spike's +0.85 x-offset disambiguation is deliberately absent (Session 2 scope, 6.2; vertical positions are identical between the spike's offset and control renders per 013 section 3.1). Committed dc19dc5, pushed to origin/main.",
+  "files_changed": [
+    "cnb/config.ly",
+    "cnb/noteheads.ly",
+    "test-unit.ly",
+    "test-unit.pdf",
+    "README.md",
+    "docs/session-sets/008-pitch-axis-hook/change-log.md",
+    "docs/session-sets/008-pitch-axis-hook/disposition.json",
+    "docs/session-sets/008-pitch-axis-hook/session-state.json",
+    "docs/session-sets/008-pitch-axis-hook/session-events.jsonl",
+    "docs/session-sets/008-pitch-axis-hook/activity-log.json",
+    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.ly",
+    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.svg",
+    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s1-evidence/measure_hook_parity.py",
+    "docs/session-sets/008-pitch-axis-hook/s1-evidence/measure_transcript.txt"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": {
+    "engine": "claude-code",
+    "provider": "anthropic",
+    "model": "claude-fable-5",
+    "effort": "high",
+    "reason": {
+      "code": "continue-current-trajectory",
+      "specifics": "Session 1 landed cleanly with full parity evidence; Session 2 (x-offset field + collision semantics, backlog 6.2/6.5) builds directly on this session's hook and its staff-position deferral decision, so continuity of context favors the same orchestrator. Lightweight tier, no metered calls; any capable engine could substitute."
+    }
+  },
+  "blockers": []
+}
