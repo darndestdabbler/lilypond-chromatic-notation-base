@@ -36,6 +36,13 @@
 %%      semitones-per-staff-space = how compressed the staff is
 %%      staff-space = the actual pixel size of one staff space
 %%
+%%    PITCH-AXIS HOOK: when cnb:get-pitch-staff-position (cnb/config.ly)
+%%    is set to a procedure, the linear formula above is replaced by
+%%      Y = (hook semitones) × 0.5 × staff-space
+%%    where the hook returns a staff position in half-staff-spaces from
+%%    the staff center (octave anchor baked in; clef-independent). The
+%%    default (#f) keeps the literal linear formula.
+%%
 %%  KEY-CHANGE TRACKING:
 %%    The engraver monitors the keyAlterations context property. On change,
 %%    it rebuilds both the procedure config cache and the stencil cache,
@@ -99,10 +106,29 @@
                    (middleCPosition (ly:context-property context 'middleCPosition)))
 
                ;; Set the vertical position based on semitone value.
+               ;;
+               ;; PITCH-AXIS HOOK: when cnb:get-pitch-staff-position is a
+               ;; procedure, it maps the absolute semitone to a staff
+               ;; position in HALF-staff-spaces from the staff center
+               ;; (the cnb:staff-line-positions unit; octave anchor baked
+               ;; in — used as-is, NOT adjusted by middleCPosition; see
+               ;; cnb/config.ly for the full unit contract). One staff
+               ;; position is half a staff space, hence the * 0.5.
+               ;;
+               ;; The hook path sets ONLY Y-offset and leaves LilyPond's
+               ;; diatonic staff-position property untouched, exactly like
+               ;; the linear path below. Writing the mapped value into
+               ;; staff-position is one of the two candidate mechanisms
+               ;; for chord-internal horizontal arrangement (backlog 6.2)
+               ;; and is decided there, not here.
                (ly:grob-set-property! grob 'Y-offset
-                     (* (+ note-semis (* 2 middleCPosition))
-                        (/ 1 cnb:semitones-per-staff-space)
-                        staff-space))
+                     (if (procedure? cnb:get-pitch-staff-position)
+                         (* (cnb:get-pitch-staff-position note-semis)
+                            0.5
+                            staff-space)
+                         (* (+ note-semis (* 2 middleCPosition))
+                            (/ 1 cnb:semitones-per-staff-space)
+                            staff-space)))
 
                ;; Replace the default notehead stencil with our custom one.
                (ly:grob-set-property! grob 'stencil

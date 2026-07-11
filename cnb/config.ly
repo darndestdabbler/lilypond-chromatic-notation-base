@@ -83,6 +83,35 @@
 %% from the staff line pattern.
 #(define cnb:ledger-positions '())
 
+%% Pitch-axis hook: an arbitrary (possibly many-to-one, non-uniform)
+%% semitone -> staff-position map for compact staves (the Twinline
+%% family), replacing the linear cnb:semitones-per-staff-space formula
+%% for NOTEHEAD vertical placement when set.
+%%
+%%   #f         — default: the literal linear formula runs unchanged
+%%                (today's behavior; zero drift with the hook unset).
+%%   procedure  — (proc semitone) is called with the note's ABSOLUTE
+%%                semitone (an integer; middle C = 0, LilyPond's
+%%                ly:pitch-semitones value) and must return the LilyPond
+%%                staff position in HALF-STAFF-SPACES from the staff
+%%                center — the same unit as cnb:staff-line-positions.
+%%
+%% UNIT CONTRACT (shared with the Configurator — do not deviate):
+%%   The procedure bakes its OWN octave anchor in (the config's
+%%   staff.midpoint lands at position 0), which makes placement
+%%   clef-independent: the returned position is used AS-IS and is NOT
+%%   further adjusted by middleCPosition. (Precedent for an explicit
+%%   anchor overriding middleCPosition: cnb:keysig-tonic-octave below.)
+%%   Contrast the #f path, whose anchor is middleCPosition-driven.
+%%
+%% The hook may be many-to-one (different pitches sharing one vertical
+%% position, disambiguated by shape and horizontal offset) and
+%% non-uniform (unequal semitone spacing between adjacent positions).
+%% Ledger lines, dots, articulations, and stem extents/directions all
+%% read the placed geometry back, so the map propagates to them
+%% automatically — see cnb/noteheads.ly for where it is consulted.
+#(define cnb:get-pitch-staff-position #f)
+
 
 %% ---------------------------------------------------------------------------
 %%  DISPLAY SETTINGS

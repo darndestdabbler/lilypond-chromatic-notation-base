@@ -1,0 +1,33 @@
+{
+  "sessionSetName": "008-pitch-axis-hook",
+  "createdDate": "2026-07-11T00:15:28.395377+00:00",
+  "totalSessions": 0,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-11T00:15:28.410015+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 2,
+      "stepKey": "session-001/hook-landed",
+      "dateTime": "2026-07-10T20:27:51-04:00",
+      "description": "Pre-flight re-verified backlog section-6 engine facts against the tree: no drift (noteheads.ly 83-109 single primary site setting Y-offset, staff-position never written; keysig.ly 224/248 and clefs.ly 207-261 secondary sites; ledgers geometry-driven; collision thresholds layout.ly 97-98). Landed cnb:get-pitch-staff-position in cnb/config.ly (default #f, staff-geometry section) documented with the full unit contract: absolute semitone (middle C = 0) -> LilyPond staff position in half-staff-spaces from staff center, octave anchor baked in, result used as-is (NOT adjusted by middleCPosition). cnb/noteheads.ly consults it: procedure -> Y-offset = (hook note-semis) * 0.5 * staff-space; #f -> the literal pre-hook formula verbatim. Decision recorded in change-log + site comment: the hook path does NOT write staff-position this session - that is one of 6.2's two candidate chord mechanisms and is decided there (also keeps the 013 parity comparison exact). test-unit.ly +2 default assertions (286->288); README Engine Settings row + count refresh.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 3,
+      "stepKey": "session-001/spike-parity",
+      "dateTime": "2026-07-10T20:27:51-04:00",
+      "description": "Evidence (a) zero drift with hook unset: unit 288/288, integration 246/246 (349 assertions, 10 specs) via tools/run_tests.py re-run after all edits; git status shows the re-rendered golden SVGs/harvests (both Kite 4-369 joy-to-the-world specs incl. the set-004 round-trip) byte-identical. Evidence (b) spike parity through the REAL hook: s1-evidence/hook-parity.ly renders the 013 spike's exact axis (pc-axis [0,0,1,2,2,3,3,4,5,5,6,6], stride 7, middle C -> -4, staff (-3 -1 1 4 6 8)) and music with cnb:get-pitch-staff-position set - no score-level engraver. Harvested (tools/harvest_svg.py) and measured (measure_hook_parity.py, adapted from 013's instruments; transcript with exit 0 in measure_transcript.txt): noteheads 35/35 at mapped positions (uniform +0.010 harvest artifact as 013), all three shared-position chord pairs dpos 0.000, ledgers 7/7 with exact multiset {-5:4, -7:1, +10:2}, stems 30/30 with single-note directions flipping at position 0 (f'/fis' at -1 up, g' at 0 down) and <c' g'> spanning -4 -> +7, all matching the 013 record's tables. x-offset deliberately absent (Session 2).",
+      "status": "complete"
+    }
+  ]
+}

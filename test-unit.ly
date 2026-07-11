@@ -507,6 +507,10 @@
    cnb:false-hollow #f)
 #(cnb:assert-equal "ledger-positions defaults to empty"
    cnb:ledger-positions '())
+#(cnb:assert-true "cnb:get-pitch-staff-position is defined"
+   (defined? 'cnb:get-pitch-staff-position))
+#(cnb:assert-equal "cnb:get-pitch-staff-position defaults to #f (linear formula)"
+   cnb:get-pitch-staff-position #f)
 
 
 %% =========================================================================
