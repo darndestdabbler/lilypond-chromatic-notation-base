@@ -4,6 +4,9 @@
 repo's engine-coordination records (session sets 007, 009, 010) plus one
 operator request. Each item cites its source record; the source records
 carry the full engine-inspection evidence (file/line references).
+**Amended 2026-07-10:** §6 (pitch axis, items 6.1–6.5) added from the
+Configurator's set-013 engine-coordination record, scheduled as set
+`008-pitch-axis-hook`.
 
 **Status convention:** every item below is OPEN unless listed in §5.
 Items were verified open against this repo's history as of set
@@ -19,6 +22,7 @@ session set — run them in `NNN` order per `docs/dabbler/start-here.md`:
 | §2.1, 2.2, 2.4 (key signatures; 2.3 cancelled) | `docs/session-sets/006-keysig-configurability/` |
 | §3.1 (vector-model removal) | `docs/session-sets/007-vector-model-removal/` ✅ resolved (see §5) |
 | §4 (toolkit minim anchors) | not this repo — no set (by design) |
+| §6.1–6.5 (pitch axis; added 2026-07-10) | `docs/session-sets/008-pitch-axis-hook/` |
 
 Each set's final session moves its items to §5 here when they resolve.
 
@@ -182,6 +186,81 @@ existing export.
   the golden Kite config's ±1.095-semitone minim offsets). The
   Configurator's importer will read `data-stem-minim-*`-style attributes
   once the toolkit defines them.
+
+---
+
+## 6. Pitch axis (compact-staff support) — *added 2026-07-10*
+
+*(Numbered §6, placed before §5, so §5 stays the stable "resolved" sink
+that existing references point at.)*
+
+Source: `chromatic-notation-configurator/docs/session-sets/013-pitch-axis-engine-discovery/s1-engine-coordination.md`
+(2026-07-10; work items its §6, IDs **E13-1…E13-5** — kept as aliases
+below). Design context: the Configurator's operator-approved pitch-axis
+design (`chromatic-notation-configurator/docs/planning/pitch-axis-design.md`
++ `CNB-LY-EXPORT-SPEC-v1_3-draft.md`) enables compact / non-uniform pitch
+axes (the Twinline family — different pitches at one vertical position,
+disambiguated by shape + horizontal offset).
+
+**Engine facts recorded there (re-verify in the set's session 1):** the
+notehead engraver is the SINGLE site where a semitone becomes a vertical
+coordinate (`cnb/noteheads.ly` ~83–109: sets `Y-offset` as a plain number
+from the linear `semitones-per-staff-space` formula; never touches
+`staff-position`). Vertical-placement consumers — LilyPond's ledger
+machinery via `cnb:ledger-positions-function` (`cnb/ledgers.ly`), dots,
+articulations, stem extents/directions, collision thresholds — read the
+placed GEOMETRY back, not the pitch, so a many-to-one map inserted at that
+one site propagates automatically (proven by the 013 spike render: 35/35
+noteheads, 7/7 ledgers, 30/30 stems exact on a Twinline-like axis with
+zero engine changes). Two secondary semitone→vertical sites:
+`cnb/keysig.ly` (~217–248) and `cnb/clefs.ly` (~203–261). The ONE measured
+break: chord-internal horizontal arrangement is diatonic-`staff-position`-
+derived — stencil-translation x-offsets are honored for unison-treated
+pairs but ABSORBED for diatonic-neighbor pairs (013 record §3.4).
+
+### 6.1 The pitch-axis hook (E13-1)
+`cnb:get-pitch-staff-position` in `cnb/config.ly`, default `#f`; consulted
+by the notehead engraver when set (a procedure `(semitone) →` LilyPond
+staff position in half-staff-spaces, same unit as
+`cnb:staff-line-positions`, octave anchor baked in by the exporter —
+precedent for explicit-anchor-overrides-`middleCPosition`:
+`cnb:keysig-tonic-octave`). The `#f` path keeps the LITERAL existing
+formula. Acceptance: golden baseline (Kite 4-369) byte-identical with the
+hook unset; a compact-axis render through the real hook matching the 013
+spike's measured positions.
+
+### 6.2 `(x-offset . N)` notehead-config field (E13-2)
+Consume an optional per-(pc, duration) horizontal offset in staff-space
+units from the procedure-model returned alist (Section C; the
+Configurator emits it only when a pitch axis is enabled and the resolved
+value is nonzero — missing field = today's behavior). Stencil translation
+is the proven mechanism for single notes; the CHORD case needs a decided
+mechanism (write the mapped value into `staff-position` so chord/collision
+layout runs in axis space, or post-note-column-layout `X-offset`).
+Acceptance evidence must include a diatonic-second shared-position chord.
+
+### 6.3 Key-signature placement through the hook (E13-3)
+`cnb/keysig.ly`'s `semi × (1/sps)` mark placement uses the hook when set,
+so the notehead-chord signature lands on the compact axis. Mind the
+keysig stencil-cache key (see §2 facts) — axis-dependent placement must
+join the cache key or invalidate it.
+
+### 6.4 Clef anchor through the hook (E13-4)
+`cnb/clefs.ly` glyph anchoring (semitone units ÷ sps) uses the hook when
+set — only observable when a custom clef and a pitch axis are enabled
+together.
+
+### 6.5 Collision-threshold semantics in axis space (E13-5)
+Verify `cnb:collision-threshold` (default 2, `cnb/layout.ly` ~97–98)
+against axis-space distances once 6.2's mechanism is chosen — shared
+positions make geometric distance 0 the common case; multi-voice
+collisions were NOT exercised by the 013 spike and need observation.
+
+**Cross-repo dependency:** the Configurator's set
+`014-pitch-axis-implementation` session 3 (exporter emission + compact
+fixtures + round-trip) is **blocked on 6.1 and 6.2 landing** and consumes
+this set's `configurator-handoff.md`; until then its exporter fails loud
+on `pitchAxis.enabled` (no silent linear `.ly` for a compact config).
 
 ---
 
