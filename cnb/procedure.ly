@@ -196,6 +196,14 @@
 %%    off-key-mark — #f (none), or symbol referencing cnb:off-key-mark-defs,
 %%                   or a built-in symbol: 'dot, 'ring, 'tick,
 %%                   'sharp-sign, 'flat-sign, 'natural-sign
+%%    x-offset     — optional. Horizontal offset in STAFF SPACES applied
+%%                   to the notehead stencil (positive = right, negative
+%%                   = left). Translating the stencil moves the grob's
+%%                   extent, so stems, spacing, and ledgers follow the
+%%                   moved head. Missing = 0 = today's behavior. Used by
+%%                   pitch-axis configs to disambiguate shared-position
+%%                   pitches (LY export spec v1.3 §6.3); the engine
+%%                   honors the field whenever present, hook or not.
 %%    repeat       — #t (default) or #f. Controls multi-notehead
 %%                   repetition for longer durations. When #t, half notes
 %%                   are doubled, whole notes quadrupled, etc. When #f,
@@ -243,6 +251,9 @@
 %%                   'ring, 'tick, 'sharp-sign, etc.) pass through
 %%                   if not found in the table — the engraver knows
 %%                   how to handle them directly.
+%%    x-offset    — number (staff spaces), passed through as-is.
+%%                  Normalized to 0 if absent; a present non-number
+%%                  warns and falls back to 0.
 %%    repeat      — boolean, passed through as-is.
 %%                  Defaults to #t if absent from config.
 %%
@@ -338,13 +349,26 @@
                           ((symbol? off-key-sym)
                            (or (hashq-ref cnb:off-key-mark-defs off-key-sym)
                                off-key-sym))
-                          (else off-key-sym))))
+                          (else off-key-sym)))
+
+          ;; x-offset: optional horizontal offset in staff spaces
+          ;; (backlog 6.2 / E13-2). Absent = 0 = today's behavior.
+          ;; A present non-number warns and falls back to 0 so a
+          ;; misconfigured field cannot move a notehead silently.
+          (x-offset-val (let ((x (assq-ref config 'x-offset)))
+                          (cond
+                            ((number? x) x)
+                            ((not (assq 'x-offset config)) 0)
+                            (else
+                             (ly:warning "cnb: x-offset must be a number, got '~a' — using 0" x)
+                             0)))))
 
      `((shape      . ,shape-data)
        (color      . ,resolved-color)
        (hollow     . ,hollow-data)
        (attachment . ,attach-data)
        (off-key-mark . ,off-key-data)
+       (x-offset   . ,x-offset-val)
        (repeat     . ,repeat-val))))
 
 

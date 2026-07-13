@@ -86,6 +86,13 @@
     %% standard notation don't apply because the staff geometry is different.)
     \override Stem.no-stem-extend = ##t
 
+    %% Apply per-note pitch-axis x-offsets AFTER LilyPond's chord
+    %% arrangement (which would otherwise absorb them — see the
+    %% X-OFFSET SUPPORT block in cnb/noteheads.ly). No-op when no
+    %% note carries an x-offset.
+    \override Stem.positioning-done =
+      #(grob-transformer 'positioning-done cnb:apply-note-x-offsets)
+
     %% Compensate stem lengths for compressed staff spacing.
     %% Without this, stems look too short on compressed staves.
     \override Stem.before-line-breaking = #cnb:compensate-stem-length

@@ -16,8 +16,12 @@
 %%    Stencils are built on demand from the resolved config cache produced
 %%    by the configuration procedure (cnb:get-notehead-config, see
 %%    procedure.ly). Stencils are key-dependent — the cache is invalidated
-%%    on key change. There is no rotation/scaling/offset step: rotation is
-%%    baked into named shapes and scaling into the path coordinates.
+%%    on key change. There is no rotation/scaling/offset step: rotation
+%%    is baked into named shapes and scaling into the path coordinates;
+%%    the config's optional x-offset field (staff spaces; pitch-axis
+%%    disambiguation, backlog 6.2/E13-2) is applied by the notehead
+%%    engraver via the grob's X-offset property, NOT here — see the
+%%    note in cnb:get-note-stencil.
 %%
 %%  HOW NOTEHEAD RENDERING WORKS (the new pipeline):
 %%
@@ -198,6 +202,18 @@
           (ly:stencil-scale cached mag mag)
 
           ;; Cache miss — build the stencil from the resolved config
+          ;;
+          ;; NOTE: the config's x-offset field (backlog 6.2 / E13-2) is
+          ;; deliberately NOT applied here as a stencil translation.
+          ;; LilyPond's chord arrangement (Stem::calc_positioning_done)
+          ;; re-derives head X from stencil EXTENTS — edge-aligning every
+          ;; head to the support head and shifting reversed heads by
+          ;; their own extent — so a translated stencil survives or is
+          ;; absorbed depending on stem direction and which chord member
+          ;; got reversed (measured this set, s2-evidence). The engraver
+          ;; applies x-offset via the grob's X-offset property instead
+          ;; (cnb/noteheads.ly), which LilyPond adds AFTER that
+          ;; arrangement arithmetic.
           (let* ((base-and-repeat
                    (let ((config (cnb:lookup-config pitch-class dur-cat)))
                      (if config
@@ -227,6 +243,11 @@
 %%  Key signatures use the config cache. The key signature is rendered in
 %%  the context of the key it represents, so the config cache should already
 %%  be built for that key.
+%%
+%%  The config's x-offset field is deliberately NOT applied here: whether
+%%  the key-signature chord display adopts the pitch-axis horizontal
+%%  disambiguation is decided with keysig-through-the-hook (backlog 6.3,
+%%  set 008 session 3), not by the notehead field (6.2).
 %% ---------------------------------------------------------------------------
 
 #(define (cnb:get-keysig-note-stencil pitch-class grob)
