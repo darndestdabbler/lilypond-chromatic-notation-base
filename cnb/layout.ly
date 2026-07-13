@@ -86,16 +86,18 @@
     %% standard notation don't apply because the staff geometry is different.)
     \override Stem.no-stem-extend = ##t
 
-    %% Apply per-note pitch-axis x-offsets AFTER LilyPond's chord
-    %% arrangement (which would otherwise absorb them — see the
-    %% X-OFFSET SUPPORT block in cnb/noteheads.ly). No-op when no
-    %% note carries an x-offset.
-    \override Stem.positioning-done =
-      #(grob-transformer 'positioning-done cnb:apply-note-x-offsets)
-
-    %% Compensate stem lengths for compressed staff spacing.
-    %% Without this, stems look too short on compressed staves.
-    \override Stem.before-line-breaking = #cnb:compensate-stem-length
+    %% Compensate stem lengths for compressed staff spacing (without it
+    %% stems look too short on compressed staves), then apply per-note
+    %% pitch-axis x-offsets AFTER LilyPond's chord arrangement — from
+    %% this plain hook, NOT from a positioning-done wrapper: mutating
+    %% grobs while that property is being evaluated segfaults LilyPond
+    %% 2.24.2 on multi-voice scores (see the X-OFFSET SUPPORT block in
+    %% cnb/noteheads.ly). The offset step is a no-op when no note
+    %% carries an x-offset.
+    \override Stem.before-line-breaking =
+      #(lambda (grob)
+         (cnb:compensate-stem-length grob)
+         (cnb:apply-note-x-offsets grob))
 
 
     %% --- COLLISION THRESHOLDS ---

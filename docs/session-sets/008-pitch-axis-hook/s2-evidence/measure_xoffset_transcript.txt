@@ -34,4 +34,3 @@ ledger rects: offset render 5, control 5
   rect 5: x   50.919 ->   57.671  (dx=+6.752)  y_center 11.395
 
 X-OFFSET ACCEPTANCE: PASS — single notes (head+stem+spacing), the unison-treated pair, and the diatonic-second pair all honor (x-offset . 0.85); verticals untouched
-EXIT=0

@@ -1,8 +1,7 @@
 \version "2.24.2"
 
 %% ============================================================================
-%% SESSION EVIDENCE — set 008 session 2 — CONTROL RENDER (xoff:amount 0.0,
-%% field omitted; otherwise byte-identical to xoffset-cases.ly)
+%% SESSION EVIDENCE — set 008 session 2 (x-offset field, backlog 6.2/E13-2)
 %%
 %% The 013 spike proved stencil translation moves single noteheads (and
 %% their stems, and the spacing) exactly, but measured the offset ABSORBED
@@ -13,9 +12,13 @@
 %%   - the (x-offset . N) field of the procedure-model config alist
 %%     (staff spaces; the sharper member of each shared pair gets +0.85,
 %%     exactly the spike's disambiguation), and
-%%   - the 6.2 chord mechanism: the hook path writes the mapped value
-%%     into NoteHead.staff-position, so chord arrangement runs in axis
-%%     space and shared-position pairs arrange as unisons.
+%%   - the 6.2 chord mechanism: cnb:apply-note-x-offsets translates the
+%%     NoteColumn by the stem's least-displaced offset plus per-head
+%%     residuals AFTER LilyPond's chord arrangement has completed
+%%     (Stem.before-line-breaking) — the arrangement re-derives head X
+%%     from stencil extents, so neither a stencil translation nor the
+%%     X-offset property survives it (both measured; see the change
+%%     log and the X-OFFSET SUPPORT block in cnb/noteheads.ly).
 %%
 %% Acceptance cases (all measured against the byte-identical control
 %% render xoffset-cases-ctrl.ly, which differs ONLY in xoff:amount 0.0

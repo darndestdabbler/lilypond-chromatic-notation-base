@@ -652,6 +652,41 @@
      (assq-ref resolved 'off-key-mark)
      'dot))
 
+%% x-offset: the optional horizontal-offset field (backlog 6.2, set 008)
+#(let* ((config '((shape . test-triangle)
+                  (color . "#FF0000")
+                  (hollow . #f)
+                  (attachment . test-top)
+                  (off-key-mark . #f)
+                  (x-offset . 0.85)))
+        (resolved (cnb:resolve-config config)))
+   (cnb:assert-equal "x-offset passes through when present"
+     (assq-ref resolved 'x-offset)
+     0.85))
+
+#(let* ((config '((shape . test-triangle)
+                  (color . "#00FF00")
+                  (hollow . #f)
+                  (attachment . test-top)
+                  (off-key-mark . #f)))
+        (resolved (cnb:resolve-config config)))
+   (cnb:assert-equal "x-offset defaults to 0 when absent"
+     (assq-ref resolved 'x-offset)
+     0))
+
+%% A present non-number x-offset warns (expected in the log) and is
+%% normalized to 0 so a misconfigured field cannot move a notehead.
+#(let* ((config '((shape . test-triangle)
+                  (color . "#0000FF")
+                  (hollow . #f)
+                  (attachment . test-top)
+                  (off-key-mark . #f)
+                  (x-offset . "0.85")))
+        (resolved (cnb:resolve-config config)))
+   (cnb:assert-equal "non-number x-offset falls back to 0"
+     (assq-ref resolved 'x-offset)
+     0))
+
 
 %% =========================================================================
 %%  TEST: cnb/procedure.ly — Default procedure

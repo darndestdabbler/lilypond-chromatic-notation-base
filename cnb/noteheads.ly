@@ -42,10 +42,10 @@
 %%    where the hook returns a staff position in half-staff-spaces from
 %%    the staff center (octave anchor baked in; clef-independent). The
 %%    hook path additionally writes the mapped value into the grob's
-%%    staff-position property so chord arrangement and collision logic
-%%    operate in axis space (the backlog-6.2 mechanism decision — see
-%%    the site comment below). The default (#f) keeps the literal
-%%    linear formula and never touches staff-position.
+%%    staff-position property so the property agrees with the placed
+%%    geometry (arrangement/collision logic read the geometry either
+%%    way — see the site comment below). The default (#f) keeps the
+%%    literal linear formula and never touches staff-position.
 %%
 %%  KEY-CHANGE TRACKING:
 %%    The engraver monitors the keyAlterations context property. On change,
@@ -106,17 +106,33 @@
 %%      before the property is ever evaluated), and single-note stems
 %%      do not follow the head.
 %%
-%%    - What works for every case: translate the grobs immediately AFTER
-%%      the arrangement. The engraver captures each note's offset at
-%%      acknowledge time (when the key-dependent config cache is
-%%      current) in the custom grob property cnb-x-offset, and a wrapper
-%%      around Stem.positioning-done (installed in cnb/layout.ly)
-%%      applies it: each head is translated by its own offset, the stem
-%%      by the offset of its LEAST-DISPLACED head — a single note's
-%%      head and stem move together, a mixed chord's stem stays with the
-%%      unshifted member. Everything that reads head positions (spacing,
-%%      ledgers, dots, multi-voice collisions) forces positioning-done
-%%      first, so the moved extents propagate everywhere downstream.
+%%    - Mutating grobs WHILE positioning-done is being evaluated (a
+%%      grob-transformer or plain wrapper around the property) segfaults
+%%      LilyPond 2.24.2 on multi-voice scores — property evaluation is
+%%      not reentrant against mutation.
+%%
+%%    - Translating EVERY head of a stem breaks LilyPond's
+%%      note-collision meshing: Stem::note_head_positions(filter) drops
+%%      heads at nonzero relative X (its way of skipping reversed
+%%      heads) and check_meshing_chords indexes the surviving vector
+%%      unguarded — an all-heads-moved stem segfaults 2.24.2 on
+%%      multi-voice scores.
+%%
+%%    - What works for every case: AFTER the arrangement has run to
+%%      completion, from a plain grob hook, split each stem's offsets
+%%      into a COMMON component (the least-displaced head's offset)
+%%      applied to the whole NoteColumn plus per-head RESIDUALS. The
+%%      engraver captures each note's offset at acknowledge time (when
+%%      the key-dependent config cache is current) in the custom grob
+%%      property cnb-x-offset; cnb:apply-note-x-offsets — chained onto
+%%      Stem.before-line-breaking in cnb/layout.ly — forces
+%%      positioning-done, translates the column by the common part
+%%      (single note: head, stem, and flag move as one) and each head
+%%      by its residual (mixed chord: the stem stays with the unshifted
+%%      member). The least-displaced head keeps relative X = 0, so the
+%%      meshing invariant holds. This runs before horizontal spacing,
+%%      so spacing, ledgers, dots, and multi-voice collisions all see
+%%      the moved extents.
 %% ---------------------------------------------------------------------------
 
 %% Register the custom grob property (the standard LilyPond extension
@@ -131,42 +147,79 @@
    "Pitch-axis horizontal offset for this notehead, in absolute
 staff-space units (already scaled by the staff's staff-space).")
 
-%% The Stem.positioning-done wrapper. Runs with LilyPond's own
-%% arrangement already applied (grob-transformer evaluates the default
-%% first); `done` is that default's value and is returned unchanged.
+%% The offset applier, run from Stem.before-line-breaking (chained
+%% after cnb:compensate-stem-length in cnb/layout.ly).
+%%
+%% TIMING IS THE POINT: grobs must NOT be mutated while a property is
+%% being evaluated — translating a head inside a positioning-done
+%% wrapper (grob-transformer or plain) segfaults LilyPond 2.24.2 on
+%% multi-voice scores (measured, s2 evidence). before-line-breaking is
+%% a plain grob hook, so here we can FORCE the arrangement to run to
+%% completion (the property value is cached), then translate on top of
+%% it, before horizontal spacing reads any extent.
+%%
+%% When no head carries an offset (every score with the field unset)
+%% this returns after a few plain property reads: positioning-done is
+%% NOT forced early, so the default pipeline is byte-identical.
 %%
 %% The stem's own X may not be materialized yet, so it is forced before
 %% the stem translation — translate_axis on an unmaterialized offset
 %% would silently DISCARD the stem's X-offset callback (its attachment
 %% to the notehead column).
-#(define (cnb:apply-note-x-offsets grob done)
+#(define (cnb:apply-note-x-offsets grob)
    (let ((head-array (ly:grob-object grob 'note-heads)))
      (if (ly:grob-array? head-array)
          (let* ((heads (ly:grob-array->list head-array))
                 (offs  (map (lambda (h)
                               (let ((o (ly:grob-property h 'cnb-x-offset 0)))
                                 (if (number? o) o 0)))
-                            heads)))
-           (if (any (lambda (o) (not (zero? o))) offs)
-               (begin
+                            heads))
+                ;; plain fold — srfi-1 helpers are not visible in every
+                ;; module that may end up calling this
+                (has-offset (let loop ((l offs))
+                              (cond ((null? l) #f)
+                                    ((zero? (car l)) (loop (cdr l)))
+                                    (else #t)))))
+           (if has-offset
+               ;; Split every offset into a COMMON component (the
+               ;; least-displaced head's offset) applied to the whole
+               ;; NoteColumn, plus per-head RESIDUALS:
+               ;;
+               ;;   single note          -> pure column translate: head,
+               ;;                           stem, and flag move together
+               ;;   mixed chord {0, N}   -> column stays (stem anchored
+               ;;                           to the unshifted member),
+               ;;                           offset member moves by N
+               ;;   uniform chord {N, N} -> pure column translate
+               ;;
+               ;; CRASH INVARIANT (do not weaken): the least-displaced
+               ;; head's residual is exactly 0, so every stem keeps at
+               ;; least one head at relative X = 0. LilyPond's
+               ;; note-collision meshing (Stem::note_head_positions with
+               ;; filter) DROPS heads at nonzero relative X and then
+               ;; indexes the remaining vector unguarded — a stem whose
+               ;; every head is moved segfaults 2.24.2 on multi-voice
+               ;; scores (measured, s2 evidence).
+               (let* ((common (car (sort offs
+                                         (lambda (a b)
+                                           (< (abs a) (abs b))))))
+                      (column (ly:grob-parent grob X)))
+                 ;; run LilyPond's chord arrangement to completion FIRST
+                 (ly:grob-property grob 'positioning-done)
+                 (if (not (zero? common))
+                     (begin
+                       ;; materialize the column's X first — translating
+                       ;; an unmaterialized offset silently discards any
+                       ;; pending X-offset callback
+                       (ly:grob-relative-coordinate
+                         column (ly:grob-parent column X) X)
+                       (ly:grob-translate-axis! column common X)))
                  (for-each
                    (lambda (h o)
-                     (if (not (zero? o))
-                         (ly:grob-translate-axis! h o X)))
-                   heads offs)
-                 ;; Stem anchor: the least-displaced head's offset.
-                 ;; Single note / uniformly offset chord: the stem moves
-                 ;; with the head(s). Chord with any unshifted member:
-                 ;; the stem stays put.
-                 (let ((stem-off (car (sort offs
-                                            (lambda (a b)
-                                              (< (abs a) (abs b)))))))
-                   (if (not (zero? stem-off))
-                       (begin
-                         (ly:grob-relative-coordinate
-                           grob (ly:grob-parent grob X) X)
-                         (ly:grob-translate-axis! grob stem-off X)))))))))
-   done)
+                     (let ((residual (- o common)))
+                       (if (not (zero? residual))
+                           (ly:grob-translate-axis! h residual X))))
+                   heads offs)))))))
 
 
 %% ---------------------------------------------------------------------------
@@ -202,19 +255,22 @@ staff-space units (already scaled by the staff's staff-space).")
                ;; position is half a staff space, hence the * 0.5.
                ;;
                ;; The hook path ALSO writes the mapped value into
-               ;; LilyPond's staff-position property — the backlog-6.2
-               ;; chord-mechanism decision. Chord-internal horizontal
-               ;; arrangement and note-column collision logic read the
-               ;; staff-position PROPERTY (diatonic unless overwritten),
-               ;; not the placed geometry, so writing it makes both run
-               ;; in axis space: shared-position chord members arrange as
-               ;; unisons and honor the config's x-offset (otherwise the
-               ;; offset is ABSORBED for diatonic-neighbor pairs — 013
-               ;; record §3.4), and cnb:collision-threshold compares
-               ;; axis-space distances (backlog 6.5). Y-offset is still
-               ;; set explicitly, so staff-position never drives vertical
-               ;; placement. The #f path is the literal pre-hook formula
-               ;; and never touches staff-position.
+               ;; LilyPond's staff-position property, for CONSISTENCY:
+               ;; chord arrangement, collision meshing, ledgers, dots,
+               ;; and stem geometry all read the placed GEOMETRY back
+               ;; (Staff_symbol_referencer), so they operate in axis
+               ;; space with or without this write (verified by source
+               ;; and by measurement, s2 evidence — the 013 record's
+               ;; §3.4 "diatonic-derived arrangement" reading was
+               ;; mistaken). The write keeps the property from LYING to
+               ;; any direct property reader: without it, the property
+               ;; would keep its diatonic value and disagree with the
+               ;; placed geometry. It plays NO role in the x-offset
+               ;; chord mechanism (that is cnb:apply-note-x-offsets
+               ;; above). Y-offset is still set explicitly, so
+               ;; staff-position never drives vertical placement. The
+               ;; #f path is the literal pre-hook formula and never
+               ;; touches staff-position.
                (if (procedure? cnb:get-pitch-staff-position)
                    (let ((mapped-pos (cnb:get-pitch-staff-position note-semis)))
                      (ly:grob-set-property! grob 'staff-position mapped-pos)

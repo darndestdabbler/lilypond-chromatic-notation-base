@@ -3,12 +3,12 @@
 %% ============================================================================
 %% SESSION EVIDENCE — set 008 session 2 (collision semantics, backlog 6.5/E13-5)
 %%
-%% Multi-voice collisions were NOT exercised by the 013 spike. With the
-%% 6.2 mechanism writing the mapped axis position into
-%% NoteHead.staff-position, LilyPond's NoteCollision/Stem logic and the
-%% cnb:collision-threshold overrides (cnb/layout.ly) compare AXIS-space
-%% distances. This score exercises cross-voice simultaneities on the
-%% compact axis around the default threshold (2):
+%% Multi-voice collisions were NOT exercised by the 013 spike. The
+%% collision machinery (NoteCollision meshing, Stem parity logic, and
+%% the cnb:collision-threshold overrides in cnb/layout.ly) reads the
+%% placed GEOMETRY back as rounded staff positions, so under the hook
+%% it compares AXIS-space distances. This score exercises cross-voice
+%% simultaneities on the compact axis around the default threshold (2):
 %%
 %%   beat  v1      v2     axis pos     axis dist  diatonic dist  case
 %%   m1 b1 cis'    c'     -4 / -4      0          0    shared pair, same step
