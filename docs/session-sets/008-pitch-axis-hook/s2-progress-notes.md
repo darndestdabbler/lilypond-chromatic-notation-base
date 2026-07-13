@@ -2,10 +2,12 @@
 
 **Written:** 2026-07-12, mid-session suspend. Session 2 is REGISTERED
 in-progress (`start_session` ran 2026-07-12 19:52 ET; state files updated).
-**Nothing is committed yet** — all work below sits in the working tree.
-Resume by reading this file top to bottom, then continue at "Remaining
-work" below. Delete this file at session close-out (its content moves
-into `change-log.md`).
+**All work below is committed locally as WIP commit `c2321d5`
+(NOT pushed)** — the close-out commit next session follows normally on
+top; the gate's push requirement covers both. Resume by reading this
+file top to bottom, then continue at "Remaining work" below. Delete
+this file at session close-out (its content moves into
+`change-log.md`).
 
 ---
 
