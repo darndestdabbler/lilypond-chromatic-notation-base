@@ -1,5 +1,125 @@
 # Change log — 008-pitch-axis-hook
 
+## Session 3 (2026-07-13) — keysig + clef through the hook; handoff (backlog 6.3, 6.4 / E13-3, E13-4)
+
+**Orchestrator:** claude-code / anthropic (lightweight tier, no metered
+calls). Final session of the set.
+
+**Goal met:** both secondary semitone→vertical placement sites follow
+the pitch axis when `cnb:get-pitch-staff-position` is set — the
+key-signature notehead-chord marks (with the hook joining the stencil
+cache key) and custom-clef glyph anchoring (with fractional anchors
+interpolated) — and the Configurator's set-014 session 3 is unblocked by
+`configurator-handoff.md`. Zero drift with the hook unset: unit
+**303/303** (+12), integration **246/246**, goldens byte-identical,
+s1 spike parity re-verified PASS on the final build.
+
+---
+
+### The engine surface landed
+
+- **`cnb/keysig.ly`** — new pure helper `cnb:keysig-note-y-offset`
+  (semi, middleCPosition, mag): the notehead engraver's placement
+  formula with `mag` standing in for the staff-space (keysig stencils
+  are built in mag-scaled coordinates). Hook path
+  `(hook semi) × 0.5 × mag`, used as-is (no `middleCPosition`); `#f`
+  path is the literal pre-hook linear formula. Both stencil passes call
+  it. The keysig-internal ledger helper needed NO change — it recovers
+  positions from the placed y (`round(2·y/mag)`), which on the hook
+  path recovers the mapped position exactly, and its candidates come
+  from `cnb:staff-line-positions` (already axis-shaped).
+  **Cache key:** `cnb:get-pitch-staff-position` joined the stencil
+  cache key (procedures compare by identity under `equal?`, so
+  re-setting the hook invalidates — the backlog §2 cache-key
+  discipline; doc comment updated).
+- **`cnb/clefs.ly`** — `cnb:clef-anchor-y-offset` branches on the hook.
+  **Fractional-anchor decision:** `anchor-semitones` is a FLOAT by the
+  set-009 contract, but the hook's input contract is INTEGER semitones
+  (the Configurator's compiled v1.3 §5.4b form uses exact-integer
+  `modulo` arithmetic — a float would crash it). A fractional anchor
+  therefore interpolates linearly between the hook positions of its
+  neighboring integer semitones: `hook(⌊a⌋) + frac·(hook(⌊a⌋+1) −
+  hook(⌊a⌋))`. Exact on any linear map (the degeneracy invariant holds
+  symbol-for-symbol); collapsed neighbors keep their shared position;
+  integer anchors call the hook once. The clef stencil cache
+  deliberately does NOT gain the hook: placement is the
+  engraver-applied per-grob `Y-offset`, never baked into the cached
+  stencil (top edge at y = 0 by construction) — documented in the
+  CACHING and VERTICAL PLACEMENT blocks. `'dozenal`/`'text` stay
+  staff-centered (register displays, not pitch-anchored).
+- **`cnb/config.ly`** — the hook's doc block now names all three
+  consultation sites and records that the semitone-unit LENGTH settings
+  (`cnb:clef-size-semitones`, `cnb:clef-gutter-semitones`,
+  `cnb:keysig-bar-extent-semis`) are intervals and stay on the linear
+  `÷ cnb:semitones-per-staff-space` regardless of the hook (an
+  absolute-pitch hook cannot map intervals on a non-uniform axis).
+- **`test-unit.ly`** — +12 assertions (291 → 303): clef-anchor hook
+  path (integer anchor, mcp-independence, fractional interpolation
+  between distinct and collapsed neighbors, negative/euclidean
+  fraction, linear-hook degeneracy) and `cnb:keysig-note-y-offset`
+  (linear ×3, hook ×3). **`README.md`** — hook row now lists all three
+  sites; unit count refreshed.
+
+### Acceptance evidence (`session-003/keysig-clef-through-hook`)
+
+`s3-evidence/keysig-clef-axis.ly` — TWO scores in one render, same
+`\key g \major` (tonic-octave 0) + same registered custom clef
+(fractional anchor **7.5**) + same 013-spike compact staff, but two hook
+anchors (−4 / −3), switched at TRANSLATION time via `\applyContext`
+(toplevel `set!` between scores would be parse-time — LilyPond
+translates collected scores at end-of-file). Harvested and measured
+(`measure_keysig_clef.py`, transcript exit 0; system assignment done
+in-script because the two scores duplicate element ids, which clobbers
+the harvester's id-keyed system map):
+
+- **Keysig marks 8/8 per system** at hook-mapped positions — semitones
+  {7 9 11 12 14 16 18 19} → positions {0..7} (anchor −4) and {1..8}
+  (anchor −3), uniform +0.009 delta (the known harvest artifact, as
+  s1's +0.010).
+- **Clef top edge** at the interpolated anchor: 0.5 / 1.5 measured
+  +0.510 / +1.510.
+- **Noteheads exact** (c′ → −4/−3 etc.), confirming clef-independence
+  (default treble `middleCPosition` −6 in effect throughout).
+- **All 13 differentials exactly +1.000** (marks, clef, notes) — the
+  artifact-free proof that the keysig stencil cache INVALIDATED on hook
+  change (same keySignature + same staff would have leaked score 1's
+  stencil before this session's cache-key change) and that the clef's
+  cached stencil was correctly REUSED and re-anchored per score by the
+  engraver.
+
+### Handoff (`session-003/handoff`)
+
+`configurator-handoff.md` written (sets-005/006 shape): the full
+contract table, the fractional-anchor interpolation contract, the 6.2
+mechanism story with the 013 §3.4 causal correction, four v1.3
+deviations/under-specifications — most notably **§5.4a leaves the
+emitted `cnb:semitones-per-staff-space` VALUE under an axis unpinned**
+(the engine's remaining ÷sps consumers are length conversions; the
+exporter should emit `axisUnitsPerStaffSpace` as the sps value, needs a
+v1.3 clarification) and **keysig pitch SELECTION stays
+`middleCPosition`-derived when `cnb:keysig-tonic-octave` is `#f`**
+(exporter should always emit an explicit tonic octave under an axis) —
+plus the seven carried cross-check flags (collision quantization,
+dot-wipe, barline elasticity, §3.4 correction, fractional-anchor
+fixture, sps emission, explicit tonic octave). Backlog §6 moved to §5
+as resolved (and the §2/006 row in the scheduling table gained its
+missing ✅ — pre-existing drift, the set was already resolved).
+
+### Zero-drift verification with the hook unset (spec step 3)
+
+- Unit suite **303/303**; integration **246/246** (349 assertions,
+  10 specs), re-run after all edits.
+- **Golden baseline byte-identical:** `git status -- tests/` clean
+  after the suite re-rendered the goldens. `test-unit.pdf` is
+  timestamp-only churn, committed as prior sets did.
+- **s1 spike parity re-verified on the final build** (render + harvest
+  + measure in the session scratchpad, exit 0): 35/35 noteheads, 7/7
+  ledger rects, stem directions flipping at position 0. (The s1 render
+  sets keysig/clef styles to `'none`, so this also confirms the changed
+  modules leave the hook-set notehead path untouched.)
+
+---
+
 ## Session 2 (2026-07-12/13) — x-offset field + collision semantics (backlog 6.2, 6.5 / E13-2, E13-5)
 
 **Orchestrator:** claude-code / anthropic (lightweight tier, no metered

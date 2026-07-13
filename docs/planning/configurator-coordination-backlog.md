@@ -19,10 +19,10 @@ session set — run them in `NNN` order per `docs/dabbler/start-here.md`:
 | Backlog items | Session set |
 |---|---|
 | §1.1–1.4 (clefs) | `docs/session-sets/005-clef-configurability/` ✅ resolved (see §5) |
-| §2.1, 2.2, 2.4 (key signatures; 2.3 cancelled) | `docs/session-sets/006-keysig-configurability/` |
+| §2.1, 2.2, 2.4 (key signatures; 2.3 cancelled) | `docs/session-sets/006-keysig-configurability/` ✅ resolved (see §5) |
 | §3.1 (vector-model removal) | `docs/session-sets/007-vector-model-removal/` ✅ resolved (see §5) |
 | §4 (toolkit minim anchors) | not this repo — no set (by design) |
-| §6.1–6.5 (pitch axis; added 2026-07-10) | `docs/session-sets/008-pitch-axis-hook/` |
+| §6.1–6.5 (pitch axis; added 2026-07-10) | `docs/session-sets/008-pitch-axis-hook/` ✅ resolved (see §5) |
 
 Each set's final session moves its items to §5 here when they resolve.
 
@@ -190,6 +190,12 @@ existing export.
 ---
 
 ## 6. Pitch axis (compact-staff support) — *added 2026-07-10*
+
+> **RESOLVED (2026-07-13) by set `008-pitch-axis-hook`** — all five items
+> (6.1–6.5) landed engine-side; see §5 and
+> `docs/session-sets/008-pitch-axis-hook/configurator-handoff.md` for the
+> exact engine contract, the 6.2 chord-mechanism decision, and the
+> cross-check flags. Kept here for source traceability.
 
 *(Numbered §6, placed before §5, so §5 stays the stable "resolved" sink
 that existing references point at.)*
@@ -372,3 +378,49 @@ change-log.md):
   merged to 1.2.1 (always-emitted `cnb:use-procedure-model #t`,
   half-staff-space conversion), preserving this repo's `repeat`-field
   documentation.
+
+### §6 Pitch axis — set `008-pitch-axis-hook` (2026-07-13)
+
+All five items (6.1–6.5 = E13-1…E13-5) landed engine-side with zero
+golden-baseline drift throughout (final: unit 303/303, integration
+246/246, goldens byte-identical, s1 spike parity re-verified). Full
+contract (names, types, defaults, the unit contract as implemented, the
+chord-mechanism decision, and the Configurator cross-check flags) is in
+`docs/session-sets/008-pitch-axis-hook/configurator-handoff.md`.
+
+- **6.1 the pitch-axis hook** — `cnb:get-pitch-staff-position`
+  (default `#f` = the literal linear formula): integer absolute
+  semitone → LilyPond staff position in half-staff-spaces, octave
+  anchor baked in, used as-is (never `middleCPosition`-adjusted).
+  Spike-parity render evidence through the REAL hook (s1: 35/35
+  noteheads, 7/7 ledgers, stem flips exact).
+- **6.2 `(x-offset . N)` field** — consumed for single notes and chord
+  members incl. the diatonic-second shared-position case (+0.850
+  measured, the 013 §3.4 absorbed pair). Mechanism decided by
+  measurement after BOTH 013-record candidates failed: NoteColumn
+  common + per-head residual translation on `Stem.before-line-breaking`
+  (crash invariant: every stem keeps one head at relative X = 0). The
+  013 §3.4 "diatonic-derived arrangement" diagnosis was corrected — the
+  absorber is `Stem::calc_positioning_done` extent arithmetic.
+- **6.3 keysig placement through the hook** — `cnb:keysig-note-y-offset`
+  maps each displayed pitch; the hook joined the keysig stencil-cache
+  key (invalidation render-proven by a two-hook +1.000 differential).
+- **6.4 clef anchor through the hook** — `cnb:clef-anchor-y-offset`
+  maps `anchor-semitones`; FRACTIONAL anchors interpolate between
+  integer-semitone hook values (exact on linear maps; the hook is never
+  called with a float). Clef stencil cache correctly hook-independent
+  (engraver-applied Y-offset re-anchors the cached stencil).
+- **6.5 collision semantics in axis space** — verified + documented, no
+  redesign: collision machinery reads placed geometry as ROUNDED
+  positions (fractional-position maps quantize); axis-distance-0
+  equal-duration cross-voice pairs render both pitches with x-offset
+  separation (stock merge wipes the down-stem head's DOTS — flagged);
+  offsets compose additively with collision shifts.
+
+**Configurator follow-ons still owed (their side, per the rule of
+engagement, consumed by set `014-pitch-axis-implementation` session 3):**
+the handoff's §5 flags — esp. the `cnb:semitones-per-staff-space`
+emission value under an axis (must be `axisUnitsPerStaffSpace`; needs a
+v1.3 clarification), always-explicit `cnb:keysig-tonic-octave` under an
+axis, a fractional-anchor clef case in the round-trip fixture, and the
+013 §3.4 causal correction in Configurator docs.

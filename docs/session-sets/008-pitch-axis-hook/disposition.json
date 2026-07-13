@@ -1,44 +1,28 @@
 {
   "status": "completed",
-  "summary": "Session 2 of 3 for set 008 (x-offset field + collision semantics, backlog 6.2/6.5, E13-2/E13-5). Landed the procedure-model alist's optional (x-offset . N) field, staff-space units: cnb:resolve-config passes it through normalized (absent -> 0, present non-number warns and falls to 0; 3 new unit assertions, 288->291); the notehead acknowledger captures x-offset*staff-space into the new custom grob property cnb-x-offset (at acknowledge time, when the key-dependent config cache is current); cnb:apply-note-x-offsets - chained after cnb:compensate-stem-length on Stem.before-line-breaking - forces positioning-done to completion, then translates the NoteColumn by the COMMON component (least-displaced head's offset) and each head by its RESIDUAL. The 6.2 chord-mechanism decision was forced by measurement: BOTH candidates named in the Configurator 013 record s3.4 fail - (A) writing the mapped value into staff-position changes nothing for arrangement (it reads placed geometry; the record's 'diatonic-derived arrangement' diagnosis was mistaken - the real absorber is Stem::calc_positioning_done's extent-based edge-alignment + parity-reversal arithmetic, which keeps or cancels a stencil translation depending on stem direction and reversal order), and (B) the X-offset property is silently discarded for chord members (translate_axis materializes the offset cache before the property is evaluated) and single-note stems don't follow. Two further discovered failure modes: mutating grobs while positioning-done is being evaluated segfaults 2.24.2 multi-voice, and translating EVERY head of a stem segfaults from any phase (root-caused to stem.cc note_head_positions filter=true dropping heads at nonzero relative X + check_meshing_chords indexing the survivors unguarded; minimal repro: two voices, shared axis position, one offset single note). The landed column+residual split preserves the crash invariant (least-displaced head stays at relative X = 0). staff-position write from session 1 KEPT with corrected rationale: property/geometry consistency only. Acceptance measured vs byte-identical control (measure_xoffset_transcript.txt, exit 0): 19 single-note columns move head+stem +0.850 together with exact within-measure spacing accumulation (barline-elastic ~0.10 redistribution at measure boundaries documented as spacing, not offset loss); chord separation effects <c' cis'> +0.851, <gis' a'> +0.850 (the 013 absorbed case - THE acceptance), <f' fis'> +0.850, spanning <c' g'> 0.000; ledgers follow moved heads; verticals untouched. 6.5 verified and documented (measure_collisions_transcript.txt, exit 0): collision machinery reads placed geometry as ROUNDED positions, so cnb:collision-threshold compares axis-space distances (fractional-position maps quantize - handoff flag); axis-distance-0 equal-duration cross-voice pairs get column-aligned merge treatment with NO head wiped (both pitches render; x-offset is the separation, +0.850 measured) but stock merge wipes the down-stem head's DOTS (handoff flag); distances 1-2 use stock shift/touch heuristics in axis space with offsets composing additively (1.850 = 1.0 + 0.85); beyond threshold untouched; shared-pair chord over a second voice works (1.207 = 0.357 + 0.85). No redesign needed - no new backlog items; two handoff flags recorded. Zero drift with the field unset: unit 291/291, integration 246/246 (349 assertions), goldens byte-identical per git status, s1 spike-parity re-verified PASS on the final build. Honest-record notes in change-log: the mid-session WIP commit c2321d5 (session was suspended 2026-07-12 and completed 2026-07-13) shipped an interim mechanism whose multi-voice segfault was masked by a piped exit code and a stale SVG; all evidence re-produced with exit codes checked directly.",
+  "summary": "Session 3 of 3 (final) for set 008 (keysig + clef through the pitch-axis hook; handoff — backlog 6.3/6.4, E13-3/E13-4). Both secondary semitone->vertical placement sites now follow cnb:get-pitch-staff-position when set. cnb/keysig.ly: new pure helper cnb:keysig-note-y-offset — hook path (hook semi)*0.5*mag used as-is (no middleCPosition), #f path the literal linear formula; both stencil passes call it; the keysig-internal ledger helper needed no change (it recovers positions from placed y, exact on the hook path); the hook JOINED the keysig stencil-cache key (procedures compare by identity — the backlog section-2 cache-key discipline). cnb/clefs.ly: cnb:clef-anchor-y-offset maps anchor-semitones through the hook; FRACTIONAL anchors (floats per the set-009 contract) interpolate linearly between the hook positions of neighboring INTEGER semitones — the hook is never called with a float, because the Configurator's compiled v1.3 5.4b form uses exact-integer modulo arithmetic; the interpolation is exact on linear maps (degeneracy invariant holds) and keeps collapsed neighbors at their shared position. The clef stencil cache deliberately does NOT gain the hook (placement is the engraver-applied per-grob Y-offset, never baked into the cached stencil). Acceptance measured (measure_keysig_clef_transcript.txt, exit 0): one render, two scores, two hook anchors (-4/-3) switched at translation time via applyContext, same G-major key (tonic-octave 0) + fractional-anchor-7.5 custom clef on the 013 spike staff — keysig marks 8/8 at mapped positions {0..7}/{1..8}, clef top edge 0.5/1.5, notes exact (uniform +0.009 harvest artifact), and all 13 system-differentials exactly +1.000, proving the keysig cache invalidates on hook change and the cached clef stencil is correctly reused and re-anchored per score. configurator-handoff.md written (sets-005/006 shape) unblocking the Configurator's set 014 session 3: full contract, the fractional-anchor interpolation contract, the 6.2 mechanism story with the 013 s3.4 causal correction, four v1.3 deviations/under-specifications (notably: 5.4a leaves the emitted cnb:semitones-per-staff-space VALUE under an axis unpinned — the engine's remaining sps consumers are LENGTH conversions (clef size/gutter, keysig bar extent), so the exporter should emit axisUnitsPerStaffSpace as the sps value, needs a v1.3 clarification; and keysig pitch SELECTION stays middleCPosition-derived at tonic-octave #f — always emit an explicit cnb:keysig-tonic-octave under an axis), plus seven carried cross-check flags (collision quantization, dot-wipe, barline elasticity, s3.4 correction, fractional-anchor fixture, sps emission, explicit tonic octave). Backlog section 6 moved to section 5 as resolved (006's scheduling-table row also gained its missing resolved mark — pre-existing drift). Unit +12 assertions (291->303: clef-anchor hook path incl. fractional/collapsed/euclidean/degeneracy cases; keysig placement helper linear+hook); README hook row + count refreshed. Zero drift with the hook unset: unit 303/303, integration 246/246 (349 assertions), goldens byte-identical per git status, s1 spike parity re-verified PASS on the final build. All end-of-set deliverables complete; set closes.",
   "files_changed": [
-    "cnb/procedure.ly",
-    "cnb/stencils.ly",
-    "cnb/noteheads.ly",
-    "cnb/layout.ly",
+    "cnb/keysig.ly",
+    "cnb/clefs.ly",
+    "cnb/config.ly",
     "test-unit.ly",
     "test-unit.pdf",
     "README.md",
+    "docs/planning/configurator-coordination-backlog.md",
     "docs/session-sets/008-pitch-axis-hook/change-log.md",
+    "docs/session-sets/008-pitch-axis-hook/configurator-handoff.md",
     "docs/session-sets/008-pitch-axis-hook/disposition.json",
     "docs/session-sets/008-pitch-axis-hook/session-state.json",
     "docs/session-sets/008-pitch-axis-hook/session-events.jsonl",
     "docs/session-sets/008-pitch-axis-hook/activity-log.json",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.ly",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.ly",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.svg",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.svg",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.harvested.json",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.harvested.json",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_xoffset.py",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_xoffset_transcript.txt",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.svg",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.harvested.json",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_collisions.py",
-    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_collisions_transcript.txt"
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.svg",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/measure_keysig_clef.py",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/measure_keysig_clef_transcript.txt"
   ],
   "verification_method": "skipped",
   "verification_message_ids": [],
-  "next_orchestrator": {
-    "engine": "claude-code",
-    "provider": "anthropic",
-    "model": "claude-fable-5",
-    "effort": "high",
-    "reason": {
-      "code": "continue-current-trajectory",
-      "specifics": "Session 3 (keysig + clef through the hook; configurator-handoff.md) consumes this session's mechanism decisions and handoff flags (013 s3.4 causal correction, fractional-position quantization, dot-wipe, crash invariant) - continuity of context favors the same orchestrator. Lightweight tier, no metered calls; any capable engine could substitute."
-    }
-  },
+  "next_orchestrator": null,
   "blockers": []
 }

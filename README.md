@@ -226,7 +226,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:semitones-per-staff-space` | `2` | Semitones per staff space |
 | `cnb:staff-line-positions` | `'(-4 -2 0 2 4)` | Staff line positions (half-staff-spaces from center) |
 | `cnb:ledger-positions` | `'()` | Ledger candidates (empty = auto-generate from staff pattern) |
-| `cnb:get-pitch-staff-position` | `#f` | Pitch-axis hook: a procedure `(semitone) → staff position` (half-staff-spaces from center, octave anchor baked in, used as-is — not adjusted by `middleCPosition`) replaces the linear formula for notehead placement; `#f` = the linear `cnb:semitones-per-staff-space` formula |
+| `cnb:get-pitch-staff-position` | `#f` | Pitch-axis hook: a procedure `(semitone) → staff position` (half-staff-spaces from center, octave anchor baked in, used as-is — not adjusted by `middleCPosition`) replaces the linear formula at every placement site — noteheads, key-signature marks, and custom-clef anchors (fractional anchors interpolate between integer semitones); `#f` = the linear `cnb:semitones-per-staff-space` formula |
 | `cnb:default-magnify` | `7/4` | Global magnification factor |
 | `cnb:false-hollow` | `#f` | Use white-overlay hollows for angular shapes |
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
@@ -269,7 +269,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ```
 ├── ChromaticNotationBase.ly          Main engine entry point
 ├── Kite-4-369-Notation-Procedure.ly  Reference config (Kite notation, procedure model)
-├── test-unit.ly                      Unit test suite (291 assertions)
+├── test-unit.ly                      Unit test suite (303 assertions)
 ├── README.md                         This file
 │
 ├── cnb/                              Engine modules (17 files, loaded in dependency order)

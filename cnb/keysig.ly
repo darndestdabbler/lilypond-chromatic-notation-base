@@ -69,6 +69,30 @@
 #(define (cnb:keysig-bar-half-extent)
    (/ cnb:keysig-bar-extent-semis cnb:semitones-per-staff-space))
 
+%% Vertical offset (staff-spaces, scaled by mag) of a key-signature
+%% notehead for absolute semitone SEMI — the notehead engraver's
+%% placement formula (cnb/noteheads.ly) with the font magnification
+%% standing in for the staff's staff-space, because keysig stencils are
+%% built in mag-scaled coordinates.
+%%
+%% PITCH-AXIS HOOK (backlog 6.3 / E13-3): when
+%% cnb:get-pitch-staff-position is a procedure, the mark's position is
+%% (hook semi) in half-staff-spaces, used AS-IS (octave anchor baked
+%% into the hook, NOT adjusted by middleCPosition — the cnb/config.ly
+%% unit contract), so the notehead-chord signature lands on the same
+%% compact axis as the notes. When #f, the literal linear formula runs
+%% unchanged. Pitch SELECTION (which octave the displayed chords sit
+%% in) stays with cnb:keysig-pitches either way — the hook only maps
+%% the chosen pitches to vertical positions. Note the bar half-extent
+%% above stays on the linear division even with the hook set:
+%% cnb:keysig-bar-extent-semis is an INTERVAL (a length in semitones),
+%% and the hook maps absolute pitches, not intervals.
+#(define (cnb:keysig-note-y-offset semi middleCPosition mag)
+   (if (procedure? cnb:get-pitch-staff-position)
+       (* (cnb:get-pitch-staff-position semi) 0.5 mag)
+       (* (+ semi (* 2 middleCPosition))
+          (/ 1 cnb:semitones-per-staff-space) mag)))
+
 
 %% ---------------------------------------------------------------------------
 %%  CALCULATE KEY SIGNATURE PITCHES
@@ -220,8 +244,7 @@
                 (y-extent      (ly:stencil-extent nh-stencil 1))
                 (width         (- (cdr x-extent) (car x-extent)))
                 (x-offset      (+ base-x-offset (if (even? i) 0 width)))
-                (y-offset      (* (+ semi (* 2 middleCPosition))
-                                  (/ 1 cnb:semitones-per-staff-space) mag))
+                (y-offset      (cnb:keysig-note-y-offset semi middleCPosition mag))
                 (ledger-offsets (cnb:notehead-ledgers y-offset y-extent mag custom-ledger-cnt))
                 (stencil       (ly:stencil-translate nh-stencil `(,x-offset . ,y-offset)))
                 (with-ledgers  (cnb:add-keysig-ledgers
@@ -244,8 +267,7 @@
                 (x-extent   (ly:stencil-extent nh-stencil 0))
                 (width      (- (cdr x-extent) (car x-extent)))
                 (x-offset   (+ base-x-offset (if (even? i) 0 width)))
-                (y-offset   (* (+ semi (* 2 middleCPosition))
-                               (/ 1 cnb:semitones-per-staff-space) mag))
+                (y-offset   (cnb:keysig-note-y-offset semi middleCPosition mag))
                 (stencil    (ly:stencil-translate nh-stencil `(,x-offset . ,y-offset))))
 
           (set! cumulative-stencil
@@ -283,12 +305,16 @@
 %%  CACHE KEY: covers EVERY input the stencil depends on — the score's
 %%  keySignature, the two positioning inputs the engraver reads per grob
 %%  (middleCPosition and font magnification), the staff geometry
-%%  (cnb:semitones-per-staff-space), and all of the key-signature display
-%%  settings (tonic-octave anchor, and the three separator-bar settings).
-%%  Before set 006 the key was ONLY keySignature, which would leak a stale
-%%  stencil the moment any of those changed (e.g. a different setting, or
-%%  the same key on a second staff with a different clef). 'none never
-%%  reaches here — the engraver suppresses that case before caching.
+%%  (cnb:semitones-per-staff-space AND the pitch-axis hook
+%%  cnb:get-pitch-staff-position, which replaces the linear placement
+%%  formula when set — set 008; procedures compare by identity under
+%%  equal?, so re-setting the hook to a new procedure invalidates), and
+%%  all of the key-signature display settings (tonic-octave anchor, and
+%%  the three separator-bar settings). Before set 006 the key was ONLY
+%%  keySignature, which would leak a stale stencil the moment any of
+%%  those changed (e.g. a different setting, or the same key on a second
+%%  staff with a different clef). 'none never reaches here — the
+%%  engraver suppresses that case before caching.
 %% ---------------------------------------------------------------------------
 
 #(define cnb:key-signature-stencil-cache '())
@@ -302,6 +328,7 @@
                                   middleCPosition
                                   mag
                                   cnb:semitones-per-staff-space
+                                  cnb:get-pitch-staff-position
                                   cnb:keysig-tonic-octave
                                   cnb:keysig-bar-color
                                   cnb:keysig-bar-thickness

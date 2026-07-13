@@ -109,7 +109,21 @@
 %% non-uniform (unequal semitone spacing between adjacent positions).
 %% Ledger lines, dots, articulations, and stem extents/directions all
 %% read the placed geometry back, so the map propagates to them
-%% automatically — see cnb/noteheads.ly for where it is consulted.
+%% automatically.
+%%
+%% CONSULTED AT (every semitone→vertical placement site, set 008):
+%%   cnb/noteheads.ly — notehead Y-offset (the primary site);
+%%   cnb/keysig.ly    — key-signature mark placement
+%%                      (cnb:keysig-note-y-offset; joins the keysig
+%%                      stencil-cache key);
+%%   cnb/clefs.ly     — 'custom clef glyph anchoring
+%%                      (cnb:clef-anchor-y-offset; fractional anchors
+%%                      interpolate between integer semitones — the
+%%                      hook itself is only ever called with integers).
+%% Semitone-unit LENGTH settings (cnb:clef-size-semitones,
+%% cnb:clef-gutter-semitones, cnb:keysig-bar-extent-semis) are
+%% intervals, not pitches — they stay on the linear
+%% cnb:semitones-per-staff-space division regardless of the hook.
 #(define cnb:get-pitch-staff-position #f)
 
 

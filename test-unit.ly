@@ -1394,6 +1394,51 @@
 
 
 %% =========================================================================
+%%  TEST: cnb/clefs.ly — Anchor placement through the pitch-axis hook
+%%  (set 008, backlog 6.4 / E13-4)
+%%
+%%  With cnb:get-pitch-staff-position set, the anchor maps through the
+%%  hook (half-staff-spaces, × 0.5 = staff-spaces), used as-is — NOT
+%%  adjusted by middleCPosition. Fractional anchors interpolate between
+%%  the hook positions of their neighboring INTEGER semitones; the hook
+%%  itself is never called with a fraction (its input contract).
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:clef-anchor-y-offset (pitch-axis hook)")
+
+%% The 013 spike's compact axis: pc → position [0 0 1 2 2 3 3 4 5 5 6 6],
+%% octave stride 7, anchor baked in (middle C, semitone 0 → position −4).
+#(define (cnb:ut-spike-axis semitone)
+   (let* ((pc  (modulo semitone 12))
+          (oct (/ (- semitone pc) 12))
+          (pos (+ (vector-ref #(0 0 1 2 2 3 3 4 5 5 6 6) pc)
+                  (* oct 7))))
+     (- pos 4)))
+
+#(set! cnb:get-pitch-staff-position cnb:ut-spike-axis)
+
+#(cnb:assert-equal "integer anchor 0 (middle C) → hook position −4 → −2 staff-spaces"
+   (cnb:clef-anchor-y-offset 0 0) -2.0)
+#(cnb:assert-equal "hook path ignores middleCPosition (anchor 0: mcp −6 = mcp 0)"
+   (cnb:clef-anchor-y-offset 0 -6) (cnb:clef-anchor-y-offset 0 0))
+#(cnb:assert-equal "fractional anchor 2.5 interpolates distinct neighbors (−3, −2) → −1.25"
+   (cnb:clef-anchor-y-offset 2.5 0) -1.25)
+#(cnb:assert-equal "fractional anchor 0.5 between collapsed semitones (C, C♯ → −4) stays put"
+   (cnb:clef-anchor-y-offset 0.5 0) -2.0)
+#(cnb:assert-near "negative fractional anchor −0.25: euclidean neighbors (−5, −4) → −2.125"
+   (cnb:clef-anchor-y-offset -0.25 0) -2.125 0.000001)
+
+%% Degeneracy: on a LINEAR hook the interpolation is exact — this is the
+%% sps-2 linear value (anchor 5.5, mcp 0 → 2.75) reproduced through the
+%% hook path (pos = semi ≡ sps 2, octave anchor at middle C).
+#(set! cnb:get-pitch-staff-position (lambda (s) s))
+#(cnb:assert-near "linear hook: fractional anchor 5.5 → 2.75 (interpolation exact)"
+   (cnb:clef-anchor-y-offset 5.5 0) 2.75 0.000001)
+
+#(set! cnb:get-pitch-staff-position #f)
+
+
+%% =========================================================================
 %%  TEST: cnb/clefs.ly — Custom size precedence and gutter math
 %% =========================================================================
 
@@ -1618,6 +1663,41 @@
 
 #(set! cnb:keysig-bar-extent-semis cnb:saved-keysig-extent)
 #(set! cnb:semitones-per-staff-space cnb:saved-keysig-sps)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — Mark placement (linear and pitch-axis hook)
+%%  (set 008, backlog 6.3 / E13-3)
+%%
+%%  cnb:keysig-note-y-offset is the notehead engraver's placement formula
+%%  with the font magnification standing in for the staff-space:
+%%  linear (semi + 2·mcp) / sps × mag when the hook is #f;
+%%  (hook semi) × 0.5 × mag — middleCPosition ignored — when set.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-note-y-offset (linear path)")
+
+#(define cnb:saved-keysig-place-sps cnb:semitones-per-staff-space)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "sps-2: semi 4, treble mcp −6, mag 1 → −4 staff-spaces"
+   (cnb:keysig-note-y-offset 4 -6 1) -4)
+#(cnb:assert-equal "sps-2: mag scales the result (semi 4, mcp −6, mag 7/4 → −7)"
+   (cnb:keysig-note-y-offset 4 -6 7/4) -7)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "sps-3: semi 6, mcp 0, mag 1 → 2 staff-spaces"
+   (cnb:keysig-note-y-offset 6 0 1) 2)
+#(set! cnb:semitones-per-staff-space cnb:saved-keysig-place-sps)
+
+#(cnb:test-group "keysig.ly — cnb:keysig-note-y-offset (pitch-axis hook)")
+
+#(set! cnb:get-pitch-staff-position cnb:ut-spike-axis)
+#(cnb:assert-equal "hook: middle C → position −4 → −2 staff-spaces at mag 1"
+   (cnb:keysig-note-y-offset 0 0 1) -2.0)
+#(cnb:assert-equal "hook path ignores middleCPosition (mcp −6 = mcp 0)"
+   (cnb:keysig-note-y-offset 0 -6 1) (cnb:keysig-note-y-offset 0 0 1))
+#(cnb:assert-equal "hook: octave stride and mag (semi 12 → position 3 → 1.5 × mag 2)"
+   (cnb:keysig-note-y-offset 12 0 2) 3.0)
+#(set! cnb:get-pitch-staff-position #f)
 
 
 %% =========================================================================

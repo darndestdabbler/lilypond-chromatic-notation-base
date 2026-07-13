@@ -44,6 +44,22 @@
       "dateTime": "2026-07-13T02:59:05-04:00",
       "description": "6.5 verified and documented (measure_collisions_transcript.txt, exit 0): collision machinery reads placed geometry as ROUNDED staff positions, so cnb:collision-threshold (default 2) compares axis-space half-staff-space distances. Cross-voice axis-distance-0 equal-duration pairs: columns aligned, NO head wiped (both pitches render), x-offset provides the separation (+0.850 measured); stock merge wipes the down-stem head's DOTS (handoff flag). Distances 1-2: stock shift/touch heuristics in axis space (-1.001 / -0.150), offsets compose additively (-1.850 = 1.0 shift + 0.85 offset). Beyond threshold: aligned, untouched. Shared-pair chord over a second voice works (1.207 = 0.357 + 0.85). 17/17 heads exact verticals. No redesign needed; fractional-position quantization + dot-wipe flagged for the session-3 handoff. Zero drift field-unset: unit 291/291, integration 246/246, goldens byte-identical, s1 parity PASS.",
       "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 1,
+      "stepKey": "session-003/keysig-clef-through-hook",
+      "dateTime": "2026-07-13T04:06:15-04:00",
+      "description": "6.3 landed: cnb:keysig-note-y-offset (cnb/keysig.ly) - hook path (hook semi)*0.5*mag used as-is (no middleCPosition), #f path the literal linear formula; both stencil passes call it; keysig-internal ledgers follow automatically (position recovered from placed y). The hook JOINED the keysig stencil-cache key (procedures compare by identity; backlog section-2 cache discipline). 6.4 landed: cnb:clef-anchor-y-offset (cnb/clefs.ly) maps anchor-semitones through the hook; FRACTIONAL anchors (set-009 float contract) interpolate linearly between the hook positions of neighboring INTEGER semitones (the hook is never called with a float - the compiled v1.3 5.4b form uses exact-integer modulo); exact on linear maps, collapsed neighbors stay put. Clef stencil cache deliberately hook-independent (placement is engraver-applied Y-offset, not baked into the cached stencil). Evidence (measure_keysig_clef_transcript.txt, exit 0): two scores, two hook anchors (-4/-3) switched via applyContext (translation-time; toplevel set! between scores is parse-time and affects both), same G-major key + fractional-anchor-7.5 custom clef on the 013 spike staff: keysig marks 8/8 at mapped positions {0..7}/{1..8}, clef top edge 0.5/1.5, notes exact (uniform +0.009 harvest artifact), and ALL 13 differentials exactly +1.000 - proving cache invalidation on hook change AND correct reuse+re-anchoring of the cached clef stencil. Unit +12 (291->303: anchor hook path incl. fractional/collapsed/euclidean/degeneracy; keysig helper linear+hook); README hook row + count. Zero drift hook-unset: unit 303/303, integration 246/246, goldens byte-identical, s1 spike parity re-verified PASS on the final build.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 2,
+      "stepKey": "session-003/handoff",
+      "dateTime": "2026-07-13T04:06:15-04:00",
+      "description": "configurator-handoff.md written (sets-005/006 shape) for the Configurator's set 014 session 3: contract table (cnb:get-pitch-staff-position unit contract as implemented; (x-offset . N) semantics), all three consultation sites with file/line refs, the fractional-anchor interpolation contract, the 6.2 mechanism decision + rejected alternatives + crash invariant + the 013 section-3.4 causal correction, four v1.3 deviations/under-specifications - notably 5.4a leaves the emitted cnb:semitones-per-staff-space VALUE under an axis unpinned (engine's remaining consumers are LENGTH conversions: clef size/gutter, keysig bar extent; exporter should emit axisUnitsPerStaffSpace as the sps value - needs a v1.3 clarification) and keysig pitch SELECTION stays middleCPosition-derived at tonic-octave #f (always emit an explicit cnb:keysig-tonic-octave under an axis) - plus seven carried cross-check flags (collision quantization, dot-wipe, barline elasticity, 3.4 correction, fractional-anchor fixture, sps emission, explicit tonic octave). Backlog section 6 moved to section 5 as resolved; scheduling table rows for 006 (pre-existing missing check) and 008 marked resolved. Final-session change-log.md entry written.",
+      "status": "complete"
     }
   ]
 }

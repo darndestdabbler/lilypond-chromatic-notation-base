@@ -82,6 +82,10 @@
 %%    changes what an existing 'custom key would render.
 %%    The cache uses assoc-ref (equal? comparison) instead of assq-ref
 %%    (eq?), because list keys need structural comparison.
+%%    The pitch-axis hook (cnb:get-pitch-staff-position, set 008) is
+%%    deliberately NOT in the key: it affects only the grob Y-offset the
+%%    ENGRAVER applies per acknowledge ('custom anchor placement), never
+%%    the cached stencil itself (built with its top edge at y = 0).
 %%
 %% ============================================================================
 
@@ -204,7 +208,10 @@
 %%    combined with the context's middleCPosition. The glyph's top edge
 %%    lands at exactly the vertical position where a notehead of that
 %%    pitch would have its center, on ANY staff design — the placement
-%%    divides through cnb:semitones-per-staff-space just like noteheads.
+%%    divides through cnb:semitones-per-staff-space just like noteheads,
+%%    or, when the pitch-axis hook cnb:get-pitch-staff-position is set
+%%    (set 008), maps through the hook just like noteheads (fractional
+%%    anchors interpolate — see cnb:clef-anchor-y-offset).
 %% ---------------------------------------------------------------------------
 
 #(define cnb:clef-defs (make-hash-table))
@@ -256,9 +263,39 @@
 %% position formula (cnb/noteheads.ly) applied to the anchor. The
 %% engraver multiplies by the staff's staff-space, exactly as the
 %% notehead engraver does.
+%%
+%% PITCH-AXIS HOOK (backlog 6.4 / E13-4): when
+%% cnb:get-pitch-staff-position is a procedure, the anchor maps through
+%% the hook instead of the linear formula, used AS-IS (octave anchor
+%% baked into the hook, NOT adjusted by middleCPosition — the
+%% cnb/config.ly unit contract). The hook's input contract is INTEGER
+%% absolute semitones (the Configurator compiles procedures with
+%% exact-integer modulo arithmetic), but anchor-semitones is a FLOAT by
+%% the set-009 anchor contract (interior-feature registration puts the
+%% top edge at a fractional grid offset), so a fractional anchor
+%% interpolates linearly between the hook positions of its neighboring
+%% integer semitones:
+%%
+%%   pos = hook(floor(a)) + frac(a) × (hook(floor(a)+1) − hook(floor(a)))
+%%
+%% On a linear map the interpolation is EXACT (it reduces symbol-for-
+%% symbol to the formula the hook replaces, so the degeneracy invariant
+%% holds); on a many-to-one axis an anchor between two semitones that
+%% collapse onto one position stays at that shared position. Integer
+%% anchors call the hook once, directly. The result is half-staff-
+%% spaces, hence the × 0.5 to staff-spaces.
 #(define (cnb:clef-anchor-y-offset anchor-semitones middle-c-position)
-   (* (+ anchor-semitones (* 2 middle-c-position))
-      (/ 1 cnb:semitones-per-staff-space)))
+   (if (procedure? cnb:get-pitch-staff-position)
+       (let* ((lo   (inexact->exact (floor anchor-semitones)))
+              (frac (- anchor-semitones lo))
+              (pos  (if (zero? frac)
+                        (cnb:get-pitch-staff-position lo)
+                        (let ((pos-lo (cnb:get-pitch-staff-position lo))
+                              (pos-hi (cnb:get-pitch-staff-position (+ lo 1))))
+                          (+ pos-lo (* frac (- pos-hi pos-lo)))))))
+         (* pos 0.5))
+       (* (+ anchor-semitones (* 2 middle-c-position))
+          (/ 1 cnb:semitones-per-staff-space))))
 
 %% Target height in semitones for a registered clef, or #f to render
 %% the path at its native coordinate scale (1 path unit = 1 staff-space).
@@ -429,11 +466,15 @@
 %%  VERTICAL PLACEMENT:
 %%    'dozenal / 'text — the legacy fixed placement around the staff
 %%    center (Y-offset -1 staff-space × mag, plus the -.5 translate
-%%    baked into the builders).
+%%    baked into the builders). These are register displays centered on
+%%    the staff, not pitch-anchored — the pitch-axis hook does not move
+%%    them.
 %%    'custom — the anchor contract: the stencil's top edge (y = 0 by
 %%    construction) is offset to the anchor semitone with the notehead
-%%    engraver's own formula, scaled by the staff's staff-space exactly
-%%    as noteheads are (cnb/noteheads.ly).
+%%    engraver's own formula — linear, or through the pitch-axis hook
+%%    when cnb:get-pitch-staff-position is set (backlog 6.4 / E13-4; see
+%%    cnb:clef-anchor-y-offset) — scaled by the staff's staff-space
+%%    exactly as noteheads are (cnb/noteheads.ly).
 %% ---------------------------------------------------------------------------
 
 #(define cnb-clef-engraver
