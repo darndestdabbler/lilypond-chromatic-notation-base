@@ -1,9 +1,11 @@
 {
   "status": "completed",
-  "summary": "Session 1 of 3 for set 008 (pitch-axis hook, backlog 6.1/E13-1). Pre-flight re-verified every backlog section-6 engine fact against the tree with NO drift (noteheads.ly 83-109 is the single primary site, sets Y-offset from the linear formula and never writes staff-position; keysig.ly 224/248 and clefs.ly 207-261 are the two secondary sites; ledgers are geometry-driven; collision thresholds at layout.ly 97-98). Landed cnb:get-pitch-staff-position in cnb/config.ly (default #f, staff-geometry section) documented with the Configurator unit contract verbatim: the procedure receives the note's absolute semitone (integer, middle C = 0, ly:pitch-semitones) and returns the LilyPond staff position in half-staff-spaces from the staff center, octave anchor baked in (config's staff.midpoint at position 0), result used AS-IS and never adjusted by middleCPosition (precedent cnb:keysig-tonic-octave); may be many-to-one and non-uniform. cnb/noteheads.ly consults it in the acknowledger: procedure -> Y-offset = (hook note-semis) * 0.5 * staff-space; #f -> the literal pre-hook formula kept verbatim. Spec step-3 decision recorded (change-log + site comment): the hook path does NOT write staff-position this session - that write is one of 6.2's two candidate chord-arrangement mechanisms and is decided in Session 2 with its own evidence (also keeps this session's 013-parity comparison exact, since the spike left staff-position untouched). test-unit.ly gained 2 default assertions (286->288); README gained the Engine Settings row and refreshed counts. Evidence (a) hook unset, zero drift: unit 288/288, integration 246/246 (349 assertions, 10 specs); committed golden SVGs/harvests (both Kite 4-369 joy-to-the-world specs incl. the set-004 round-trip) byte-identical per git status. Evidence (b) spike parity through the REAL hook (no score-level coercion): s1-evidence/hook-parity.ly renders the 013 spike's exact axis (pc-axis [0,0,1,2,2,3,3,4,5,5,6,6], stride 7, middle C -> -4, staff (-3 -1 1 4 6 8)) and note-for-note music with cnb:get-pitch-staff-position set; harvested with tools/harvest_svg.py and measured by s1-evidence/measure_hook_parity.py (adapted from the 013 instruments; transcript with exit 0 in s1-evidence/measure_transcript.txt): 35/35 noteheads at mapped positions (uniform +0.010 harvest artifact, same as 013), all three shared-position chord pairs dpos 0.000, 7/7 ledger rects with the exact 013 multiset {-5:4, -7:1, +10:2}, 30/30 stems with single-note directions flipping at LilyPond position 0 (f'/fis' at -1 up, g' at 0 down) and the spanning chord <c' g'> drawing one stem -4 -> +7 - all matching the 013 record's measured tables. The spike's +0.85 x-offset disambiguation is deliberately absent (Session 2 scope, 6.2; vertical positions are identical between the spike's offset and control renders per 013 section 3.1). Committed dc19dc5, pushed to origin/main.",
+  "summary": "Session 2 of 3 for set 008 (x-offset field + collision semantics, backlog 6.2/6.5, E13-2/E13-5). Landed the procedure-model alist's optional (x-offset . N) field, staff-space units: cnb:resolve-config passes it through normalized (absent -> 0, present non-number warns and falls to 0; 3 new unit assertions, 288->291); the notehead acknowledger captures x-offset*staff-space into the new custom grob property cnb-x-offset (at acknowledge time, when the key-dependent config cache is current); cnb:apply-note-x-offsets - chained after cnb:compensate-stem-length on Stem.before-line-breaking - forces positioning-done to completion, then translates the NoteColumn by the COMMON component (least-displaced head's offset) and each head by its RESIDUAL. The 6.2 chord-mechanism decision was forced by measurement: BOTH candidates named in the Configurator 013 record s3.4 fail - (A) writing the mapped value into staff-position changes nothing for arrangement (it reads placed geometry; the record's 'diatonic-derived arrangement' diagnosis was mistaken - the real absorber is Stem::calc_positioning_done's extent-based edge-alignment + parity-reversal arithmetic, which keeps or cancels a stencil translation depending on stem direction and reversal order), and (B) the X-offset property is silently discarded for chord members (translate_axis materializes the offset cache before the property is evaluated) and single-note stems don't follow. Two further discovered failure modes: mutating grobs while positioning-done is being evaluated segfaults 2.24.2 multi-voice, and translating EVERY head of a stem segfaults from any phase (root-caused to stem.cc note_head_positions filter=true dropping heads at nonzero relative X + check_meshing_chords indexing the survivors unguarded; minimal repro: two voices, shared axis position, one offset single note). The landed column+residual split preserves the crash invariant (least-displaced head stays at relative X = 0). staff-position write from session 1 KEPT with corrected rationale: property/geometry consistency only. Acceptance measured vs byte-identical control (measure_xoffset_transcript.txt, exit 0): 19 single-note columns move head+stem +0.850 together with exact within-measure spacing accumulation (barline-elastic ~0.10 redistribution at measure boundaries documented as spacing, not offset loss); chord separation effects <c' cis'> +0.851, <gis' a'> +0.850 (the 013 absorbed case - THE acceptance), <f' fis'> +0.850, spanning <c' g'> 0.000; ledgers follow moved heads; verticals untouched. 6.5 verified and documented (measure_collisions_transcript.txt, exit 0): collision machinery reads placed geometry as ROUNDED positions, so cnb:collision-threshold compares axis-space distances (fractional-position maps quantize - handoff flag); axis-distance-0 equal-duration cross-voice pairs get column-aligned merge treatment with NO head wiped (both pitches render; x-offset is the separation, +0.850 measured) but stock merge wipes the down-stem head's DOTS (handoff flag); distances 1-2 use stock shift/touch heuristics in axis space with offsets composing additively (1.850 = 1.0 + 0.85); beyond threshold untouched; shared-pair chord over a second voice works (1.207 = 0.357 + 0.85). No redesign needed - no new backlog items; two handoff flags recorded. Zero drift with the field unset: unit 291/291, integration 246/246 (349 assertions), goldens byte-identical per git status, s1 spike-parity re-verified PASS on the final build. Honest-record notes in change-log: the mid-session WIP commit c2321d5 (session was suspended 2026-07-12 and completed 2026-07-13) shipped an interim mechanism whose multi-voice segfault was masked by a piped exit code and a stale SVG; all evidence re-produced with exit codes checked directly.",
   "files_changed": [
-    "cnb/config.ly",
+    "cnb/procedure.ly",
+    "cnb/stencils.ly",
     "cnb/noteheads.ly",
+    "cnb/layout.ly",
     "test-unit.ly",
     "test-unit.pdf",
     "README.md",
@@ -12,11 +14,19 @@
     "docs/session-sets/008-pitch-axis-hook/session-state.json",
     "docs/session-sets/008-pitch-axis-hook/session-events.jsonl",
     "docs/session-sets/008-pitch-axis-hook/activity-log.json",
-    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.ly",
-    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.svg",
-    "docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.harvested.json",
-    "docs/session-sets/008-pitch-axis-hook/s1-evidence/measure_hook_parity.py",
-    "docs/session-sets/008-pitch-axis-hook/s1-evidence/measure_transcript.txt"
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.ly",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.ly",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.svg",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.svg",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_xoffset.py",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_xoffset_transcript.txt",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.svg",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_collisions.py",
+    "docs/session-sets/008-pitch-axis-hook/s2-evidence/measure_collisions_transcript.txt"
   ],
   "verification_method": "skipped",
   "verification_message_ids": [],
@@ -27,7 +37,7 @@
     "effort": "high",
     "reason": {
       "code": "continue-current-trajectory",
-      "specifics": "Session 1 landed cleanly with full parity evidence; Session 2 (x-offset field + collision semantics, backlog 6.2/6.5) builds directly on this session's hook and its staff-position deferral decision, so continuity of context favors the same orchestrator. Lightweight tier, no metered calls; any capable engine could substitute."
+      "specifics": "Session 3 (keysig + clef through the hook; configurator-handoff.md) consumes this session's mechanism decisions and handoff flags (013 s3.4 causal correction, fractional-position quantization, dot-wipe, crash invariant) - continuity of context favors the same orchestrator. Lightweight tier, no metered calls; any capable engine could substitute."
     }
   },
   "blockers": []
