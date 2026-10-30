@@ -128,13 +128,23 @@ second suite declaration.
    and stderr to UTF-8 (falling back to ASCII where that fails), open every
    file with an explicit `encoding="utf-8"` while keeping the bytes the
    harvests are written with, render with `-dno-point-and-click`, and warn
-   (without failing) when `lilypond --version` is not 2.24.x. Prove it by
-   running the engine-integration suite whole, as
+   (without failing) when `lilypond --version` is not 2.24.x. Make golden
+   drift a test failure: before writing a regenerated
+   `tests/*.harvested.json`, `run_tests.py` compares it with the tracked
+   copy and, when they differ, leaves the tracked file untouched, names the
+   differing element ids and properties, and exits non-zero; a new
+   `--update-baselines` flag writes the regenerated harvest instead, for an
+   intended change. A spec with no tracked harvest yet writes one and
+   passes. Prove it by running the engine-integration suite whole, as
    `python tools/run_tests.py` with no `-X utf8` and no environment
-   variable set: it passes, and afterwards
+   variable set: it passes, and
    `git diff --exit-code -- "tests/*.harvested.json"` shows no change. The
    tracked `tests/*.svg` are re-baselined once, losing their `textedit://`
    links; a second run leaves `git status -- tests` clean.
+   Tests for the comparison go in a new `tools/test_run_tests.py` (stdlib
+   `unittest`, no LilyPond needed): identical harvests pass, a changed
+   property fails naming the element, and `--update-baselines` writes the
+   file.
 3. Add `tools/run_unit.py`: it runs `lilypond test-unit.ly` with its output
    in an ignored folder (add the folder to `.gitignore`) and a time limit
    on the LilyPond process, parses
@@ -142,7 +152,12 @@ second suite declaration.
    a missing line, a LilyPond error or the time limit. Declare it in
    `dabbler.yaml` as a second suite, `engine-unit`, in `command:` form
    (`python tools/run_unit.py`), covering `cnb/`, `test-unit.ly`,
-   `ChromaticNotationBase.ly` and `tools/run_unit.py`; and drop `-X utf8`
+   `ChromaticNotationBase.ly` and `tools/run_unit.py`. Declare a third
+   suite, `engine-tooling`, for the tooling's own tests
+   (`command: python -m unittest discover -s tools -p "test_*.py"`,
+   `runs_whole: true`, `covers: [tools/]`, `test_roots: [tools]`,
+   `test_glob: "test_*.py"`, `test_name: "test_{name}.py"`, so a change to
+   `tools/run_tests.py` names `tools/test_run_tests.py`). Drop `-X utf8`
    from the engine-integration suite's command and its comment. Prove it
    by running the engine-unit suite (`python tools/run_unit.py`): it exits
    0 and reports 303 passed.

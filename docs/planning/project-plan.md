@@ -443,7 +443,12 @@ has no other consumer.
   stored baseline. The tracked tree is therefore the drift detector. E1
   takes the brief's first option, rendering with `-dno-point-and-click` in
   place, and not an ignored output folder, which would stop regenerating
-  the tracked harvests and so hide drift. The tracked SVGs are re-baselined
+  the tracked harvests and so hide drift. *Amended by the operator after
+  session 2:* E1 also makes drift a test failure rather than a dirty tree:
+  `run_tests.py` compares each regenerated harvest with the tracked copy,
+  names what differs and exits non-zero, and `--update-baselines` accepts
+  an intended change. The clause is then proved by the engine-integration
+  suite itself. The tracked SVGs are re-baselined
   once (their `textedit://` links go); the harvests stay byte-identical,
   since they carry no links (checked 2026-10-30:
   `tests/c-major-scale.svg` has 10, its harvest 0).
