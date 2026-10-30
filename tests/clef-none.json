@@ -1,0 +1,29 @@
+{
+  "test_name": "Clef style 'none suppresses the clef stencil (set 005)",
+  "input_file": "clef-none.ly",
+  "description": "cnb:clef-style 'none must engrave no clef stencil at all, so a Configurator config with its clef disabled finally matches its preview. The clef element must be absent from the SVG while noteheads render normally.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE CLEF IS GONE ==="},
+
+    {
+      "id": "cl-1",
+      "description": "No clef element is engraved in measure 1",
+      "expect": {
+        "type": ["is None"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: EVERYTHING ELSE STILL RENDERS ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally; no clef element anywhere in the SVG",
+      "expect": {
+        "type":      ["== 'notehead'", "count('clef') == 0", "count('notehead') == 4"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}

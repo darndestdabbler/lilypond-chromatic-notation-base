@@ -1,0 +1,80 @@
+# dabbler.yaml -- what this repository declares about itself.
+#
+# Tracked, unlike local-overrides.yaml, because CI reads these facts and so
+# does the next machine to pick up a session. Precedence is the packaged
+# router-config.yaml, then this file, then local-overrides.yaml. Providers,
+# models, roles and transports are deliberately absent: those are
+# distribution facts, and a repository that restated them here would fork
+# the model registry in order to say how to run a test suite.
+schema_version: 1
+
+# The integration suite is the run of record: it renders every tests/*.ly
+# through LilyPond (2.24.2 on PATH), harvests the SVG and evaluates the
+# JSON assertion specs. 246 tests / 349 assertions in about 6 s on
+# 2026-10-30, so it runs whole every time. It renders with
+# -dno-point-and-click, so the tracked tests/*.svg are the same from any
+# checkout, and a regenerated tests/*.harvested.json that differs from the
+# tracked one fails the run (`--update-baselines` accepts an intended
+# change).
+#
+# The unit suite gates test-unit.ly through tools/run_unit.py: LilyPond
+# exits 0 even when its assertions fail, so the wrapper reads its
+# "TEST RESULTS: N passed, M failed" line. 303 assertions in about 2 s; it
+# is declared expensive only because it alone covers test-unit.ly, so its
+# run must be a run of record.
+#
+# The tooling suite is the Python tooling's own tests (stdlib unittest, no
+# LilyPond): tools/test_<name>.py tests tools/<name>.py.
+testing:
+  suites:
+    - name: engine-integration
+      command: python tools/run_tests.py
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tools/
+        - tests/
+        - ChromaticNotationBase.ly
+        - Kite-4-369-Notation-Procedure.ly
+        - kite-4-369-from-configurator.ly
+        - joy-to-the-world.ly
+      test_roots: [tests]
+      test_glob: "*.json"
+    - name: engine-unit
+      command: python tools/run_unit.py
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - test-unit.ly
+        - ChromaticNotationBase.ly
+        - tools/run_unit.py
+    - name: engine-tooling
+      command: python -m unittest discover -s tools -p "test_*.py"
+      runs_whole: true
+      covers: [tools/]
+      test_roots: [tools]
+      test_glob: "test_*.py"
+      test_name: "test_{name}.py"
+
+# Step (f) of the lifecycle: pack, then push to a feed. A session that
+# declared itself releasable publishes through these -- both argv, never
+# shell strings, and `push` naming the credential rather than holding it.
+# This repository declares none, and that is the declaration: it publishes
+# to no feed today. A feed that is a folder on disk -- a drive path, a UNC
+# path or file:// -- takes no credential: leave `secret` out, and the push
+# runs without one. `dabbler packaging --dry-run` rehearses the block and
+# exits 0 when it loads, in a session that may not publish too;
+# `dabbler packaging --rehearse` runs the pack and pushes nothing.
+#
+#   packaging:
+#     pack:
+#       argv: ["dotnet", "pack", "-c", "Release", "-o", "{output}"]
+#     push:
+#       argv: ["dotnet", "nuget", "push", "{artifact}",
+#              "--source", "{feed}", "--api-key", "{secret}"]
+#       feed: https://pkgs.dev.azure.com/<org>/_packaging/<feed>/nuget/v3/index.json
+#       secret: DABBLER_FEED_PAT
