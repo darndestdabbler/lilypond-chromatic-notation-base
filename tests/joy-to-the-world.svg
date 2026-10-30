@@ -1,0 +1,2311 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="210.00mm" height="297.00mm" viewBox="0.0000 -0.0000 119.5016 169.0094">
+<style type="text/css">
+<![CDATA[
+tspan { white-space: pre; }
+]]>
+</style>
+<g transform="translate(47.3226, 6.1578)">
+<text font-family="serif" font-weight="bold" font-size="3.4927" text-anchor="start" fill="currentColor">
+<tspan>Joy to the World</tspan>
+</text>
+</g>
+<g transform="translate(91.0488, 9.6578)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>Isaac Watts &amp; Lowell Mason</tspan>
+</text>
+</g>
+<g transform="translate(2.8453, 11.7187)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>Kite 4-369 (Procedure)</tspan>
+</text>
+</g>
+<g transform="translate(23.7947, 11.7187)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>*</tspan>
+</text>
+</g>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 14.7892)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 16.5392)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 18.2892)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 21.7892)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 23.5392)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 25.2892)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+</g>
+<g id="bl-4" data-type="barline" data-measure="4">
+<g transform="translate(70.0744, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-3" data-type="barline" data-measure="3">
+<g transform="translate(53.9844, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-5" data-type="barline" data-measure="5">
+<g transform="translate(85.6410, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-2" data-type="barline" data-measure="2">
+<g transform="translate(38.9178, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-6" data-type="barline" data-measure="6">
+<g transform="translate(100.9576, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-7" data-type="barline" data-measure="7">
+<g transform="translate(116.3238, 20.0392)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="st-4-0.375-0" data-type="stem" data-measure="4" data-beat="0.375" data-voice="0">
+<g transform="translate(80.5409, 20.0392)">
+<rect x="-0.1137" y="-4.3750" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="fl-4-0.375-0" data-type="flag" data-measure="4" data-beat="0.375" data-voice="0">
+<g transform="translate(80.6547, 15.7042)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0v-250h-14v250h14zM0 0c0 -198 207 -336 207 -534c0 -71 -16 -142 -42 -208c-4 -7 -10 -11 -17 -11c-12 0 -24 10 -21 25c26 62 41 127 41 194c0 104 -96 209 -168 284v250z" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-5-0.000-71-0" data-type="dots" data-measure="5" data-beat="0.000" data-midi="71" data-voice="0">
+<g transform="translate(89.6065, 20.9142)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-5-0.000-0" data-type="stem" data-measure="5" data-beat="0.000" data-voice="0">
+<g transform="translate(87.6403, 20.0392)">
+<rect x="-0.1137" y="1.6335" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-4-0.000-0" data-type="stem" data-measure="4" data-beat="0.000" data-voice="0">
+<g transform="translate(72.0737, 20.0392)">
+<rect x="-0.1137" y="-0.2917" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-3-0.250-0" data-type="stem" data-measure="3" data-beat="0.250" data-voice="0">
+<g transform="translate(62.8005, 20.0392)">
+<rect x="-0.1137" y="-1.4583" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="bm-1-0.250-0" data-type="beam" data-measure="1" data-beat="0.250" data-voice="0">
+<g transform="translate(34.0070, 24.9341)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="1.9988 -0.0248 1.9988 0.7352 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(29.8177, 25.6217)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="6.1880 0.7050 6.1880 1.4650 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="dt-4-0.000-62-0" data-type="dots" data-measure="4" data-beat="0.000" data-midi="62" data-voice="0">
+<g transform="translate(74.0399, 26.1642)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-6-0.375-0" data-type="stem" data-measure="6" data-beat="0.375" data-voice="0">
+<g transform="translate(111.2237, 20.0392)">
+<rect x="-0.1137" y="0.4668" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="fl-6-0.375-0" data-type="flag" data-measure="6" data-beat="0.375" data-voice="0">
+<g transform="translate(111.3374, 25.5409)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0h-14v250h14v-250zM0 0v250c98 58 228 147 228 259c0 57 -15 112 -40 164c-3 15 9 25 21 25c7 0 14 -3 18 -10c25 -56 40 -117 40 -179c0 -203 -267 -306 -267 -509z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-5-0.375-0" data-type="stem" data-measure="5" data-beat="0.375" data-voice="0">
+<g transform="translate(95.8575, 20.0392)">
+<rect x="-0.1137" y="1.6335" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="fl-5-0.375-0" data-type="flag" data-measure="5" data-beat="0.375" data-voice="0">
+<g transform="translate(95.9713, 26.7076)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0h-14v250h14v-250zM0 0v250c98 58 228 147 228 259c0 57 -15 112 -40 164c-3 15 9 25 21 25c7 0 14 -3 18 -10c25 -56 40 -117 40 -179c0 -203 -267 -306 -267 -509z" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-6-0.000-73-0" data-type="dots" data-measure="6" data-beat="0.000" data-midi="73" data-voice="0">
+<g transform="translate(104.9727, 19.1642)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-6-0.000-0" data-type="stem" data-measure="6" data-beat="0.000" data-voice="0">
+<g transform="translate(103.0065, 20.0392)">
+<rect x="-0.1137" y="0.4668" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-2-0.000-69-0" data-type="dots" data-measure="2" data-beat="0.000" data-midi="69" data-voice="0">
+<g transform="translate(42.8833, 20.9142)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-2-0.000-0" data-type="stem" data-measure="2" data-beat="0.000" data-voice="0">
+<g transform="translate(40.9171, 20.0392)">
+<rect x="-0.1137" y="-4.3750" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-1-0.250-73-0" data-type="dots" data-measure="1" data-beat="0.250" data-midi="73" data-voice="0">
+<g transform="translate(31.8976, 19.1642)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-1-0.250-0" data-type="stem" data-measure="1" data-beat="0.250" data-voice="0">
+<g transform="translate(29.9315, 20.0392)">
+<rect x="-0.1137" y="0.4668" width="0.2275" height="5.1355" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-1-0.438-0" data-type="stem" data-measure="1" data-beat="0.438" data-voice="0">
+<g transform="translate(35.9320, 20.0392)">
+<rect x="-0.1137" y="1.6335" width="0.2275" height="5.0142" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-3-0.000-0" data-type="stem" data-measure="3" data-beat="0.000" data-voice="0">
+<g transform="translate(55.9837, 20.0392)">
+<rect x="-0.1137" y="-2.6250" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(2.7853, 20.0392)">
+<rect x="0.0000" y="-5.3375" width="0.1600" height="10.6750" ry="0.0500" fill="currentColor"/>
+</g>
+<g id="cl-1" data-type="clef" data-measure="1">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(6.1197, 16.1973)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0179)">
+<g transform="translate(4.2077, 11.2318)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g id="ks-1" data-type="key-signature" data-measure="1">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:37:5:6">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(100.0000%, 83.1373%, 16.4706%)">
+<g transform="translate(7.0212, 15.4510)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.4000" stroke="currentColor" x1="0" y1="0" x2="0" y2="-8"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 14.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 14.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 13.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 10.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 14.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 14.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 13.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 10.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="ts-1" data-type="time-signature" data-measure="1">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:38:5:6">
+<g transform="translate(16.7527, 20.0392)">
+<path transform="scale(0.0070, -0.0070)" d="M87 126c12 3 25 5 38 5c32 0 67 -10 101 -33c23 -16 49 -25 70 -25c20 0 37 8 42 28c1 6 6 8 10 8c5 0 11 -4 11 -10c0 -63 -85 -99 -132 -99c-35 0 -69 14 -94 42c-14 16 -32 23 -50 23c-30 0 -59 -21 -62 -55c-1 -7 -5 -10 -10 -10s-11 3 -11 10c0 174 232 167 232 345
+c0 60 -19 124 -71 124c-24 0 -46 -15 -46 -37c0 -27 35 -41 35 -68c0 -38 -31 -69 -69 -69s-68 31 -68 69c0 74 70 126 148 126c93 0 180 -58 180 -145c0 -156 -160 -160 -254 -229z" fill="currentColor"/>
+</g>
+<g transform="translate(16.6332, 23.5671)">
+<path transform="scale(0.0070, -0.0070)" d="M208 319c21 13 42 27 57 47c11 15 18 32 25 49c4 9 20 7 20 -7v-256h68c9 0 13 -7 13 -14s-4 -13 -13 -13h-68v-16c0 -45 26 -88 68 -88c7 0 10 -5 10 -10s-3 -11 -10 -11c-41 0 -82 13 -123 13s-82 -13 -123 -13c-7 0 -10 6 -10 11s3 10 10 10c42 0 68 43 68 88v16h-173
+c-21 0 -29 13 -29 21c0 2 1 5 2 6c81 96 146 208 146 333c0 10 7 18 15 15c22 -7 44 -13 67 -13s45 6 67 13c12 4 21 -8 15 -15l-283 -333h173v147c0 8 2 16 8 20z" fill="currentColor"/>
+</g>
+</a>
+</g>
+<g id="fl-2-0.375-0" data-type="flag" data-measure="2" data-beat="0.375" data-voice="0">
+<g transform="translate(48.9981, 16.8709)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0v-250h-14v250h14zM0 0c0 -198 207 -336 207 -534c0 -71 -16 -142 -42 -208c-4 -7 -10 -11 -17 -11c-12 0 -24 10 -21 25c26 62 41 127 41 194c0 104 -96 209 -168 284v250z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-1-0.000-0" data-type="stem" data-measure="1" data-beat="0.000" data-voice="0">
+<g transform="translate(22.8647, 20.0392)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-2-0.375-0" data-type="stem" data-measure="2" data-beat="0.375" data-voice="0">
+<g transform="translate(48.8843, 20.0392)">
+<rect x="-0.1137" y="-3.2083" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
+</g>
+<g id="nh-1-0.438-71-0" data-type="notehead" data-measure="1" data-beat="0.438" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:16:17">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(20.5326, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(20.5326, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-3-0.250-64-0" data-type="notehead" data-measure="3" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:36:37">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(35.8860, 14.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-4-0.000-62-0" data-type="notehead" data-measure="4" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:40:41">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(41.1850, 14.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-1-0.000-74-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:5:6">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(13.0655, 10.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-3-0.000-66-0" data-type="notehead" data-measure="3" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:31:32">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(31.9907, 13.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-4-0.375-69-0" data-type="notehead" data-measure="4" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:44:45">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(46.0234, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(46.0234, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-2-0.375-67-0" data-type="notehead" data-measure="2" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:26:27">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(27.9339, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(27.9339, 13.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-6-0.375-73-0" data-type="notehead" data-measure="6" data-beat="0.375" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:66:67">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(63.5564, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(63.5564, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-5-0.000-71-0" data-type="notehead" data-measure="5" data-beat="0.000" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:51:52">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(50.0802, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(50.0802, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-2-0.000-69-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:22:23">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(23.3812, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(23.3812, 12.4510)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-5-0.375-71-0" data-type="notehead" data-measure="5" data-beat="0.375" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:55:56">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(54.7757, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(54.7757, 11.7843)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-6-0.000-73-0" data-type="notehead" data-measure="6" data-beat="0.000" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:60:61">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(58.8609, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(58.8609, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-1-0.250-73-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:39:10:11">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(17.1037, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(17.1037, 11.1177)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 31.9727)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 33.7227)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 35.4727)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 38.9727)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 40.7227)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 42.4727)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+</g>
+<g id="bl-9" data-type="barline" data-measure="9">
+<g transform="translate(53.2388, 37.2227)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-12" data-type="barline" data-measure="12">
+<g transform="translate(116.3238, 37.2227)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-8" data-type="barline" data-measure="8">
+<g transform="translate(31.6787, 37.2227)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-10" data-type="barline" data-measure="10">
+<g transform="translate(74.0846, 37.2227)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-11" data-type="barline" data-measure="11">
+<g transform="translate(95.6447, 37.2227)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="st-10-0.125-0" data-type="stem" data-measure="10" data-beat="0.125" data-voice="0">
+<g transform="translate(81.0330, 37.2227)">
+<rect x="-0.1137" y="0.4668" width="0.2275" height="4.7758" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-9-0.250-0" data-type="stem" data-measure="9" data-beat="0.250" data-voice="0">
+<g transform="translate(63.9649, 37.2227)">
+<rect x="-0.1137" y="-3.2188" width="0.2275" height="5.6687" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-10-0.250-0" data-type="stem" data-measure="10" data-beat="0.250" data-voice="0">
+<g transform="translate(85.9059, 37.2227)">
+<rect x="-0.1137" y="-3.8169" width="0.2275" height="3.3501" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-11-0.000-0" data-type="stem" data-measure="11" data-beat="0.000" data-voice="0">
+<g transform="translate(97.6440, 37.2227)">
+<rect x="-0.1137" y="-3.8198" width="0.2275" height="4.5196" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-10-0.375-0" data-type="stem" data-measure="10" data-beat="0.375" data-voice="0">
+<g transform="translate(90.5289, 37.2227)">
+<rect x="-0.1137" y="-3.1831" width="0.2275" height="3.8830" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-11-0.000-69-0" data-type="dots" data-measure="11" data-beat="0.000" data-midi="69" data-voice="0">
+<g transform="translate(99.6101, 38.0977)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="bm-11-0.250-0" data-type="beam" data-measure="11" data-beat="0.250" data-voice="0">
+<g transform="translate(106.2570, 35.4727)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.0604 -0.3800 5.0604 0.3800 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="st-9-0.375-0" data-type="stem" data-measure="9" data-beat="0.375" data-voice="0">
+<g transform="translate(69.0878, 37.2227)">
+<rect x="-0.1137" y="-5.5312" width="0.2275" height="3.3144" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-10-0.000-0" data-type="stem" data-measure="10" data-beat="0.000" data-voice="0">
+<g transform="translate(76.1600, 37.2227)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0415" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="sl-8-0.250-71-0" data-type="slur" data-measure="8" data-beat="0.250" data-midi="71" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:23:24">
+<g transform="translate(43.5000, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1903 2.6251C0.7388 4.0968 2.9165 4.6463 4.4326 3.7918L4.4326 3.7918C2.9678 4.4427 0.7902 3.8931 -0.1903 2.6251z"/>
+</g>
+</a>
+</g>
+<g id="sl-8-0.000-74-0" data-type="slur" data-measure="8" data-beat="0.000" data-midi="74" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:15:16">
+<g transform="translate(33.7541, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0925 -3.2253C1.5202 -4.3501 3.8292 -4.0737 4.9654 -2.6419L4.9654 -2.6419C3.8042 -3.8652 1.4953 -4.1416 0.0925 -3.2253z"/>
+</g>
+</a>
+</g>
+<g id="bm-8-0.000-0" data-type="beam" data-measure="8" data-beat="0.000" data-voice="0">
+<g transform="translate(33.6404, 42.1402)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.0604 -0.0475 5.0604 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-9-0.000-69-0" data-type="slur" data-measure="9" data-beat="0.000" data-midi="69" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:33:34">
+<g transform="translate(55.2381, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1529 3.7918C1.4789 6.0094 6.2131 6.9588 8.5739 5.5418L8.5739 5.5418C6.2544 6.7529 1.5202 5.8035 -0.1529 3.7918z"/>
+</g>
+</a>
+</g>
+<g id="bm-8-0.250-0" data-type="beam" data-measure="8" data-beat="0.250" data-voice="0">
+<g transform="translate(43.3863, 33.3902)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="4.8104 0.2850 4.8104 1.0450 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="bm-9-0.000-0" data-type="beam" data-measure="9" data-beat="0.000" data-voice="0">
+<g transform="translate(55.1243, 33.3902)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.8944 0.2850 5.8944 1.0450 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(59.0200, 35.2443)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="1.9988 -0.1515 1.9988 0.6085 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-10-0.000-74-0" data-type="slur" data-measure="10" data-beat="0.000" data-midi="74" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:51:52">
+<g transform="translate(76.1600, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0925 -3.2253C1.5202 -4.3501 3.8292 -4.0737 4.9654 -2.6419L4.9654 -2.6419C3.8042 -3.8652 1.4953 -4.1416 0.0925 -3.2253z"/>
+</g>
+</a>
+</g>
+<g id="bm-9-0.250-0" data-type="beam" data-measure="9" data-beat="0.250" data-voice="0">
+<g transform="translate(63.8511, 34.0552)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.3104 -2.7950 5.3104 -2.0350 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-10-0.250-71-0" data-type="slur" data-measure="10" data-beat="0.250" data-midi="71" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:59:60">
+<g transform="translate(85.9059, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1903 2.6251C0.7388 4.0968 2.9165 4.6463 4.4326 3.7918L4.4326 3.7918C2.9678 4.4427 0.7902 3.8931 -0.1903 2.6251z"/>
+</g>
+</a>
+</g>
+<g id="bm-10-0.000-0" data-type="beam" data-measure="10" data-beat="0.000" data-voice="0">
+<g transform="translate(76.0463, 42.1402)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.0604 -0.0475 5.0604 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-11-0.000-69-0" data-type="slur" data-measure="11" data-beat="0.000" data-midi="69" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:69:70">
+<g transform="translate(97.6440, 37.2227)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1529 3.7918C1.4789 6.0094 6.2131 6.9588 8.5739 5.5418L8.5739 5.5418C6.2544 6.7529 1.5202 5.8035 -0.1529 3.7918z"/>
+</g>
+</a>
+</g>
+<g id="bm-10-0.250-0" data-type="beam" data-measure="10" data-beat="0.250" data-voice="0">
+<g transform="translate(85.7922, 33.3902)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="4.8104 0.2850 4.8104 1.0450 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="bm-11-0.000-0" data-type="beam" data-measure="11" data-beat="0.000" data-voice="0">
+<g transform="translate(97.5302, 33.3902)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.8944 0.2850 5.8944 1.0450 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(101.4259, 35.2443)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="1.9987 -0.1515 1.9987 0.6085 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="st-11-0.188-0" data-type="stem" data-measure="11" data-beat="0.188" data-voice="0">
+<g transform="translate(103.3509, 37.2227)">
+<rect x="-0.1137" y="-3.1802" width="0.2275" height="5.0468" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-11-0.250-0" data-type="stem" data-measure="11" data-beat="0.250" data-voice="0">
+<g transform="translate(106.3708, 37.2227)">
+<rect x="-0.1137" y="-1.7500" width="0.2275" height="4.1999" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-11-0.375-0" data-type="stem" data-measure="11" data-beat="0.375" data-voice="0">
+<g transform="translate(111.2437, 37.2227)">
+<rect x="-0.1137" y="-1.7500" width="0.2275" height="4.1999" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="fl-7-0.375-0" data-type="flag" data-measure="7" data-beat="0.375" data-voice="0">
+<g transform="translate(26.9195, 42.1411)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0h-14v250h14v-250zM0 0v250c98 58 228 147 228 259c0 57 -15 112 -40 164c-3 15 9 25 21 25c7 0 14 -3 18 -10c25 -56 40 -117 40 -179c0 -203 -267 -306 -267 -509z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-7-0.375-0" data-type="stem" data-measure="7" data-beat="0.375" data-voice="0">
+<g transform="translate(26.8057, 37.2227)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-8-0.250-0" data-type="stem" data-measure="8" data-beat="0.250" data-voice="0">
+<g transform="translate(43.5000, 37.2227)">
+<rect x="-0.1137" y="-3.8169" width="0.2275" height="3.3501" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-7-0.000-0" data-type="stem" data-measure="7" data-beat="0.000" data-voice="0">
+<g transform="translate(18.9957, 37.2227)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-7-0.000-74-0" data-type="dots" data-measure="7" data-beat="0.000" data-midi="74" data-voice="0">
+<g transform="translate(20.9619, 36.3477)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-8-0.375-0" data-type="stem" data-measure="8" data-beat="0.375" data-voice="0">
+<g transform="translate(48.1230, 37.2227)">
+<rect x="-0.1137" y="-3.1831" width="0.2275" height="3.8830" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-8-0.000-0" data-type="stem" data-measure="8" data-beat="0.000" data-voice="0">
+<g transform="translate(33.7541, 37.2227)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0415" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-8-0.125-0" data-type="stem" data-measure="8" data-beat="0.125" data-voice="0">
+<g transform="translate(38.6271, 37.2227)">
+<rect x="-0.1137" y="0.4668" width="0.2275" height="4.7758" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(1.9575, 30.8989)">
+<text font-family="serif" font-size="1.7461" text-anchor="start" fill="currentColor">
+<tspan>7</tspan>
+</text>
+</g>
+<g id="ks-7" data-type="key-signature" data-measure="7">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(100.0000%, 83.1373%, 16.4706%)">
+<g transform="translate(7.0212, 25.2701)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.4000" stroke="currentColor" x1="0" y1="0" x2="0" y2="-8"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 24.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 23.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 23.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 24.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 23.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 23.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="cl-7" data-type="clef" data-measure="7">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(6.1197, 28.9708)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0179)">
+<g transform="translate(4.2077, 19.7475)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g id="st-9-0.188-0" data-type="stem" data-measure="9" data-beat="0.188" data-voice="0">
+<g transform="translate(60.9450, 37.2227)">
+<rect x="-0.1137" y="-3.1802" width="0.2275" height="5.0468" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(2.7853, 37.2227)">
+<rect x="0.0000" y="-5.3375" width="0.1600" height="10.6750" ry="0.0500" fill="currentColor"/>
+</g>
+<g id="dt-9-0.000-69-0" data-type="dots" data-measure="9" data-beat="0.000" data-midi="69" data-voice="0">
+<g transform="translate(57.2042, 38.0977)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-9-0.000-0" data-type="stem" data-measure="9" data-beat="0.000" data-voice="0">
+<g transform="translate(55.2381, 37.2227)">
+<rect x="-0.1137" y="-3.8198" width="0.2275" height="4.5196" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="nh-11-0.375-66-0" data-type="notehead" data-measure="11" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:81:82">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(63.5678, 23.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-10-0.375-69-0" data-type="notehead" data-measure="10" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:61:62">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(51.7308, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(51.7308, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-8-0.250-71-0" data-type="notehead" data-measure="8" data-beat="0.250" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:22:23">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(24.8571, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(24.8571, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-9-0.000-69-0" data-type="notehead" data-measure="9" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:30:31">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(31.5646, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(31.5646, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-10-0.000-74-0" data-type="notehead" data-measure="10" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:50:51">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(43.5200, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-11-0.188-67-0" data-type="notehead" data-measure="11" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:71:72">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(59.0576, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(59.0576, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-7-0.375-74-0" data-type="notehead" data-measure="7" data-beat="0.375" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:9:10">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(15.3176, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-8-0.375-69-0" data-type="notehead" data-measure="8" data-beat="0.375" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:25:26">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(27.4988, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(27.4988, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-11-0.000-69-0" data-type="notehead" data-measure="11" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:66:67">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(55.7966, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(55.7966, 22.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-7-0.000-74-0" data-type="notehead" data-measure="7" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:5:6">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(10.8547, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-10-0.125-73-0" data-type="notehead" data-measure="10" data-beat="0.125" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:53:54">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(46.3045, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(46.3045, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-8-0.125-73-0" data-type="notehead" data-measure="8" data-beat="0.125" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:17:18">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(22.0726, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(22.0726, 20.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-9-0.188-67-0" data-type="notehead" data-measure="9" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:35:36">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(34.8257, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(34.8257, 22.9368)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-9-0.375-74-0" data-type="notehead" data-measure="9" data-beat="0.375" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:45:46">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(39.4788, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-10-0.250-71-0" data-type="notehead" data-measure="10" data-beat="0.250" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:58:59">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(49.0891, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(49.0891, 21.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-8-0.000-74-0" data-type="notehead" data-measure="8" data-beat="0.000" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:14:15">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(19.2881, 20.6035)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-11-0.250-66-0" data-type="notehead" data-measure="11" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:75:76">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(60.7833, 23.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-9-0.250-66-0" data-type="notehead" data-measure="9" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:40:39:40">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(36.5514, 23.2701)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 49.1562)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 50.9062)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 52.6562)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 56.1562)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 57.9062)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 59.6562)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+</g>
+<g id="bl-15" data-type="barline" data-measure="15">
+<g transform="translate(116.3238, 54.4062)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-14" data-type="barline" data-measure="14">
+<g transform="translate(79.1640, 54.4062)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-13" data-type="barline" data-measure="13">
+<g transform="translate(53.3658, 54.4062)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="st-14-0.125-0" data-type="stem" data-measure="14" data-beat="0.125" data-voice="0">
+<g transform="translate(89.9527, 54.4062)">
+<rect x="-0.1137" y="-0.3325" width="0.2275" height="3.9490" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-14-0.000-0" data-type="stem" data-measure="14" data-beat="0.000" data-voice="0">
+<g transform="translate(81.7037, 54.4062)">
+<rect x="-0.1137" y="-0.3325" width="0.2275" height="3.9490" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-13-0.438-0" data-type="stem" data-measure="13" data-beat="0.438" data-voice="0">
+<g transform="translate(74.2251, 54.4062)">
+<rect x="-0.1137" y="-3.1752" width="0.2275" height="5.6250" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-13-0.375-0" data-type="stem" data-measure="13" data-beat="0.375" data-voice="0">
+<g transform="translate(69.5172, 54.4062)">
+<rect x="-0.1137" y="-3.4923" width="0.2275" height="5.3589" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="bm-14-0.250-0" data-type="beam" data-measure="14" data-beat="0.250" data-voice="0">
+<g transform="translate(98.0880, 52.9887)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="13.3945 -0.7125 13.3945 0.0475 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(106.3371, 54.2020)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.1454 -0.5083 5.1454 0.2517 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="bm-12-0.000-0" data-type="beam" data-measure="12" data-beat="0.000" data-voice="0">
+<g transform="translate(18.8820, 52.6562)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="8.4365 -0.3800 8.4365 0.3800 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-12-0.375-66-0" data-type="slur" data-measure="12" data-beat="0.375" data-midi="66" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:22:23">
+<g transform="translate(43.7429, 54.4062)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0957 5.5418C1.4888 6.5732 3.7043 6.2987 4.8036 4.9585L4.8036 4.9585C3.6784 6.0903 1.4630 6.3648 0.0957 5.5418z"/>
+</g>
+</a>
+</g>
+<g id="bm-12-0.250-0" data-type="beam" data-measure="12" data-beat="0.250" data-voice="0">
+<g transform="translate(35.3801, 51.2387)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="13.1445 -0.7125 13.1445 0.0475 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(43.6291, 52.4482)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="4.8954 -0.5045 4.8954 0.2555 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-13-0.375-67-0" data-type="slur" data-measure="13" data-beat="0.375" data-midi="67" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:36:37">
+<g transform="translate(69.5172, 54.4062)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0957 4.9585C1.0037 6.2987 3.2191 6.5732 4.6123 5.5418L4.6123 5.5418C3.2449 6.3648 1.0295 6.0903 -0.0957 4.9585z"/>
+</g>
+</a>
+</g>
+<g id="bm-13-0.375-0" data-type="beam" data-measure="13" data-beat="0.375" data-voice="0">
+<g transform="translate(69.4034, 50.9062)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="4.8954 -0.0475 4.8954 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(69.4034, 52.3237)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="4.8954 -0.0475 4.8954 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="bm-14-0.000-0" data-type="beam" data-measure="14" data-beat="0.000" data-voice="0">
+<g transform="translate(81.5899, 54.0737)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="8.4365 -0.3800 8.4365 0.3800 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-14-0.375-64-0" data-type="slur" data-measure="14" data-beat="0.375" data-midi="64" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:55:56">
+<g transform="translate(106.4508, 54.4062)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.1782 6.7085C1.7625 7.6319 4.1298 7.0749 5.1361 5.5418L5.1361 5.5418C4.0817 6.8705 1.7144 7.4275 0.1782 6.7085z"/>
+</g>
+</a>
+</g>
+<g id="st-14-0.250-0" data-type="stem" data-measure="14" data-beat="0.250" data-voice="0">
+<g transform="translate(98.2018, 54.4062)">
+<rect x="-0.1137" y="-1.4203" width="0.2275" height="5.0369" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-14-0.375-0" data-type="stem" data-measure="14" data-beat="0.375" data-voice="0">
+<g transform="translate(106.4508, 54.4062)">
+<rect x="-0.1137" y="-1.6245" width="0.2275" height="5.2410" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-14-0.438-0" data-type="stem" data-measure="14" data-beat="0.438" data-voice="0">
+<g transform="translate(111.4087, 54.4062)">
+<rect x="-0.1137" y="-1.7472" width="0.2275" height="4.1971" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-12-0.125-0" data-type="stem" data-measure="12" data-beat="0.125" data-voice="0">
+<g transform="translate(27.2448, 54.4062)">
+<rect x="-0.1137" y="-1.7500" width="0.2275" height="4.1999" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-12-0.000-0" data-type="stem" data-measure="12" data-beat="0.000" data-voice="0">
+<g transform="translate(18.9957, 54.4062)">
+<rect x="-0.1137" y="-1.7500" width="0.2275" height="4.1999" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-12-0.250-0" data-type="stem" data-measure="12" data-beat="0.250" data-voice="0">
+<g transform="translate(35.4938, 54.4062)">
+<rect x="-0.1137" y="-3.1704" width="0.2275" height="5.6202" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-12-0.375-0" data-type="stem" data-measure="12" data-beat="0.375" data-voice="0">
+<g transform="translate(43.7429, 54.4062)">
+<rect x="-0.1137" y="-3.3784" width="0.2275" height="5.8283" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(1.0698, 48.1062)">
+<text font-family="serif" font-size="1.7461" text-anchor="start" fill="currentColor">
+<tspan>12</tspan>
+</text>
+</g>
+<g id="ks-12" data-type="key-signature" data-measure="12">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(100.0000%, 83.1373%, 16.4706%)">
+<g transform="translate(7.0212, 35.0893)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.4000" stroke="currentColor" x1="0" y1="0" x2="0" y2="-8"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 34.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 31.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 31.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 30.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 30.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 30.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 34.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 31.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 31.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 30.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 30.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 30.4226)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="cl-12" data-type="clef" data-measure="12">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(6.1197, 41.7443)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0179)">
+<g transform="translate(4.2077, 28.2631)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g transform="translate(2.7853, 54.4062)">
+<rect x="0.0000" y="-5.3375" width="0.1600" height="10.6750" ry="0.0500" fill="currentColor"/>
+</g>
+<g id="dt-13-0.000-69-0" data-type="dots" data-measure="13" data-beat="0.000" data-midi="69" data-voice="0">
+<g transform="translate(57.8717, 55.2812)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-13-0.000-0" data-type="stem" data-measure="13" data-beat="0.000" data-voice="0">
+<g transform="translate(55.9056, 54.4062)">
+<rect x="-0.1137" y="-4.3750" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-12-0.438-0" data-type="stem" data-measure="12" data-beat="0.438" data-voice="0">
+<g transform="translate(48.4508, 54.4062)">
+<rect x="-0.1137" y="-3.4971" width="0.2275" height="5.3637" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="nh-12-0.125-66-0" data-type="notehead" data-measure="12" data-beat="0.125" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:9:10">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(15.5684, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-12-0.375-66-0" data-type="notehead" data-measure="12" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:17:18">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(24.9959, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-14-0.125-64-0" data-type="notehead" data-measure="14" data-beat="0.125" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:48:49">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(51.4016, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-13-0.375-67-0" data-type="notehead" data-measure="13" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:33:34">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(39.7241, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(39.7241, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-12-0.438-67-0" data-type="notehead" data-measure="12" data-beat="0.438" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:24:25">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(27.6862, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(27.6862, 32.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-14-0.250-64-0" data-type="notehead" data-measure="14" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:50:51">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(56.1153, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-13-0.438-66-0" data-type="notehead" data-measure="13" data-beat="0.438" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:38:39">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(42.4143, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-12-0.250-66-0" data-type="notehead" data-measure="12" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:13:14">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(20.2822, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-14-0.375-64-0" data-type="notehead" data-measure="14" data-beat="0.375" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:52:53">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(60.8290, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-12-0.000-66-0" data-type="notehead" data-measure="12" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:5:6">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(10.8547, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-14-0.000-64-0" data-type="notehead" data-measure="14" data-beat="0.000" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:45:46">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(46.6878, 33.7559)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-13-0.000-69-0" data-type="notehead" data-measure="13" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:29:30">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(31.9460, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(31.9460, 32.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-14-0.438-66-0" data-type="notehead" data-measure="14" data-beat="0.438" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:41:57:58">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(63.6621, 33.0893)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 66.3397)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 68.0897)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 69.8397)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 73.3397)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 75.0897)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+<g transform="translate(2.8453, 76.8397)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1750" stroke="currentColor" x1="0.0875" y1="0" x2="113.7235" y2="0"/>
+</g>
+</g>
+<g id="bl-16" data-type="barline" data-measure="16">
+<g transform="translate(35.4577, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-19" data-type="barline" data-measure="19">
+<g transform="translate(99.6428, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-18" data-type="barline" data-measure="18">
+<g transform="translate(81.3452, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-20" data-type="barline" data-measure="20">
+<g transform="translate(115.6063, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="1.0500" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+<g transform="translate(114.7488, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-17" data-type="barline" data-measure="17">
+<g transform="translate(57.0357, 71.5897)">
+<rect x="0.0000" y="-5.2500" width="0.3325" height="10.5000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bm-17-0.250-0" data-type="beam" data-measure="17" data-beat="0.250" data-voice="0">
+<g transform="translate(69.4076, 69.8397)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="5.9959 -0.7125 5.9959 0.0475 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="st-17-0.375-0" data-type="stem" data-measure="17" data-beat="0.375" data-voice="0">
+<g transform="translate(75.3297, 71.5897)">
+<rect x="-0.1137" y="-2.0762" width="0.2275" height="3.9428" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-18-0.000-0" data-type="stem" data-measure="18" data-beat="0.000" data-voice="0">
+<g transform="translate(83.4273, 71.5897)">
+<rect x="-0.1137" y="-2.6250" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-17-0.188-0" data-type="stem" data-measure="17" data-beat="0.188" data-voice="0">
+<g transform="translate(66.0337, 71.5897)">
+<rect x="-0.1137" y="-3.1781" width="0.2275" height="5.0446" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-17-0.250-0" data-type="stem" data-measure="17" data-beat="0.250" data-voice="0">
+<g transform="translate(69.5213, 71.5897)">
+<rect x="-0.1137" y="-1.7563" width="0.2275" height="4.2061" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="sl-15-0.375-66-0" data-type="slur" data-measure="15" data-beat="0.375" data-midi="66" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:14:15">
+<g transform="translate(28.4825, 71.5897)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.2637 5.5418C0.3238 6.7379 1.7585 7.2549 2.9739 6.7085L2.9739 6.7085C1.8297 7.0573 0.3950 6.5403 -0.2637 5.5418z"/>
+</g>
+</a>
+</g>
+<g id="sl-16-0.000-62-0" data-type="slur" data-measure="16" data-beat="0.000" data-midi="62" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:23:24">
+<g transform="translate(37.5398, 71.5897)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M1.7477 0.2915C1.8081 -1.5111 3.4972 -3.1750 5.3005 -3.2085L5.3005 -3.2085C3.6446 -3.0254 1.9555 -1.3615 1.7477 0.2915z"/>
+</g>
+</a>
+</g>
+<g id="bm-15-0.375-0" data-type="beam" data-measure="15" data-beat="0.375" data-voice="0">
+<g transform="translate(28.3687, 69.8397)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="3.4251 -0.0475 3.4251 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(28.3687, 71.2572)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="3.4251 -0.0475 3.4251 0.7125 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="sl-17-0.000-69-0" data-type="slur" data-measure="17" data-beat="0.000" data-midi="69" data-voice="0">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:38:39">
+<g transform="translate(59.1178, 71.5897)">
+<path stroke-width="0.1400" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1290 3.7918C1.7904 6.1853 7.6776 7.1757 10.2745 5.5418L10.2745 5.5418C7.7125 6.9686 1.8252 5.9783 -0.1290 3.7918z"/>
+</g>
+</a>
+</g>
+<g id="bm-17-0.000-0" data-type="beam" data-measure="17" data-beat="0.000" data-voice="0">
+<g transform="translate(59.0040, 67.7572)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="7.1035 0.2850 7.1035 1.0450 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+<g transform="translate(64.1087, 69.6499)">
+<polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="1.9988 -0.1902 1.9988 0.5698 0.0400 0.3800 0.0400 -0.3800"/>
+</g>
+</g>
+<g id="st-18-0.250-0" data-type="stem" data-measure="18" data-beat="0.250" data-voice="0">
+<g transform="translate(91.3065, 71.5897)">
+<rect x="-0.1137" y="-1.4583" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-19-0.000-0" data-type="stem" data-measure="19" data-beat="0.000" data-voice="0">
+<g transform="translate(102.5566, 71.5897)">
+<rect x="-0.1137" y="-0.2917" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-15-0.000-0" data-type="stem" data-measure="15" data-beat="0.000" data-voice="0">
+<g transform="translate(18.9957, 71.5897)">
+<rect x="-0.1137" y="-3.2083" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="fl-16-0.000-0" data-type="flag" data-measure="16" data-beat="0.000" data-voice="0">
+<g transform="translate(37.6535, 71.3380)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0v-250h-14v250h14zM0 0c0 -198 207 -336 207 -534c0 -71 -16 -142 -42 -208c-4 -7 -10 -11 -17 -11c-12 0 -24 10 -21 25c26 62 41 127 41 194c0 104 -96 209 -168 284v250z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-16-0.000-0" data-type="stem" data-measure="16" data-beat="0.000" data-voice="0">
+<g transform="translate(37.5398, 71.5897)">
+<rect x="-0.1137" y="-0.2917" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-15-0.000-67-0" data-type="dots" data-measure="15" data-beat="0.000" data-midi="67" data-voice="0">
+<g transform="translate(20.9619, 74.2147)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-15-0.438-0" data-type="stem" data-measure="15" data-beat="0.438" data-voice="0">
+<g transform="translate(31.7201, 71.5897)">
+<rect x="-0.1137" y="-1.4284" width="0.2275" height="5.0450" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-15-0.375-0" data-type="stem" data-measure="15" data-beat="0.375" data-voice="0">
+<g transform="translate(28.4825, 71.5897)">
+<rect x="-0.1137" y="-1.7391" width="0.2275" height="4.1890" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-17-0.000-0" data-type="stem" data-measure="17" data-beat="0.000" data-voice="0">
+<g transform="translate(59.1178, 71.5897)">
+<rect x="-0.1137" y="-3.8219" width="0.2275" height="4.5218" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-17-0.000-69-0" data-type="dots" data-measure="17" data-beat="0.000" data-midi="69" data-voice="0">
+<g transform="translate(61.0840, 72.4647)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0c0 32 25 57 57 57s57 -25 57 -57s-25 -57 -57 -57s-57 25 -57 57z" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(2.7853, 71.5897)">
+<rect x="0.0000" y="-5.3375" width="0.1600" height="10.6750" ry="0.0500" fill="currentColor"/>
+</g>
+<g id="fl-16-0.375-0" data-type="flag" data-measure="16" data-beat="0.375" data-voice="0">
+<g transform="translate(51.3411, 78.2580)">
+<path transform="scale(0.0070, -0.0070)" d="M0 0h-14v250h14v-250zM0 0v250c98 58 228 147 228 259c0 57 -15 112 -40 164c-3 15 9 25 21 25c7 0 14 -3 18 -10c25 -56 40 -117 40 -179c0 -203 -267 -306 -267 -509z" fill="currentColor"/>
+</g>
+</g>
+<g id="st-16-0.375-0" data-type="stem" data-measure="16" data-beat="0.375" data-voice="0">
+<g transform="translate(51.2273, 71.5897)">
+<rect x="-0.1137" y="1.6335" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="cl-15" data-type="clef" data-measure="15">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(6.1197, 54.5178)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0179)">
+<g transform="translate(4.2077, 36.7788)">
+<text font-family="serif" font-weight="bold" font-size="3.8500" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g id="ks-15" data-type="key-signature" data-measure="15">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(100.0000%, 83.1373%, 16.4706%)">
+<g transform="translate(7.0212, 44.9084)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.4000" stroke="currentColor" x1="0" y1="0" x2="0" y2="-8"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 44.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 43.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 42.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 40.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 40.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 40.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(6.3545, 44.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 43.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 42.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(7.6880, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(6.3545, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(7.6880, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(6.3545, 40.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(6.3545, 40.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(7.6880, 40.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(1.0698, 65.2692)">
+<text font-family="serif" font-size="1.7461" text-anchor="start" fill="currentColor">
+<tspan>15</tspan>
+</text>
+</g>
+<g id="st-16-0.125-0" data-type="stem" data-measure="16" data-beat="0.125" data-voice="0">
+<g transform="translate(43.3481, 71.5897)">
+<rect x="-0.1137" y="-0.1165" width="0.2275" height="5.0749" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
+</g>
+<g id="nh-19-0.000-62-0" data-type="notehead" data-measure="19" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="1">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:64:65">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(59.4810, 44.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(58.6475, 44.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-17-0.000-69-0" data-type="notehead" data-measure="17" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:35:36">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(33.7816, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(33.7816, 41.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.3333 -0.3333L0 0.3333L-0.3333 -0.3333L0.3333 -0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-17-0.188-67-0" data-type="notehead" data-measure="17" data-beat="0.188" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:40:41">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(37.7336, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(37.7336, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-16-0.375-71-0" data-type="notehead" data-measure="16" data-beat="0.375" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:30:31">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(29.2727, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(29.2727, 41.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-17-0.250-66-0" data-type="notehead" data-measure="17" data-beat="0.250" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:44:45">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(39.7265, 42.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-16-0.125-74-0" data-type="notehead" data-measure="16" data-beat="0.125" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:25:26">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(24.7704, 40.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-17-0.375-67-0" data-type="notehead" data-measure="17" data-beat="0.375" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:50:51">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(43.0456, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(43.0456, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-18-0.000-66-0" data-type="notehead" data-measure="18" data-beat="0.000" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:55:56">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(47.6728, 42.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-15-0.000-67-0" data-type="notehead" data-measure="15" data-beat="0.000" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:5:6">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(10.8547, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+<g color="rgb(100.0000%, 100.0000%, 100.0000%)">
+<g transform="translate(10.8547, 42.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.3333 0.3333L0.0000 -0.3333L0.3333 0.3333L-0.3333 0.3333z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-16-0.000-62-0" data-type="notehead" data-measure="16" data-beat="0.000" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="3">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:21:22">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(21.4513, 44.2417)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-18-0.250-64-0" data-type="notehead" data-measure="18" data-beat="0.250" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:60:61">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(52.1751, 43.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-15-0.438-64-0" data-type="notehead" data-measure="15" data-beat="0.438" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:16:17">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(80.0000%, 47.4510%, 65.4902%)">
+<g transform="translate(18.1257, 43.5751)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.0000 0.6667L-0.6667 0.3333L0.0000 -0.6667L0.6667 0.3333L-0.0000 0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g id="nh-15-0.375-66-0" data-type="notehead" data-measure="15" data-beat="0.375" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="4">
+<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/joy-to-the-world.ly:42:9:10">
+<g transform="scale(1.7500, 1.7500)">
+<g color="rgb(31.3725%, 70.5882%, 91.3725%)">
+<g transform="translate(16.2757, 42.9084)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.6667L0.6667 -0.3333L0 0.6667L-0.6667 -0.3333L0 -0.6667z"/>
+</g>
+</g>
+</g>
+</a>
+</g>
+<g transform="translate(31.2980, 159.4988)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0" y1="0" x2="56.9055" y2="0"/>
+</g>
+<g transform="translate(2.8453, 161.3609)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>*4-369 Notation: notehead height = 4 semitones; staff lines at +/- 3, 6 &amp; 9 semitones</tspan>
+</text>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<a xlink:href="https://lilypond.org/">
+<rect x="0.0000" y="-0.4748" width="50.3614" height="2.0024" fill="none" stroke="none" stroke-width="0.0"/>
+</a>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>Music engraving by LilyPond 2.24.2—www.lilypond.org</tspan>
+</text>
+</g>
+</svg>
