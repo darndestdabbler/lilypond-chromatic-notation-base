@@ -28,8 +28,9 @@ working tree unchanged; the README's figures and status match reality; a
 One module: the repository itself, a tree of LilyPond/Scheme files loaded by
 `ChromaticNotationBase.ly`, plus Python 3.8+ test tooling under `tools/`. It
 reaches no database. It is handed over as the source tree (users clone it and
-`\include` a config); the release is an annotated `v1.0.0` tag
-(`packaging: release: tag`), published by the operator pushing the tag.
+`\include` a config); the release is a source archive plus an annotated
+`v1.0.0` tag: the release session runs the declared `pack`, then creates the
+tag from `version.json` and pushes it to origin.
 
 ## 3. State on 2026-10-30
 
@@ -84,8 +85,16 @@ reaches no database. It is handed over as the source tree (users clone it and
    signatures follow the score), and a "Running the tests" section matching
    the declared suites.
 
-**Packaging** — writes `packaging:` with `release: tag` into `dabbler.yaml`
-and does nothing else.
+E3 also adds a root `version.json` reading `{ "version": "1.0.0" }`; the
+release reads its version and tag from it.
+
+**Packaging** — writes the `packaging:` block into `dabbler.yaml` and does
+nothing else: a `pack` with no `push`, whose artifact is a source archive,
+`argv: ["git", "archive", "--format=zip",
+"--output={output}/lilypond-chromatic-notation-base-1.0.0.zip", "HEAD"]`.
+Check it with `dabbler packaging --rehearse`. (`release: tag` is not usable
+here: in Dabbler 3.27.0 it validates the orchestration repository's own
+manifests and names a `vsix-v*` tag.)
 
 **Release 1.0.0** — `### Session N: Release 1.0.0 (release: 1.0.0)`, no steps.
 A major version: this is the first release.
