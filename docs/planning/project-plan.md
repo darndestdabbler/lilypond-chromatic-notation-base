@@ -4,6 +4,9 @@
 > **Amended:** 2026-10-30 — the wrap-up program to 1.0.0 is imported from
 > `docs/planning/brief.md` as [§7](#7-wrap-up-program-to-100-2026-10-30);
 > §2, §3 and §6 are brought up to date with sets 001–008, all complete.
+> **Amended:** 2026-10-30 (session 2) — the cuts are challenged in
+> [§7.7](#77-challenge-of-the-cuts-session-2-2026-10-30) before §7 is
+> broken into numbered sessions.
 > **Repo role:** LilyPond/Scheme rendering engine — the third stage of the
 > three-repo chromatic-notation pipeline.
 > **Tier recommendation:** `lightweight` (small, solo-maintained, no UI;
@@ -418,3 +421,61 @@ steps. A major version: this is the first release.
   must not drift. Any session that changes rendering proves zero drift.
 - IP posture per §5: Kite is this project's own system; Clairnote SN and
   Chromatic Lyre Notation are prior art only.
+
+### 7.7 Challenge of the cuts (session 2, 2026-10-30)
+
+**Should the module exist, and as one?** Yes. The repository is the unit
+users clone and `\include`, and nothing in it is deployed, versioned or
+reused apart from the rest. The one deferred cut — `tools/` as its own
+package — stays deferred: `tools/` tests only this tree, ships with it and
+has no other consumer.
+
+**Is each contract clause a promise something can prove?**
+
+- *Contract in* (LilyPond 2.24.x, a registered config, an `\include`ing
+  score): proved by the engine-integration suite, whose
+  `joy-to-the-world-configurator` score renders a Configurator-exported
+  config. The 2.24.x precondition is not checked today; E1 adds a warning.
+- *Contract out — golden harvests do not drift:* provable only by
+  `git diff --exit-code -- tests` after an engine-integration run.
+  `tools/run_tests.py` evaluates the assertion specs, then rewrites
+  `tests/*.harvested.json` (and `tests/*.svg`) in place; it compares no
+  stored baseline. The tracked tree is therefore the drift detector. E1
+  takes the brief's first option, rendering with `-dno-point-and-click` in
+  place, and not an ignored output folder, which would stop regenerating
+  the tracked harvests and so hide drift. The tracked SVGs are re-baselined
+  once (their `textedit://` links go); the harvests stay byte-identical,
+  since they carry no links (checked 2026-10-30:
+  `tests/c-major-scale.svg` has 10, its harvest 0).
+- *How it fails:* the integration suite exits non-zero on a failed
+  assertion. The unit suite cannot fail — LilyPond exits 0 whatever
+  `test-unit.ly` reports — so this clause is unprovable for it until E1's
+  `tools/run_unit.py`.
+
+**Does the dependency direction hide the decisions most likely to change?**
+Two decisions are likely to change, and both are already explicit. The
+LilyPond version is a precondition this engine does not control; E1 warns
+when it is not 2.24.x and E2 records what the newest stable does. The
+Configurator's export contract is owned by
+`docs/CNB-LY-EXPORT-SPEC-v1_2.md` and pinned by the
+`joy-to-the-world-configurator` test, so a change there fails a named
+test, not a silent render.
+
+**Corrections to §7.5 made while numbering the sessions:**
+
+- `Policy: fast` is not carried into E2 or E3. The release preflight (in
+  Dabbler 3.27.0) refuses a release while any session closed since the
+  last release lacks a VERIFIED verdict, so a session that skipped
+  verification would block Release 1.0.0. Both sessions are small, and
+  verifying them costs little.
+- E2's cruft list adds the tracked `tools/__pycache__/*.pyc` files: they
+  are already ignored by `.gitignore`, and one is for a `normalize_svg.py`
+  that no longer exists.
+- The skeleton session is E1 (session 3). There is no solution or build
+  file to scaffold. What a skeleton contributes here is the suite
+  declarations: E1 declares the unit suite, with a hang limit in its own
+  command, beside the engine-integration suite.
+- The packaging session may name the archive with the router's
+  `{version}` placeholder, not the literal `1.0.0`, if
+  `dabbler packaging --rehearse` accepts it; otherwise it keeps the
+  brief's argv.
