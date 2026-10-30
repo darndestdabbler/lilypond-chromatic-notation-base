@@ -182,7 +182,15 @@ Phase E2 of `docs/planning/project-plan.md` §7.5.
 4. Render one score (`tests/c-major-scale.ly`) on the newest LilyPond
    stable release and record the result — works, fails (with the first
    error), or untested and why — in the README's Requirements section. No
-   engine or tooling change; 2.24.x stays the supported version.
+   engine or tooling change; 2.24.x stays the supported version. On the
+   operator's machine LilyPond 2.26.0 is unpacked at
+   `D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe`
+   (checked 2026-10-30: it reports "GNU LilyPond 2.26.0 (running
+   Guile 3.0)"). Call it by that full path and never put it on `PATH`,
+   where it would displace the 2.24.2 the suites use. Write its output to
+   the ignored output folder from session 3 (`-o`), never beside the
+   tracked `tests/c-major-scale.svg`. Record any `\version` or
+   `convert-ly` warning it prints.
 
 ### Session 5: Clean up the guidance and README for 1.0.0
 
