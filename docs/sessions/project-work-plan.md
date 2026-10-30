@@ -15,7 +15,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 1 | Author or import the solution plan | no | 2026-10-30 |
 | 2 | Challenge the plan, then break it into numbered sessions | no | 2026-10-30 |
 | 3 | Make the test tooling portable and gate honestly | no | 2026-10-30 |
-| 4 | Remove cruft and record LilyPond compatibility | — | not declared |
+| 4 | Remove cruft and record LilyPond compatibility | no | 2026-10-30 |
 | 5 | Clean up the guidance and README for 1.0.0 | — | not declared |
 | 6 | Declare the source-archive packaging | — | not declared |
 | 7 | Release 1.0.0 (release: 1.0.0) | — | not declared |
@@ -41,3 +41,9 @@ Make the CNB test tooling portable and make it gate honestly. tools/run_tests.py
 **Amended after acceptance:**
 
 - 2026-10-30 — step 'portable-runner': its files: tools/__pycache__/harvest_svg.cpython-311.pyc is still tracked (session 4 untracks it) and Python regenerates it whenever harvest_svg.py changes, so editing harvest_svg.py changes it (claude-code (anthropic, claude-opus-5-5))
+
+### Session 4 — Remove cruft and record LilyPond compatibility
+
+**Releasable: no.**
+
+Remove the repository's cruft and record how the engine fares on the newest LilyPond. Delete tools/old/ and tools/to-transition-to-python/ outright (git history keeps them), stop tracking tools/__pycache__/*.pyc (already ignored) and test-unit.pdf, and ignore /test-unit.pdf; prove nothing depended on them by running the engine-integration suite whole and the engine-unit suite. Mark docs/planning/configurator-coordination-backlog.md closed at its top, naming the session sets that resolved it (005-clef-configurability, 006-keysig-configurability, 007-vector-model-removal, 008-pitch-axis-hook; §4 was never this repository's). Render tests/c-major-scale.ly once with LilyPond 2.26.0, called by its full path D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe with its output in the ignored out/ folder, and record in the README's Requirements section whether it works, fails (with the first error) or is untested and why, including any \version or convert-ly warning it prints; 2.24.x stays the supported version.

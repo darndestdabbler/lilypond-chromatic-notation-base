@@ -66,6 +66,12 @@ CNB is one part of a three-tool workflow. Each tool has a focused responsibility
 - **LilyPond 2.24.x** (tested with 2.24.2) — [download](https://lilypond.org/download.html)
 - **Python 3.8+** — for the integration testing tools
 
+**LilyPond 2.26 is not supported yet.** Rendering `tests/c-major-scale.ly`
+with LilyPond 2.26.0 (Guile 3.0) on 2026-10-30 fails: the first error is
+`Unbound variable: duration-length`, a Scheme function the engine calls in
+`cnb/utils.ly` that 2.26 no longer defines. LilyPond printed no `\version`
+or `convert-ly` warning. Stay on 2.24.x.
+
 ```bash
 lilypond --version
 python3 --version

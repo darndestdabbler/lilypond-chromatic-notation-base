@@ -3,6 +3,7 @@ __pycache__/
 
 # Output of tools/run_unit.py and other renders that are not baselines.
 /out/
+/test-unit.pdf
 
 # Dabbler router machine-side state: the run ledger records each
 # verification round after the tree it describes, so committing it

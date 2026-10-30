@@ -1,5 +1,12 @@
 # Engine backlog — Configurator-coordination work items
 
+> **CLOSED (2026-10-30).** Every item this repository owned is resolved:
+> §1 by set `005-clef-configurability`, §2 by set
+> `006-keysig-configurability` (2.3 cancelled), §3 by set
+> `007-vector-model-removal`, and §6 by set `008-pitch-axis-hook` (see §5).
+> §4 was never this repository's. Kept for source traceability; new
+> coordination work goes in the session plan, not here.
+
 **Assembled:** 2026-07-07, from the `chromatic-notation-configurator`
 repo's engine-coordination records (session sets 007, 009, 010) plus one
 operator request. Each item cites its source record; the source records
