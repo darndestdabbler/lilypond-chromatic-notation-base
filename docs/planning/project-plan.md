@@ -1,6 +1,9 @@
 # Project Plan — lilypond-chromatic-notation-base (CNB Engine)
 
 > **Created:** 2026-07-04
+> **Amended:** 2026-10-30 — the wrap-up program to 1.0.0 is imported from
+> `docs/planning/brief.md` as [§7](#7-wrap-up-program-to-100-2026-10-30);
+> §2, §3 and §6 are brought up to date with sets 001–008, all complete.
 > **Repo role:** LilyPond/Scheme rendering engine — the third stage of the
 > three-repo chromatic-notation pipeline.
 > **Tier recommendation:** `lightweight` (small, solo-maintained, no UI;
@@ -45,10 +48,10 @@ needs a documentation fix as part of this plan, not just a caveat here.
   hash-table registration, resolver, config cache. This is the *only*
   configuration model — the legacy vector-cycling model was removed in
   set 007 (see Known Issue #2, now resolved).
-- **163 unit-test assertions** in `test-unit.ly`, all passing.
+- **303 unit-test assertions** in `test-unit.ly`, all passing (2026-10-30).
 - **Python test pipeline** (`tools/harvest_svg.py`, `tools/run_tests.py`):
-  render → harvest SVG to structured JSON → assert. Integration tests
-  passing (72/72, C-major scale).
+  render → harvest SVG to structured JSON → assert. 246 tests / 349
+  assertions passing across the `tests/*.json` specs (2026-10-30).
 - **One working reference notation**: `Kite-4-369-Notation-Procedure.ly`
   (the legacy vector-model `Kite-4-369-Notation-Clean.ly` was retired in
   set 007) — an original notation system devised
@@ -62,11 +65,12 @@ needs a documentation fix as part of this plan, not just a caveat here.
   per-note off-key marks (chosen by the config procedure's `off-key-mark`
   field: `'dot`, `'ring`, `'tick`, or a custom generator) — all implemented.
 
-### Known issues (carried over, still open)
+### Known issues
 
-1. **Callback collision**: `test-ids.ly` and `cnb/off-key.ly` both hook
-   `after-line-breaking` on `NoteHead` grobs — last-one-wins. Needs callback
-   chaining. Unfixed.
+1. **Callback collision** — ✅ **RESOLVED (set 002, 2026-07-04).**
+   `test-ids.ly` and `cnb/off-key.ly` both hooked `after-line-breaking` on
+   `NoteHead` grobs, last-one-wins; the hooks now chain. See
+   `docs/session-sets/002-callback-chaining-fix/`.
 2. **Dual model coexistence** — ✅ **RESOLVED (set 007, 2026-07-09).** The
    legacy vector-cycling model has been removed from every engine module; the
    procedure model is now the only configuration model. `cnb:use-procedure-model`
@@ -81,6 +85,11 @@ needs a documentation fix as part of this plan, not just a caveat here.
 ---
 
 ## 3. Remaining work → session sets
+
+> **Status 2026-10-30:** Phases A–D are complete (sets 001–004), and so are
+> the backlog sets 005–008 in §6. The release criterion in §1 is met. The
+> phase text below is kept as the record of what was planned; the work
+> still to do is the wrap-up program in §7.
 
 The phases below are sized to map roughly 1:1 onto session sets. Phase order
 matters: A and B are independent and can run in either order or be combined
@@ -170,6 +179,9 @@ inkscape-music-glyph-toolkit  →  chromatic-notation-configurator  →  lilypon
   Phase D cannot start until that repo's exporter (its Phase 4 / Session 14)
   lands. Check that repo's `docs/planning/project-plan.md` for current
   status before scheduling Phase D's first session.
+  *(2026-10-30: no longer the bottleneck — its exporter landed, Phase D
+  passed in set 004, and every item in
+  `docs/planning/configurator-coordination-backlog.md` is resolved.)*
 
 ---
 
@@ -278,3 +290,131 @@ scheduled as set 007:
 | `005-clef-configurability` | §1.1–1.4 | 3 | lightweight | — |
 | `006-keysig-configurability` | §2.1–2.4 | 3 | lightweight | — (after 005 by `NNN` order) |
 | `007-vector-model-removal` | §3.1 | 2 | lightweight | — (after 005/006 by `NNN` order) |
+
+**Status 2026-10-30:** all eight sets, 001–008 (the last being
+`008-pitch-axis-hook`), are complete. `docs/session-sets/` stays in place
+as read-only history; later work runs as numbered sessions in
+`docs/sessions/session-plan.md`, decomposed from §7.
+
+---
+
+## 7. Wrap-up program to 1.0.0 (2026-10-30)
+
+Imported from `docs/planning/brief.md`, the operator-approved wrap-up plan.
+
+### 7.1 Objective
+
+Finish, clean up and document the CNB engine to the level of "reliable for
+simple exploration", as the last stage of the three-tool pipeline in §4,
+then release it as **1.0.0** and make the repository public under CC0.
+
+**Out of scope:** new engine features, new configuration models, the
+deferred items in §3 ("Deferred / explicitly out of scope"), and support
+for LilyPond versions other than 2.24.x (E2 only records what a newer
+version does).
+
+**Success:** from a fresh clone on a stock Windows console, the unit and
+integration suites run green with no environment variables set and leave
+the working tree unchanged; the README's figures and status match reality;
+a `v1.0.0` tag exists.
+
+### 7.2 Production split
+
+Nothing runs separately in production, and nothing talks to a database:
+there is no database. The engine is a library of LilyPond/Scheme source
+that a user's score `\include`s; LilyPond runs it on the user's machine.
+
+### 7.3 Handoff artifacts
+
+| Part | Handed over as | Produced by |
+|---|---|---|
+| The engine (whole repository) | A source archive, `lilypond-chromatic-notation-base-1.0.0.zip` | `git archive --format=zip --output={output}/lilypond-chromatic-notation-base-1.0.0.zip HEAD`, the declared `pack` |
+| The release marker | An annotated `v1.0.0` tag pushed to origin | The release session, reading the version from the root `version.json` |
+
+Users may equally clone the repository; the archive and the tag are the
+same tree.
+
+### 7.4 Module
+
+**One module: the repository itself.** No cut is made, because nothing in
+it is deployed, versioned or reused apart from the rest.
+
+- **Responsibility:** render chromatic music notation from a declarative
+  config. `ChromaticNotationBase.ly` loads the engine modules in `cnb/`;
+  `tools/` holds the Python 3.8+ test tooling (render → harvest SVG →
+  assert); `tests/` holds the scores, assertion specs and golden harvests.
+- **Contract in:** LilyPond 2.24.x on `PATH`; a config (normally exported
+  by `chromatic-notation-configurator`, per `docs/CNB-LY-EXPORT-SPEC-v1_2.md`)
+  that registers its definitions and procedure before the score; a score
+  that `\include`s `ChromaticNotationBase.ly` and the config.
+- **Contract out:** LilyPond's PDF/SVG/PNG output with noteheads, stems,
+  clefs, key signatures, ledgers, beams, articulations, dots and off-key
+  marks drawn as the config's procedure resolves them; the golden harvests
+  in `tests/` do not drift between releases unless a session says so and
+  re-baselines them.
+- **How it fails:** a malformed config or an unsupported LilyPond version
+  fails at render time with LilyPond's own error output; the engine adds no
+  error channel of its own. The test tooling exits non-zero on any failed
+  assertion (E1 extends this to the unit suite).
+- **Dependency direction:** this engine depends on nothing in the sibling
+  repositories at run time; the Configurator depends on this engine's
+  export contract, and the Inkscape toolkit feeds the Configurator.
+- **Cuts deferred:** none. Splitting `tools/` into its own package was
+  considered and not made: it exists only to test this tree.
+
+### 7.5 Phases
+
+**E1 — Test tooling is portable and gates honestly.**
+1. In `tools/run_tests.py` and `tools/harvest_svg.py`, reconfigure stdout to
+   UTF-8 (or fall back to ASCII) and open files with explicit encodings;
+   render with `-dno-point-and-click` (or write rendered SVGs and harvests to
+   an ignored output folder) so a run never modifies tracked files; warn
+   when LilyPond is not 2.24.x.
+2. Add `tools/run_unit.py`: runs `lilypond test-unit.ly` into an ignored
+   output folder, parses `TEST RESULTS: N passed, M failed`, and exits
+   non-zero on any failure or a missing line. Declare it in `dabbler.yaml`
+   as a second suite (`command:` form), and drop `-X utf8` from the
+   integration suite's command once step 1 makes it unnecessary.
+3. Write `tests/example-notes.json` from the existing harvest, pruned to
+   meaningful assertions; delete `tests/TODO.md`; update the README counts
+   and status banner.
+
+**E2 — Remove cruft; record LilyPond compatibility.** `Policy: fast`.
+1. Delete `tools/old/` and `tools/to-transition-to-python/` (or move them to
+   `docs/archive/` with a short note on what the JSX inspector was); stop
+   tracking `test-unit.pdf` and ignore it.
+2. Mark `configurator-coordination-backlog.md` as closed at the top.
+3. Render one score on the newest LilyPond stable and record the result
+   (works / fails / untested) in README Requirements. No code change.
+
+**E3 — Guidance and README cleanup.** `Policy: fast`.
+1. Replace the placeholder `lessons-learned.md` with real lessons harvested
+   from the session-set `change-log.md` files, or delete it together with
+   `lessons-archive.md` and `project-guidance.md`; remove v1 `ai_router`
+   instructions from whatever is kept.
+2. README: status 1.0.0, a "Known limitations" section (LilyPond 2.24.x
+   only, tested on Windows, configs are generated by the Configurator,
+   clefs/key signatures follow the score), and a "Running the tests"
+   section matching the declared suites.
+3. Add a root `version.json` reading `{ "version": "1.0.0" }`; the release
+   reads its version and tag from it.
+
+**Packaging** — writes the `packaging:` block into `dabbler.yaml` and does
+nothing else: a `pack` with no `push`, whose artifact is the source archive
+in §7.3. Its check is `dabbler packaging --rehearse`. (`release: tag` is not
+usable here: in Dabbler 3.27.0 it validates the orchestration repository's
+own manifests and names a `vsix-v*` tag.)
+
+**Release 1.0.0** — `### Session N: Release 1.0.0 (release: 1.0.0)`, no
+steps. A major version: this is the first release.
+
+### 7.6 Constraints
+
+- `docs/session-sets/` stays in place as read-only history: the README and
+  the Configurator's records link into it (notably
+  `008-pitch-axis-hook/configurator-handoff.md`, which the Configurator's
+  next session reads).
+- Golden baselines (`tests/*.harvested.json`, the `joy-to-the-world` pair)
+  must not drift. Any session that changes rendering proves zero drift.
+- IP posture per §5: Kite is this project's own system; Clairnote SN and
+  Chromatic Lyre Notation are prior art only.
