@@ -1,7 +1,7 @@
 # ChromaticNotationBase (CNB)
 
 > **Status: Release criterion met (July 2026)**
-> The engine is stable and tested (179 unit + 231 integration assertions passing). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
+> The engine is stable and tested (303 unit + 259 integration assertions passing, October 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
 
 A configurable engine for chromatic music notation in LilyPond.
 
@@ -323,9 +323,10 @@ off-key.ly → layout.ly
 
 ```bash
 lilypond test-unit.ly
+python3 tools/run_unit.py   # the same, exiting non-zero on any failed assertion
 ```
 
-254 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, clef style/size settings, and custom-clef registration (anchor placement, size precedence, gutter padding, stencil geometry).
+303 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, clef style/size settings, and custom-clef registration (anchor placement, size precedence, gutter padding, stencil geometry).
 
 ### Integration Tests
 

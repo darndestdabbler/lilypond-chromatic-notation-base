@@ -36,7 +36,29 @@
         "identityProvenance": "direct"
       },
       "verificationVerdict": "VERIFIED",
-      "startCommit": "e65b9456874c9f600f79e6ea35ab482a7f5e6189",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "e65b9456874c9f600f79e6ea35ab482a7f5e6189"
+    },
+    {
+      "number": 3,
+      "title": "Make the test tooling portable and gate honestly",
+      "status": "in-progress",
+      "startedAt": "2026-10-30T07:20:33.738000-04:00",
+      "completedAt": null,
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "startCommit": "481884eac47695fe4883eaf48ebb9e23b2e8a5c9",
       "frameworkVersion": "3.27.0",
       "verification": {
         "rounds": 1,
@@ -44,6 +66,42 @@
         "verifierProvider": "openai",
         "transport": "api"
       }
+    },
+    {
+      "number": 4,
+      "title": "Remove cruft and record LilyPond compatibility",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    },
+    {
+      "number": 5,
+      "title": "Clean up the guidance and README for 1.0.0",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    },
+    {
+      "number": 6,
+      "title": "Declare the source-archive packaging",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    },
+    {
+      "number": 7,
+      "title": "Release 1.0.0 (release: 1.0.0)",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
     }
   ]
 }

@@ -52,6 +52,19 @@ ET.register_namespace("", SVG_NS)
 ET.register_namespace("xlink", XLINK_NS)
 
 
+def configure_output():
+    """Print UTF-8 whatever the console's code page; where a stream cannot
+    be switched, escape what it cannot encode rather than crash."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError, OSError):
+            try:
+                stream.reconfigure(errors="backslashreplace")
+            except (AttributeError, ValueError, OSError):
+                pass
+
+
 # =========================================================================
 #  TRANSFORM ACCUMULATION
 # =========================================================================
@@ -835,6 +848,7 @@ def harvest(svg_path):
 # =========================================================================
 
 def main():
+    configure_output()
     parser = argparse.ArgumentParser(
         description="Extract structured musical data from LilyPond SVG output.")
     parser.add_argument("svg_file", help="Path to SVG file")
@@ -859,7 +873,7 @@ def main():
     json_str = json.dumps(result, indent=indent, default=str)
 
     if args.output:
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             f.write(json_str)
             f.write("\n")
         elem_count = len(result.get('elements', result) if isinstance(result, dict) else result)

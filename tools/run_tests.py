@@ -12,6 +12,7 @@ USAGE:
     python3 tools/run_tests.py                    # run all tests in tests/
     python3 tools/run_tests.py tests/c-major.json # run a single test
     python3 tools/run_tests.py --verbose           # show all assertions
+    python3 tools/run_tests.py --update-baselines  # accept changed harvests
     python3 tools/run_tests.py --generate tests/c-major.ly  # generate golden JSON
 
 TEST SPEC FORMAT (JSON):
@@ -66,6 +67,7 @@ EXAMPLES:
 
 import sys
 import os
+import re
 import json
 import glob
 import subprocess
@@ -78,7 +80,10 @@ from pathlib import Path
 TOOLS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, TOOLS_DIR)
 
-from harvest_svg import harvest
+from harvest_svg import harvest, configure_output
+
+# The version the tracked harvests were baselined on.
+SUPPORTED_LILYPOND = "2.24"
 
 
 # =========================================================================
@@ -291,9 +296,12 @@ def run_lilypond(input_file, output_dir=None):
     output_dir = os.path.abspath(output_dir)
     input_file = os.path.abspath(input_file)
 
+    # -dno-point-and-click keeps textedit:// links (which embed the absolute
+    # path) out of the SVG, so a render is the same from any checkout.
     cmd = [
         "lilypond",
         "-dbackend=svg",
+        "-dno-point-and-click",
         f"--output={output_dir}/{base}",
         input_file,
     ]
@@ -302,7 +310,8 @@ def run_lilypond(input_file, output_dir=None):
         result = subprocess.run(
             cmd,
             capture_output=True,
-            text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=60,
             cwd=project_root,
         )
@@ -335,16 +344,87 @@ def run_lilypond(input_file, output_dir=None):
         return None
 
 
+def warn_unless_supported_lilypond():
+    """Warn (without failing) when lilypond is not the baselined version."""
+    try:
+        result = subprocess.run(
+            ["lilypond", "--version"], capture_output=True,
+            encoding="utf-8", errors="replace", timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return  # run_lilypond reports a missing or hung lilypond per test
+    first_line = (result.stdout.splitlines() or [""])[0]
+    if not re.search(rf"\b{re.escape(SUPPORTED_LILYPOND)}\.\d+", first_line):
+        print(f"Warning: harvests are baselined on LilyPond "
+              f"{SUPPORTED_LILYPOND}.x; found '{first_line}'", file=sys.stderr)
+
+
+# =========================================================================
+#  HARVEST BASELINES
+# =========================================================================
+
+def _flatten(d, prefix=""):
+    """Flatten nested dicts into dotted keys; an empty dict is a leaf."""
+    flat = {}
+    for key, value in d.items():
+        if isinstance(value, dict) and value:
+            flat.update(_flatten(value, f"{prefix}{key}."))
+        else:
+            flat[f"{prefix}{key}"] = value
+    return flat
+
+
+def harvest_differences(baseline, harvested):
+    """Name what differs between two harvests, one line per element id
+    (with its changed properties) or other top-level key. Empty when equal."""
+    diffs = []
+    old_els = {el["id"]: el for el in baseline.get("elements", [])}
+    new_els = {el["id"]: el for el in harvested.get("elements", [])}
+    for el_id in sorted(old_els.keys() | new_els.keys()):
+        if el_id not in new_els:
+            diffs.append(f"{el_id}: no longer harvested")
+        elif el_id not in old_els:
+            diffs.append(f"{el_id}: newly harvested")
+        else:
+            old, new = _flatten(old_els[el_id]), _flatten(new_els[el_id])
+            changed = sorted(k for k in old.keys() | new.keys()
+                             if old.get(k) != new.get(k))
+            if changed:
+                diffs.append(f"{el_id}: {', '.join(changed)}")
+    for key in sorted((baseline.keys() | harvested.keys()) - {"elements"}):
+        if baseline.get(key) != harvested.get(key):
+            diffs.append(f"{key}: changed")
+    return diffs
+
+
+def save_harvest(harvested, harvest_path, update_baselines=False):
+    """Write a regenerated harvest unless it drifts from the tracked one.
+
+    With no tracked harvest yet, or with update_baselines, the file is
+    written. Otherwise a drifted harvest leaves the file untouched and its
+    differences are returned; an empty list means nothing was refused.
+    """
+    # Round-trip so the comparison sees exactly what would be written.
+    harvested = json.loads(json.dumps(harvested, default=str))
+    if os.path.exists(harvest_path) and not update_baselines:
+        with open(harvest_path, encoding="utf-8") as f:
+            diffs = harvest_differences(json.load(f), harvested)
+        if diffs:
+            return diffs
+    with open(harvest_path, "w", encoding="utf-8") as f:
+        json.dump(harvested, f, indent=2)
+    return []
+
+
 # =========================================================================
 #  TEST EXECUTION
 # =========================================================================
 
-def run_single_test(spec_path, verbose=False):
+def run_single_test(spec_path, verbose=False, update_baselines=False):
     """Run a single test from a JSON spec file.
 
     Returns (passed_count, failed_count, total_assertion_count)
     """
-    with open(spec_path) as f:
+    with open(spec_path, encoding="utf-8") as f:
         spec = json.load(f)
 
     test_name = spec.get("test_name", os.path.basename(spec_path))
@@ -371,8 +451,8 @@ def run_single_test(spec_path, verbose=False):
     # Step 1: Run LilyPond
     svg_path = run_lilypond(input_file, output_dir=spec_dir)
     if not svg_path:
-        print(f"  SKIP: LilyPond failed")
-        return (0, 0, 0)
+        print(f"  ✗ LilyPond failed")
+        return (0, 1, 0)
 
     print(f"  SVG: {svg_path}")
 
@@ -462,11 +542,20 @@ def run_single_test(spec_path, verbose=False):
                 if line:
                     print(line)
 
-    # Save harvested data alongside the spec for inspection
+    # The tracked harvest beside the spec is the golden baseline: drift
+    # from it fails the test unless --update-baselines accepts it.
     harvest_path = svg_path.replace(".svg", ".harvested.json")
-    with open(harvest_path, "w") as f:
-        json.dump(harvested, f, indent=2, default=str)
-    print(f"  Saved harvest: {harvest_path}")
+    drift = save_harvest(harvested, harvest_path, update_baselines)
+    if drift:
+        failed += 1
+        print(f"    ✗ Harvest differs from {harvest_path} (left untouched; "
+              f"--update-baselines accepts an intended change):")
+        for line in drift[:20]:
+            print(f"        {line}")
+        if len(drift) > 20:
+            print(f"        ... and {len(drift) - 20} more")
+    else:
+        print(f"  Harvest baseline: {harvest_path}")
 
     return (passed, failed, len(assertions))
 
@@ -494,7 +583,7 @@ def generate_golden(ly_file, output_json=None):
 
     harvested = harvest(svg_path)
 
-    with open(output_json, "w") as f:
+    with open(output_json, "w", encoding="utf-8") as f:
         json.dump(harvested, f, indent=2, default=str)
 
     element_count = len(harvested.get("elements", []))
@@ -553,8 +642,12 @@ def main():
         help="Keep SVG files after tests")
     parser.add_argument("--generate", metavar="FILE.ly",
         help="Generate golden harvest JSON from a .ly file")
+    parser.add_argument("--update-baselines", action="store_true",
+        help="Write regenerated harvests over the tracked ones (an intended change)")
 
+    configure_output()
     args = parser.parse_args()
+    warn_unless_supported_lilypond()
 
     if args.generate:
         generate_golden(args.generate)
@@ -591,7 +684,8 @@ def main():
     start_time = time.time()
 
     for spec_file in spec_files:
-        p, f, t = run_single_test(spec_file, verbose=args.verbose)
+        p, f, t = run_single_test(spec_file, verbose=args.verbose,
+                                  update_baselines=args.update_baselines)
         total_passed += p
         total_failed += f
         total_assertions += t

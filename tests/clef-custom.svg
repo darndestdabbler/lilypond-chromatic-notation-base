@@ -42,15 +42,12 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ts-1" data-type="time-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:35:2:3">
 <g transform="translate(11.5622, 10.0453)">
 <path transform="scale(0.0040, -0.0040)" d="M359 27c-49 0 -75 42 -75 75c0 38 27 77 72 77c4 0 9 0 14 -1c-28 37 -72 59 -120 59c-106 0 -113 -73 -113 -186v-51v-51c0 -113 7 -187 113 -187c80 0 139 70 158 151c2 7 7 10 12 10c6 0 13 -4 13 -12c0 -94 -105 -174 -183 -174c-68 0 -137 21 -184 70
 c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c1 -5 1 -10 1 -14c0 -40 -30 -72 -67 -72z" fill="currentColor"/>
 </g>
-</a>
 </g>
 <g id="ks-1" data-type="key-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:34:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(100.0000%, 83.1373%, 16.4706%)">
 <g transform="translate(9.1454, 16.0453)">
@@ -200,7 +197,6 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="st-1-0.000-0" data-type="stem" data-measure="1" data-beat="0.000" data-voice="0">
 <g transform="translate(15.6973, 10.0453)">
@@ -247,7 +243,6 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 <g id="nh-1-0.750-65-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="65" data-pitch-class="5" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:36:9:10">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(22.3565, 13.5453)">
@@ -255,10 +250,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-60-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:36:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(15.2622, 16.0453)">
@@ -266,10 +259,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-64-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:36:7:8">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(20.1584, 14.0453)">
@@ -277,10 +268,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.250-62-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/clef-custom.ly:36:5:6">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(17.7103, 15.0453)">
@@ -288,7 +277,6 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g transform="translate(34.5701, 165.1202)">
 <a xlink:href="https://lilypond.org/">

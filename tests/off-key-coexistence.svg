@@ -57,25 +57,19 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ti-?-0.000-0-0" data-type="tie" data-measure="?" data-beat="0.000" data-midi="0" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:17:18">
 <g transform="translate(37.0383, 10.0453)">
 <path stroke-width="0.0800" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.2000 -2.7500C1.1017 -3.5813 4.3885 -3.5813 5.2902 -2.7500L5.2902 -2.7500C4.3885 -3.4613 1.1017 -3.4613 0.2000 -2.7500z"/>
 </g>
-</a>
 </g>
 <g id="sl-2-0.250-72-0" data-type="slur" data-measure="2" data-beat="0.250" data-midi="72" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:11:12">
 <g transform="translate(30.7382, 10.0453)">
 <path stroke-width="0.0800" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.1009 -1.1582C0.4615 -2.1876 2.0070 -2.6782 3.0492 -2.1582L3.0492 -2.1582C2.0433 -2.5639 0.4978 -2.0732 -0.1009 -1.1582z"/>
 </g>
-</a>
 </g>
 <g id="bm-2-0.000-0" data-type="beam" data-measure="2" data-beat="0.000" data-voice="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:4:5">
 <g transform="translate(27.3867, 7.8553)">
 <polygon stroke-linejoin="round" stroke-linecap="round" stroke-width="0.0800" fill="currentColor" stroke="currentColor" points="2.0401 -0.8200 2.0401 -0.4200 0.0400 0.2000 0.0400 -0.2000"/>
 </g>
-</a>
 </g>
 <g id="st-1-0.500-0" data-type="stem" data-measure="1" data-beat="0.500" data-voice="0">
 <g transform="translate(20.2473, 10.0453)">
@@ -114,7 +108,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ks-1" data-type="key-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:46:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(100.0000%, 83.1373%, 16.4706%)">
 <g transform="translate(7.6453, 16.0453)">
@@ -264,7 +257,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="st-1-0.750-0" data-type="stem" data-measure="1" data-beat="0.750" data-voice="0">
 <g transform="translate(23.1473, 10.0453)">
@@ -272,12 +264,10 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ts-1" data-type="time-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:47:2:3">
 <g transform="translate(10.0621, 10.0453)">
 <path transform="scale(0.0040, -0.0040)" d="M359 27c-49 0 -75 42 -75 75c0 38 27 77 72 77c4 0 9 0 14 -1c-28 37 -72 59 -120 59c-106 0 -113 -73 -113 -186v-51v-51c0 -113 7 -187 113 -187c80 0 139 70 158 151c2 7 7 10 12 10c6 0 13 -4 13 -12c0 -94 -105 -174 -183 -174c-68 0 -137 21 -184 70
 c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c1 -5 1 -10 1 -14c0 -40 -30 -72 -67 -72z" fill="currentColor"/>
 </g>
-</a>
 </g>
 <g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
 <g transform="translate(2.8453, 13.0453)">
@@ -306,7 +296,6 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 <g id="nh-1-0.250-62-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:48:5:6">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(16.9122, 15.0453)">
@@ -314,10 +303,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.125-71-0" data-type="notehead" data-measure="2" data-beat="0.125" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:6:7">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(28.9667, 10.5453)">
@@ -325,10 +312,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.000-69-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="3">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(27.0166, 11.5453)">
@@ -336,10 +321,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-60-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:48:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.7621, 16.0453)">
@@ -347,10 +330,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.250-72-0" data-type="notehead" data-measure="2" data-beat="0.250" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:9:10">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(30.7382, 10.0453)">
@@ -358,10 +339,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.500-74-0" data-type="notehead" data-measure="2" data-beat="0.500" data-midi="74" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:13:14">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(33.8882, 9.0453)">
@@ -369,10 +348,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.750-67-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:48:11:12">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(22.7123, 12.5453)">
@@ -380,10 +357,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-3-0.000-76-0" data-type="notehead" data-measure="3" data-beat="0.000" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="0">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:50:2:3">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(43.2786, 8.0453)">
@@ -406,10 +381,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.750-76-0" data-type="notehead" data-measure="2" data-beat="0.750" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:49:16:17">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(37.0383, 8.0453)">
@@ -417,10 +390,8 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-66-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="66" data-pitch-class="6" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/tests/off-key-coexistence.ly:48:7:8">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(19.8122, 13.0453)">
@@ -431,7 +402,6 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 <g transform="translate(19.8122, 12.1952)">
 <circle stroke-linejoin="round" stroke-linecap="round" fill="currentColor" stroke="currentColor" stroke-width="0" r="0.1200"/>
 </g>
-</a>
 </g>
 <g transform="translate(34.5701, 165.1202)">
 <a xlink:href="https://lilypond.org/">
