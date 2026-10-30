@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "summary": "Session 2 of 2 (final): all Session 1 findings resolved and the release criterion met. E1: tests/joy-to-the-world.ly and tests/example-notes.ly migrated off renamed colors (cnb:rose -> cnb:1-rose etc.) onto Kite-4-369-Notation-Procedure.ly; golden suite compiles and passes as checked in (74/74 flagship, no skips); stale SVG/harvest snapshots regenerated. D3: tools/harvest_svg.py canonicalizes numeric path tokens before hashing (4-decimal round, trailing-zero strip, -0 fold); golden vs Configurator-exported harvests now identical on all dimensions including path_hash (191/191 elements, zero diffs, staff geometry and 19 measures equal) - Session 1's accepted-cosmetic caveat eliminated. Harness: run_tests.py no longer ingests *.harvested.json as specs. Docs: README gains the render-side end-to-end walkthrough cross-linking the Configurator design half (007 handoff item 1), accessible-colors define-before-include hand-off smoke-tested live; README status/counters refreshed; CNB-LY-EXPORT-SPEC merged to 1.2.1 preserving engine-side repeat docs (FYI filed for Configurator copy). Suites green post-change: integration 231/231 (317 assertions, 5 specs), unit 179/179. Release criterion (project plan section 1) attested met in change-log.md and findings.md section 7. Deliverable commit 4b6a59c.",
+  "files_changed": [
+    "README.md",
+    "docs/CNB-LY-EXPORT-SPEC-v1_2.md",
+    "tests/joy-to-the-world.ly",
+    "tests/joy-to-the-world.svg",
+    "tests/joy-to-the-world.harvested.json",
+    "tests/joy-to-the-world-configurator.harvested.json",
+    "tests/example-notes.ly",
+    "tests/example-notes.svg",
+    "tests/example-notes.harvested.json",
+    "tests/c-major-scale.harvested.json",
+    "tests/c-major-scale.svg",
+    "tests/off-key-coexistence.harvested.json",
+    "tests/off-key-coexistence-procedure.harvested.json",
+    "tools/harvest_svg.py",
+    "tools/run_tests.py",
+    "test-unit.pdf",
+    "docs/session-sets/004-end-to-end-pipeline-verification/findings.md",
+    "docs/session-sets/004-end-to-end-pipeline-verification/change-log.md",
+    "docs/session-sets/004-end-to-end-pipeline-verification/activity-log.json"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": null,
+  "blockers": []
+}
