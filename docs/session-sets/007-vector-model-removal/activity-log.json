@@ -1,0 +1,41 @@
+{
+  "sessionSetName": "007-vector-model-removal",
+  "createdDate": "2026-07-09T00:36:22.317440+00:00",
+  "totalSessions": 2,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-09T00:36:22.325217+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 1,
+      "stepKey": "session-002/vector-code-removed",
+      "dateTime": "2026-07-09T04:44:34-04:00",
+      "description": "Removed the vector-cycling implementation from every engine module against S1's inventory: config.ly (seven cycling sequence vectors, cnb:off-key-indicator, cnb:off-key-flag-stencil), stencils.ly (modulus helpers, cnb:rotate-stencil, build-base-stencils, base-stencil-vector/get-base-stencils), stems.ly (stem-attachment-modulus + vector branch), off-key.ly (apply-off-key-flag + engraver vector arms); the (if cnb:use-procedure-model ...) branches in stencils/stems/off-key/noteheads are now unconditional; layout.ly accidental suppression unconditional. Resolved S1's two open questions: Q1 pre-scaled cnb:notehead-shape/-hollow-path to bake in the old 0.75 scaling, restoring the documented 2-semitone default oval; Q2 removed cnb:off-key-indicator entirely and dropped the test-unit assertion (unit 287->286). cnb:use-procedure-model kept defined as a permanent no-op (constraint 1).",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 2,
+      "stepKey": "session-002/roundtrip-reverified",
+      "dateTime": "2026-07-09T04:44:34-04:00",
+      "description": "Full suites re-run green (lightweight, no metered calls): unit 286/286, integration 246/246 (349 assertions, 10 specs). Spec constraint 2 confirmed: the set-004 round-trip golden tests/joy-to-the-world-configurator is byte-stable (committed SVG + harvested JSON unchanged in git) and passes 74/74 (101 assertions); tests/joy-to-the-world likewise byte-stable. Bare-default fixtures regenerated at 2 semitones (undoing S1's temporary 2.666 default); clef-custom.json's one absolute first-notehead pin reverted 15.151->14.762, gutter delta under test unchanged at +1.5.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 3,
+      "stepKey": "session-002/backlog-updated",
+      "dateTime": "2026-07-09T04:44:34-04:00",
+      "description": "Docs updated: README (single-model note, removed off-key-indicator row + Known Issue #3 + roadmap bullet, unit count 286), project-plan.md Known Issue #2 -> RESOLVED (untracked in repo, per S1 precedent), configurator-coordination-backlog.md 3.1 resolved (header table flagged + new section-5 entry noting NO Configurator-side action required since the emitted #(set! cnb:use-procedure-model #t) line stays valid), CNB-LY-EXPORT-SPEC-v1_2.md (D1 rationale + Engine-Settings default #f->#t annotated; always-emit contract unchanged), INTEGRATION-TESTING.md (stale off-key/callback limitation rewritten). Deliverable commit bd68ef6, pushed to origin/main. Set 007 complete.",
+      "status": "complete"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+# dabbler.yaml -- what this repository declares about itself.
+#
+# Tracked, unlike local-overrides.yaml, because CI reads these facts and so
+# does the next machine to pick up a session. Precedence is the packaged
+# router-config.yaml, then this file, then local-overrides.yaml. Providers,
+# models, roles and transports are deliberately absent: those are
+# distribution facts, and a repository that restated them here would fork
+# the model registry in order to say how to run a test suite.
+schema_version: 1
+
+# The integration suite is the run of record: it renders every tests/*.ly
+# through LilyPond (2.24.2 on PATH), harvests the SVG and evaluates the
+# JSON assertion specs. 246 tests / 349 assertions in about 6 s on
+# 2026-10-30, so it runs whole every time. `-X utf8` is needed until the
+# runner stops printing box-drawing characters to a cp1252 console
+# (wrap-up plan E1).
+#
+# Known fragility (E1 fixes it): each run rewrites the tracked tests/*.svg,
+# and LilyPond's point-and-click links embed the absolute path. Run from
+# D:\Projects (the casing the framework resolves) the files come out
+# byte-identical; from any other casing or location they differ.
+#
+# test-unit.ly is deliberately NOT declared: LilyPond exits 0 even when its
+# assertions fail, so it cannot gate anything until E1 adds a wrapper that
+# reads its "TEST RESULTS: N passed, M failed" line.
+testing:
+  suites:
+    - name: engine-integration
+      command: python -X utf8 tools/run_tests.py
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tools/
+        - tests/
+        - ChromaticNotationBase.ly
+        - Kite-4-369-Notation-Procedure.ly
+        - kite-4-369-from-configurator.ly
+        - joy-to-the-world.ly
+      test_roots: [tests]
+      test_glob: "*.json"
+
+# Step (f) of the lifecycle: pack, then push to a feed. A session that
+# declared itself releasable publishes through these -- both argv, never
+# shell strings, and `push` naming the credential rather than holding it.
+# This repository declares none, and that is the declaration: it publishes
+# to no feed today. A feed that is a folder on disk -- a drive path, a UNC
+# path or file:// -- takes no credential: leave `secret` out, and the push
+# runs without one. `dabbler packaging --dry-run` rehearses the block and
+# exits 0 when it loads, in a session that may not publish too;
+# `dabbler packaging --rehearse` runs the pack and pushes nothing.
+#
+#   packaging:
+#     pack:
+#       argv: ["dotnet", "pack", "-c", "Release", "-o", "{output}"]
+#     push:
+#       argv: ["dotnet", "nuget", "push", "{artifact}",
+#              "--source", "{feed}", "--api-key", "{secret}"]
+#       feed: https://pkgs.dev.azure.com/<org>/_packaging/<feed>/nuget/v3/index.json
+#       secret: DABBLER_FEED_PAT
