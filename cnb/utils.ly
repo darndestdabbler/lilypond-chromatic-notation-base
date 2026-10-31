@@ -319,8 +319,17 @@
 %%
 %% We convert to a "log2 duration" number:
 %%   breve=-1, whole=0, half=1, quarter=2, eighth=3, etc.
+%%
+%% The duration's length as a fraction: LilyPond 2.26 removed
+%% duration-length in favour of ly:duration->number, which 2.24 lacks,
+%% so whichever is defined is chosen once, here at load time.
+#(define cnb:duration->number
+   (if (defined? 'ly:duration->number)
+       ly:duration->number
+       duration-length))
+
 #(define (cnb:duration-category duration-prop)
-   (let* ((dur (duration-length duration-prop))
+   (let* ((dur (cnb:duration->number duration-prop))
           (raw (- (cnb:log2 (denominator dur))
                   (floor (/ (numerator dur) 2))))
           (clamped (max 0 (min 3 (inexact->exact (round raw))))))

@@ -11,9 +11,10 @@ import tempfile
 import unittest
 from unittest import mock
 
-from run_tests import (PROJECT_ROOT, baseline_dir, generate_golden,
-                       harvest_differences, lilypond_env_var,
-                       lilypond_version, render_dir, resolve_lilypond,
+from run_tests import (PROJECT_ROOT, baseline_dir, check_element_assertions,
+                       generate_golden, harvest_differences,
+                       lilypond_env_var, lilypond_version,
+                       make_eval_namespace, render_dir, resolve_lilypond,
                        run_lilypond, run_single_test, save_harvest)
 
 HARVEST = {
@@ -133,6 +134,41 @@ class ResolveLilypondTest(unittest.TestCase):
         with self.assertRaises(SystemExit) as raised:
             resolve_lilypond("2.26")
         self.assertIn("CNB_LILYPOND_2_26", str(raised.exception.code))
+
+
+class LilypondInExpressionsTest(unittest.TestCase):
+
+    ELEMENTS = {el["id"]: el for el in HARVEST["elements"]}
+    ASSERTION = {"id": "nh-1", "expect": {"type": ["lilypond == '2.26'"]}}
+
+    def test_namespace_defaults_to_2_24(self):
+        ns = make_eval_namespace(None, self.ELEMENTS, HARVEST)
+        self.assertEqual(ns["lilypond"], "2.24")
+
+    def test_expression_reads_the_version(self):
+        el = self.ELEMENTS["nh-1"]
+        for version, passed in (("2.26", True), ("2.24", False)):
+            [result] = check_element_assertions(
+                el, self.ASSERTION, self.ELEMENTS, HARVEST, version)
+            self.assertIs(result["passed"], passed)
+
+    def _run(self, version):
+        with tempfile.TemporaryDirectory() as spec_dir:
+            open(os.path.join(spec_dir, "x.ly"), "w").close()
+            spec_path = os.path.join(spec_dir, "x.json")
+            with open(spec_path, "w", encoding="utf-8") as f:
+                json.dump({"input_file": "x.ly", "assertions": [
+                    {"id": "nh-1",
+                     "expect": {"type": ["lilypond == '2.24'"]}}]}, f)
+            with mock.patch("run_tests.run_lilypond",
+                            return_value=os.path.join(spec_dir, "x.svg")),                  mock.patch("run_tests.harvest", return_value=HARVEST),                  mock.patch("run_tests.save_harvest", return_value=[]),                  contextlib.redirect_stdout(io.StringIO()):
+                return run_single_test(spec_path, version=version)
+
+    def test_run_single_test_defaults_to_2_24(self):
+        self.assertEqual(self._run(None), (1, 0, 1))
+
+    def test_run_single_test_passes_its_version(self):
+        self.assertEqual(self._run("2.26"), (0, 1, 1))
 
 
 class VersionDirectoriesTest(unittest.TestCase):

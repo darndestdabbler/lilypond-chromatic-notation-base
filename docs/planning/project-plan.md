@@ -484,3 +484,42 @@ test, not a silent render.
   `{version}` placeholder, not the literal `1.0.0`, if
   `dabbler packaging --rehearse` accepts it; otherwise it keeps the
   brief's argv.
+
+**LilyPond 2.26 baselines (session 9, 2026-10-31).** With the
+`duration-length` and colour fixes, every engine-unit (303) and
+engine-integration (259 tests, 365 assertions) assertion passes on
+LilyPond 2.26.0. Its harvest baselines are `tests/lilypond-2.26/`, one
+per spec. All 11 differ from 2.24's, and every difference is a layout
+change, not a misplaced glyph. Every file harvests the same element ids,
+and no `data` field differs: pitch, measure, duration and colour all
+match.
+
+- *Vertical:* each score's staves sit lower by one uniform offset: +2.84 in the one-system scores, +5.79 in
+  `keysig-none`, and +5.84 to +5.85 on every system of the four-system
+  `example-notes` and both `joy-to-the-world` scores. Element positions
+  in staff-spaces from the staff centre stay within 0.006. The one
+  exception is the `joy-to-the-world` ledger line `ll-1-0.000-0`, which
+  harvests at (0, 0) on both versions, so its staff-relative figure only
+  follows the staff.
+- *Horizontal:* spacing after the clef and key signature changed. In the
+  single-system scores, everything after the prefatory matter moves right
+  by one amount: +0.29 in `c-major-scale`, `keysig-bar-style` and
+  `off-key-coexistence`; +0.52 in `keysig-none`; +0.59 in `clef-custom`
+  and `clef-size-dozenal`. Measure widths stay the same, and the staff
+  symbol widens by the same amount. `clef-text-size` moves left by 0.44,
+  and `clef-none` does not move. In the multi-system scores, the systems
+  start up to 0.42 further left and measure widths change by at most
+  0.24 (`example-notes`) and 0.16 (`joy-to-the-world`).
+- *Shapes:* path hashes change for the time-signature glyph in every
+  score, for the rests in `example-notes`, and for the flags and slurs
+  in both `joy-to-the-world` scores. The slurs' extents grow by at most
+  0.06. No notehead, stem, clef, ledger line or key signature changed
+  shape.
+- *The clef gutter:* the 2-staff-space gutter adds +1.5 to the distance
+  from the clef's right edge to the first notehead on 2.24 (7.617 to
+  9.117), but its full +2.0 on 2.26 (7.704 to 9.704). The clef itself
+  sits at x = 3.645 on both. No single figure fits both, so the operator
+  chose a version-aware assertion. `tools/run_tests.py` gives spec
+  expressions the version under test as `lilypond` ('2.24' when none is
+  named), and `tests/clef-custom.json` asserts that distance per version
+  with its 0.1 tolerance unchanged.

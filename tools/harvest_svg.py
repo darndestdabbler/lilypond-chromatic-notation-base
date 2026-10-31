@@ -187,17 +187,38 @@ def get_representative_position(element):
 #  VISUAL PROPERTY EXTRACTION (deep search)
 # =========================================================================
 
+_RGBA = re.compile(r"rgba\(\s*([\d.]+)%\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%"
+                   r"\s*,\s*([\d.]+)%\s*\)")
+
+
+def normalize_color(color):
+    """Rewrite LilyPond 2.26's rgba(R%, G%, B%, A%) in the 2.24 form.
+
+    An opaque rgba becomes rgb(R%, G%, B%); one that is not opaque keeps
+    its alpha. Either way every component is written at four decimals,
+    since 2.26 sometimes writes 0% for 0.0000%. Any other string is
+    returned unchanged.
+    """
+    match = _RGBA.fullmatch(color.strip())
+    if not match:
+        return color
+    parts = [f"{float(c):.4f}%" for c in match.groups()]
+    if float(match.group(4)) >= 100:
+        return f"rgb({', '.join(parts[:3])})"
+    return f"rgba({', '.join(parts)})"
+
+
 def extract_color_deep(element):
     """Search all descendants for color/fill information."""
     for desc in element.iter():
         color = desc.get("color")
         if color and color != "currentColor":
-            return color
+            return normalize_color(color)
         tag = get_tag_local(desc)
         if tag in DRAWING_TAGS:
             fill = desc.get("fill")
             if fill and fill not in ("none", "currentColor"):
-                return fill
+                return normalize_color(fill)
     return None
 
 

@@ -8,9 +8,13 @@
 # the model registry in order to say how to run a test suite.
 schema_version: 1
 
-# Both LilyPond suites name the version they prove with --lilypond-version:
+# Every LilyPond suite names the version it proves with --lilypond-version:
 # the runners use the executable CNB_LILYPOND_X_Y names, else the lilypond
 # on PATH if it reports X.Y, and fail naming the variable otherwise.
+# engine-integration and engine-unit prove 2.24; engine-integration-2.26
+# and engine-unit-2.26 are the same suites on 2.26, whose harvest
+# baselines are tests/lilypond-2.26/*.harvested.json and whose renders go
+# to the ignored out/lilypond-2.26/.
 #
 # The integration suite is the run of record: it renders every tests/*.ly
 # through LilyPond 2.24, harvests the SVG and evaluates the JSON assertion
@@ -48,6 +52,31 @@ testing:
       test_glob: "*.json"
     - name: engine-unit
       command: python tools/run_unit.py --lilypond-version 2.24
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - test-unit.ly
+        - ChromaticNotationBase.ly
+        - tools/run_unit.py
+    - name: engine-integration-2.26
+      command: python tools/run_tests.py --lilypond-version 2.26
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tools/
+        - tests/
+        - ChromaticNotationBase.ly
+        - Kite-4-369-Notation-Procedure.ly
+        - kite-4-369-from-configurator.ly
+        - joy-to-the-world.ly
+      test_roots: [tests]
+      test_glob: "*.json"
+    - name: engine-unit-2.26
+      command: python tools/run_unit.py --lilypond-version 2.26
       expensive: true
       whole_at_close: true
       runs_whole: true

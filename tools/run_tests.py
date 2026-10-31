@@ -52,6 +52,8 @@ ASSERTION EXPRESSIONS:
         count   — Helper: count('notehead') -> int
         staff   — Staff geometry dict (top_line_y, bottom_line_y, etc.)
         measures — Measure boundaries dict
+        lilypond — The LilyPond version under test, 'X.Y' ('2.24' when
+                   no --lilypond-version is given)
 
     All standard Python operators and builtins (abs, min, max, round,
     len, str, float, int, isinstance, etc.) are available.
@@ -162,7 +164,8 @@ def make_count_helper(elements_by_id):
     return count
 
 
-def make_eval_namespace(v, elements_by_id, harvested):
+def make_eval_namespace(v, elements_by_id, harvested,
+                        lilypond=BASELINE_VERSION):
     """Build the restricted namespace for eval().
 
     Includes:
@@ -172,6 +175,7 @@ def make_eval_namespace(v, elements_by_id, harvested):
       - count: element type counter
       - staff: staff geometry
       - measures: measure boundaries
+      - lilypond: the LilyPond version under test, 'X.Y'
       - Safe builtins only (no os, subprocess, etc.)
     """
     safe_builtins = {
@@ -203,6 +207,7 @@ def make_eval_namespace(v, elements_by_id, harvested):
         "count": make_count_helper(elements_by_id),
         "staff": harvested.get("staff", {}),
         "measures": harvested.get("measures", {}),
+        "lilypond": lilypond,
     }
 
 
@@ -230,7 +235,8 @@ def eval_expression(expr_raw, namespace):
         return (False, f"ERROR: {type(e).__name__}: {e}")
 
 
-def check_element_assertions(element, assertion, elements_by_id, harvested):
+def check_element_assertions(element, assertion, elements_by_id, harvested,
+                             lilypond=BASELINE_VERSION):
     """Check all property assertions for a single element.
 
     Returns a list of result dicts, one per expression evaluated.
@@ -248,7 +254,7 @@ def check_element_assertions(element, assertion, elements_by_id, harvested):
         v = v_raw if found else None
 
         # Build eval namespace with this v
-        ns = make_eval_namespace(v, elements_by_id, harvested)
+        ns = make_eval_namespace(v, elements_by_id, harvested, lilypond)
 
         # Evaluate each expression
         for i, expr in enumerate(expressions):
@@ -573,7 +579,8 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
 
         # --- Evaluate all expressions for this element ---
         results = check_element_assertions(
-            actual, assertion, elements_by_id, harvested)
+            actual, assertion, elements_by_id, harvested,
+            version or BASELINE_VERSION)
 
         all_passed = all(r["passed"] for r in results)
 
