@@ -8,10 +8,14 @@
 # the model registry in order to say how to run a test suite.
 schema_version: 1
 
+# Both LilyPond suites name the version they prove with --lilypond-version:
+# the runners use the executable CNB_LILYPOND_X_Y names, else the lilypond
+# on PATH if it reports X.Y, and fail naming the variable otherwise.
+#
 # The integration suite is the run of record: it renders every tests/*.ly
-# through LilyPond (2.24.2 on PATH), harvests the SVG and evaluates the
-# JSON assertion specs. 246 tests / 349 assertions in about 6 s on
-# 2026-10-30, so it runs whole every time. It renders with
+# through LilyPond 2.24, harvests the SVG and evaluates the JSON assertion
+# specs. 259 tests / 365 assertions in about 7 s on 2026-10-31, so it runs
+# whole every time. It renders with
 # -dno-point-and-click, so the tracked tests/*.svg are the same from any
 # checkout, and a regenerated tests/*.harvested.json that differs from the
 # tracked one fails the run (`--update-baselines` accepts an intended
@@ -28,7 +32,7 @@ schema_version: 1
 testing:
   suites:
     - name: engine-integration
-      command: python tools/run_tests.py
+      command: python tools/run_tests.py --lilypond-version 2.24
       expensive: true
       whole_at_close: true
       runs_whole: true
@@ -43,7 +47,7 @@ testing:
       test_roots: [tests]
       test_glob: "*.json"
     - name: engine-unit
-      command: python tools/run_unit.py
+      command: python tools/run_unit.py --lilypond-version 2.24
       expensive: true
       whole_at_close: true
       runs_whole: true

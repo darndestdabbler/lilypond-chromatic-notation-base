@@ -19,6 +19,10 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 5 | Clean up the guidance and README for 1.0.0 | no | 2026-10-30 |
 | 6 | Declare the source-archive packaging | no | 2026-10-30 |
 | 7 | Release 1.0.0 (release: 1.0.0) | yes | 2026-10-31 |
+| 8 | Let the test runners choose a LilyPond version | no | 2026-10-31 |
+| 9 | Make the engine and the harvester work on LilyPond 2.26 | — | not declared |
+| 10 | Document LilyPond 2.26 support and bump to 1.1.0 | — | not declared |
+| 11 | Release 1.1.0 (release: 1.1.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -65,3 +69,9 @@ Declare this repository's source-archive packaging in dabbler.yaml: replace the 
 **Releasable: yes.**
 
 Release 1.0.0: the framework packs and publishes what is on the trunk.
+
+### Session 8 — Let the test runners choose a LilyPond version
+
+**Releasable: no.**
+
+Give tools/run_tests.py and tools/run_unit.py a --lilypond-version X.Y option. run_tests.py gains small helpers that both runners use: the variable name for a version (CNB_LILYPOND_X_Y), the version a lilypond executable reports (X.Y from the first line of --version), resolution of the executable (the variable's value, else the lilypond on PATH if it reports X.Y, else exit non-zero with a message naming the variable to set), the render directory (out/lilypond-X.Y/ for any version other than 2.24, so tracked tests/*.svg are never rewritten by such a run) and the harvest baseline directory (beside the spec for 2.24, tests/lilypond-2.26/ for 2.26, none for a version outside the supported set {2.24, 2.26}). The LilyPond executable is passed to run_lilypond instead of the hard-coded name. For an unsupported version run_tests.py warns once and skips the drift comparison while every assertion still runs; this replaces the old 'baselined on 2.24' warning, which is removed. Without the option both runners behave as today: lilypond from PATH, renders beside the spec (run_unit.py into out/), drift compared with tests/*.harvested.json. Tests in tools/test_run_tests.py cover resolution from the variable, from PATH, and the failure message; the baseline path for 2.24 and 2.26; and the unsupported-version skip. Then dabbler.yaml's engine-integration and engine-unit suite commands gain --lilypond-version 2.24 so the run of record names the version it proves.

@@ -13,6 +13,15 @@ USAGE:
     python3 tools/run_tests.py tests/c-major.json # run a single test
     python3 tools/run_tests.py --verbose           # show all assertions
     python3 tools/run_tests.py --update-baselines  # accept changed harvests
+    python3 tools/run_tests.py --lilypond-version 2.26  # LilyPond 2.26 and its baselines
+
+LILYPOND VERSIONS:
+    --lilypond-version X.Y renders with the executable CNB_LILYPOND_X_Y names,
+    else the lilypond on PATH if it reports X.Y. 2.24's harvest baselines are
+    tests/*.harvested.json; 2.26's are tests/lilypond-2.26/*.harvested.json,
+    rendered into out/lilypond-2.26/. Another version runs the assertions but
+    compares no baselines. Without the option, PATH's lilypond is compared
+    with 2.24's baselines.
     python3 tools/run_tests.py --generate tests/c-major.ly  # generate golden JSON
 
 TEST SPEC FORMAT (JSON):
@@ -82,8 +91,12 @@ sys.path.insert(0, TOOLS_DIR)
 
 from harvest_svg import harvest, configure_output
 
-# The version the tracked harvests were baselined on.
-SUPPORTED_LILYPOND = "2.24"
+PROJECT_ROOT = os.path.dirname(TOOLS_DIR)
+
+# The LilyPond versions with tracked harvest baselines: 2.24's sit beside
+# the specs, every other one's in a lilypond-X.Y/ folder beside them.
+SUPPORTED_LILYPOND_VERSIONS = ("2.24", "2.26")
+BASELINE_VERSION = "2.24"
 
 
 # =========================================================================
@@ -281,7 +294,58 @@ def format_result_line(r, verbose=False):
 #  LILYPOND EXECUTION
 # =========================================================================
 
-def run_lilypond(input_file, output_dir=None):
+def lilypond_env_var(version):
+    """The variable naming LilyPond X.Y's executable: CNB_LILYPOND_X_Y."""
+    return "CNB_LILYPOND_" + version.replace(".", "_")
+
+
+def lilypond_version(executable):
+    """The X.Y that an executable's --version reports, or None."""
+    try:
+        result = subprocess.run(
+            [executable, "--version"], capture_output=True,
+            encoding="utf-8", errors="replace", timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    first_line = (result.stdout.splitlines() or [""])[0]
+    match = re.search(r"\b(\d+\.\d+)\.\d+", first_line)
+    return match.group(1) if match else None
+
+
+def resolve_lilypond(version):
+    """The lilypond executable for version X.Y: the one CNB_LILYPOND_X_Y
+    names, else the lilypond on PATH if it reports X.Y. Exits non-zero,
+    naming the variable to set, when neither does."""
+    var = lilypond_env_var(version)
+    if os.environ.get(var):
+        return os.environ[var]
+    if lilypond_version("lilypond") == version:
+        return "lilypond"
+    sys.exit(f"LilyPond {version} not found: set {var} to its lilypond "
+             f"executable, or put LilyPond {version} on PATH")
+
+
+def render_dir(version):
+    """Where renders for a version go: out/lilypond-X.Y/ for any version
+    but 2.24, so the tracked tests/*.svg stay 2.24's; None means the
+    runner's usual place."""
+    if version is None or version == BASELINE_VERSION:
+        return None
+    return os.path.join(PROJECT_ROOT, "out", f"lilypond-{version}")
+
+
+def baseline_dir(version, spec_dir):
+    """Where a version's harvest baselines live: beside the spec for 2.24
+    (or no version given), in spec_dir/lilypond-X.Y/ for another supported
+    version, and None -- no drift comparison -- for an unsupported one."""
+    if version is None or version == BASELINE_VERSION:
+        return spec_dir
+    if version in SUPPORTED_LILYPOND_VERSIONS:
+        return os.path.join(spec_dir, f"lilypond-{version}")
+    return None
+
+
+def run_lilypond(input_file, output_dir=None, lilypond="lilypond"):
     """Run LilyPond with SVG backend on the input file.
 
     Runs from the project root directory so that \\include paths resolve.
@@ -290,16 +354,15 @@ def run_lilypond(input_file, output_dir=None):
     if output_dir is None:
         output_dir = os.path.dirname(input_file) or "."
 
-    project_root = os.path.dirname(TOOLS_DIR)
-
     base = os.path.splitext(os.path.basename(input_file))[0]
     output_dir = os.path.abspath(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
     input_file = os.path.abspath(input_file)
 
     # -dno-point-and-click keeps textedit:// links (which embed the absolute
     # path) out of the SVG, so a render is the same from any checkout.
     cmd = [
-        "lilypond",
+        lilypond,
         "-dbackend=svg",
         "-dno-point-and-click",
         f"--output={output_dir}/{base}",
@@ -313,7 +376,7 @@ def run_lilypond(input_file, output_dir=None):
             encoding="utf-8",
             errors="replace",
             timeout=60,
-            cwd=project_root,
+            cwd=PROJECT_ROOT,
         )
         if result.returncode != 0:
             print(f"  LilyPond error (exit {result.returncode}):", file=sys.stderr)
@@ -340,22 +403,8 @@ def run_lilypond(input_file, output_dir=None):
         print(f"  LilyPond timed out (60s)", file=sys.stderr)
         return None
     except FileNotFoundError:
-        print(f"  lilypond not found in PATH", file=sys.stderr)
+        print(f"  {lilypond} not found", file=sys.stderr)
         return None
-
-
-def warn_unless_supported_lilypond():
-    """Warn (without failing) when lilypond is not the baselined version."""
-    try:
-        result = subprocess.run(
-            ["lilypond", "--version"], capture_output=True,
-            encoding="utf-8", errors="replace", timeout=60)
-    except (OSError, subprocess.TimeoutExpired):
-        return  # run_lilypond reports a missing or hung lilypond per test
-    first_line = (result.stdout.splitlines() or [""])[0]
-    if not re.search(rf"\b{re.escape(SUPPORTED_LILYPOND)}\.\d+", first_line):
-        print(f"Warning: harvests are baselined on LilyPond "
-              f"{SUPPORTED_LILYPOND}.x; found '{first_line}'", file=sys.stderr)
 
 
 # =========================================================================
@@ -419,8 +468,10 @@ def save_harvest(harvested, harvest_path, update_baselines=False):
 #  TEST EXECUTION
 # =========================================================================
 
-def run_single_test(spec_path, verbose=False, update_baselines=False):
-    """Run a single test from a JSON spec file.
+def run_single_test(spec_path, verbose=False, update_baselines=False,
+                    lilypond="lilypond", version=None):
+    """Run a single test from a JSON spec file, rendering with the lilypond
+    executable for version (None: the PATH one against 2.24's baselines).
 
     Returns (passed_count, failed_count, total_assertion_count)
     """
@@ -436,8 +487,7 @@ def run_single_test(spec_path, verbose=False, update_baselines=False):
         input_file = os.path.join(spec_dir, input_file)
 
     if not os.path.exists(input_file):
-        project_root = os.path.dirname(TOOLS_DIR)
-        input_file_alt = os.path.join(project_root, spec.get("input_file"))
+        input_file_alt = os.path.join(PROJECT_ROOT, spec.get("input_file"))
         if os.path.exists(input_file_alt):
             input_file = input_file_alt
         else:
@@ -449,7 +499,9 @@ def run_single_test(spec_path, verbose=False, update_baselines=False):
     print(f"  Input: {input_file}")
 
     # Step 1: Run LilyPond
-    svg_path = run_lilypond(input_file, output_dir=spec_dir)
+    svg_path = run_lilypond(input_file,
+                            output_dir=render_dir(version) or spec_dir,
+                            lilypond=lilypond)
     if not svg_path:
         print(f"  ✗ LilyPond failed")
         return (0, 1, 0)
@@ -542,9 +594,16 @@ def run_single_test(spec_path, verbose=False, update_baselines=False):
                 if line:
                     print(line)
 
-    # The tracked harvest beside the spec is the golden baseline: drift
-    # from it fails the test unless --update-baselines accepts it.
-    harvest_path = svg_path.replace(".svg", ".harvested.json")
+    # The version's tracked harvest is the golden baseline: drift from it
+    # fails the test unless --update-baselines accepts it. An unsupported
+    # version has none, and main() has warned that drift is not compared.
+    harvest_dir = baseline_dir(version, spec_dir)
+    if harvest_dir is None:
+        return (passed, failed, len(assertions))
+    os.makedirs(harvest_dir, exist_ok=True)
+    harvest_path = os.path.join(
+        harvest_dir,
+        os.path.basename(svg_path).replace(".svg", ".harvested.json"))
     drift = save_harvest(harvested, harvest_path, update_baselines)
     if drift:
         failed += 1
@@ -564,19 +623,27 @@ def run_single_test(spec_path, verbose=False, update_baselines=False):
 #  GOLDEN FILE GENERATION
 # =========================================================================
 
-def generate_golden(ly_file, output_json=None):
+def generate_golden(ly_file, output_json=None, lilypond="lilypond",
+                    version=None):
     """Generate a golden harvest JSON from a .ly file.
 
     This is the starting point for creating test specs.
     Run on a known-good render, review the output, then write assertions.
+    The render goes beside the .ly file, or into render_dir(version) for a
+    version other than 2.24; by default the harvest goes to the version's
+    baseline_dir (the render's folder for an unsupported version).
     """
+    ly_dir = os.path.dirname(ly_file) or "."
+    output_dir = render_dir(version) or ly_dir
     if output_json is None:
-        output_json = ly_file.replace(".ly", ".harvested.json")
+        json_dir = baseline_dir(version, ly_dir) or output_dir
+        os.makedirs(json_dir, exist_ok=True)
+        output_json = os.path.join(json_dir, os.path.basename(
+            ly_file).replace(".ly", ".harvested.json"))
 
     print(f"Generating golden file from: {ly_file}")
-    output_dir = os.path.dirname(ly_file) or "."
 
-    svg_path = run_lilypond(ly_file, output_dir=output_dir)
+    svg_path = run_lilypond(ly_file, output_dir=output_dir, lilypond=lilypond)
     if not svg_path:
         print("Failed to render SVG")
         sys.exit(1)
@@ -644,13 +711,21 @@ def main():
         help="Generate golden harvest JSON from a .ly file")
     parser.add_argument("--update-baselines", action="store_true",
         help="Write regenerated harvests over the tracked ones (an intended change)")
+    parser.add_argument("--lilypond-version", metavar="X.Y",
+        help="Render with LilyPond X.Y (from CNB_LILYPOND_X_Y, else PATH) "
+             "and compare that version's harvest baselines")
 
     configure_output()
     args = parser.parse_args()
-    warn_unless_supported_lilypond()
+    version = args.lilypond_version
+    lilypond = resolve_lilypond(version) if version else "lilypond"
+    if version and version not in SUPPORTED_LILYPOND_VERSIONS:
+        print(f"Warning: LilyPond {version} is not supported "
+              f"({', '.join(SUPPORTED_LILYPOND_VERSIONS)}); harvest drift "
+              f"is not compared, assertions still run", file=sys.stderr)
 
     if args.generate:
-        generate_golden(args.generate)
+        generate_golden(args.generate, lilypond=lilypond, version=version)
         return
 
     # Find test specs
@@ -685,7 +760,8 @@ def main():
 
     for spec_file in spec_files:
         p, f, t = run_single_test(spec_file, verbose=args.verbose,
-                                  update_baselines=args.update_baselines)
+                                  update_baselines=args.update_baselines,
+                                  lilypond=lilypond, version=version)
         total_passed += p
         total_failed += f
         total_assertions += t

@@ -9,14 +9,20 @@ a missing line, a LilyPond error or the time limit.
 
 USAGE:
     python tools/run_unit.py
+    python tools/run_unit.py --lilypond-version 2.26  # into out/lilypond-2.26/
+
+--lilypond-version X.Y runs the executable CNB_LILYPOND_X_Y names, else the
+lilypond on PATH if it reports X.Y (see run_tests.py).
 """
 
+import argparse
 import os
 import re
 import subprocess
 import sys
 
 from harvest_svg import configure_output
+from run_tests import render_dir, resolve_lilypond
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "out")
@@ -33,14 +39,20 @@ def parse_results(log):
 
 def main():
     configure_output()
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    cmd = ["lilypond", f"--output={OUTPUT_DIR}/test-unit", "test-unit.ly"]
+    parser = argparse.ArgumentParser(description="Gate on test-unit.ly")
+    parser.add_argument("--lilypond-version", metavar="X.Y",
+        help="Run LilyPond X.Y (from CNB_LILYPOND_X_Y, else PATH)")
+    version = parser.parse_args().lilypond_version
+    lilypond = resolve_lilypond(version) if version else "lilypond"
+    output_dir = render_dir(version) or OUTPUT_DIR
+    os.makedirs(output_dir, exist_ok=True)
+    cmd = [lilypond, f"--output={output_dir}/test-unit", "test-unit.ly"]
     try:
         result = subprocess.run(
             cmd, cwd=PROJECT_ROOT, capture_output=True,
             encoding="utf-8", errors="replace", timeout=TIME_LIMIT_SECONDS)
     except FileNotFoundError:
-        print("lilypond not found in PATH", file=sys.stderr)
+        print(f"{lilypond} not found", file=sys.stderr)
         return 1
     except subprocess.TimeoutExpired:
         print(f"LilyPond exceeded {TIME_LIMIT_SECONDS}s on test-unit.ly",

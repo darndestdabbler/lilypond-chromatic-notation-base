@@ -143,10 +143,58 @@
         "engine": "framework",
         "identityProvenance": "direct"
       },
-      "verificationVerdict": null,
-      "startCommit": "94c65b4720ba51a4eec59c4cbfcae870f7eec98f",
       "frameworkVersion": "3.27.0",
-      "noChange": true
+      "startCommit": "94c65b4720ba51a4eec59c4cbfcae870f7eec98f",
+      "verificationVerdict": null
+    },
+    {
+      "number": 8,
+      "title": "Let the test runners choose a LilyPond version",
+      "status": "in-progress",
+      "startedAt": "2026-10-31T04:38:34.270000-04:00",
+      "completedAt": null,
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "startCommit": "55f9414296c2518f6961ab9edd7f3aae3a67ca1f",
+      "frameworkVersion": "3.27.0",
+      "verification": {
+        "rounds": 3,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      }
+    },
+    {
+      "number": 9,
+      "title": "Make the engine and the harvester work on LilyPond 2.26",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    },
+    {
+      "number": 10,
+      "title": "Document LilyPond 2.26 support and bump to 1.1.0",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    },
+    {
+      "number": 11,
+      "title": "Release 1.1.0 (release: 1.1.0)",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
     }
   ]
 }
