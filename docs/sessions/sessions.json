@@ -150,9 +150,9 @@
     {
       "number": 8,
       "title": "Let the test runners choose a LilyPond version",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-10-31T04:38:34.270000-04:00",
-      "completedAt": null,
+      "completedAt": "2026-10-31T04:51:48.945000-04:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
