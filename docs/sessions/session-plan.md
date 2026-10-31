@@ -222,3 +222,94 @@ Phase E3 of `docs/planning/project-plan.md` §7.5.
    nothing.
 
 ### Session 7: Release 1.0.0 (release: 1.0.0)
+
+### Session 8: Let the test runners choose a LilyPond version
+
+**Why.** 1.0.0 supports LilyPond 2.24.x only, and 2.26 is the current
+stable release, so a new user is likely to have it. Measured on
+2026-10-31 in a scratch worktree: with the session 9 fixes, every
+engine-unit and engine-integration assertion passes on 2.26.0, but 11
+of the tracked harvests differ in layout coordinates. Supporting both
+versions needs a harvest baseline set per version, and suites that
+prove each one. On the operator's machine 2.24.2 is on `PATH` and 2.26.0
+is at `D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe`,
+named by the user environment variable `CNB_LILYPOND_2_26`.
+
+1. Register.
+2. Give `tools/run_tests.py` and `tools/run_unit.py` a
+   `--lilypond-version X.Y` option. It uses the executable named by
+   `CNB_LILYPOND_X_Y` (dots become underscores), or else the `lilypond`
+   on `PATH` if its `--version` reports X.Y. Otherwise it exits non-zero
+   with a message naming the variable to set. Without the option, both
+   behave as today. The supported set is 2.24 and 2.26. The 2.24
+   harvest baselines stay at `tests/*.harvested.json`, and 2.26's go in
+   `tests/lilypond-2.26/`. For any version other than 2.24, renders go
+   to the ignored `out/lilypond-X.Y/`, so the tracked `tests/*.svg`
+   are never rewritten by a 2.26 run. For a version outside the
+   supported set, warn and skip the drift comparison; assertions still
+   run. Replace the "baselined on 2.24" warning with this. Tests in
+   `tools/test_run_tests.py` cover: resolution from the variable, from
+   `PATH`, and the failure message; the baseline path for 2.24 and for
+   2.26; and the unsupported-version skip. Prove it by running the
+   engine-tooling suite, then
+   `python tools/run_tests.py --lilypond-version 2.24` and
+   `python tools/run_unit.py --lilypond-version 2.24`. Both pass, and
+   `git status -- tests` is clean.
+3. Add `--lilypond-version 2.24` to the engine-integration and
+   engine-unit suite commands in `dabbler.yaml`, so the run of record
+   names the version it proves.
+
+### Session 9: Make the engine and the harvester work on LilyPond 2.26
+
+1. Register.
+2. Fix the three 2.26 breaks found on 2026-10-31:
+   - **`duration-length`:** `cnb:duration-category` in `cnb/utils.ly`
+     calls `duration-length`, which 2.26 removed in favour of
+     `ly:duration->number`, which 2.24 lacks. Pick whichever is defined,
+     once at load time and not on every call.
+   - **Colours:** 2.26 writes `rgba(R%, G%, B%, 100.0000%)` where 2.24
+     wrote `rgb(R%, G%, B%)`, and sometimes `0%` for `0.0000%`.
+     `tools/harvest_svg.py` (`extract_color_deep`) normalises an opaque
+     `rgba` to the 2.24 `rgb` form, with every component at four
+     decimals. A colour that is not opaque keeps its alpha. Test this in
+     a new `tools/test_harvest_svg.py`.
+   - **Gutter test:** `tests/clef-custom.json` asserts the first
+     notehead at an absolute x of 14.762, measured on 2.24. On 2.26 the
+     same note sits at 15.349. Restate the assertion so it proves the
+     same 1.5-unit gutter on both versions, for example relative to the
+     clef's right edge, or against a no-gutter twin spec. Do not widen
+     the tolerance.
+
+   Prove nothing changed on 2.24: all three suites pass, and
+   `git diff --exit-code -- "tests/*.harvested.json"` shows no drift.
+3. Run `python tools/run_tests.py --lilypond-version 2.26 --update-baselines`
+   to write `tests/lilypond-2.26/*.harvested.json`. Every spec
+   assertion must pass before any baseline is written. Spot-check that
+   the coordinate shifts against the 2.24 baselines are consistent
+   layout changes, not misplaced glyphs, and record what changed in
+   §7.7 of `docs/planning/project-plan.md`. Declare two suites in
+   `dabbler.yaml`:
+   - `engine-integration-2.26`: `python tools/run_tests.py --lilypond-version 2.26`
+   - `engine-unit-2.26`: `python tools/run_unit.py --lilypond-version 2.26`
+
+   Both take the same fields and covers as their 2.24 counterparts.
+   Prove it by running both 2.26 suites: they pass, and
+   `git status -- tests` shows only the new `tests/lilypond-2.26/`
+   files.
+
+### Session 10: Document LilyPond 2.26 support and bump to 1.1.0
+
+1. Register.
+2. README:
+   - Requirements says LilyPond 2.24.x or 2.26.x. Replace the "2.26 is
+     not supported yet" paragraph, and the Known limitations bullet, with
+     what was measured.
+   - "Running the tests" names all five suites exactly as `dabbler.yaml`
+     declares them. Explain `--lilypond-version` and the
+     `CNB_LILYPOND_X_Y` variable, and say that a contributor with only
+     one version installed runs that version's suites.
+3. Set `version.json` to `{ "version": "1.1.0" }`. Add a short
+   `CHANGELOG.md` with 1.0.0 (first release) and 1.1.0 (LilyPond 2.26
+   support; harvest baselines per version).
+
+### Session 11: Release 1.1.0 (release: 1.1.0)
