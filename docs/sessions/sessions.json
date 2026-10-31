@@ -92,9 +92,9 @@
     {
       "number": 5,
       "title": "Clean up the guidance and README for 1.0.0",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-10-30T21:07:04.269000-04:00",
-      "completedAt": null,
+      "completedAt": "2026-10-30T21:11:44.631000-04:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
