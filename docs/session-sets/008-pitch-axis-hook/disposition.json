@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "summary": "Session 3 of 3 (final) for set 008 (keysig + clef through the pitch-axis hook; handoff — backlog 6.3/6.4, E13-3/E13-4). Both secondary semitone->vertical placement sites now follow cnb:get-pitch-staff-position when set. cnb/keysig.ly: new pure helper cnb:keysig-note-y-offset — hook path (hook semi)*0.5*mag used as-is (no middleCPosition), #f path the literal linear formula; both stencil passes call it; the keysig-internal ledger helper needed no change (it recovers positions from placed y, exact on the hook path); the hook JOINED the keysig stencil-cache key (procedures compare by identity — the backlog section-2 cache-key discipline). cnb/clefs.ly: cnb:clef-anchor-y-offset maps anchor-semitones through the hook; FRACTIONAL anchors (floats per the set-009 contract) interpolate linearly between the hook positions of neighboring INTEGER semitones — the hook is never called with a float, because the Configurator's compiled v1.3 5.4b form uses exact-integer modulo arithmetic; the interpolation is exact on linear maps (degeneracy invariant holds) and keeps collapsed neighbors at their shared position. The clef stencil cache deliberately does NOT gain the hook (placement is the engraver-applied per-grob Y-offset, never baked into the cached stencil). Acceptance measured (measure_keysig_clef_transcript.txt, exit 0): one render, two scores, two hook anchors (-4/-3) switched at translation time via applyContext, same G-major key (tonic-octave 0) + fractional-anchor-7.5 custom clef on the 013 spike staff — keysig marks 8/8 at mapped positions {0..7}/{1..8}, clef top edge 0.5/1.5, notes exact (uniform +0.009 harvest artifact), and all 13 system-differentials exactly +1.000, proving the keysig cache invalidates on hook change and the cached clef stencil is correctly reused and re-anchored per score. configurator-handoff.md written (sets-005/006 shape) unblocking the Configurator's set 014 session 3: full contract, the fractional-anchor interpolation contract, the 6.2 mechanism story with the 013 s3.4 causal correction, four v1.3 deviations/under-specifications (notably: 5.4a leaves the emitted cnb:semitones-per-staff-space VALUE under an axis unpinned — the engine's remaining sps consumers are LENGTH conversions (clef size/gutter, keysig bar extent), so the exporter should emit axisUnitsPerStaffSpace as the sps value, needs a v1.3 clarification; and keysig pitch SELECTION stays middleCPosition-derived at tonic-octave #f — always emit an explicit cnb:keysig-tonic-octave under an axis), plus seven carried cross-check flags (collision quantization, dot-wipe, barline elasticity, s3.4 correction, fractional-anchor fixture, sps emission, explicit tonic octave). Backlog section 6 moved to section 5 as resolved (006's scheduling-table row also gained its missing resolved mark — pre-existing drift). Unit +12 assertions (291->303: clef-anchor hook path incl. fractional/collapsed/euclidean/degeneracy cases; keysig placement helper linear+hook); README hook row + count refreshed. Zero drift with the hook unset: unit 303/303, integration 246/246 (349 assertions), goldens byte-identical per git status, s1 spike parity re-verified PASS on the final build. All end-of-set deliverables complete; set closes.",
+  "files_changed": [
+    "cnb/keysig.ly",
+    "cnb/clefs.ly",
+    "cnb/config.ly",
+    "test-unit.ly",
+    "test-unit.pdf",
+    "README.md",
+    "docs/planning/configurator-coordination-backlog.md",
+    "docs/session-sets/008-pitch-axis-hook/change-log.md",
+    "docs/session-sets/008-pitch-axis-hook/configurator-handoff.md",
+    "docs/session-sets/008-pitch-axis-hook/disposition.json",
+    "docs/session-sets/008-pitch-axis-hook/session-state.json",
+    "docs/session-sets/008-pitch-axis-hook/session-events.jsonl",
+    "docs/session-sets/008-pitch-axis-hook/activity-log.json",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.svg",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.harvested.json",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/measure_keysig_clef.py",
+    "docs/session-sets/008-pitch-axis-hook/s3-evidence/measure_keysig_clef_transcript.txt"
+  ],
+  "verification_method": "skipped",
+  "verification_message_ids": [],
+  "next_orchestrator": null,
+  "blockers": []
+}
