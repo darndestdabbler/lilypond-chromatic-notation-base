@@ -1,0 +1,29 @@
+{
+  "test_name": "Key-signature style 'none suppresses the display (set 006)",
+  "input_file": "keysig-none.ly",
+  "description": "cnb:keysig-style 'none must engrave no key-signature stencil at all, so a Configurator config with keys.keySignature.enabled: false finally matches its preview. The key-signature element must be absent from the SVG while noteheads render normally.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE KEY SIGNATURE IS GONE ==="},
+
+    {
+      "id": "ks-1",
+      "description": "No key-signature element is engraved in measure 1",
+      "expect": {
+        "type": ["is None"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: EVERYTHING ELSE STILL RENDERS ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally; no key-signature element anywhere in the SVG",
+      "expect": {
+        "type":      ["== 'notehead'", "count('key-signature') == 0", "count('notehead') == 4"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}
