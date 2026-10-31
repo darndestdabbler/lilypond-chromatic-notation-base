@@ -79,6 +79,13 @@
       "dateTime": "2026-10-31T05:24:22.592000-04:00",
       "task": "Document the LilyPond 2.26 support that session 9 delivered and bump the release version to 1.1.0. In README.md, Requirements names LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), and the \"2.26 is not supported yet\" paragraph and the Known limitations bullet are replaced with what was measured: all suites pass on both versions, each version has its own harvest baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/*.harvested.json for 2.26), and 2.26 lays scores out slightly differently (uniform vertical staff offset, small horizontal spacing shifts after the clef and key signature, the clef gutter's full width), as recorded in section 7.7 of docs/planning/project-plan.md. \"Running the tests\" lists all five suites exactly as dabbler.yaml declares them, explains --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH that reports X.Y), and says that a contributor with only one version installed runs that version's suites. version.json becomes { \"version\": \"1.1.0\" }, the README status line says 1.1.0, and a short CHANGELOG.md records 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).",
       "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 11,
+      "dateTime": "2026-10-31T05:34:51.955000-04:00",
+      "task": "Release 1.1.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
     }
   ]
 }
