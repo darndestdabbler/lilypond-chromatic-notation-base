@@ -1,0 +1,40 @@
+{
+  "test_name": "Separator-bar styling settings reach the render (set 006)",
+  "input_file": "keysig-bar-style.ly",
+  "description": "cnb:keysig-bar-color, cnb:keysig-bar-thickness and cnb:keysig-bar-extent-semis replace the values that used to be hard-coded in cnb/keysig.ly (cnb:gold, thickness 4, ±1 octave). This score sets the bar to pure blue, thickness 8, and ±2 octaves (extent 24 semitones). The key-signature element must render in blue, and its bounding box must be taller than the default ±1-octave bar (whose height is 12.5 on this staff), confirming the extent setting drives the bar geometry.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE BAR RENDERS IN THE OVERRIDDEN COLOR ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Key signature renders in the overridden blue (not the default gold)",
+      "expect": {
+        "type":         ["== 'key-signature'"],
+        "visual.color": ["v is not None", "'(0.0000%, 0.0000%,' in v", "'83' not in v"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE EXTENT SETTING DRIVES THE BAR HEIGHT ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Extent 24 semitones (±2 octaves) makes the bar taller than the default 12.5",
+      "expect": {
+        "visual.bbox.h": ["v > 20.0"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: NOTEHEADS STILL RENDER ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the styled key signature",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4", "count('key-signature') == 1"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}
