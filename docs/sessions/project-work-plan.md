@@ -18,7 +18,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 4 | Remove cruft and record LilyPond compatibility | no | 2026-10-30 |
 | 5 | Clean up the guidance and README for 1.0.0 | no | 2026-10-30 |
 | 6 | Declare the source-archive packaging | no | 2026-10-30 |
-| 7 | Release 1.0.0 (release: 1.0.0) | — | not declared |
+| 7 | Release 1.0.0 (release: 1.0.0) | yes | 2026-10-31 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -59,3 +59,9 @@ Phase E3 of docs/planning/project-plan.md section 7.5: clean up the guidance and
 **Releasable: no.**
 
 Declare this repository's source-archive packaging in dabbler.yaml: replace the commented example packaging block with a real `packaging:` block whose `pack` argv is ["git", "archive", "--format=zip", "--output={output}/lilypond-chromatic-notation-base-{version}.zip", "HEAD"] and which declares no `push`. The `{version}` placeholder is used in place of the literal 1.0.0 because a rehearsal in a scratch clone accepted it (it resolved to 1.0.0 and the pack exited 0). The step is proved by `dabbler packaging --rehearse`, which runs the pack and pushes nothing.
+
+### Session 7 — Release 1.0.0 (release: 1.0.0)
+
+**Releasable: yes.**
+
+Release 1.0.0: the framework packs and publishes what is on the trunk.
