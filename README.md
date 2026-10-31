@@ -1,7 +1,7 @@
 # ChromaticNotationBase (CNB)
 
-> **Status: 1.0.0**
-> The engine is stable and tested (303 unit + 349 integration assertions passing, October 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
+> **Status: 1.1.0**
+> The engine is stable and tested (303 unit + 365 integration assertions passing on LilyPond 2.24 and 2.26, October 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
 
 A configurable engine for chromatic music notation in LilyPond.
 
@@ -63,14 +63,23 @@ CNB is one part of a three-tool workflow. Each tool has a focused responsibility
 
 ## Requirements
 
-- **LilyPond 2.24.x** (tested with 2.24.2) — [download](https://lilypond.org/download.html)
+- **LilyPond 2.24.x or 2.26.x** (tested with 2.24.2 and 2.26.0) — [download](https://lilypond.org/download.html)
 - **Python 3.8+** — for the integration testing tools
 
-**LilyPond 2.26 is not supported yet.** Rendering `tests/c-major-scale.ly`
-with LilyPond 2.26.0 (Guile 3.0) on 2026-10-30 fails: the first error is
-`Unbound variable: duration-length`, a Scheme function the engine calls in
-`cnb/utils.ly` that 2.26 no longer defines. LilyPond printed no `\version`
-or `convert-ly` warning. Stay on 2.24.x.
+**LilyPond 2.26** passes the same unit and integration suites as 2.24
+(measured 2026-10-31 with 2.26.0). Each version has its own harvest
+baselines: `tests/*.harvested.json` for 2.24 and
+`tests/lilypond-2.26/*.harvested.json` for 2.26. The two versions place
+things slightly differently. On 2.26 each score's staves sit lower by a
+uniform offset, and elements after the clef and key signature move
+horizontally by a small amount (at most 0.59 in the harvested
+coordinates). The time-signature glyph,
+rests, flags and slurs have different shapes. A custom clef's gutter adds
+its full width before the first note (2.24 adds about three quarters of
+it). Positions relative to the staff stay within 0.006 staff spaces, and
+noteheads, stems, clefs, ledger lines and key signatures have the same
+shapes. The measurements are in section 7.7 of
+[docs/planning/project-plan.md](docs/planning/project-plan.md).
 
 ```bash
 lilypond --version
@@ -329,14 +338,31 @@ The repository declares its test suites in `dabbler.yaml`:
 
 | Suite | Command | What it runs |
 |-------|---------|--------------|
-| `engine-integration` | `python tools/run_tests.py` | Renders every `tests/*.ly` through LilyPond, harvests the SVG and evaluates the JSON assertion specs |
-| `engine-unit` | `python tools/run_unit.py` | Renders `test-unit.ly` and fails on any failed assertion |
+| `engine-integration` | `python tools/run_tests.py --lilypond-version 2.24` | Renders every `tests/*.ly` through LilyPond 2.24, harvests the SVG, evaluates the JSON assertion specs and compares the harvests with `tests/*.harvested.json` |
+| `engine-unit` | `python tools/run_unit.py --lilypond-version 2.24` | Renders `test-unit.ly` through LilyPond 2.24 and fails on any failed assertion |
+| `engine-integration-2.26` | `python tools/run_tests.py --lilypond-version 2.26` | The integration suite on LilyPond 2.26, compared with `tests/lilypond-2.26/*.harvested.json`; renders go to the ignored `out/lilypond-2.26/` |
+| `engine-unit-2.26` | `python tools/run_unit.py --lilypond-version 2.26` | The unit suite on LilyPond 2.26 |
 | `engine-tooling` | `python -m unittest discover -s tools -p "test_*.py"` | The Python tooling's own tests (no LilyPond) |
+
+### Choosing a LilyPond version
+
+`--lilypond-version X.Y` runs the `lilypond` executable that the
+environment variable `CNB_LILYPOND_X_Y` names (for example
+`CNB_LILYPOND_2_26`). If that variable is not set, the runners use the
+`lilypond` on `PATH` if its `--version` reports X.Y, and otherwise fail
+with a message naming the variable to set. Without the option, the
+`lilypond` on `PATH` is used and the harvests are compared with 2.24's
+baselines.
+
+You do not need both versions installed. With only one, run that
+version's suites (for example `engine-integration` and `engine-unit` for
+2.24), plus `engine-tooling`.
 
 ### Unit Tests
 
 ```bash
-python tools/run_unit.py
+python tools/run_unit.py --lilypond-version 2.24
+python tools/run_unit.py --lilypond-version 2.26
 ```
 
 `lilypond test-unit.ly` runs the same assertions, but LilyPond exits 0 even when they fail; `tools/run_unit.py` reads its `TEST RESULTS: N passed, M failed` line and exits non-zero on any failure.
@@ -348,17 +374,18 @@ python tools/run_unit.py
 The integration pipeline renders music with LilyPond, extracts structured data from the SVG output, and evaluates assertions against expected values:
 
 ```bash
-# Run all integration tests:
-python tools/run_tests.py
+# Run all integration tests on LilyPond 2.24 (or 2.26):
+python tools/run_tests.py --lilypond-version 2.24
+python tools/run_tests.py --lilypond-version 2.26
 
 # Run a specific test:
-python tools/run_tests.py tests/c-major-scale.json
+python tools/run_tests.py --lilypond-version 2.24 tests/c-major-scale.json
 
 # Verbose output:
-python tools/run_tests.py --verbose
+python tools/run_tests.py --lilypond-version 2.24 --verbose
 ```
 
-A regenerated `tests/*.harvested.json` that differs from the tracked copy fails the run; `--update-baselines` accepts an intended change.
+A regenerated harvest that differs from the version's tracked baseline (`tests/*.harvested.json` for 2.24, `tests/lilypond-2.26/*.harvested.json` for 2.26) fails the run; `--update-baselines` accepts an intended change.
 
 The pipeline consists of three components: an ID engraver (`cnb/test-ids.ly`) that tags SVG output with structured metadata, an SVG harvester (`tools/harvest_svg.py`) that extracts element positions and properties, and a test runner (`tools/run_tests.py`) that orchestrates the full render → harvest → assert cycle.
 
@@ -367,7 +394,7 @@ See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md) for full document
 
 ## Known limitations
 
-- **LilyPond 2.24.x only.** 2.26 fails to render (see [Requirements](#requirements)).
+- **LilyPond 2.24.x and 2.26.x only.** Output differs slightly between the two (see [Requirements](#requirements)), and no other version has been tested.
 - **Tested on Windows.** The engine and its test suites have been run on Windows only.
 - **Configs are generated by the Configurator.** Writing a config by hand is possible, but the supported path is a [Chromatic Notation Configurator](https://github.com/darndestdabbler/chromatic-notation-configurator) export conforming to [CNB-LY-EXPORT-SPEC-v1_2.md](docs/CNB-LY-EXPORT-SPEC-v1_2.md).
 - **Clefs and key signatures follow the score.** The engine displays the clef and key that the music's `\clef` and `\key` set; a config chooses only how they look (`cnb:clef-style`, `cnb:keysig-style`), not which clef or key is in force.

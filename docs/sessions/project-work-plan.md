@@ -21,7 +21,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 7 | Release 1.0.0 (release: 1.0.0) | yes | 2026-10-31 |
 | 8 | Let the test runners choose a LilyPond version | no | 2026-10-31 |
 | 9 | Make the engine and the harvester work on LilyPond 2.26 | no | 2026-10-31 |
-| 10 | Document LilyPond 2.26 support and bump to 1.1.0 | — | not declared |
+| 10 | Document LilyPond 2.26 support and bump to 1.1.0 | no | 2026-10-31 |
 | 11 | Release 1.1.0 (release: 1.1.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
@@ -81,3 +81,9 @@ Give tools/run_tests.py and tools/run_unit.py a --lilypond-version X.Y option. r
 **Releasable: no.**
 
 Make the CNB engine and its SVG harvester work on LilyPond 2.26 without changing anything on 2.24. In cnb/utils.ly, cnb:duration-category picks ly:duration->number (2.26) or duration-length (2.24) once at load time. In tools/harvest_svg.py, extract_color_deep rewrites an opaque rgba(...) colour to the 2.24 rgb(R%, G%, B%) form with every component at four decimals, while a colour that is not opaque keeps its alpha. A new tools/test_harvest_svg.py tests this. The clef-custom gutter assertion is restated as the operator decided on 2026-10-31. Measured from a no-gutter twin, the 2-staff-space gutter moves the first notehead +1.5 on 2.24 but the full +2.0 on 2.26, so no assertion that ignores the version can keep the 0.1 tolerance. tools/run_tests.py therefore exposes the LilyPond version under test to spec expressions as `lilypond` (2.24 when no version is given), tested in tools/test_run_tests.py. tests/clef-custom.json then asserts the first notehead's distance from the clef's right edge per version (9.117 on 2.24, 9.704 on 2.26), with the tolerance unchanged. 2.24 is proved unchanged: all three suites pass and the tracked tests/*.harvested.json do not drift. Then the 2.26 baselines tests/lilypond-2.26/*.harvested.json are written with --update-baselines after every assertion passes. Their coordinate shifts against 2.24 are spot-checked and recorded in section 7.7 of docs/planning/project-plan.md. Finally, engine-integration-2.26 and engine-unit-2.26 are declared in dabbler.yaml with the same fields and covers as their 2.24 counterparts.
+
+### Session 10 — Document LilyPond 2.26 support and bump to 1.1.0
+
+**Releasable: no.**
+
+Document the LilyPond 2.26 support that session 9 delivered and bump the release version to 1.1.0. In README.md, Requirements names LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), and the "2.26 is not supported yet" paragraph and the Known limitations bullet are replaced with what was measured: all suites pass on both versions, each version has its own harvest baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/*.harvested.json for 2.26), and 2.26 lays scores out slightly differently (uniform vertical staff offset, small horizontal spacing shifts after the clef and key signature, the clef gutter's full width), as recorded in section 7.7 of docs/planning/project-plan.md. "Running the tests" lists all five suites exactly as dabbler.yaml declares them, explains --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH that reports X.Y), and says that a contributor with only one version installed runs that version's suites. version.json becomes { "version": "1.1.0" }, the README status line says 1.1.0, and a short CHANGELOG.md records 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).
