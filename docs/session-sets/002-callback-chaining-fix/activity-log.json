@@ -1,0 +1,17 @@
+{
+  "sessionSetName": "002-callback-chaining-fix",
+  "createdDate": "2026-07-04T19:51:21.954858+00:00",
+  "totalSessions": 1,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-04T19:51:21.989372+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    }
+  ]
+}
