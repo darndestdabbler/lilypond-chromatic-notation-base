@@ -1,0 +1,196 @@
+{
+  "test_name": "Duration categories: colour and notehead repetition per category, unchanged by dots and tuplets",
+  "input_file": "duration-rules.ly",
+  "description": "Audit 2026-11-02 H2. cnb:duration-category must follow the scale cnb/procedure.ly documents (0 breve or longer, 1 whole, 2 half, 3 quarter or shorter) and come from the duration log alone. The score's config colours category 0 red, 1 green, 2 blue and 3 black with repeat on, so each note's colour is its category and its width is its head count: a single head is the quarter's width, two overlapping heads (cnb:multinote-padding = -0.5) are 1.5x it and four are 2.5x it. Every note is G4, so widths compare directly. Before the fix a whole was coloured as category 0, a half as 1, a quarter as 2; a double-dotted quarter was drawn as a doubled half and a triplet half as a single head.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: ONE NOTE PER CATEGORY ==="},
+
+    {
+      "id": "nh-1-0.000-67-0",
+      "description": "All 20 noteheads present",
+      "expect": {
+        "type": ["count('notehead') == 20"]
+      }
+    },
+    {
+      "id": "nh-1-0.000-67-0",
+      "description": "Breve: category 0 (red), 4 heads",
+      "expect": {
+        "data.duration": ["== '-1'"],
+        "visual.color":  ["== 'rgb(100.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - 2.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "Whole: category 1 (green), 4 heads",
+      "expect": {
+        "data.duration": ["== '0'"],
+        "visual.color":  ["== 'rgb(0.0000%, 100.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - 2.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-3-0.000-67-0",
+      "description": "Half: category 2 (blue), 2 heads",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-3-0.500-67-0",
+      "description": "Quarter: category 3 (black), 1 head",
+      "expect": {
+        "data.duration": ["== '2'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"]
+      }
+    },
+    {
+      "id": "nh-3-0.750-67-0",
+      "description": "Eighth: category 3 (black), 1 head",
+      "expect": {
+        "data.duration": ["== '3'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-3-0.875-67-0",
+      "description": "Second eighth: category 3 (black), 1 head",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: DOTS DO NOT CHANGE THE CATEGORY ==="},
+
+    {
+      "id": "nh-4-0.000-67-0",
+      "description": "Dotted half: still category 2 (blue), 2 heads",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-4-0.750-67-0",
+      "description": "Quarter after the dotted half: category 3 (black), 1 head",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-5-0.000-67-0",
+      "description": "Dotted quarter: still category 3 (black), 1 head",
+      "expect": {
+        "data.duration": ["== '2'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-5-0.375-67-0",
+      "description": "Eighth after the dotted quarter: category 3 (black), 1 head",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-5-0.500-67-0",
+      "description": "Double-dotted quarter: still category 3 (black), 1 head, not a doubled half",
+      "expect": {
+        "data.duration": ["== '2'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-5-0.938-67-0",
+      "description": "Sixteenth: category 3 (black), 1 head",
+      "expect": {
+        "data.duration": ["== '4'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-8-0.000-67-0",
+      "description": "Dotted whole: still category 1 (green), 4 heads",
+      "expect": {
+        "data.duration": ["== '0'"],
+        "visual.color":  ["== 'rgb(0.0000%, 100.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - 2.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: TUPLETS DO NOT CHANGE THE CATEGORY ==="},
+
+    {
+      "id": "nh-6-0.000-67-0",
+      "description": "Triplet half 1: still category 2 (blue), 2 heads, not a single head",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-6-0.333-67-0",
+      "description": "Triplet half 2: category 2 (blue), 2 heads",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-6-0.667-67-0",
+      "description": "Triplet half 3: category 2 (blue), 2 heads",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    },
+    {
+      "id": "nh-7-0.000-67-0",
+      "description": "Triplet quarter 1: category 3 (black), 1 head",
+      "expect": {
+        "data.duration": ["== '2'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-7-0.167-67-0",
+      "description": "Triplet quarter 2: category 3 (black), 1 head",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-7-0.333-67-0",
+      "description": "Triplet quarter 3: category 3 (black), 1 head",
+      "expect": {
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"],
+        "visual.bbox.w": ["abs(v - prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.05"]
+      }
+    },
+    {
+      "id": "nh-7-0.500-67-0",
+      "description": "Half after the triplet: category 2 (blue), 2 heads",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.color":  ["== 'rgb(0.0000%, 0.0000%, 100.0000%)'"],
+        "visual.bbox.w": ["abs(v - 1.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+      }
+    }
+  ]
+}

@@ -14,9 +14,9 @@
 %%    (left/right edges for up/down stems). Custom noteheads need
 %%    custom attachment points, or stems will connect at wrong positions.
 %%
-%%    The attachment data comes from the resolved config cache, which
-%%    already contains the correct attachment alist for the given
-%%    (pitch-class, duration) combination.
+%%    The attachment data is the resolved config's attachment alist for
+%%    the note, which the notehead engraver captures on the grob at
+%%    acknowledge time (cnb-attachment, cnb/noteheads.ly).
 %%
 %%  WHY STEM LENGTH COMPENSATION:
 %%    When we compress the staff (staff-space < 1), LilyPond's automatic
@@ -41,28 +41,27 @@
 %%
 %%  Returns an (x . y) pair in notehead-relative coordinates.
 %%
-%%  The attachment alist is read from the resolved config cache for the
-%%  note's (pitch-class, duration) combination.
+%%  The attachment alist is the one the notehead engraver captured on the
+%%  grob (property cnb-attachment, cnb/noteheads.ly) from the note's
+%%  resolved config at acknowledge time. It is NOT looked up in the config
+%%  cache here: this runs at layout time, when the cache holds the last
+%%  key of the score, so a later key change would rewrite earlier stems
+%%  (audit 2026-11-02, M1).
 %% ---------------------------------------------------------------------------
 
 #(define (cnb:stem-attachment grob)
    (let* (
            (stem      (ly:grob-object grob 'stem))
            (stem-dir  (ly:grob-property stem 'direction UP))
-           (event     (ly:grob-property grob 'cause))
-           (pitch     (ly:event-property event 'pitch))
-           (semi      (ly:pitch-semitones pitch))
            (logdur    (note-head::calc-duration-log grob))
-           (pitch-class (modulo semi 12))
 
-           ;; Read the attachment record from the config cache. On a cache
-           ;; miss (shouldn't happen) fall back to a centered side attachment.
+           ;; The captured attachment record; absent (no config, or an
+           ;; unregistered attachment) falls back to a centered side
+           ;; attachment.
            (record
-             (let* ((dur-prop  (ly:event-property event 'duration))
-                    (dur-cat   (cnb:duration-category dur-prop))
-                    (config    (cnb:lookup-config pitch-class dur-cat)))
-               (if config
-                   (assq-ref config 'attachment)
+             (let ((captured (ly:grob-property grob 'cnb-attachment #f)))
+               (if (pair? captured)
+                   captured
                    '((crotchet-up . (1 . 0)) (crotchet-down . (-1 . 0))
                      (minim-up . (1 . 0)) (minim-down . (-1 . 0)))))))
 

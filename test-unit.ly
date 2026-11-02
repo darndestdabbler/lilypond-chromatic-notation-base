@@ -105,13 +105,6 @@
 %%  TEST: cnb/utils.ly — Math and list utilities
 %% =========================================================================
 
-#(cnb:test-group "utils.ly — cnb:log2")
-%% log returns inexact (floating point), so use assert-near
-#(cnb:assert-near "log2(1) ≈ 0"  (cnb:log2 1)  0.0 0.001)
-#(cnb:assert-near "log2(2) ≈ 1"  (cnb:log2 2)  1.0 0.001)
-#(cnb:assert-near "log2(4) ≈ 2"  (cnb:log2 4)  2.0 0.001)
-#(cnb:assert-near "log2(8) ≈ 3"  (cnb:log2 8)  3.0 0.001)
-
 #(cnb:test-group "utils.ly — cnb:round2")
 #(cnb:assert-equal "round2(3.14159, 2) = 3.14" (cnb:round2 3.14159 2) 3.14)
 %% Guile uses banker's rounding (round-half-to-even): round(2.5) = 2.0
@@ -142,25 +135,55 @@
    '(moveto 0 0 curveto 1 2 3 4 5 6 closepath))
 
 #(cnb:test-group "utils.ly — cnb:make-cache-key")
-%% Formula: pitch-class * 100 + duration-category
-#(cnb:assert-equal "cache key for pitch 0, dur 2"  (cnb:make-cache-key 0 2)    2)
-#(cnb:assert-equal "cache key for pitch 5, dur 3"  (cnb:make-cache-key 5 3)  503)
-#(cnb:assert-equal "cache key for pitch 11, dur 1" (cnb:make-cache-key 11 1) 1101)
+%% Formula: pitch-class * 100 + duration-category (0 breve, 1 whole,
+%% 2 half, 3 quarter or shorter)
+#(cnb:assert-equal "cache key for C breve (0, 0)"     (cnb:make-cache-key 0 0)     0)
+#(cnb:assert-equal "cache key for C quarter (0, 3)"   (cnb:make-cache-key 0 3)     3)
+#(cnb:assert-equal "cache key for F half (5, 2)"      (cnb:make-cache-key 5 2)   502)
+#(cnb:assert-equal "cache key for B whole (11, 1)"    (cnb:make-cache-key 11 1) 1101)
+#(cnb:assert-equal "cache key for B quarter (11, 3)"  (cnb:make-cache-key 11 3) 1103)
 %% Keys must be unique — verify no collisions for all valid combinations
-#(cnb:assert-true "all cache keys unique"
+#(cnb:assert-true "all cache keys unique over 12 pitch classes x 4 categories"
    (let* ((keys (map (lambda (p)
                        (map (lambda (d) (cnb:make-cache-key p d))
-                            '(0 1 2 3 4)))
+                            '(0 1 2 3)))
                      (iota 12)))
           (flat (apply append keys))
           (unique (delete-duplicates flat)))
      (= (length flat) (length unique))))
+%% A dotted or triplet note keys the same as its plain duration.
+#(cnb:assert-equal "cache key of a triplet half = cache key of a half"
+   (cnb:make-cache-key 7 (cnb:duration-category (ly:make-duration 1 0 2 3)))
+   (cnb:make-cache-key 7 (cnb:duration-category (ly:make-duration 1 0))))
 
 #(cnb:test-group "utils.ly — cnb:duration-category")
-%% NOTE: cnb:duration-category takes a LilyPond Duration object (from
-%% ly:event-property 'duration), not a plain integer. It cannot be unit
-%% tested without a rendering context. This is a Tier 2 test candidate.
-#(ly:message "  SKIP: duration-category requires LilyPond Duration objects")
+%% Scale (cnb/procedure.ly): 0 = breve or longer, 1 = whole, 2 = half,
+%% 3 = quarter or shorter. It comes from the duration log alone, so dots
+%% and the tuplet factor never change it.
+%% Each entry: (log expected-category name).
+#(for-each
+   (lambda (entry)
+     (let ((log (car entry))
+           (expected (cadr entry))
+           (name (caddr entry)))
+       (cnb:assert-equal (format #f "~a (log ~a) -> ~a" name log expected)
+         (cnb:duration-category (ly:make-duration log 0)) expected)
+       (cnb:assert-equal (format #f "dotted ~a -> ~a" name expected)
+         (cnb:duration-category (ly:make-duration log 1)) expected)
+       (cnb:assert-equal (format #f "double-dotted ~a -> ~a" name expected)
+         (cnb:duration-category (ly:make-duration log 2)) expected)))
+   '((-1 0 "breve")
+     (0 1 "whole")
+     (1 2 "half")
+     (2 3 "quarter")
+     (3 3 "eighth")
+     (4 3 "sixteenth")))
+%% Triplets (2/3 factor) keep their written duration's category.
+#(cnb:assert-equal "triplet breve -> 0"   (cnb:duration-category (ly:make-duration -1 0 2 3)) 0)
+#(cnb:assert-equal "triplet whole -> 1"   (cnb:duration-category (ly:make-duration 0 0 2 3)) 1)
+#(cnb:assert-equal "triplet half -> 2"    (cnb:duration-category (ly:make-duration 1 0 2 3)) 2)
+#(cnb:assert-equal "triplet quarter -> 3" (cnb:duration-category (ly:make-duration 2 0 2 3)) 3)
+#(cnb:assert-equal "dotted triplet half -> 2" (cnb:duration-category (ly:make-duration 1 1 2 3)) 2)
 
 #(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")
 %% The composer is pure: it takes the property's current value and a new

@@ -523,3 +523,20 @@ match.
   expressions the version under test as `lilypond` ('2.24' when none is
   named), and `tests/clef-custom.json` asserts that distance per version
   with its 0.1 tolerance unchanged.
+
+**Session 12 re-baselines (2026-11-02).** None. Session 12 fixed audit
+findings H2 (duration category from the duration log, on the documented
+0–3 scale), H3 (dots on ledger lines counted the notehead's offset
+twice) and M1 (stem attachment captured at acknowledge time). After the
+fixes, all five suites pass on 2.24 and 2.26, and no existing harvest
+drifted on either version. That is as expected:
+
+- No tracked score's config branches on duration.
+- Only the length-based category of tuplets and double-dotted notes
+  changed head counts, and no tracked score has one.
+- No tracked score has a dotted note on a ledger line.
+- No tracked score uses a key-dependent attachment.
+
+The three new specs added their own first baselines on both versions:
+`duration-rules`, `dots-ledger-lines` and `stem-attachment-key-change`.
+These are new files, not re-baselines.

@@ -29,13 +29,6 @@
 %%  MATH HELPERS
 %% ---------------------------------------------------------------------------
 
-%% Log base 2. Used to determine note duration category from LilyPond's
-%% internal duration representation. LilyPond stores durations as
-%% fractions (e.g., 1/4 for a quarter note), and we need the log2
-%% to classify them: whole=0, half=1, quarter=2, eighth=3, etc.
-#(define (cnb:log2 x)
-   (/ (log x) (log 2)))
-
 %% Round a number to n decimal places.
 %% Example: (cnb:round2 3.14159 2) => 3.14
 #(define (cnb:round2 x n)
@@ -302,38 +295,26 @@
 %% ENCODING SCHEME:
 %%   key = (pitch-class * 100) + duration-category
 %%   This works because pitch-class is 0-11 and duration-category
-%%   is a small integer (typically 0-4), so keys never collide.
+%%   is 0-3 (see cnb:duration-category), so keys never collide.
 %%
 %% EXAMPLES:
-%%   C quarter note:  (cnb:make-cache-key 0 2) => 2
-%%   F# half note:    (cnb:make-cache-key 6 1) => 601
-%%   B whole note:    (cnb:make-cache-key 11 0) => 1100
+%%   C quarter note:  (cnb:make-cache-key 0 3) => 3
+%%   F# half note:    (cnb:make-cache-key 6 2) => 602
+%%   B whole note:    (cnb:make-cache-key 11 1) => 1101
 #(define (cnb:make-cache-key pitch-class duration-category)
    (+ (* pitch-class 100) duration-category))
 
 
-%% Compute the duration category for a note event.
+%% Compute the duration category for a note event, on the scale the
+%% configuration procedure documents (cnb/procedure.ly):
+%%   0 = breve or longer, 1 = whole, 2 = half, 3 = quarter or shorter.
 %%
-%% LilyPond represents durations as fractions:
-%%   breve=2, whole=1, half=1/2, quarter=1/4, eighth=1/8, etc.
-%%
-%% We convert to a "log2 duration" number:
-%%   breve=-1, whole=0, half=1, quarter=2, eighth=3, etc.
-%%
-%% The duration's length as a fraction: LilyPond 2.26 removed
-%% duration-length in favour of ly:duration->number, which 2.24 lacks,
-%% so whichever is defined is chosen once, here at load time.
-#(define cnb:duration->number
-   (if (defined? 'ly:duration->number)
-       ly:duration->number
-       duration-length))
-
+%% It comes from the duration LOG alone (breve=-1, whole=0, half=1,
+%% quarter=2, eighth=3, ...) as clamp(log + 1, 0, 3), so dots and the
+%% tuplet factor never change it: a dotted half and a triplet half are
+%% both halves.
 #(define (cnb:duration-category duration-prop)
-   (let* ((dur (cnb:duration->number duration-prop))
-          (raw (- (cnb:log2 (denominator dur))
-                  (floor (/ (numerator dur) 2))))
-          (clamped (max 0 (min 3 (inexact->exact (round raw))))))
-     clamped))
+   (max 0 (min 3 (+ (ly:duration-log duration-prop) 1))))
 
 
 %% ---------------------------------------------------------------------------

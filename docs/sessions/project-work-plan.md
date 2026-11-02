@@ -23,6 +23,11 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 9 | Make the engine and the harvester work on LilyPond 2.26 | no | 2026-10-31 |
 | 10 | Document LilyPond 2.26 support and bump to 1.1.0 | no | 2026-10-31 |
 | 11 | Release 1.1.0 (release: 1.1.0) | yes | 2026-10-31 |
+| 12 | Engrave durations and dots correctly | no | 2026-11-02 |
+| 13 | The test runner cannot pass a broken render | — | not declared |
+| 14 | Harvest what is drawn, and claim only what works | — | not declared |
+| 15 | A clean public archive, and 1.1.1 | — | not declared |
+| 16 | Release 1.1.1 (release: 1.1.1) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -93,3 +98,9 @@ Document the LilyPond 2.26 support that session 9 delivered and bump the release
 **Releasable: yes.**
 
 Release 1.1.0: the framework packs and publishes what is on the trunk.
+
+### Session 12 — Engrave durations and dots correctly
+
+**Releasable: no.**
+
+Fix three engraving errors from the 2026-11-02 audit (H2, H3, M1) that every suite passed. H2: cnb:duration-category (cnb/utils.ly) is recomputed from the duration log alone as clamp(log + 1, 0, 3), so breve -> 0, whole -> 1, half -> 2 and quarter or shorter -> 3, the scale cnb/procedure.ly and the export spec already document; dots and the tuplet factor no longer change it. The consumers follow that scale: the repeat rule in cnb/stencils.ly (still 4 heads for whole and breve, 2 for a half, 1 for a quarter or shorter) and the cache-key comments; noteheads.ly, off-key.ly and stems.ly pass the category straight to the lookup and are confirmed. test-unit.ly gains unit tests for every duration log from -1 to 4, with and without dots, triplets and the cache key, and a new integration spec tests/duration-rules.ly/.json engraves breve, whole, half, quarter, eighth, dotted notes and triplets under a config that colours each category differently, asserting each note's colour and head count. H3: cnb/dots.ly stops counting the notehead's offset twice when it moves a dot off a ledger line, proved by a spec with dotted notes on and off ledger lines above and below the staff asserting each dot's distance from its notehead. M1: the notehead acknowledger captures the attachment record from the config current at acknowledge time onto the grob (as it already does for x-offset) and cnb:stem-attachment reads it from there, so a later \key change no longer rewrites earlier stems, proved by a spec with a key-dependent attachment and a mid-score key change. Finally all five suites run; any existing harvest that drifts is re-baselined on both versions only after every difference is checked to be one of these three fixes, and each re-baselined file (or that none drifted) is recorded in section 7.7 of docs/planning/project-plan.md.

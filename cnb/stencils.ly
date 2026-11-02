@@ -148,9 +148,9 @@
 %%  BUILD A DURATION-SPECIFIC STENCIL
 %%
 %%  Takes a base stencil and creates the appropriate repetition:
-%%    category >= 2 -> quarter or shorter: 1 copy (no repetition)
-%%    category  = 1 -> half note: 2 copies side by side
-%%    category <= 0 -> whole/breve: 4 copies
+%%    category  = 3 -> quarter or shorter: 1 copy (no repetition)
+%%    category  = 2 -> half note: 2 copies side by side
+%%    category <= 1 -> whole/breve: 4 copies
 %%
 %%  The copies overlap by cnb:multinote-padding (usually negative = overlap).
 %% ---------------------------------------------------------------------------
@@ -158,13 +158,13 @@
 #(define (cnb:build-duration-stencil base-stencil duration-category)
    (let* ((stencil base-stencil))
 
-      (for-each (lambda (i)
-        (let* ((threshold (- 1 i)))
+      ;; Double once for a half or longer, and again for a whole or longer.
+      (for-each (lambda (threshold)
           (if (<= duration-category threshold)
               (set! stencil
                     (ly:stencil-combine-at-edge
-                      stencil 0 1 stencil cnb:multinote-padding)))))
-        (iota 3 0))
+                      stencil 0 1 stencil cnb:multinote-padding))))
+        '(2 1))
 
       stencil))
 

@@ -33,7 +33,10 @@
 %%    1. Gets the parent notehead's staff position
 %%    2. Computes the ledger lines for that note (via proximity rule)
 %%    3. If the note's position matches a ledger line, shifts the
-%%       dot's staff-position by 1 in the appropriate direction
+%%       dot 1 staff-position away from the notehead in the
+%%       appropriate direction. The dot is positioned relative to its
+%%       notehead (its Y-parent), so the shift is the dodge alone, not
+%%       the notehead's position plus the dodge.
 %%
 %%  DIRECTION LOGIC:
 %%    When dodging, the dot moves AWAY from the nearest staff line
@@ -100,13 +103,14 @@
                        ;; Notes below the staff → dodge down (-1)
                        ;; This matches standard engraving convention.
                        (staff-center (/ (+ top-staff bottom-staff) 2))
-                       (dodge-dir    (if (>= nh-pos staff-center) 1 -1))
+                       (dodge-dir    (if (>= nh-pos staff-center) 1 -1)))
 
-                       ;; The new dot position: shift by 1 staff-position
-                       ;; in the dodge direction.
-                       (new-pos      (+ nh-pos dodge-dir)))
-
-                 ;; Set the dot's staff-position to the dodged value.
-                 ;; This is the same property LilyPond's built-in avoidance
-                 ;; uses, so it integrates naturally.
-                 (ly:grob-set-property! dots-grob 'staff-position new-pos)))))))
+                 ;; Shift the dot by 1 staff-position in the dodge
+                 ;; direction. The dot's Y-parent is the notehead, which
+                 ;; already carries its own Y-offset, so the dot's
+                 ;; staff-position is RELATIVE to the notehead: set it to
+                 ;; the dodge alone. Setting the notehead's absolute
+                 ;; position plus the dodge counted the notehead's offset
+                 ;; twice and threw the dot several staff spaces away
+                 ;; (audit 2026-11-02, H3).
+                 (ly:grob-set-property! dots-grob 'staff-position dodge-dir)))))))

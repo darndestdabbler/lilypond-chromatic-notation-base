@@ -147,6 +147,15 @@
    "Pitch-axis horizontal offset for this notehead, in absolute
 staff-space units (already scaled by the staff's staff-space).")
 
+%% The resolved stem-attachment record of the note's config, captured
+%% at acknowledge time for the same reason as cnb-x-offset: stem
+%% attachment is evaluated at layout time, after later key changes have
+%% rebuilt the config cache (audit 2026-11-02, M1). Read by
+%% cnb:stem-attachment (cnb/stems.ly).
+#(cnb:define-grob-property 'cnb-attachment list?
+   "Stem-attachment record (crotchet-up, crotchet-down, minim-up,
+minim-down) of this notehead's config, captured at acknowledge time.")
+
 %% The offset applier, run from Stem.before-line-breaking (chained
 %% after cnb:compensate-stem-length in cnb/layout.ly).
 %%
@@ -285,17 +294,18 @@ staff-space units (already scaled by the staff's staff-space).")
                (ly:grob-set-property! grob 'stencil
                      note-stencil)
 
-               ;; X-OFFSET (backlog 6.2 / E13-2): capture the config's
-               ;; optional x-offset on the grob, scaled to absolute
-               ;; staff-space units, for the post-arrangement translation
-               ;; in cnb:apply-note-x-offsets (see the X-OFFSET SUPPORT
+               ;; X-OFFSET (backlog 6.2 / E13-2) AND STEM ATTACHMENT
+               ;; (audit 2026-11-02, M1): capture the config's optional
+               ;; x-offset on the grob, scaled to absolute staff-space
+               ;; units, for the post-arrangement translation in
+               ;; cnb:apply-note-x-offsets (see the X-OFFSET SUPPORT
                ;; block above for why it cannot be applied here or in
-               ;; the stencil). Captured NOW because the key-dependent
-               ;; config cache is current at acknowledge time; the
-               ;; wrapper runs at layout time, after any later key
-               ;; changes have rebuilt the cache. A zero or missing
-               ;; field never touches the grob — byte-identical to
-               ;; today's behavior.
+               ;; the stencil), and its attachment record for
+               ;; cnb:stem-attachment (cnb/stems.ly). Captured NOW
+               ;; because the key-dependent config cache is current at
+               ;; acknowledge time; both readers run at layout time,
+               ;; after any later key changes have rebuilt the cache. A
+               ;; zero or missing x-offset never touches the grob.
                (let* ((pc      (modulo note-semis 12))
                       (dur-cat (cnb:duration-category
                                  (ly:event-property note-event 'duration)))
@@ -303,6 +313,9 @@ staff-space units (already scaled by the staff's staff-space).")
                       (x-off   (let ((x (and config
                                              (cnb:config-field config 'x-offset))))
                                  (if (number? x) x 0))))
+                 (let ((att (and config (cnb:config-field config 'attachment))))
+                   (if (pair? att)
+                       (ly:grob-set-property! grob 'cnb-attachment att)))
                  (if (not (zero? x-off))
                      (ly:grob-set-property! grob 'cnb-x-offset
                                             (* x-off staff-space))))))))))
