@@ -1,0 +1,106 @@
+# Project work plan — sessions
+
+**Written by `dabbler` as a fold of `activity-log.json`.**
+Hand edits are overwritten by the next append. The record is the log;
+this page is one view of it.
+
+---
+
+## Sessions
+
+The numbered sessions are declared from `session-plan.md`; each one's task is what its own plan step declared.
+
+| # | Session | Releasable | Declared |
+| ---: | --- | --- | --- |
+| 1 | Author or import the solution plan | no | 2026-10-30 |
+| 2 | Challenge the plan, then break it into numbered sessions | no | 2026-10-30 |
+| 3 | Make the test tooling portable and gate honestly | no | 2026-10-30 |
+| 4 | Remove cruft and record LilyPond compatibility | no | 2026-10-30 |
+| 5 | Clean up the guidance and README for 1.0.0 | no | 2026-10-30 |
+| 6 | Declare the source-archive packaging | no | 2026-10-30 |
+| 7 | Release 1.0.0 (release: 1.0.0) | yes | 2026-10-31 |
+| 8 | Let the test runners choose a LilyPond version | no | 2026-10-31 |
+| 9 | Make the engine and the harvester work on LilyPond 2.26 | no | 2026-10-31 |
+| 10 | Document LilyPond 2.26 support and bump to 1.1.0 | no | 2026-10-31 |
+| 11 | Release 1.1.0 (release: 1.1.0) | yes | 2026-10-31 |
+| 12 | Engrave durations and dots correctly | no | 2026-11-02 |
+| 13 | The test runner cannot pass a broken render | — | not declared |
+| 14 | Harvest what is drawn, and claim only what works | — | not declared |
+| 15 | A clean public archive, and 1.1.1 | — | not declared |
+| 16 | Release 1.1.1 (release: 1.1.1) | — | not declared |
+
+### Session 1 — Author or import the solution plan
+
+**Releasable: no.**
+
+Import the operator-approved wrap-up brief (docs/planning/brief.md) into the existing docs/planning/project-plan.md, amending that file rather than creating a solution-plan.md, as the brief directs. The amendment adds: the wrap-up objective (finish, clean up and document the CNB engine to 'reliable for simple exploration', release it as 1.0.0 and make the repository public under CC0) with its out-of-scope list and success criteria; the Production split the brief answers (one module, the LilyPond/Scheme source tree plus Python test tooling, no database, nothing running separately); the Handoff artifacts (a source archive produced by `git archive` plus an annotated v1.0.0 tag read from version.json); the single module's responsibility, contract and the cuts deliberately not made; the refreshed current state on 2026-10-30; and the wrap-up phases E1 (portable, honest test tooling), E2 (cruft removal and LilyPond compatibility note), E3 (guidance and README cleanup, version.json), the packaging session and the Release 1.0.0 session, each with its key deliverables, plus the constraints (session-sets kept as read-only history, golden baselines must not drift, IP posture per section 5). Stale counts and phase status in the existing sections are corrected where they contradict the brief's state.
+
+### Session 2 — Challenge the plan, then break it into numbered sessions
+
+**Releasable: no.**
+
+Challenge the cuts of docs/planning/project-plan.md (this repository's plan file; there is no solution-plan.md) and record the answers as a new rationale subsection, section 7.7: whether the single module should exist and tools/ stay uncut; whether each contract clause is a promise something can prove (the golden-harvest no-drift promise is provable only by `git diff --exit-code -- tests` after the integration run, because tools/run_tests.py rewrites tests/*.harvested.json in place and compares nothing, so E1 chooses -dno-point-and-click over an ignored output folder to keep the tracked tree as the drift detector; the unit suite cannot fail today and E1 fixes that); whether the dependency direction hides the decisions most likely to change (the LilyPond version and the Configurator's export contract); and that the only deferred cut, splitting tools/, stays deferred. The challenge also records two planning corrections found in the 3.27.0 router: the release preflight refuses a release while any session since the last release closed without a VERIFIED verdict, so the brief's `Policy: fast` lines are not carried into E2/E3; and the tracked tools/__pycache__/*.pyc files are cruft E2 removes alongside the brief's list. Then append the numbered sessions to docs/sessions/session-plan.md: Session 3 (E1, portable and honest test tooling, also the skeleton-equivalent session that declares the second suite, since this repository has no solution or build files to scaffold), Session 4 (E2, cruft removal and LilyPond compatibility note), Session 5 (E3, guidance and README cleanup plus version.json 1.0.0), Session 6 (packaging: the pack-only `packaging:` block, checked with `dabbler packaging --rehearse`), and Session 7: Release 1.0.0 (release: 1.0.0), with no steps, proposed as a major version because it is the first release. Each work session has a Register step and at most three work steps, and every step that runs a suite names which one.
+
+### Session 3 — Make the test tooling portable and gate honestly
+
+**Releasable: no.**
+
+Make the CNB test tooling portable and make it gate honestly. tools/run_tests.py and tools/harvest_svg.py reconfigure stdout/stderr to UTF-8 (falling back to ASCII-safe replacement), open every file with encoding="utf-8" while keeping the bytes harvests are written with, render with -dno-point-and-click, and warn without failing when lilypond --version is not 2.24.x. run_tests.py turns golden drift into a test failure: it compares each regenerated tests/*.harvested.json with the tracked copy, and on a difference leaves the file untouched, names the differing element ids and properties, and exits non-zero; --update-baselines writes the regenerated harvest instead, and a spec with no harvest yet writes one and passes. Tests for that comparison go in tools/test_run_tests.py (stdlib unittest, no LilyPond). The tracked tests/*.svg are re-baselined once without their textedit:// links. A new tools/run_unit.py runs lilypond test-unit.ly into an ignored out/ folder under a time limit, parses the TEST RESULTS line and exits non-zero on any failure, a missing line, a LilyPond error or the time limit; dabbler.yaml declares it as the engine-unit suite, adds an engine-tooling suite for the tooling's own unittest tests, and drops -X utf8 from engine-integration. Finally tests/example-notes.json is written from its harvest, pruned to assertions that pin what the score is for, tests/TODO.md is deleted, and the README's test counts and status banner are brought to what the two suites report.
+
+**Amended after acceptance:**
+
+- 2026-10-30 — step 'portable-runner': its files: tools/__pycache__/harvest_svg.cpython-311.pyc is still tracked (session 4 untracks it) and Python regenerates it whenever harvest_svg.py changes, so editing harvest_svg.py changes it (claude-code (anthropic, claude-opus-5-5))
+
+### Session 4 — Remove cruft and record LilyPond compatibility
+
+**Releasable: no.**
+
+Remove the repository's cruft and record how the engine fares on the newest LilyPond. Delete tools/old/ and tools/to-transition-to-python/ outright (git history keeps them), stop tracking tools/__pycache__/*.pyc (already ignored) and test-unit.pdf, and ignore /test-unit.pdf; prove nothing depended on them by running the engine-integration suite whole and the engine-unit suite. Mark docs/planning/configurator-coordination-backlog.md closed at its top, naming the session sets that resolved it (005-clef-configurability, 006-keysig-configurability, 007-vector-model-removal, 008-pitch-axis-hook; §4 was never this repository's). Render tests/c-major-scale.ly once with LilyPond 2.26.0, called by its full path D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe with its output in the ignored out/ folder, and record in the README's Requirements section whether it works, fails (with the first error) or is untested and why, including any \version or convert-ly warning it prints; 2.24.x stays the supported version.
+
+### Session 5 — Clean up the guidance and README for 1.0.0
+
+**Releasable: no.**
+
+Phase E3 of docs/planning/project-plan.md section 7.5: clean up the guidance and README for 1.0.0. The three guidance files under docs/planning (lessons-learned.md, lessons-archive.md, project-guidance.md) are untouched v1 templates whose only content is TODO placeholders and ai_router instructions, and the session-set change-logs record no lessons to harvest, so this session deletes all three (the plan's second option), which removes the v1 ai_router instructions with them; nothing outside the planning records that describe this task links to them. It then updates README.md: the status banner reads 1.0.0; a new "Known limitations" section states LilyPond 2.24.x only, tested on Windows, configs are generated by the Configurator, and clefs and key signatures follow the score; and the existing Testing section becomes "Running the tests", naming the declared suites exactly as dabbler.yaml declares them -- engine-integration (`python tools/run_tests.py`) and engine-unit (`python tools/run_unit.py`), plus the Python tooling's own engine-tooling suite. Finally it adds a root version.json reading { "version": "1.0.0" } for the release session to check against.
+
+### Session 6 — Declare the source-archive packaging
+
+**Releasable: no.**
+
+Declare this repository's source-archive packaging in dabbler.yaml: replace the commented example packaging block with a real `packaging:` block whose `pack` argv is ["git", "archive", "--format=zip", "--output={output}/lilypond-chromatic-notation-base-{version}.zip", "HEAD"] and which declares no `push`. The `{version}` placeholder is used in place of the literal 1.0.0 because a rehearsal in a scratch clone accepted it (it resolved to 1.0.0 and the pack exited 0). The step is proved by `dabbler packaging --rehearse`, which runs the pack and pushes nothing.
+
+### Session 7 — Release 1.0.0 (release: 1.0.0)
+
+**Releasable: yes.**
+
+Release 1.0.0: the framework packs and publishes what is on the trunk.
+
+### Session 8 — Let the test runners choose a LilyPond version
+
+**Releasable: no.**
+
+Give tools/run_tests.py and tools/run_unit.py a --lilypond-version X.Y option. run_tests.py gains small helpers that both runners use: the variable name for a version (CNB_LILYPOND_X_Y), the version a lilypond executable reports (X.Y from the first line of --version), resolution of the executable (the variable's value, else the lilypond on PATH if it reports X.Y, else exit non-zero with a message naming the variable to set), the render directory (out/lilypond-X.Y/ for any version other than 2.24, so tracked tests/*.svg are never rewritten by such a run) and the harvest baseline directory (beside the spec for 2.24, tests/lilypond-2.26/ for 2.26, none for a version outside the supported set {2.24, 2.26}). The LilyPond executable is passed to run_lilypond instead of the hard-coded name. For an unsupported version run_tests.py warns once and skips the drift comparison while every assertion still runs; this replaces the old 'baselined on 2.24' warning, which is removed. Without the option both runners behave as today: lilypond from PATH, renders beside the spec (run_unit.py into out/), drift compared with tests/*.harvested.json. Tests in tools/test_run_tests.py cover resolution from the variable, from PATH, and the failure message; the baseline path for 2.24 and 2.26; and the unsupported-version skip. Then dabbler.yaml's engine-integration and engine-unit suite commands gain --lilypond-version 2.24 so the run of record names the version it proves.
+
+### Session 9 — Make the engine and the harvester work on LilyPond 2.26
+
+**Releasable: no.**
+
+Make the CNB engine and its SVG harvester work on LilyPond 2.26 without changing anything on 2.24. In cnb/utils.ly, cnb:duration-category picks ly:duration->number (2.26) or duration-length (2.24) once at load time. In tools/harvest_svg.py, extract_color_deep rewrites an opaque rgba(...) colour to the 2.24 rgb(R%, G%, B%) form with every component at four decimals, while a colour that is not opaque keeps its alpha. A new tools/test_harvest_svg.py tests this. The clef-custom gutter assertion is restated as the operator decided on 2026-10-31. Measured from a no-gutter twin, the 2-staff-space gutter moves the first notehead +1.5 on 2.24 but the full +2.0 on 2.26, so no assertion that ignores the version can keep the 0.1 tolerance. tools/run_tests.py therefore exposes the LilyPond version under test to spec expressions as `lilypond` (2.24 when no version is given), tested in tools/test_run_tests.py. tests/clef-custom.json then asserts the first notehead's distance from the clef's right edge per version (9.117 on 2.24, 9.704 on 2.26), with the tolerance unchanged. 2.24 is proved unchanged: all three suites pass and the tracked tests/*.harvested.json do not drift. Then the 2.26 baselines tests/lilypond-2.26/*.harvested.json are written with --update-baselines after every assertion passes. Their coordinate shifts against 2.24 are spot-checked and recorded in section 7.7 of docs/planning/project-plan.md. Finally, engine-integration-2.26 and engine-unit-2.26 are declared in dabbler.yaml with the same fields and covers as their 2.24 counterparts.
+
+### Session 10 — Document LilyPond 2.26 support and bump to 1.1.0
+
+**Releasable: no.**
+
+Document the LilyPond 2.26 support that session 9 delivered and bump the release version to 1.1.0. In README.md, Requirements names LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), and the "2.26 is not supported yet" paragraph and the Known limitations bullet are replaced with what was measured: all suites pass on both versions, each version has its own harvest baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/*.harvested.json for 2.26), and 2.26 lays scores out slightly differently (uniform vertical staff offset, small horizontal spacing shifts after the clef and key signature, the clef gutter's full width), as recorded in section 7.7 of docs/planning/project-plan.md. "Running the tests" lists all five suites exactly as dabbler.yaml declares them, explains --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH that reports X.Y), and says that a contributor with only one version installed runs that version's suites. version.json becomes { "version": "1.1.0" }, the README status line says 1.1.0, and a short CHANGELOG.md records 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).
+
+### Session 11 — Release 1.1.0 (release: 1.1.0)
+
+**Releasable: yes.**
+
+Release 1.1.0: the framework packs and publishes what is on the trunk.
+
+### Session 12 — Engrave durations and dots correctly
+
+**Releasable: no.**
+
+Fix three engraving errors from the 2026-11-02 audit (H2, H3, M1) that every suite passed. H2: cnb:duration-category (cnb/utils.ly) is recomputed from the duration log alone as clamp(log + 1, 0, 3), so breve -> 0, whole -> 1, half -> 2 and quarter or shorter -> 3, the scale cnb/procedure.ly and the export spec already document; dots and the tuplet factor no longer change it. The consumers follow that scale: the repeat rule in cnb/stencils.ly (still 4 heads for whole and breve, 2 for a half, 1 for a quarter or shorter) and the cache-key comments; noteheads.ly, off-key.ly and stems.ly pass the category straight to the lookup and are confirmed. test-unit.ly gains unit tests for every duration log from -1 to 4, with and without dots, triplets and the cache key, and a new integration spec tests/duration-rules.ly/.json engraves breve, whole, half, quarter, eighth, dotted notes and triplets under a config that colours each category differently, asserting each note's colour and head count. H3: cnb/dots.ly stops counting the notehead's offset twice when it moves a dot off a ledger line, proved by a spec with dotted notes on and off ledger lines above and below the staff asserting each dot's distance from its notehead. M1: the notehead acknowledger captures the attachment record from the config current at acknowledge time onto the grob (as it already does for x-offset) and cnb:stem-attachment reads it from there, so a later \key change no longer rewrites earlier stems, proved by a spec with a key-dependent attachment and a mid-score key change. Finally all five suites run; any existing harvest that drifts is re-baselined on both versions only after every difference is checked to be one of these three fixes, and each re-baselined file (or that none drifted) is recorded in section 7.7 of docs/planning/project-plan.md.
