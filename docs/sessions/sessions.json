@@ -230,9 +230,9 @@
     {
       "number": 12,
       "title": "Engrave durations and dots correctly",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-02T06:24:01.491000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-02T07:13:35.550000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
