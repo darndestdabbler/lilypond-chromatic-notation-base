@@ -313,3 +313,108 @@ named by the user environment variable `CNB_LILYPOND_2_26`.
    support; harvest baselines per version).
 
 ### Session 11: Release 1.1.0 (release: 1.1.0)
+
+### Session 12: Engrave durations and dots correctly
+
+**Why.** A whole-repository audit on 2026-11-02
+(`docs/planning/audit-2026-11-02.md`; finding IDs below refer to it)
+found visible engraving errors that every suite passed:
+
+- `cnb:duration-category` is computed from the full duration length, so
+  dots and tuplets change the category (H2).
+- It is off by one against the engine's own documented scale in
+  `cnb/procedure.ly`: 0 = breve or longer, 1 = whole, 2 = half, 3 = quarter
+  or shorter. The scale is also the export spec's, so a Configurator rule
+  for minims hollows quarter notes (Configurator audit H4).
+- Dots on ledger-line notes land 6–8 staff spaces away (H3).
+
+1. Register.
+2. Compute the category from the duration *log* alone, as
+   `clamp(log + 1, 0, 3)`. That maps breve → 0, whole → 1, half → 2, and
+   quarter or shorter → 3, ignoring dots and the tuplet factor. Update
+   every consumer to that scale: `noteheads.ly` (repeat counts must still
+   give 2 heads for a half and 4 for a whole), `off-key.ly`, `stems.ly`,
+   `stencils.ly` and the cache key. Add unit tests to `test-unit.ly` for
+   every duration log from −1 to 4, with and without dots, for triplets,
+   and for the cache key.
+
+   Add an integration spec, `tests/duration-rules.ly` plus its `.json`.
+   It uses a small config whose procedure gives each category a different
+   colour, and engraves a breve, a whole, a half, a quarter, an eighth,
+   dotted versions and triplets. It asserts the colour and head count of
+   each note.
+3. H3: in `cnb/dots.ly`, count the notehead offset once. Add an
+   integration spec with dotted notes on and off ledger lines above and
+   below the staff, asserting each dot's distance from its notehead.
+4. M1: stem attachment uses the config the note was engraved with, not
+   the global cache at layout time, so a later `\key` change no longer
+   rewrites earlier stems. Add a spec with a key-dependent config and a
+   mid-score key change.
+
+   Run all five suites. Where an existing harvest drifts, re-baseline it
+   with `--update-baselines` on both versions only after checking that
+   every difference is one of these three fixes. Record each re-baselined
+   file and why in §7.7 of `docs/planning/project-plan.md`.
+
+### Session 13: The test runner cannot pass a broken render
+
+1. Register.
+2. H1: before rendering, `run_tests.py` deletes any earlier output for the
+   spec, including tracked `tests/{base}.svg` when rendering in place, so
+   it can only harvest what this run wrote. A multi-page render
+   (`{base}-1.svg`, `{base}-2.svg`, …) is harvested page by page, or fails
+   with a message; it never falls back to a stale file. M5: "No test specs
+   found" exits non-zero. L3: without `--lilypond-version`, detect the
+   version on `PATH`, and for anything but 2.24 write to
+   `out/lilypond-X.Y/` and compare against that version's baselines.
+3. M3, L6: drift comparison keys repeated ids by `id` plus occurrence
+   index, so an edit to the second `staff-symbol` or a duplicated ledger
+   id shows as drift. An absence check passes only for a declared absence,
+   never because an expression contains `is None`.
+4. M4: verify that the executable named by `CNB_LILYPOND_X_Y` reports X.Y,
+   and fail otherwise. L4: add `tools/run_tests.py` and
+   `tools/harvest_svg.py` to the engine-unit suites' `covers:`. Each fix
+   gets a test in `tools/test_run_tests.py`. Check the result the way the
+   audit did, by re-running its probes: the key-signature regression plus
+   `\pageBreak`, the edited duplicate ids, and the env var pointed at 2.24.
+   Each must now fail.
+
+### Session 14: Harvest what is drawn, and claim only what works
+
+1. Register.
+2. M2: `tools/harvest_svg.py` harvests the geometry of `circle`,
+   `ellipse`, `polygon`, `polyline` and `text`, plus beam bounding boxes
+   and shape hashes, so off-key rings and beams can drift. Add tests in
+   `tools/test_harvest_svg.py`. Re-baseline both versions, and confirm the
+   only changes are the newly harvested properties.
+3. M6: the articulation correction never changes anything, and beam and
+   stem compensation never apply on the engine's own staff. Either make
+   each one work, with a spec that fails without it, or delete the dead
+   code and its README claims. No half measures: what the README
+   advertises must be tested.
+4. M7, L1, L2: the README reports real counts (assertions, not `_comment`
+   markers, for 2.24 and 2.26) and the real project tree;
+   `docs/INTEGRATION-TESTING.md` describes per-version baselines and
+   `--lilypond-version`; `--generate` refuses to overwrite a tracked
+   baseline without `--update-baselines`; and `--keep-svg` works or is
+   removed.
+
+### Session 15: A clean public archive, and 1.1.1
+
+1. Register.
+2. L5:
+   - Add `.gitattributes` `export-ignore` for `.vscode/`, `AGENTS.md`,
+     `CLAUDE.md`, `docs/sessions/`, `docs/transcripts/` and
+     `docs/planning/`.
+   - Re-render any tracked SVG that still carries a
+     `textedit://D:/Projects/...` link with `-dno-point-and-click`.
+   - Replace the `c:\Users\...` path in the findings file with a
+     repository-relative one.
+   - Prove it with `dabbler packaging --rehearse`: list the zip, and
+     `grep` it for `textedit://`, `D:\` and `Users\`. None may appear.
+3. Set `version.json` to `1.1.1`, and add a `CHANGELOG.md` entry. Note
+   that duration categories now follow the documented scale, so a
+   hand-written config that relied on the old off-by-one numbering must
+   change.
+
+### Session 16: Release 1.1.1 (release: 1.1.1)
