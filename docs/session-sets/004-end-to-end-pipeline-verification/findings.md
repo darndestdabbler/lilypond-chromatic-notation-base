@@ -13,8 +13,8 @@ Session 1 comes out clean, Session 2 collapses to documentation only").
 ## 1. Pre-flight gate (Step 1) — PASSED
 
 The cross-repo blocker is cleared. Confirmed in
-`chromatic-notation-configurator` (now at `d:\Projects\chromatic-notation-configurator`;
-it moved from `c:\Users\denmi\source\repos\`):
+`chromatic-notation-configurator` (a sibling checkout of this repository,
+`../chromatic-notation-configurator`):
 
 - `cnb/src/cnb-lilypond.js` exists in the modular rewrite (13 modules total).
 - Its exporter set `003-lilypond-exporter` and UI export set `006` are
@@ -29,7 +29,7 @@ it moved from `c:\Users\denmi\source\repos\`):
 Generated fresh from the Configurator fixture — zero hand edits:
 
 ```
-node d:\Projects\chromatic-notation-configurator\cnb\fixtures\export-kite-4-369.mjs \
+node ../chromatic-notation-configurator/cnb/fixtures/export-kite-4-369.mjs \
      kite-4-369-from-configurator.ly        # 7665 bytes, no validation warnings
 ```
 

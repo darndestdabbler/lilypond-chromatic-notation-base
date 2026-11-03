@@ -120,7 +120,6 @@ tspan { white-space: pre; }
 <g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
 </g>
 <g id="nh-2-0.000-67-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:84:6:7">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(17.2278, 8.4286)">
@@ -128,10 +127,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-61-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="61" data-pitch-class="1" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:83:6:7">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(5.6953, 10.4286)">
@@ -139,10 +136,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-60-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:87:6:7">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(4.8453, 10.4286)">
@@ -150,10 +145,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.750-64-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="64" data-pitch-class="4" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:83:18:19">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.6396, 9.4286)">
@@ -161,10 +154,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.750-60-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:87:18:19">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.7897, 10.4286)">
@@ -172,10 +163,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.000-60-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:88:6:7">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(17.2278, 10.4286)">
@@ -183,10 +172,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.250-63-0" data-type="notehead" data-measure="2" data-beat="0.250" data-midi="63" data-pitch-class="3" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:84:9:10">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(19.4259, 9.4286)">
@@ -194,10 +181,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.250-61-0" data-type="notehead" data-measure="2" data-beat="0.250" data-midi="61" data-pitch-class="1" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:88:9:10">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(21.2760, 10.4286)">
@@ -205,10 +190,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-60-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:87:15:16">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(11.0916, 10.4286)">
@@ -216,10 +199,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-62-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="62" data-pitch-class="2" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:83:15:16">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(10.0915, 9.9286)">
@@ -227,10 +208,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.500-72-0" data-type="notehead" data-measure="2" data-beat="0.500" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:84:14:15">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(22.7761, 6.9286)">
@@ -238,10 +217,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.500-60-0" data-type="notehead" data-measure="2" data-beat="0.500" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:88:14:15">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(22.7761, 10.4286)">
@@ -249,10 +226,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.250-68-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="68" data-pitch-class="8" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:87:10:11">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(7.5934, 7.9286)">
@@ -260,10 +235,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.250-69-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:83:12:13">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(8.4434, 7.9286)">
@@ -271,10 +244,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.750-60-0" data-type="notehead" data-measure="2" data-beat="0.750" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:88:17:18">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(24.9742, 10.4286)">
@@ -282,10 +253,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.750-69-0" data-type="notehead" data-measure="2" data-beat="0.750" data-midi="69" data-pitch-class="9" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:84:24:25">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(26.1812, 7.9286)">
@@ -293,10 +262,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-2-0.750-68-0" data-type="notehead" data-measure="2" data-beat="0.750" data-midi="68" data-pitch-class="8" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://D:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.ly:84:19:20">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(24.9742, 7.9286)">
@@ -304,7 +271,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g transform="translate(34.5701, 165.1202)">
 <a xlink:href="https://lilypond.org/">

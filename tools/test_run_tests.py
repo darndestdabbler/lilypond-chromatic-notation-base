@@ -133,15 +133,15 @@ class LilypondVersionTest(unittest.TestCase):
 
 class ResolveLilypondTest(unittest.TestCase):
 
-    @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": r"D:\ly\lilypond.exe"})
+    @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": "/opt/lilypond/bin/lilypond"})
     @mock.patch("run_tests.subprocess.run",
                 return_value=version_output("GNU LilyPond 2.26.0 (running Guile 3.0)"))
     def test_from_variable(self, run):
-        self.assertEqual(resolve_lilypond("2.26"), r"D:\ly\lilypond.exe")
+        self.assertEqual(resolve_lilypond("2.26"), "/opt/lilypond/bin/lilypond")
         self.assertEqual(run.call_args.args[0],
-                         [r"D:\ly\lilypond.exe", "--version"])
+                         ["/opt/lilypond/bin/lilypond", "--version"])
 
-    @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": r"D:\ly\lilypond.exe"})
+    @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": "/opt/lilypond/bin/lilypond"})
     @mock.patch("run_tests.subprocess.run",
                 return_value=version_output("GNU LilyPond 2.24.2 (running Guile 2.2)"))
     def test_variable_naming_another_version_fails(self, _run):

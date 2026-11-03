@@ -384,8 +384,8 @@ def run_lilypond(input_file, output_dir=None, lilypond="lilypond"):
     for f in renders():
         os.remove(os.path.join(output_dir, f))
 
-    # -dno-point-and-click keeps textedit:// links (which embed the absolute
-    # path) out of the SVG, so a render is the same from any checkout.
+    # -dno-point-and-click keeps point-and-click links (which embed the
+    # absolute path) out of the SVG, so a render is the same from any checkout.
     cmd = [
         lilypond,
         "-dbackend=svg",

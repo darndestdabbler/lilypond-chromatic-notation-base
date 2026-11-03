@@ -45,7 +45,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ks-1" data-type="key-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:87:4:5">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(100.0000%, 83.1373%, 16.4706%)">
 <g transform="translate(7.6454, 16.0453)">
@@ -165,7 +164,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="st-1-0.000-0" data-type="stem" data-measure="1" data-beat="0.000" data-voice="0">
 <g transform="translate(11.5805, 10.0453)">
@@ -185,7 +183,6 @@ tspan { white-space: pre; }
 <g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
 </g>
 <g id="nh-1-0.750-67-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:88:15:16">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(18.0255, 10.0453)">
@@ -193,10 +190,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-60-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:88:4:5">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(11.1455, 12.0453)">
@@ -204,10 +199,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-72-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:88:11:12">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(16.0774, 8.5453)">
@@ -215,10 +208,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.250-67-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:88:8:9">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.6293, 10.0453)">
@@ -226,7 +217,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="staff-symbol" data-type="staff-symbol">
 <g transform="translate(2.8453, 20.0453)">
@@ -269,7 +259,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 <g id="ks-1" data-type="key-signature" data-measure="1">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:106:4:5">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(100.0000%, 83.1373%, 16.4706%)">
 <g transform="translate(7.6454, 30.0453)">
@@ -389,7 +378,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="st-1-0.000-0" data-type="stem" data-measure="1" data-beat="0.000" data-voice="0">
 <g transform="translate(11.5805, 24.0453)">
@@ -407,7 +395,6 @@ tspan { white-space: pre; }
 <rect x="0.0000" y="-2.8000" width="0.1600" height="5.6000" ry="0.0500" fill="currentColor"/>
 </g>
 <g id="nh-1-0.750-67-0" data-type="notehead" data-measure="1" data-beat="0.750" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:107:15:16">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(18.0255, 23.5453)">
@@ -415,10 +402,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.000-60-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="60" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:107:4:5">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(11.1455, 25.5453)">
@@ -426,10 +411,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.500-72-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:107:11:12">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(16.0774, 22.0453)">
@@ -437,10 +420,8 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g id="nh-1-0.250-67-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="67" data-pitch-class="7" data-voice="0" data-duration="2">
-<a style="color:inherit;" xlink:href="textedit://d:/Projects/lilypond-chromatic-notation-base/docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.ly:107:8:9">
 <g transform="scale(1.0000, 1.0000)">
 <g color="rgb(0.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(13.6293, 23.5453)">
@@ -448,7 +429,6 @@ tspan { white-space: pre; }
 </g>
 </g>
 </g>
-</a>
 </g>
 <g transform="translate(34.5701, 165.1202)">
 <a xlink:href="https://lilypond.org/">

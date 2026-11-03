@@ -26,7 +26,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 12 | Engrave durations and dots correctly | no | 2026-11-02 |
 | 13 | The test runner cannot pass a broken render | no | 2026-11-02 |
 | 14 | Harvest what is drawn, and claim only what works | no | 2026-11-03 |
-| 15 | A clean public archive, and 1.1.1 | — | not declared |
+| 15 | A clean public archive, and 1.1.1 | no | 2026-11-03 |
 | 16 | Release 1.1.1 (release: 1.1.1) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
@@ -120,3 +120,9 @@ Make the harvester see what LilyPond draws, and make the README claim only what 
 **Amended after acceptance:**
 
 - 2026-11-03 — step 'docs-tell-the-truth': its checks: The check's bare 'scores/' substring test matched the external URL github.com/scaleshift-scores/... in the README acknowledgments, not a scores/ folder; it now looks for a scores/ entry in the project tree ('── scores/'). Every other assertion of the check is unchanged. (claude-code (anthropic, claude-opus-5-5))
+
+### Session 15 — A clean public archive, and 1.1.1
+
+**Releasable: no.**
+
+Make the public source zip clean (audit L5) and set the version to 1.1.1. The findings file docs/session-sets/004-end-to-end-pipeline-verification/findings.md stops naming this machine's paths: its `c:\Users\denmi\source\repos\` path, and the `d:\Projects\chromatic-notation-configurator` paths in the same sentence and in its export command, become the sibling-relative `../chromatic-notation-configurator`. The five tracked evidence SVGs under docs/session-sets/008-pitch-axis-hook/s*-evidence/ that carry `textedit://D:/Projects/...` links are re-rendered from their own .ly files with LilyPond 2.24 and `-dno-point-and-click`; a trial render showed each comes out identical to the tracked file once links are removed, and a check proves that against fe23380. The literal strings the plan's grep looks for also occur in two tooling files that would ship: the `textedit://` in a tools/run_tests.py comment is reworded, and the `D:\ly\lilypond.exe` fixture in tools/test_run_tests.py becomes a path with no drive letter. A new .gitattributes marks `.vscode/`, `AGENTS.md`, `CLAUDE.md`, `docs/sessions/`, `docs/transcripts/` and `docs/planning/` export-ignore. The proof is `dabbler packaging --rehearse` (the pack runs) and, because that pack archives HEAD and the session's work is committed only at the land, a check that archives the working tree the same way (`git archive --format=zip` of a tree written from a temporary index) and asserts that none of those paths is in the zip and that no entry contains `textedit://`, `D:\` or `Users\`. Finally version.json becomes 1.1.1 and CHANGELOG.md gains a 1.1.1 entry summarising sessions 12 to 15, stating that duration categories now follow the documented scale (breve 0, whole 1, half 2, quarter or shorter 3), so a hand-written config that relied on the old off-by-one numbering must change.
