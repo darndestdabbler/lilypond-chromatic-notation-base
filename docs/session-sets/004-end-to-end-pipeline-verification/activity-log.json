@@ -1,0 +1,65 @@
+{
+  "sessionSetName": "004-end-to-end-pipeline-verification",
+  "createdDate": "2026-07-05T16:42:52.562914+00:00",
+  "totalSessions": 2,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-05T16:42:52.578792+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/preflight-gate-passed",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "Pre-flight gate: Configurator modular-rewrite exporter confirmed landed (cnb/src/cnb-lilypond.js; its set 003 complete, release-gate set 007 complete/VERIFIED). Banner already removed from spec per its own instruction.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 2,
+      "stepKey": "session-001/exported-config-rendered",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "Generated kite-4-369-from-configurator.ly (7665 bytes) via node cnb/fixtures/export-kite-4-369.mjs from kite-4-369-config.json; rendered tests/joy-to-the-world-configurator.ly with lilypond -dbackend=svg and harvested 191 identified elements.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 3,
+      "stepKey": "session-001/baseline-diff-recorded",
+      "dateTime": "2026-07-05T12:48:45.741527-04:00",
+      "description": "74/74 golden assertions passed (101 expressions) via tools/run_tests.py on tests/joy-to-the-world-configurator.json; element-level diff vs checked-in golden harvest: 191/191 ids match, staff geometry and all 19 measure boundaries identical, 21 kite-down noteheads differ only in visual.path_hash (runtime-rotated vs pre-baked path text; geometry verified identical). Findings recorded in findings.md.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 1,
+      "stepKey": "session-002/discrepancies-resolved",
+      "dateTime": "2026-07-05T13:09:53.982646-04:00",
+      "description": "Triaged Session 1 findings: E1 fixed (tests/joy-to-the-world.ly and tests/example-notes.ly migrated off renamed cnb:rose/cnb:blue/cnb:black to cnb:0-skyblue/cnb:1-rose/cnb:2-black with Kite-4-369-Notation-Procedure.ly include; stale SVGs re-rendered); D3 fixed (tools/harvest_svg.py canonicalizes numeric tokens in path text before hashing, so -0.0000-vs-0 formatting no longer diverges hashes); run_tests.py directory scan no longer ingests *.harvested.json snapshots as specs (crashed the default all-tests run). Re-ran render-harvest-diff: golden vs Configurator-exported harvests now identical on ALL dimensions including path_hash (191/191 elements, 0 field diffs, staff geometry and 19 measures equal) - Session 1's accepted-cosmetic caveat eliminated. Full suites green: 231/231 integration (317 assertions, all 5 specs, no skips), 179/179 unit.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 2,
+      "stepKey": "session-002/workflow-documented",
+      "dateTime": "2026-07-05T13:09:53.982646-04:00",
+      "description": "README gains 'End-to-End Walkthrough: Rendering an Exported Config' (render half: install, obtain exported config, include from score, render with/without cnb:use-accessible-colors, verify vs golden baseline), cross-linking the Configurator README's design half per 007 handoff item 1. Accessible-colors hand-off smoke-tested live (define-before-include renders CB-safe palette). docs/CNB-LY-EXPORT-SPEC-v1_2.md merged to 1.2.1 (use-procedure-model always-emitted D1, half-staff-space conversion D2) while preserving engine-side repeat-field docs absent from the Configurator copy.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 3,
+      "stepKey": "session-002/release-criterion-met",
+      "dateTime": "2026-07-05T13:09:53.982646-04:00",
+      "description": "Release criterion (project plan section 1): Configurator-exported config renders joy-to-the-world through this engine matching the golden baseline exactly - 74/74 golden assertions and now hash-identical harvests with zero accepted differences. README status updated to 'Release criterion met (July 2026)'. Recorded in findings.md section 7 and change-log.md.",
+      "status": "complete"
+    }
+  ]
+}
