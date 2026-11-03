@@ -9,8 +9,9 @@
 schema_version: 1
 
 # Every LilyPond suite names the version it proves with --lilypond-version:
-# the runners use the executable CNB_LILYPOND_X_Y names, else the lilypond
-# on PATH if it reports X.Y, and fail naming the variable otherwise.
+# the runners use the executable CNB_LILYPOND_X_Y names, which must report
+# X.Y, else the lilypond on PATH if it reports X.Y, and fail naming the
+# variable otherwise.
 # engine-integration and engine-unit prove 2.24; engine-integration-2.26
 # and engine-unit-2.26 are the same suites on 2.26, whose harvest
 # baselines are tests/lilypond-2.26/*.harvested.json and whose renders go
@@ -60,6 +61,8 @@ testing:
         - test-unit.ly
         - ChromaticNotationBase.ly
         - tools/run_unit.py
+        - tools/run_tests.py
+        - tools/harvest_svg.py
     - name: engine-integration-2.26
       command: python tools/run_tests.py --lilypond-version 2.26
       expensive: true
@@ -85,6 +88,8 @@ testing:
         - test-unit.ly
         - ChromaticNotationBase.ly
         - tools/run_unit.py
+        - tools/run_tests.py
+        - tools/harvest_svg.py
     - name: engine-tooling
       command: python -m unittest discover -s tools -p "test_*.py"
       runs_whole: true

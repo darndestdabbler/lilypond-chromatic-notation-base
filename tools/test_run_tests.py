@@ -13,7 +13,7 @@ from unittest import mock
 
 from run_tests import (PROJECT_ROOT, baseline_dir, check_element_assertions,
                        generate_golden, harvest_differences,
-                       lilypond_env_var, lilypond_version,
+                       lilypond_env_var, lilypond_version, main,
                        make_eval_namespace, render_dir, resolve_lilypond,
                        run_lilypond, run_single_test, save_harvest)
 
@@ -46,6 +46,24 @@ class HarvestDifferencesTest(unittest.TestCase):
         changed["elements"][0]["id"] = "nh-3"
         self.assertEqual(harvest_differences(HARVEST, changed),
                          ["nh-1: no longer harvested", "nh-3: newly harvested"])
+
+    REPEATED = {"elements": [
+        {"id": "staff-symbol", "absolute": {"x": 0.0}},
+        {"id": "staff-symbol", "absolute": {"x": 0.0}},
+        {"id": "ll-1", "absolute": {"y": 4.0}},
+    ]}
+
+    def test_later_occurrence_of_a_repeated_id_is_compared(self):
+        changed = copy.deepcopy(self.REPEATED)
+        changed["elements"][1]["absolute"]["x"] = 10.0
+        self.assertEqual(harvest_differences(self.REPEATED, changed),
+                         ["staff-symbol[1]: absolute.x"])
+
+    def test_newly_duplicated_id_is_drift(self):
+        changed = copy.deepcopy(self.REPEATED)
+        changed["elements"].append({"id": "ll-1", "absolute": {"y": 4.0}})
+        self.assertEqual(harvest_differences(self.REPEATED, changed),
+                         ["ll-1[1]: newly harvested"])
 
 
 class SaveHarvestTest(unittest.TestCase):
@@ -116,10 +134,21 @@ class LilypondVersionTest(unittest.TestCase):
 class ResolveLilypondTest(unittest.TestCase):
 
     @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": r"D:\ly\lilypond.exe"})
-    @mock.patch("run_tests.subprocess.run")
+    @mock.patch("run_tests.subprocess.run",
+                return_value=version_output("GNU LilyPond 2.26.0 (running Guile 3.0)"))
     def test_from_variable(self, run):
         self.assertEqual(resolve_lilypond("2.26"), r"D:\ly\lilypond.exe")
-        run.assert_not_called()
+        self.assertEqual(run.call_args.args[0],
+                         [r"D:\ly\lilypond.exe", "--version"])
+
+    @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_26": r"D:\ly\lilypond.exe"})
+    @mock.patch("run_tests.subprocess.run",
+                return_value=version_output("GNU LilyPond 2.24.2 (running Guile 2.2)"))
+    def test_variable_naming_another_version_fails(self, _run):
+        with self.assertRaises(SystemExit) as raised:
+            resolve_lilypond("2.26")
+        self.assertIn("CNB_LILYPOND_2_26", raised.exception.code)
+        self.assertIn("reports LilyPond 2.24, not 2.26", raised.exception.code)
 
     @mock.patch.dict(os.environ, {"CNB_LILYPOND_2_24": ""})
     @mock.patch("run_tests.subprocess.run",
@@ -171,6 +200,43 @@ class LilypondInExpressionsTest(unittest.TestCase):
         self.assertEqual(self._run("2.26"), (0, 1, 1))
 
 
+class DeclaredAbsenceTest(unittest.TestCase):
+    """A missing element passes only an assertion declaring "absent": true."""
+
+    def run_assertion(self, assertion):
+        """run_single_test's (passed, failed, total) for one assertion
+        against HARVEST, which has nh-1 and nh-2 but no cl-1."""
+        with tempfile.TemporaryDirectory() as spec_dir:
+            open(os.path.join(spec_dir, "x.ly"), "w").close()
+            spec_path = os.path.join(spec_dir, "x.json")
+            with open(spec_path, "w", encoding="utf-8") as f:
+                json.dump({"input_file": "x.ly", "assertions": [assertion]}, f)
+            with mock.patch("run_tests.run_lilypond",
+                            return_value=os.path.join(spec_dir, "x.svg")), \
+                 mock.patch("run_tests.harvest", return_value=HARVEST), \
+                 mock.patch("run_tests.save_harvest", return_value=[]), \
+                 contextlib.redirect_stdout(io.StringIO()):
+                return run_single_test(spec_path)
+
+    def test_declared_absence_passes_when_missing(self):
+        self.assertEqual(
+            self.run_assertion({"id": "cl-1", "absent": True}), (1, 0, 1))
+
+    def test_declared_absence_fails_when_present(self):
+        self.assertEqual(
+            self.run_assertion({"id": "nh-1", "absent": True}), (0, 1, 1))
+
+    def test_is_none_expression_does_not_excuse_a_missing_element(self):
+        self.assertEqual(self.run_assertion(
+            {"id": "cl-1", "expect": {"visual.color": ["v is None"],
+                                      "type": ["== 'clef'"]}}), (0, 1, 1))
+
+    def test_assertion_with_nothing_to_check_fails(self):
+        self.assertEqual(self.run_assertion({"id": "nh-1"}), (0, 1, 1))
+        self.assertEqual(
+            self.run_assertion({"id": "nh-1", "expect": {}}), (0, 1, 1))
+
+
 class VersionDirectoriesTest(unittest.TestCase):
 
     SPEC_DIR = os.path.join("repo", "tests")
@@ -183,24 +249,31 @@ class VersionDirectoriesTest(unittest.TestCase):
         self.assertEqual(baseline_dir("2.26", self.SPEC_DIR),
                          os.path.join(self.SPEC_DIR, "lilypond-2.26"))
 
-    def test_unsupported_version_has_no_baseline(self):
-        self.assertIsNone(baseline_dir("2.22", self.SPEC_DIR))
+    def test_baseline_dir_for_any_other_version(self):
+        self.assertEqual(baseline_dir("2.27", self.SPEC_DIR),
+                         os.path.join(self.SPEC_DIR, "lilypond-2.27"))
 
-    def test_unsupported_version_skips_drift_but_runs_assertions(self):
+    def test_any_other_version_fails_on_drift_from_its_baseline(self):
         with tempfile.TemporaryDirectory() as spec_dir:
             open(os.path.join(spec_dir, "x.ly"), "w").close()
             spec_path = os.path.join(spec_dir, "x.json")
             with open(spec_path, "w", encoding="utf-8") as f:
                 json.dump({"input_file": "x.ly", "assertions": [
-                    {"id": "nh-1", "expect": {"type": ["== 'rest'"]}}]}, f)
+                    {"id": "nh-1", "expect": {"type": ["== 'notehead'"]}}]}, f)
+            os.makedirs(os.path.join(spec_dir, "lilypond-2.27"))
+            baseline = copy.deepcopy(HARVEST)
+            baseline["elements"][0]["absolute"]["x"] = 11.0
+            with open(os.path.join(spec_dir, "lilypond-2.27",
+                                   "x.harvested.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump(baseline, f)
             with mock.patch("run_tests.run_lilypond",
                             return_value=os.path.join(spec_dir, "x.svg")), \
                  mock.patch("run_tests.harvest", return_value=HARVEST), \
-                 mock.patch("run_tests.save_harvest") as save, \
-                 contextlib.redirect_stdout(io.StringIO()):
+                 contextlib.redirect_stdout(io.StringIO()) as out:
                 self.assertEqual(
-                    run_single_test(spec_path, version="2.22"), (0, 1, 1))
-            save.assert_not_called()
+                    run_single_test(spec_path, version="2.27"), (1, 1, 1))
+            self.assertIn("nh-1: absolute.x", out.getvalue())
 
     @mock.patch("run_tests.subprocess.run",
                 return_value=subprocess.CompletedProcess([], 1, "", "boom"))
@@ -238,6 +311,92 @@ class VersionDirectoriesTest(unittest.TestCase):
         self.assertIsNone(render_dir("2.24"))
         self.assertEqual(render_dir("2.26"),
                          os.path.join(PROJECT_ROOT, "out", "lilypond-2.26"))
+
+
+class FreshRenderTest(unittest.TestCase):
+    """run_lilypond harvests only what this run wrote, and one page of it."""
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.out = self.dir.name
+
+    def tearDown(self):
+        self.dir.cleanup()
+
+    def render(self, *written):
+        """run_lilypond on x.ly with a LilyPond that writes `written`."""
+        def lilypond(cmd, **_kwargs):
+            for name in written:
+                open(os.path.join(self.out, name), "w").close()
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        stderr = io.StringIO()
+        with mock.patch("run_tests.subprocess.run", side_effect=lilypond), \
+             contextlib.redirect_stderr(stderr):
+            svg = run_lilypond(os.path.join(self.out, "x.ly"),
+                               output_dir=self.out)
+        return svg, stderr.getvalue()
+
+    def touch(self, name):
+        open(os.path.join(self.out, name), "w").close()
+
+    def test_stale_render_is_deleted_and_not_harvested(self):
+        for name in ("x.svg", "x-1.svg", "x-custom.svg"):
+            self.touch(name)
+        svg, err = self.render()
+        self.assertIsNone(svg)
+        self.assertIn("SVG not found", err)
+        self.assertEqual(os.listdir(self.out), ["x-custom.svg"])
+
+    def test_multi_page_render_fails(self):
+        svg, err = self.render("x-1.svg", "x-2.svg")
+        self.assertIsNone(svg)
+        self.assertIn("2 pages (x-1.svg, x-2.svg)", err)
+
+    def test_fresh_single_page_is_returned(self):
+        self.touch("x.svg")
+        svg, _err = self.render("x.svg")
+        self.assertEqual(svg, os.path.join(self.out, "x.svg"))
+
+
+class MainTest(unittest.TestCase):
+
+    def run_main(self, *argv):
+        """main()'s exit code with argv, its output swallowed."""
+        with mock.patch("sys.argv", ["run_tests.py", *argv]), \
+             mock.patch("run_tests.configure_output"), \
+             contextlib.redirect_stdout(io.StringIO()), \
+             contextlib.redirect_stderr(io.StringIO()), \
+             self.assertRaises(SystemExit) as raised:
+            main()
+        return raised.exception.code
+
+    def spec_dir(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        return tmp.name
+
+    @mock.patch("run_tests.resolve_lilypond", return_value="lilypond")
+    def test_no_specs_exits_non_zero(self, _resolve):
+        self.assertEqual(
+            self.run_main("--lilypond-version", "2.24", self.spec_dir()), 1)
+
+    @mock.patch("run_tests.resolve_lilypond", return_value="lilypond")
+    def test_missing_path_exits_non_zero(self, _resolve):
+        code = self.run_main("--lilypond-version", "2.24",
+                             os.path.join(self.spec_dir(), "no-such.json"))
+        self.assertIn("no-such.json", code)
+
+    @mock.patch("run_tests.lilypond_version", return_value="2.26")
+    @mock.patch("run_tests.run_single_test", return_value=(1, 0, 1))
+    def test_version_less_run_uses_path_version(self, run_test, _version):
+        spec_dir = self.spec_dir()
+        open(os.path.join(spec_dir, "x.json"), "w").close()
+        self.assertEqual(self.run_main(spec_dir), 0)
+        self.assertEqual(run_test.call_args.kwargs["version"], "2.26")
+
+    @mock.patch("run_tests.lilypond_version", return_value=None)
+    def test_version_less_run_without_lilypond_exits(self, _version):
+        self.assertIn("No lilypond on PATH", self.run_main(self.spec_dir()))
 
 
 if __name__ == "__main__":

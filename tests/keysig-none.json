@@ -10,9 +10,7 @@
     {
       "id": "ks-1",
       "description": "No key-signature element is engraved in measure 1",
-      "expect": {
-        "type": ["is None"]
-      }
+      "absent": true
     },
 
     {"_comment": "=== SECTION 2: EVERYTHING ELSE STILL RENDERS ==="},

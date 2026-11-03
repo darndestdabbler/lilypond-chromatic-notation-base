@@ -189,9 +189,15 @@ Cross-element:     ["v > prop('nh-1-0.000-60-0', 'staff_relative.vertical')"]
 Same shape:        ["== prop('nh-1-0.000-60-0', 'visual.path_hash')"]
 Element count:     ["count('notehead') == 8"]
 Existence:         ["v is not None"]
-Absence:           ["v is None"]
+Property absent:   ["v is None"]
 Membership:        ["v in ['#FF0000', '#0000FF']"]
 ```
+
+An element that must not be engraved is declared with `"absent": true` in
+place of `expect` (`{"id": "cl-1", "absent": true}`): it passes only when no
+element has that id, and fails when one does. A missing element fails every
+other assertion, whatever its expressions say, and an assertion with
+neither `expect` nor `"absent": true` fails.
 
 Expressions starting with a comparison operator (`==`, `!=`, `<`, `>`, `<=`, `>=`) are automatically prefixed with `v `, so `"== 'notehead'"` becomes `"v == 'notehead'"`.
 

@@ -10,7 +10,7 @@ Pipeline for each test case:
 
 USAGE:
     python3 tools/run_tests.py                    # run all tests in tests/
-    python3 tools/run_tests.py tests/c-major.json # run a single test
+    python3 tools/run_tests.py tests/c-major-scale.json  # run a single test
     python3 tools/run_tests.py --verbose           # show all assertions
     python3 tools/run_tests.py --update-baselines  # accept changed harvests
     python3 tools/run_tests.py --lilypond-version 2.26  # LilyPond 2.26 and its baselines
@@ -18,10 +18,10 @@ USAGE:
 LILYPOND VERSIONS:
     --lilypond-version X.Y renders with the executable CNB_LILYPOND_X_Y names,
     else the lilypond on PATH if it reports X.Y. 2.24's harvest baselines are
-    tests/*.harvested.json; 2.26's are tests/lilypond-2.26/*.harvested.json,
-    rendered into out/lilypond-2.26/. Another version runs the assertions but
-    compares no baselines. Without the option, PATH's lilypond is compared
-    with 2.24's baselines.
+    tests/*.harvested.json; any other version's are
+    tests/lilypond-X.Y/*.harvested.json (2.26's are tracked), rendered into
+    out/lilypond-X.Y/. Without the option, PATH's lilypond is used as the
+    version it reports.
     python3 tools/run_tests.py --generate tests/c-major.ly  # generate golden JSON
 
 TEST SPEC FORMAT (JSON):
@@ -52,8 +52,8 @@ ASSERTION EXPRESSIONS:
         count   — Helper: count('notehead') -> int
         staff   — Staff geometry dict (top_line_y, bottom_line_y, etc.)
         measures — Measure boundaries dict
-        lilypond — The LilyPond version under test, 'X.Y' ('2.24' when
-                   no --lilypond-version is given)
+        lilypond — The LilyPond version under test, 'X.Y' (PATH's
+                   lilypond's when no --lilypond-version is given)
 
     All standard Python operators and builtins (abs, min, max, round,
     len, str, float, int, isinstance, etc.) are available.
@@ -71,9 +71,14 @@ EXAMPLES:
     Width comparison:     ["abs(v - prop('nh-1-0.000-60-0', 'visual.bbox.w')) < 0.5"]
     Type check:           ["isinstance(v, str)", "v.startswith('#')"]
     Existence:            ["v is not None"]
-    Absence:              ["v is None"]
+    Property absent:      ["v is None"]
     Count elements:       ["count('notehead') == 8"]
     Membership:           ["v in ['#FF0000', '#0000FF', '#00FF00']"]
+
+ABSENT ELEMENTS:
+    {"id": "cl-1", "absent": true} in place of "expect" passes only when no
+    element has that id. A missing element fails any other assertion, and
+    an assertion with neither "expect" nor "absent": true fails.
 """
 
 import sys
@@ -95,9 +100,8 @@ from harvest_svg import harvest, configure_output
 
 PROJECT_ROOT = os.path.dirname(TOOLS_DIR)
 
-# The LilyPond versions with tracked harvest baselines: 2.24's sit beside
-# the specs, every other one's in a lilypond-X.Y/ folder beside them.
-SUPPORTED_LILYPOND_VERSIONS = ("2.24", "2.26")
+# 2.24's harvest baselines sit beside the specs, every other version's in a
+# lilypond-X.Y/ folder beside them.
 BASELINE_VERSION = "2.24"
 
 
@@ -321,9 +325,14 @@ def lilypond_version(executable):
 def resolve_lilypond(version):
     """The lilypond executable for version X.Y: the one CNB_LILYPOND_X_Y
     names, else the lilypond on PATH if it reports X.Y. Exits non-zero,
-    naming the variable to set, when neither does."""
+    naming the variable, when the one it names does not report X.Y or
+    neither is found."""
     var = lilypond_env_var(version)
     if os.environ.get(var):
+        reported = lilypond_version(os.environ[var])
+        if reported != version:
+            sys.exit(f"{var} names {os.environ[var]}, which reports LilyPond "
+                     f"{reported or 'no version'}, not {version}")
         return os.environ[var]
     if lilypond_version("lilypond") == version:
         return "lilypond"
@@ -342,20 +351,19 @@ def render_dir(version):
 
 def baseline_dir(version, spec_dir):
     """Where a version's harvest baselines live: beside the spec for 2.24
-    (or no version given), in spec_dir/lilypond-X.Y/ for another supported
-    version, and None -- no drift comparison -- for an unsupported one."""
+    (or no version given), in spec_dir/lilypond-X.Y/ for any other."""
     if version is None or version == BASELINE_VERSION:
         return spec_dir
-    if version in SUPPORTED_LILYPOND_VERSIONS:
-        return os.path.join(spec_dir, f"lilypond-{version}")
-    return None
+    return os.path.join(spec_dir, f"lilypond-{version}")
 
 
 def run_lilypond(input_file, output_dir=None, lilypond="lilypond"):
     """Run LilyPond with SVG backend on the input file.
 
     Runs from the project root directory so that \\include paths resolve.
-    Returns path to the output SVG, or None on failure.
+    Earlier renders of the file ({base}.svg, {base}-N.svg) are deleted
+    first, so only what this run writes can be harvested. Returns the path
+    to the one-page SVG, or None on failure, including a multi-page render.
     """
     if output_dir is None:
         output_dir = os.path.dirname(input_file) or "."
@@ -364,6 +372,16 @@ def run_lilypond(input_file, output_dir=None, lilypond="lilypond"):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
     input_file = os.path.abspath(input_file)
+
+    # LilyPond names a one-page SVG {base}.svg and pages {base}-1.svg, ...
+    render_name = re.compile(re.escape(base) + r"(-\d+)?\.svg")
+
+    def renders():
+        return sorted(f for f in os.listdir(output_dir)
+                      if render_name.fullmatch(f))
+
+    for f in renders():
+        os.remove(os.path.join(output_dir, f))
 
     # -dno-point-and-click keeps textedit:// links (which embed the absolute
     # path) out of the SVG, so a render is the same from any checkout.
@@ -391,18 +409,15 @@ def run_lilypond(input_file, output_dir=None, lilypond="lilypond"):
                     print(f"    {line}", file=sys.stderr)
             return None
 
-        # LilyPond outputs {base}.svg or {base}-page1.svg
-        for suffix in [".svg", "-page1.svg"]:
-            svg_path = os.path.join(output_dir, f"{base}{suffix}")
-            if os.path.exists(svg_path):
-                return svg_path
-
-        # Search for any SVG matching base
-        for f in os.listdir(output_dir):
-            if f.startswith(base) and f.endswith(".svg"):
-                return os.path.join(output_dir, f)
-
-        print(f"  SVG not found after LilyPond run", file=sys.stderr)
+        written = renders()
+        if written == [f"{base}.svg"]:
+            return os.path.join(output_dir, written[0])
+        if written:
+            print(f"  LilyPond rendered {len(written)} pages "
+                  f"({', '.join(written)}); a test score must fit on one page",
+                  file=sys.stderr)
+        else:
+            print(f"  SVG not found after LilyPond run", file=sys.stderr)
         return None
 
     except subprocess.TimeoutExpired:
@@ -428,12 +443,25 @@ def _flatten(d, prefix=""):
     return flat
 
 
+def _elements_by_occurrence(harvest):
+    """A harvest's elements keyed by id, a repeated id's later occurrences
+    by id[n] (n counting from 0), so no occurrence is dropped."""
+    seen = {}
+    keyed = {}
+    for el in harvest.get("elements", []):
+        n = seen.get(el["id"], 0)
+        seen[el["id"]] = n + 1
+        keyed[el["id"] if n == 0 else f"{el['id']}[{n}]"] = el
+    return keyed
+
+
 def harvest_differences(baseline, harvested):
-    """Name what differs between two harvests, one line per element id
-    (with its changed properties) or other top-level key. Empty when equal."""
+    """Name what differs between two harvests, one line per element (id, or
+    id[n] for a repeated id's later occurrence, with its changed properties)
+    or other top-level key. Empty when equal."""
     diffs = []
-    old_els = {el["id"]: el for el in baseline.get("elements", [])}
-    new_els = {el["id"]: el for el in harvested.get("elements", [])}
+    old_els = _elements_by_occurrence(baseline)
+    new_els = _elements_by_occurrence(harvested)
     for el_id in sorted(old_els.keys() | new_els.keys()):
         if el_id not in new_els:
             diffs.append(f"{el_id}: no longer harvested")
@@ -542,39 +570,39 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
 
         a_id = assertion.get("id")
         a_desc = assertion.get("description", a_id)
-        expect = assertion.get("expect", {})
+        absent = assertion.get("absent") is True
 
-        # --- Handle missing elements ---
+        if not absent and not assertion.get("expect"):
+            print(f"    ✗ {a_desc}")
+            print(f"        Nothing to check: give 'expect' or \"absent\": true")
+            failed += 1
+            continue
+
         actual = elements_by_id.get(a_id)
 
-        if actual is None:
-            # Check if this is an expected-absence assertion.
-            # Convention: if ANY expression across ALL properties contains
-            # "is None" or "== None", treat it as an absence check.
-            absence_expected = False
-            for prop_key, exprs in expect.items():
-                if not isinstance(exprs, list):
-                    exprs = [exprs]
-                for expr in exprs:
-                    if "is None" in str(expr) or "== None" in str(expr):
-                        absence_expected = True
-                        break
-                if absence_expected:
-                    break
-
-            if absence_expected:
+        # --- A declared absence: "absent": true ---
+        if absent:
+            if actual is None:
                 print(f"    ✓ {a_desc} (absent as expected)")
                 passed += 1
             else:
                 print(f"    ✗ {a_desc}")
-                print(f"        Element '{a_id}' not found in SVG")
-                # Show available IDs with same prefix for debugging
-                prefix = a_id.split("-")[0] + "-" if "-" in a_id else ""
-                similar = [eid for eid in elements_by_id if eid.startswith(prefix)]
-                if similar:
-                    print(f"        Similar IDs: {', '.join(similar[:8])}"
-                          f"{'...' if len(similar) > 8 else ''}")
+                print(f"        Element '{a_id}' is in the SVG but is "
+                      f"declared absent")
                 failed += 1
+            continue
+
+        # --- Handle missing elements ---
+        if actual is None:
+            print(f"    ✗ {a_desc}")
+            print(f"        Element '{a_id}' not found in SVG")
+            # Show available IDs with same prefix for debugging
+            prefix = a_id.split("-")[0] + "-" if "-" in a_id else ""
+            similar = [eid for eid in elements_by_id if eid.startswith(prefix)]
+            if similar:
+                print(f"        Similar IDs: {', '.join(similar[:8])}"
+                      f"{'...' if len(similar) > 8 else ''}")
+            failed += 1
             continue
 
         # --- Evaluate all expressions for this element ---
@@ -602,11 +630,8 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
                     print(line)
 
     # The version's tracked harvest is the golden baseline: drift from it
-    # fails the test unless --update-baselines accepts it. An unsupported
-    # version has none, and main() has warned that drift is not compared.
+    # fails the test unless --update-baselines accepts it.
     harvest_dir = baseline_dir(version, spec_dir)
-    if harvest_dir is None:
-        return (passed, failed, len(assertions))
     os.makedirs(harvest_dir, exist_ok=True)
     harvest_path = os.path.join(
         harvest_dir,
@@ -638,12 +663,12 @@ def generate_golden(ly_file, output_json=None, lilypond="lilypond",
     Run on a known-good render, review the output, then write assertions.
     The render goes beside the .ly file, or into render_dir(version) for a
     version other than 2.24; by default the harvest goes to the version's
-    baseline_dir (the render's folder for an unsupported version).
+    baseline_dir.
     """
     ly_dir = os.path.dirname(ly_file) or "."
     output_dir = render_dir(version) or ly_dir
     if output_json is None:
-        json_dir = baseline_dir(version, ly_dir) or output_dir
+        json_dir = baseline_dir(version, ly_dir)
         os.makedirs(json_dir, exist_ok=True)
         output_json = os.path.join(json_dir, os.path.basename(
             ly_file).replace(".ly", ".harvested.json"))
@@ -725,11 +750,14 @@ def main():
     configure_output()
     args = parser.parse_args()
     version = args.lilypond_version
-    lilypond = resolve_lilypond(version) if version else "lilypond"
-    if version and version not in SUPPORTED_LILYPOND_VERSIONS:
-        print(f"Warning: LilyPond {version} is not supported "
-              f"({', '.join(SUPPORTED_LILYPOND_VERSIONS)}); harvest drift "
-              f"is not compared, assertions still run", file=sys.stderr)
+    if version:
+        lilypond = resolve_lilypond(version)
+    else:
+        lilypond = "lilypond"
+        version = lilypond_version(lilypond)
+        if version is None:
+            sys.exit("No lilypond on PATH: put LilyPond on PATH, or name a "
+                     "version with --lilypond-version")
 
     if args.generate:
         generate_golden(args.generate, lilypond=lilypond, version=version)
@@ -737,7 +765,7 @@ def main():
 
     # Find test specs
     spec_files = []
-    paths = args.paths or ["tests/"]
+    paths = args.paths or [os.path.join(PROJECT_ROOT, "tests")]
 
     for path in paths:
         if os.path.isfile(path) and path.endswith(".json"):
@@ -747,12 +775,12 @@ def main():
                 f for f in glob.glob(os.path.join(path, "*.json"))
                 if not f.endswith(".harvested.json")))
         else:
-            print(f"Warning: Skipping '{path}' (not a .json file or directory)")
+            sys.exit(f"Not a .json test spec or a directory: '{path}'")
 
     if not spec_files:
         print("No test specs found.")
         print("  Create test specs in tests/ directory, or run with --generate")
-        sys.exit(0)
+        sys.exit(1)
 
     n = len(spec_files)
     print(f"╔══════════════════════════════════════════╗")
