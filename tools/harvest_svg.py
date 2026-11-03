@@ -112,7 +112,8 @@ def compose_transforms(outer, inner):
     )
 
 
-DRAWING_TAGS = {"path", "rect", "line", "circle", "ellipse", "polygon", "text"}
+DRAWING_TAGS = {"path", "rect", "line", "circle", "ellipse", "polygon",
+                "polyline", "text"}
 
 
 def get_tag_local(element):
@@ -242,6 +243,18 @@ def _canonical_number(match):
     return text or "0"
 
 
+def _canonical_geometry(text):
+    """Canonicalize every numeric token in text and collapse whitespace."""
+    normalized = re.sub(
+        r'-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?', _canonical_number,
+        text.strip())
+    return re.sub(r'\s+', ' ', normalized)
+
+
+def _short_hash(text):
+    return hashlib.sha256(text.encode()).hexdigest()[:12]
+
+
 def hash_path(path_d):
     """Compute a short hash of path data for shape identity comparison.
 
@@ -252,11 +265,45 @@ def hash_path(path_d):
     """
     if not path_d:
         return None
-    normalized = re.sub(
-        r'-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?', _canonical_number,
-        path_d.strip())
-    normalized = re.sub(r'\s+', ' ', normalized)
-    return hashlib.sha256(normalized.encode()).hexdigest()[:12]
+    return _short_hash(_canonical_geometry(path_d))
+
+
+def _parse_points(points):
+    """Parse a polygon/polyline points attribute into (x, y) pairs."""
+    try:
+        nums = [float(n) for n in re.split(r'[\s,]+', points.strip()) if n]
+    except ValueError:
+        return []
+    return list(zip(nums[0::2], nums[1::2]))
+
+
+SHAPE_GEOMETRY = {
+    "circle": ("r",),
+    "ellipse": ("rx", "ry"),
+    "polygon": ("points",),
+    "polyline": ("points",),
+    "text": ("font-family", "font-weight", "font-size", "text-anchor"),
+}
+
+
+def hash_shapes(element):
+    """Hash the geometry of an element's non-path primitives, in document
+    order: each one's tag, accumulated scale and shape attributes (and a
+    text's string, taken verbatim). Numbers are canonicalized as in
+    hash_path. None when the element draws none of them."""
+    parts = []
+    for _, _, prim, (sx, sy, _, _) in find_drawing_positions(element):
+        tag = get_tag_local(prim)
+        if tag not in SHAPE_GEOMETRY:
+            continue
+        attrs = " ".join(f"{a}={prim.get(a, '')}" for a in SHAPE_GEOMETRY[tag])
+        part = _canonical_geometry(f"{tag} scale({sx} {sy}) {attrs}")
+        if tag == "text":
+            part += " " + repr("".join(prim.itertext()).strip())
+        parts.append(part)
+    if not parts:
+        return None
+    return _short_hash(" | ".join(parts))
 
 
 def compute_bbox_deep(element):
@@ -294,7 +341,24 @@ def compute_bbox_deep(element):
             y2 = float(prim.get("y2", 0))
             all_x.extend([sx * x1 + tx, sx * x2 + tx])
             all_y.extend([sy * y1 + ty, sy * y2 + ty])
+        elif tag in ("circle", "ellipse"):
+            cx = float(prim.get("cx", 0))
+            cy = float(prim.get("cy", 0))
+            rx = float(prim.get("r" if tag == "circle" else "rx", 0))
+            ry = float(prim.get("r" if tag == "circle" else "ry", 0))
+            all_x.extend([sx * (cx - rx) + tx, sx * (cx + rx) + tx])
+            all_y.extend([sy * (cy - ry) + ty, sy * (cy + ry) + ty])
+        elif tag in ("polygon", "polyline"):
+            points = _parse_points(prim.get("points", ""))
+            if points:
+                all_x.extend(sx * x + tx for x, _ in points)
+                all_y.extend(sy * y + ty for _, y in points)
+            else:
+                all_x.append(abs_x)
+                all_y.append(abs_y)
         else:
+            # text: an SVG carries no glyph metrics, so only its anchor
+            # point counts; its string and font go into hash_shapes.
             all_x.append(abs_x)
             all_y.append(abs_y)
 
@@ -807,6 +871,7 @@ def harvest(svg_path):
         color = extract_color_deep(svg_el)
         path_d = extract_path_data_deep(svg_el)
         bbox = compute_bbox_deep(svg_el)
+        shape_hash = hash_shapes(svg_el)
 
         element_record = {
             "id": el_id,
@@ -824,6 +889,8 @@ def harvest(svg_path):
             element_record["visual"]["color"] = color
         if path_d:
             element_record["visual"]["path_hash"] = hash_path(path_d)
+        if shape_hash:
+            element_record["visual"]["shape_hash"] = shape_hash
         if bbox:
             element_record["visual"]["bbox"] = bbox
 

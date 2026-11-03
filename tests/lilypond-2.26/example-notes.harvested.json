@@ -334,6 +334,7 @@
         "horizontal": -0.2353
       },
       "visual": {
+        "shape_hash": "c8ca422c0e65",
         "bbox": {
           "x": 4.245,
           "y": 27.634,
@@ -632,6 +633,7 @@
         "horizontal": -0.1362
       },
       "visual": {
+        "shape_hash": "c8ca422c0e65",
         "bbox": {
           "x": 4.245,
           "y": 44.817,
@@ -959,6 +961,7 @@
         "horizontal": -0.1362
       },
       "visual": {
+        "shape_hash": "c8ca422c0e65",
         "bbox": {
           "x": 4.245,
           "y": 62.0,
@@ -1286,6 +1289,7 @@
         "horizontal": -0.1384
       },
       "visual": {
+        "shape_hash": "c8ca422c0e65",
         "bbox": {
           "x": 4.245,
           "y": 79.183,

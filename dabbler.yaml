@@ -19,8 +19,8 @@ schema_version: 1
 #
 # The integration suite is the run of record: it renders every tests/*.ly
 # through LilyPond 2.24, harvests the SVG and evaluates the JSON assertion
-# specs. 259 tests / 365 assertions in about 7 s on 2026-10-31, so it runs
-# whole every time. It renders with
+# specs. 303 assertions (620 expressions) in 14 specs, in about 35 s on
+# 2026-11-03, so it runs whole every time. It renders with
 # -dno-point-and-click, so the tracked tests/*.svg are the same from any
 # checkout, and a regenerated tests/*.harvested.json that differs from the
 # tracked one fails the run (`--update-baselines` accepts an intended
@@ -28,7 +28,7 @@ schema_version: 1
 #
 # The unit suite gates test-unit.ly through tools/run_unit.py: LilyPond
 # exits 0 even when its assertions fail, so the wrapper reads its
-# "TEST RESULTS: N passed, M failed" line. 303 assertions in about 2 s; it
+# "TEST RESULTS: N passed, M failed" line. 325 assertions in about 2 s; it
 # is declared expensive only because it alone covers test-unit.ly, so its
 # run must be a run of record.
 #

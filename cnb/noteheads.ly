@@ -156,8 +156,7 @@ staff-space units (already scaled by the staff's staff-space).")
    "Stem-attachment record (crotchet-up, crotchet-down, minim-up,
 minim-down) of this notehead's config, captured at acknowledge time.")
 
-%% The offset applier, run from Stem.before-line-breaking (chained
-%% after cnb:compensate-stem-length in cnb/layout.ly).
+%% The offset applier, run from Stem.before-line-breaking (cnb/layout.ly).
 %%
 %% TIMING IS THE POINT: grobs must NOT be mutated while a property is
 %% being evaluated — translating a head inside a positioning-done

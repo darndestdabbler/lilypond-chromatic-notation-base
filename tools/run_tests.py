@@ -14,6 +14,8 @@ USAGE:
     python3 tools/run_tests.py --verbose           # show all assertions
     python3 tools/run_tests.py --update-baselines  # accept changed harvests
     python3 tools/run_tests.py --lilypond-version 2.26  # LilyPond 2.26 and its baselines
+    python3 tools/run_tests.py --generate tests/new-score.ly  # golden harvest
+        (refuses to overwrite an existing baseline without --update-baselines)
 
 LILYPOND VERSIONS:
     --lilypond-version X.Y renders with the executable CNB_LILYPOND_X_Y names,
@@ -22,7 +24,6 @@ LILYPOND VERSIONS:
     tests/lilypond-X.Y/*.harvested.json (2.26's are tracked), rendered into
     out/lilypond-X.Y/. Without the option, PATH's lilypond is used as the
     version it reports.
-    python3 tools/run_tests.py --generate tests/c-major.ly  # generate golden JSON
 
 TEST SPEC FORMAT (JSON):
     {
@@ -507,10 +508,14 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
     """Run a single test from a JSON spec file, rendering with the lilypond
     executable for version (None: the PATH one against 2.24's baselines).
 
-    Returns (passed_count, failed_count, total_assertion_count)
+    Returns (passed, failed, assertions, drifted): assertions counts the
+    spec's entries that have an id (not its _comment markers); failed
+    counts failed assertions, or 1 when the test cannot run; drifted is 1
+    when the harvest differs from its baseline, else 0.
     """
     with open(spec_path, encoding="utf-8") as f:
         spec = json.load(f)
+    assertions = [a for a in spec.get("assertions", []) if "id" in a]
 
     test_name = spec.get("test_name", os.path.basename(spec_path))
     input_file = spec.get("input_file")
@@ -527,7 +532,7 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
         else:
             print(f"\n✗ {test_name}")
             print(f"  Input file not found: {input_file}")
-            return (0, 1, 1)
+            return (0, 1, len(assertions), 0)
 
     print(f"\n● {test_name}")
     print(f"  Input: {input_file}")
@@ -538,7 +543,7 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
                             lilypond=lilypond)
     if not svg_path:
         print(f"  ✗ LilyPond failed")
-        return (0, 1, 0)
+        return (0, 1, len(assertions), 0)
 
     print(f"  SVG: {svg_path}")
 
@@ -547,7 +552,7 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
         harvested = harvest(svg_path)
     except Exception as e:
         print(f"  Harvest error: {e}")
-        return (0, 1, 1)
+        return (0, 1, len(assertions), 0)
 
     element_count = len(harvested.get("elements", []))
     print(f"  Harvested: {element_count} elements, "
@@ -558,16 +563,12 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
     for el in harvested.get("elements", []):
         elements_by_id[el["id"]] = el
 
-    # Step 3: Check assertions
-    assertions = spec.get("assertions", [])
+    # Step 3: Check assertions (comment entries, which have no id, were
+    # dropped when the spec was loaded)
     passed = 0
     failed = 0
 
     for assertion in assertions:
-        # Skip comment entries (section markers)
-        if "id" not in assertion:
-            continue
-
         a_id = assertion.get("id")
         a_desc = assertion.get("description", a_id)
         absent = assertion.get("absent") is True
@@ -638,7 +639,6 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
         os.path.basename(svg_path).replace(".svg", ".harvested.json"))
     drift = save_harvest(harvested, harvest_path, update_baselines)
     if drift:
-        failed += 1
         print(f"    ✗ Harvest differs from {harvest_path} (left untouched; "
               f"--update-baselines accepts an intended change):")
         for line in drift[:20]:
@@ -648,7 +648,7 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
     else:
         print(f"  Harvest baseline: {harvest_path}")
 
-    return (passed, failed, len(assertions))
+    return (passed, failed, len(assertions), 1 if drift else 0)
 
 
 # =========================================================================
@@ -656,14 +656,15 @@ def run_single_test(spec_path, verbose=False, update_baselines=False,
 # =========================================================================
 
 def generate_golden(ly_file, output_json=None, lilypond="lilypond",
-                    version=None):
+                    version=None, update_baselines=False):
     """Generate a golden harvest JSON from a .ly file.
 
     This is the starting point for creating test specs.
     Run on a known-good render, review the output, then write assertions.
     The render goes beside the .ly file, or into render_dir(version) for a
     version other than 2.24; by default the harvest goes to the version's
-    baseline_dir.
+    baseline_dir. An existing baseline is overwritten only with
+    update_baselines; otherwise this exits before rendering.
     """
     ly_dir = os.path.dirname(ly_file) or "."
     output_dir = render_dir(version) or ly_dir
@@ -672,6 +673,9 @@ def generate_golden(ly_file, output_json=None, lilypond="lilypond",
         os.makedirs(json_dir, exist_ok=True)
         output_json = os.path.join(json_dir, os.path.basename(
             ly_file).replace(".ly", ".harvested.json"))
+    if os.path.exists(output_json) and not update_baselines:
+        sys.exit(f"{output_json} is an existing baseline: run the spec to "
+                 f"check it, or add --update-baselines to overwrite it")
 
     print(f"Generating golden file from: {ly_file}")
 
@@ -737,10 +741,9 @@ def main():
         help="Test spec JSON files or directories (default: tests/)")
     parser.add_argument("-v", "--verbose", action="store_true",
         help="Show all assertion details including passes")
-    parser.add_argument("--keep-svg", action="store_true",
-        help="Keep SVG files after tests")
     parser.add_argument("--generate", metavar="FILE.ly",
-        help="Generate golden harvest JSON from a .ly file")
+        help="Generate golden harvest JSON from a .ly file (an existing "
+             "one only with --update-baselines)")
     parser.add_argument("--update-baselines", action="store_true",
         help="Write regenerated harvests over the tracked ones (an intended change)")
     parser.add_argument("--lilypond-version", metavar="X.Y",
@@ -760,7 +763,8 @@ def main():
                      "version with --lilypond-version")
 
     if args.generate:
-        generate_golden(args.generate, lilypond=lilypond, version=version)
+        generate_golden(args.generate, lilypond=lilypond, version=version,
+                        update_baselines=args.update_baselines)
         return
 
     # Find test specs
@@ -791,25 +795,27 @@ def main():
     total_passed = 0
     total_failed = 0
     total_assertions = 0
+    total_drifted = 0
     start_time = time.time()
 
     for spec_file in spec_files:
-        p, f, t = run_single_test(spec_file, verbose=args.verbose,
-                                  update_baselines=args.update_baselines,
-                                  lilypond=lilypond, version=version)
+        p, f, t, d = run_single_test(spec_file, verbose=args.verbose,
+                                     update_baselines=args.update_baselines,
+                                     lilypond=lilypond, version=version)
         total_passed += p
         total_failed += f
         total_assertions += t
+        total_drifted += d
 
     elapsed = time.time() - start_time
 
     print(f"\n{'='*50}")
     print(f"  RESULTS: {total_passed} passed, {total_failed} failed "
-          f"({total_assertions} assertions)")
+          f"({total_assertions} assertions), {total_drifted} harvests drifted")
     print(f"  Time: {elapsed:.1f}s")
     print(f"{'='*50}")
 
-    sys.exit(1 if total_failed > 0 else 0)
+    sys.exit(1 if total_failed or total_drifted else 0)
 
 
 if __name__ == "__main__":

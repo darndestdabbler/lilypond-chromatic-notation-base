@@ -52,13 +52,11 @@
 %%   cnb/path-geometry.ly   — Path winding detection, reversal, normalization
 %%   cnb/stencils.ly        — Notehead stencil construction and caching
 %%   cnb/noteheads.ly       — Notehead engraver (positions + renders notes)
-%%   cnb/stems.ly           — Stem attachment points and length compensation
+%%   cnb/stems.ly           — Stem attachment points
 %%   cnb/clefs.ly           — Dozenal clef number system and engraver
 %%   cnb/ledgers.ly         — Proximity-based ledger line visibility
 %%   cnb/staff.ly           — Staff lines, ledger lines, and their engravers
 %%   cnb/keysig.ly          — Notehead-based key signatures and engraver
-%%   cnb/beams.ly           — Beam thickness/spacing compensation
-%%   cnb/articulations.ly   — Articulation Y-offset correction for ledger collisions
 %%   cnb/dots.ly            — Augmentation dot avoidance for ledger lines
 %%   cnb/off-key.ly         — Off-key note flags (configurable visual indicators)
 %%   cnb/layout.ly          — Engraver registration and paper settings
@@ -86,8 +84,6 @@
 \include "cnb/ledgers.ly"
 \include "cnb/staff.ly"
 \include "cnb/keysig.ly"
-\include "cnb/beams.ly"
-\include "cnb/articulations.ly"
 \include "cnb/dots.ly"
 \include "cnb/off-key.ly"
 \include "cnb/layout.ly"

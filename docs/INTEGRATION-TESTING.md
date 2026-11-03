@@ -6,18 +6,56 @@ CNB's integration tests render music with LilyPond, extract structured data from
 ## Quick Reference
 
 ```bash
-# Run all integration tests:
-python3 tools/run_tests.py
+# Run all integration tests on LilyPond 2.24, or on 2.26:
+python3 tools/run_tests.py --lilypond-version 2.24
+python3 tools/run_tests.py --lilypond-version 2.26
 
 # Run a specific test spec:
-python3 tools/run_tests.py tests/c-major-scale.json
+python3 tools/run_tests.py --lilypond-version 2.24 tests/c-major-scale.json
 
 # Verbose output (show all assertion details, not just failures):
-python3 tools/run_tests.py --verbose
+python3 tools/run_tests.py --lilypond-version 2.24 --verbose
 
-# Generate a golden harvest file from a known-good render:
-python3 tools/run_tests.py --generate tests/c-major-scale.ly
+# Accept an intended change to the harvests:
+python3 tools/run_tests.py --lilypond-version 2.24 --update-baselines
+
+# Generate the harvest baseline of a new test score:
+python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly
 ```
+
+The run ends with `RESULTS: P passed, F failed (N assertions), D harvests
+drifted`. N counts the assertions that have an `id`; `_comment` entries
+are section markers and are not counted. The run exits non-zero when any
+assertion fails or any harvest drifts.
+
+
+## LilyPond Versions and Harvest Baselines
+
+`--lilypond-version X.Y` renders with the `lilypond` executable that the
+environment variable `CNB_LILYPOND_X_Y` names (for example
+`CNB_LILYPOND_2_26`), which must report X.Y. If the variable is not set,
+the runner uses the `lilypond` on `PATH` if it reports X.Y, and otherwise
+exits naming the variable. Without the option, the `lilypond` on `PATH`
+is used as the version it reports.
+
+Each version has its own render folder and its own tracked harvest
+baselines, because the two versions lay a page out slightly differently:
+
+| Version | Renders go to | Harvest baselines |
+|---------|---------------|-------------------|
+| 2.24 | `tests/` (the tracked `tests/*.svg`, rendered with `-dno-point-and-click` so they are the same from any checkout) | `tests/*.harvested.json` |
+| 2.26 (or any other) | the ignored `out/lilypond-X.Y/` | `tests/lilypond-X.Y/*.harvested.json` (2.26's, in `tests/lilypond-2.26/`, are tracked) |
+
+**The drift check.** After a spec's assertions run, its fresh harvest is
+compared with the version's baseline, element by element (a repeated id's
+later occurrences as `id[n]`). Any difference fails the run and leaves the
+baseline untouched, naming each changed element and property.
+`--update-baselines` writes the fresh harvest over the baseline instead:
+use it only for an intended change, and review the diff.
+
+**`--generate`** writes the baseline of a new test score. It refuses to
+overwrite an existing baseline, exiting before it renders, unless
+`--update-baselines` is given too.
 
 
 ## Component 1: ID Engraver (`cnb/test-ids.ly`)
@@ -126,6 +164,15 @@ python3 tools/harvest_svg.py output.svg --elements-only
 }
 ```
 
+### Visual Properties
+
+| Property | What it is |
+|----------|------------|
+| `visual.color` | The first colour or fill found in the element (2.26's `rgba(...)` written in 2.24's `rgb(...)` form) |
+| `visual.path_hash` | A 12-character hash of the element's first `<path>` data, numbers canonicalized; equal hashes mean the same shape |
+| `visual.shape_hash` | A 12-character hash of the element's other drawing primitives, in order: each `<circle>` (`r`), `<ellipse>` (`rx`, `ry`), `<polygon>` and `<polyline>` (`points`) and `<text>` (its string, font family, weight, size and anchor), each with its accumulated scale. Present only when the element draws one of them: beams (polygons), off-key `'ring` marks (circles), text clefs |
+| `visual.bbox` | The bounding box of everything the element draws: path points, rects, lines, circles and ellipses (centre ± radius), and polygon and polyline points. A `<text>` counts only as its anchor point, because an SVG carries no glyph metrics; a change to the text shows in `shape_hash` |
+
 ### Coordinate Systems
 
 | System | Origin | Orientation | Description |
@@ -178,6 +225,7 @@ Each property maps to an array of Python expression strings. Every expression mu
 | `count(type)` | function | Count elements of a given type, e.g., `count('notehead')` |
 | `staff` | dict | Staff geometry (`top_line_y`, `bottom_line_y`, `center_y`, etc.) |
 | `measures` | dict | Measure boundaries (`left_x`, `right_x`, `width`) |
+| `lilypond` | str | The LilyPond version the run renders with (`'2.24'`, `'2.26'`), for an expectation that differs between versions |
 
 ### Expression Examples
 
@@ -205,15 +253,15 @@ Expressions starting with a comparison operator (`==`, `!=`, `<`, `>`, `<=`, `>=
 ## Creating a New Integration Test
 
 1. Write a test score (`.ly` file) that includes `ChromaticNotationBase.ly` and `cnb/test-ids.ly`.
-2. Generate a golden harvest: `python3 tools/run_tests.py --generate tests/my-test.ly`
+2. Generate its baseline on each version: `python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly`, then the same with `2.26`.
 3. Review the harvested JSON to understand element IDs and positions.
 4. Write a test spec (`.json` file) with assertions referencing those element IDs.
-5. Run the test: `python3 tools/run_tests.py tests/my-test.json`
+5. Run the test on each version: `python3 tools/run_tests.py --lilypond-version 2.24 tests/my-test.json`
 
 ### Generating a Golden Baseline
 
 ```bash
-python3 tools/run_tests.py --generate tests/c-major-scale.ly
+python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly
 ```
 
-This renders the `.ly` file, harvests the SVG, and writes a `.harvested.json` file showing all element positions and properties. Use this output to write or update assertion specs.
+This renders the `.ly` file, harvests the SVG, and writes the version's `.harvested.json` baseline showing all element positions and properties. Use this output to write assertion specs. An existing baseline is not overwritten: to change one, run its spec with `--update-baselines` (or add `--update-baselines` to `--generate`).

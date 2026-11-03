@@ -194,47 +194,68 @@ class LilypondInExpressionsTest(unittest.TestCase):
                 return run_single_test(spec_path, version=version)
 
     def test_run_single_test_defaults_to_2_24(self):
-        self.assertEqual(self._run(None), (1, 0, 1))
+        self.assertEqual(self._run(None), (1, 0, 1, 0))
 
     def test_run_single_test_passes_its_version(self):
-        self.assertEqual(self._run("2.26"), (0, 1, 1))
+        self.assertEqual(self._run("2.26"), (0, 1, 1, 0))
 
 
 class DeclaredAbsenceTest(unittest.TestCase):
     """A missing element passes only an assertion declaring "absent": true."""
 
     def run_assertion(self, assertion):
-        """run_single_test's (passed, failed, total) for one assertion
-        against HARVEST, which has nh-1 and nh-2 but no cl-1."""
-        with tempfile.TemporaryDirectory() as spec_dir:
-            open(os.path.join(spec_dir, "x.ly"), "w").close()
-            spec_path = os.path.join(spec_dir, "x.json")
-            with open(spec_path, "w", encoding="utf-8") as f:
-                json.dump({"input_file": "x.ly", "assertions": [assertion]}, f)
-            with mock.patch("run_tests.run_lilypond",
-                            return_value=os.path.join(spec_dir, "x.svg")), \
-                 mock.patch("run_tests.harvest", return_value=HARVEST), \
-                 mock.patch("run_tests.save_harvest", return_value=[]), \
-                 contextlib.redirect_stdout(io.StringIO()):
-                return run_single_test(spec_path)
+        """run_single_test's (passed, failed, assertions, drifted) for one
+        assertion against HARVEST, which has nh-1 and nh-2 but no cl-1."""
+        return run_spec([assertion])
 
     def test_declared_absence_passes_when_missing(self):
         self.assertEqual(
-            self.run_assertion({"id": "cl-1", "absent": True}), (1, 0, 1))
+            self.run_assertion({"id": "cl-1", "absent": True}), (1, 0, 1, 0))
 
     def test_declared_absence_fails_when_present(self):
         self.assertEqual(
-            self.run_assertion({"id": "nh-1", "absent": True}), (0, 1, 1))
+            self.run_assertion({"id": "nh-1", "absent": True}), (0, 1, 1, 0))
 
     def test_is_none_expression_does_not_excuse_a_missing_element(self):
         self.assertEqual(self.run_assertion(
             {"id": "cl-1", "expect": {"visual.color": ["v is None"],
-                                      "type": ["== 'clef'"]}}), (0, 1, 1))
+                                      "type": ["== 'clef'"]}}), (0, 1, 1, 0))
 
     def test_assertion_with_nothing_to_check_fails(self):
-        self.assertEqual(self.run_assertion({"id": "nh-1"}), (0, 1, 1))
+        self.assertEqual(self.run_assertion({"id": "nh-1"}), (0, 1, 1, 0))
         self.assertEqual(
-            self.run_assertion({"id": "nh-1", "expect": {}}), (0, 1, 1))
+            self.run_assertion({"id": "nh-1", "expect": {}}), (0, 1, 1, 0))
+
+
+def run_spec(assertions, drift=()):
+    """run_single_test on a spec of assertions against HARVEST, with
+    save_harvest reporting drift."""
+    with tempfile.TemporaryDirectory() as spec_dir:
+        open(os.path.join(spec_dir, "x.ly"), "w").close()
+        spec_path = os.path.join(spec_dir, "x.json")
+        with open(spec_path, "w", encoding="utf-8") as f:
+            json.dump({"input_file": "x.ly", "assertions": assertions}, f)
+        with mock.patch("run_tests.run_lilypond",
+                        return_value=os.path.join(spec_dir, "x.svg")), \
+             mock.patch("run_tests.harvest", return_value=HARVEST), \
+             mock.patch("run_tests.save_harvest", return_value=list(drift)), \
+             contextlib.redirect_stdout(io.StringIO()):
+            return run_single_test(spec_path)
+
+
+class CountsTest(unittest.TestCase):
+    """Only assertions with an id are counted, and drift apart from them."""
+
+    NOTEHEAD = {"id": "nh-1", "expect": {"type": ["== 'notehead'"]}}
+
+    def test_comment_markers_are_not_counted(self):
+        self.assertEqual(
+            run_spec([{"_comment": "section"}, self.NOTEHEAD,
+                      {"_comment": "another"}]), (1, 0, 1, 0))
+
+    def test_drift_is_counted_apart_from_assertions(self):
+        self.assertEqual(run_spec([self.NOTEHEAD], drift=["nh-1: absolute.x"]),
+                         (1, 0, 1, 1))
 
 
 class VersionDirectoriesTest(unittest.TestCase):
@@ -272,7 +293,7 @@ class VersionDirectoriesTest(unittest.TestCase):
                  mock.patch("run_tests.harvest", return_value=HARVEST), \
                  contextlib.redirect_stdout(io.StringIO()) as out:
                 self.assertEqual(
-                    run_single_test(spec_path, version="2.27"), (1, 1, 1))
+                    run_single_test(spec_path, version="2.27"), (1, 0, 1, 1))
             self.assertIn("nh-1: absolute.x", out.getvalue())
 
     @mock.patch("run_tests.subprocess.run",
@@ -305,6 +326,38 @@ class VersionDirectoriesTest(unittest.TestCase):
                 tests_dir, "lilypond-2.26", "example.harvested.json")))
             with open(svg_file, encoding="utf-8") as f:
                 self.assertEqual(f.read(), "sentinel")
+
+    GOLDEN = {**HARVEST, "staff": {"top_line_y": 1.0, "bottom_line_y": 5.0,
+                                   "staff_height": 4.0, "line_count": 5}}
+
+    def generate_over(self, update_baselines):
+        """generate_golden over an existing baseline; (render mock, the
+        baseline's contents afterwards)."""
+        with tempfile.TemporaryDirectory() as tests_dir:
+            ly_file = os.path.join(tests_dir, "example.ly")
+            baseline = os.path.join(tests_dir, "example.harvested.json")
+            with open(baseline, "w", encoding="utf-8") as f:
+                f.write("{}")
+            with mock.patch("run_tests.run_lilypond",
+                            return_value="example.svg") as render, \
+                 mock.patch("run_tests.harvest", return_value=self.GOLDEN), \
+                 contextlib.redirect_stdout(io.StringIO()):
+                try:
+                    generate_golden(ly_file, version="2.24",
+                                    update_baselines=update_baselines)
+                except SystemExit as exit_:
+                    self.assertIn("--update-baselines", str(exit_.code))
+            with open(baseline, encoding="utf-8") as f:
+                return render, json.load(f)
+
+    def test_generate_refuses_an_existing_baseline(self):
+        render, written = self.generate_over(update_baselines=False)
+        render.assert_not_called()
+        self.assertEqual(written, {})
+
+    def test_generate_overwrites_with_update_baselines(self):
+        _render, written = self.generate_over(update_baselines=True)
+        self.assertEqual(written, self.GOLDEN)
 
     def test_render_dir(self):
         self.assertIsNone(render_dir(None))
@@ -386,8 +439,16 @@ class MainTest(unittest.TestCase):
                              os.path.join(self.spec_dir(), "no-such.json"))
         self.assertIn("no-such.json", code)
 
+    @mock.patch("run_tests.resolve_lilypond", return_value="lilypond")
+    @mock.patch("run_tests.run_single_test", return_value=(1, 0, 1, 1))
+    def test_drift_alone_fails_the_run(self, _run_test, _resolve):
+        spec_dir = self.spec_dir()
+        open(os.path.join(spec_dir, "x.json"), "w").close()
+        self.assertEqual(
+            self.run_main("--lilypond-version", "2.24", spec_dir), 1)
+
     @mock.patch("run_tests.lilypond_version", return_value="2.26")
-    @mock.patch("run_tests.run_single_test", return_value=(1, 0, 1))
+    @mock.patch("run_tests.run_single_test", return_value=(1, 0, 1, 0))
     def test_version_less_run_uses_path_version(self, run_test, _version):
         spec_dir = self.spec_dir()
         open(os.path.join(spec_dir, "x.json"), "w").close()

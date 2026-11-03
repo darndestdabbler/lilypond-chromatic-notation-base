@@ -86,18 +86,13 @@
     %% standard notation don't apply because the staff geometry is different.)
     \override Stem.no-stem-extend = ##t
 
-    %% Compensate stem lengths for compressed staff spacing (without it
-    %% stems look too short on compressed staves), then apply per-note
-    %% pitch-axis x-offsets AFTER LilyPond's chord arrangement — from
-    %% this plain hook, NOT from a positioning-done wrapper: mutating
-    %% grobs while that property is being evaluated segfaults LilyPond
-    %% 2.24.2 on multi-voice scores (see the X-OFFSET SUPPORT block in
-    %% cnb/noteheads.ly). The offset step is a no-op when no note
+    %% Apply per-note pitch-axis x-offsets AFTER LilyPond's chord
+    %% arrangement — from this plain hook, NOT from a positioning-done
+    %% wrapper: mutating grobs while that property is being evaluated
+    %% segfaults LilyPond 2.24.2 on multi-voice scores (see the X-OFFSET
+    %% SUPPORT block in cnb/noteheads.ly). It is a no-op when no note
     %% carries an x-offset.
-    \override Stem.before-line-breaking =
-      #(lambda (grob)
-         (cnb:compensate-stem-length grob)
-         (cnb:apply-note-x-offsets grob))
+    \override Stem.before-line-breaking = #cnb:apply-note-x-offsets
 
 
     %% --- COLLISION THRESHOLDS ---
@@ -105,20 +100,6 @@
     %% Higher values = more tolerance for close notes.
     \override Stem.note-collision-threshold = #cnb:collision-threshold
     \override NoteCollision.note-collision-threshold = #cnb:collision-threshold
-
-
-    %% --- BEAM COMPENSATION ---
-    %% Adjust beam thickness and spacing for compressed staff.
-    \override Beam.before-line-breaking = #cnb:compensate-beam
-
-
-    %% --- ARTICULATION CORRECTION ---
-    %% Adjust articulation marks (staccato, accent, fermata, etc.)
-    %% to avoid collision with ledger lines that extend beyond the note.
-    %% grob-transformer wraps around LilyPond's default Y-offset
-    %% calculation and lets us add extra offset when needed.
-    \override Script.Y-offset =
-      #(grob-transformer 'Y-offset cnb:script-y-offset-callback)
 
 
     %% --- DOT POSITION CORRECTION ---
