@@ -1,0 +1,109 @@
+# dabbler.yaml -- what this repository declares about itself.
+#
+# Tracked, unlike local-overrides.yaml, because CI reads these facts and so
+# does the next machine to pick up a session. Precedence is the packaged
+# router-config.yaml, then this file, then local-overrides.yaml. Providers,
+# models, roles and transports are deliberately absent: those are
+# distribution facts, and a repository that restated them here would fork
+# the model registry in order to say how to run a test suite.
+schema_version: 1
+
+# Every LilyPond suite names the version it proves with --lilypond-version:
+# the runners use the executable CNB_LILYPOND_X_Y names, which must report
+# X.Y, else the lilypond on PATH if it reports X.Y, and fail naming the
+# variable otherwise.
+# engine-integration and engine-unit prove 2.24; engine-integration-2.26
+# and engine-unit-2.26 are the same suites on 2.26, whose harvest
+# baselines are tests/lilypond-2.26/*.harvested.json and whose renders go
+# to the ignored out/lilypond-2.26/.
+#
+# The integration suite is the run of record: it renders every tests/*.ly
+# through LilyPond 2.24, harvests the SVG and evaluates the JSON assertion
+# specs. 259 tests / 365 assertions in about 7 s on 2026-10-31, so it runs
+# whole every time. It renders with
+# -dno-point-and-click, so the tracked tests/*.svg are the same from any
+# checkout, and a regenerated tests/*.harvested.json that differs from the
+# tracked one fails the run (`--update-baselines` accepts an intended
+# change).
+#
+# The unit suite gates test-unit.ly through tools/run_unit.py: LilyPond
+# exits 0 even when its assertions fail, so the wrapper reads its
+# "TEST RESULTS: N passed, M failed" line. 303 assertions in about 2 s; it
+# is declared expensive only because it alone covers test-unit.ly, so its
+# run must be a run of record.
+#
+# The tooling suite is the Python tooling's own tests (stdlib unittest, no
+# LilyPond): tools/test_<name>.py tests tools/<name>.py.
+testing:
+  suites:
+    - name: engine-integration
+      command: python tools/run_tests.py --lilypond-version 2.24
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tools/
+        - tests/
+        - ChromaticNotationBase.ly
+        - Kite-4-369-Notation-Procedure.ly
+        - kite-4-369-from-configurator.ly
+        - joy-to-the-world.ly
+      test_roots: [tests]
+      test_glob: "*.json"
+    - name: engine-unit
+      command: python tools/run_unit.py --lilypond-version 2.24
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - test-unit.ly
+        - ChromaticNotationBase.ly
+        - tools/run_unit.py
+        - tools/run_tests.py
+        - tools/harvest_svg.py
+    - name: engine-integration-2.26
+      command: python tools/run_tests.py --lilypond-version 2.26
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tools/
+        - tests/
+        - ChromaticNotationBase.ly
+        - Kite-4-369-Notation-Procedure.ly
+        - kite-4-369-from-configurator.ly
+        - joy-to-the-world.ly
+      test_roots: [tests]
+      test_glob: "*.json"
+    - name: engine-unit-2.26
+      command: python tools/run_unit.py --lilypond-version 2.26
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - test-unit.ly
+        - ChromaticNotationBase.ly
+        - tools/run_unit.py
+        - tools/run_tests.py
+        - tools/harvest_svg.py
+    - name: engine-tooling
+      command: python -m unittest discover -s tools -p "test_*.py"
+      runs_whole: true
+      covers: [tools/]
+      test_roots: [tools]
+      test_glob: "test_*.py"
+      test_name: "test_{name}.py"
+
+# Step (f) of the lifecycle: pack, then push to a feed. The pack is a
+# source zip of HEAD, named for the release's version; there is no `push`,
+# because this repository publishes to no feed. `dabbler packaging
+# --rehearse` runs the pack into a scratch folder and pushes nothing.
+packaging:
+  pack:
+    argv: ["git", "archive", "--format=zip",
+           "--output={output}/lilypond-chromatic-notation-base-{version}.zip",
+           "HEAD"]

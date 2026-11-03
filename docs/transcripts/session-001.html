@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 001 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 001 transcript</h1>
+<p class="stamp">Rendered 2026-10-30T10:51:30.462Z by dabbler-ai-router 3.27.0 at 1579f524b01568aea02ad0b344e10cbbb7138604.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-10-30T06:48:49.701-04:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 1: Author or import the solution plan</h3>
+<ol><li>Register.</li><li>The brief is the prompt this session was started with, or <code>docs/planning/brief.md</code>: what the solution is — its purpose, who uses it, what it must do and what is out of scope, what success looks like, and whether a plan or notes already exist. With neither, ask the person who started the session for it and write their answer to that path before any work. The plan's substance is theirs: do not search neighbouring directories for one, and do not draft one from the folder name. Before any module is proposed, ask them how production is split: what runs separately in production, and which part may talk to the database? Offer the default -- an application tier that calls an API tier, and only the API tier talks to the database. Then create — or import — <code>docs/planning/solution-plan.md</code>: the objective a reader can act on; the *Production split* they answered; the *Handoff artifacts*, what each separately running part is handed over as, with the standard command for its form -- for .NET an IIS site package (<code>dotnet publish</code>) or a Windows Service (a Worker Service published for a service host), for Java a runnable jar or a war (<code>mvn package</code> writing into <code>{output}</code>, which <code>packaging.pack</code> requires -- say through a property the POM's jar or war plugin takes as its output directory, <code>-Dhandoff.dir={output}</code>) or an image (Spring Boot's <code>build-image</code>), for the database a SQL migration script (<code>dotnet ef migrations script --idempotent</code>); the real form is produced later, and a tutorial produces the easiest one to test; the modules, with what each is responsible for, the contract each exposes (what must be true going in, what is guaranteed coming out, how it fails), the dependency direction, the reason for each cut and the cuts deferred — one module is a fine answer, and most small solutions are one; and the phases or feature areas with their key deliverables, each scoped to a handful of focused AI sessions. A repository that already has <code>docs/planning/project-plan.md</code> amends that file instead.</li><li>Where the plan has several modules, say in it how each is a project: a <code>.csproj</code> listed in the root solution file for .NET, or a Maven module listed in the parent <code>pom.xml</code>, each reaching a sibling by project reference -- a <code>&lt;ProjectReference&gt;</code>, or a dependency at <code>${project.version}</code>. The first numbered session, the skeleton, writes the projects.</li></ol>
+<p>The framework then verifies the work cross-provider, runs the suites as the run of record and closes the session. These are the framework's, not steps to plan.</p>
+<p>This session writes the plan and nothing else: it creates, edits or deletes no code, project, build file, test, <code>dabbler.yaml</code> suite or packaging.</p>
+<p><strong>Creates:</strong> <code>docs/planning/solution-plan.md</code>. A later revision is just another plan session that amends the same file.</p>
+<h2>Work Plan</h2>
+<p>Import the operator-approved wrap-up brief (docs/planning/brief.md) into the existing docs/planning/project-plan.md, amending that file rather than creating a solution-plan.md, as the brief directs. The amendment adds: the wrap-up objective (finish, clean up and document the CNB engine to 'reliable for simple exploration', release it as 1.0.0 and make the repository public under CC0) with its out-of-scope list and success criteria; the Production split the brief answers (one module, the LilyPond/Scheme source tree plus Python test tooling, no database, nothing running separately); the Handoff artifacts (a source archive produced by <code>git archive</code> plus an annotated v1.0.0 tag read from version.json); the single module's responsibility, contract and the cuts deliberately not made; the refreshed current state on 2026-10-30; and the wrap-up phases E1 (portable, honest test tooling), E2 (cruft removal and LilyPond compatibility note), E3 (guidance and README cleanup, version.json), the packaging session and the Release 1.0.0 session, each with its key deliverables, plus the constraints (session-sets kept as read-only history, golden baselines must not drift, IP posture per section 5). Stale counts and phase status in the existing sections are corrected where they contradict the brief's state.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/cdf491fc6e3275f16edb020eeef61755eb96f73d"><code>cdf491fc6e3275f16edb020eeef61755eb96f73d</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Amend project plan</td><td><p>Amend docs/planning/project-plan.md with the wrap-up program from docs/planning/brief.md: add a wrap-up section carrying the objective, out-of-scope list and success criteria; a 'Production split' section (one module, no database, nothing running separately); a 'Handoff artifacts' section (source archive via git archive into {output}, plus an annotated v1.0.0 tag from version.json); the single module's responsibility, contract (inputs, guarantees, failure modes) and cuts not made; the 2026-10-30 state; phases E1, E2, E3, Packaging and Release 1.0.0 with their deliverables; and the constraints. Correct stale counts in the existing current-state section and mark the session-set table as complete.</p></td><td><span class="mono">docs/planning/project-plan.md</span></td><td><code>python -I -c import sys; t = open('docs/planning/project-plan.md', encoding='utf-8').read(); need = ['Production split', 'Handoff artifacts', 'E1', 'E2', 'E3', 'Packaging', 'Release 1.0.0', 'version.json', 'git archive']; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No code, test, tool, build file, README, dabbler.yaml suite or packaging block is created, edited or deleted -- the session plan's section for session 1 forbids it.</li><li>No numbered sessions are appended to docs/sessions/session-plan.md -- that is session 2's work.</li><li>No docs/planning/solution-plan.md is created -- this repository already keeps its plan in docs/planning/project-plan.md, which is amended instead.</li><li>No new engine features or configuration models are planned; the deferred items in project-plan.md section 3 stay deferred.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[10:48:49]</span> <span class="muted">run-started</span> session=001 mode=pull</div>
+<div class="line"><span class="at">[10:48:49]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[10:49:23]</span> <span class="muted">run-resumed</span> session=001 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[10:49:23]</span> <span class="muted">plan-accepted</span> steps=[&quot;amend-project-plan&quot;] non_goals=4</div>
+<div class="line"><span class="at">[10:49:25]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[10:49:25]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=amend-project-plan</div>
+<div class="line"><span class="at">[10:50:21]</span> <span class="muted">run-resumed</span> session=001 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[10:50:22]</span> <span class="muted">check-passed</span> step=amend-project-plan argv=[&quot;python&quot;,&quot;-I&quot;,&quot;-c&quot;,&quot;import sys; t = open('docs/planning/project-plan.md', encoding='utf-8').read(); need = ['Production split', 'Handoff artifacts', 'E1', 'E2', 'E3', 'Packaging', 'Release 1.0.0', 'version.json', 'git archive']; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[10:50:23]</span> <span class="muted">report-accepted</span> seq=2 step=amend-project-plan files=[&quot;docs/planning/project-plan.md&quot;] notes=Imported the wrap-up brief into project-plan.md as section 7 (objective, production split, handoff artifacts, module contract, phases E1-E3/Packaging/Release 1.0.0, constraints); refreshed stale counts and status in sections 2, 3, 4 and 6.</div>
+<div class="line"><span class="at">[10:50:23]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[10:50:23]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[10:50:25]</span> <span class="muted">job-started</span> name=verification pid=46816 log=.dabbler/runs/s1/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[10:50:57]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s1/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[10:50:57]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[10:50:57]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[10:50:58]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python -X utf8 tools/run_tests.py</div>
+<div class="line"><span class="at">[10:50:59]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=67232 log=.dabbler/runs/s1/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[10:51:08]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s1/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[10:51:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[10:51:16]</span> <span class="muted">landed</span> commit=cdf491fc6e3275f16edb020eeef61755eb96f73d</div>
+<div class="line"><span class="at">[10:51:16]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[10:51:16]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[10:51:16]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[10:51:18]</span> <span class="muted">job-started</span> name=close pid=16476 log=.dabbler/runs/s1/driver/jobs/close.log</div>
+<div class="line"><span class="at">[10:51:30]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s1/driver/jobs/close.log</div>
+<div class="line"><span class="at">[10:51:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>2 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** §7.1 requires making the repository public under CC0, but no phase assigns an actionable deliverable for adding the CC0 dedication/license or changing repository visibility. E3 covers README/version metadata, Packaging covers an archive, and “Release 1.0.0” explicitly has “no steps.” Add an explicit, named release deliverable for the CC0 legal artifact and public-repository action.</td><td>not answered</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>**Nit:** `docs/planning/project-plan.md` §6 still presents sets 001–004 as recommended future work: “Sets 001–003 … can be authored and run immediately” and “Do not create set 004 until…”. This conflicts with the immediately following status that all sets 001–008 are complete. Mark those paragraphs explicitly as historical, or remove/rewrite them so current scheduling guidance is unambiguous.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>6s</td><td></td><td></td><td></td><td><span class="mono">python -X utf8 tools/run_tests.py</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

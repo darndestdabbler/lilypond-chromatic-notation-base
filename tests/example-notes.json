@@ -1,0 +1,110 @@
+{
+  "test_name": "Example notes — color scheme, pitch placement and system breaks",
+  "input_file": "example-notes.ly",
+  "description": "The opening pitches of Joy to the World (D5, A4, G4, E4), one per system, rendered with the Kite procedure's color-blind-friendly scheme: each pitch class takes its registered color, lower pitches sit lower on the staff, a repeated pitch keeps its color and height, and every system restates its clef and key signature after a \\break.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: SCORE SHAPE ==="},
+
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "Twelve noteheads and four rests: three notes and a rest per pitch",
+      "expect": {
+        "type": ["== 'notehead'", "count('notehead') == 12", "count('rest') == 4"]
+      }
+    },
+
+    {
+      "id": "cl-3",
+      "description": "Second system restates the clef",
+      "expect": {"type": ["== 'clef'"], "staff_relative.system": ["== 1"]}
+    },
+    {
+      "id": "ks-5",
+      "description": "Third system restates the key signature",
+      "expect": {"type": ["== 'key-signature'"], "staff_relative.system": ["== 2"]}
+    },
+    {
+      "id": "ks-7",
+      "description": "Fourth system restates the key signature",
+      "expect": {"type": ["== 'key-signature'"], "staff_relative.system": ["== 3"]}
+    },
+
+    {"_comment": "=== SECTION 2: COLOR SCHEME (procedure model) ==="},
+
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "D takes the tertiary color (black)",
+      "expect": {
+        "data.pitch-class": ["== '2'"],
+        "visual.color": ["== 'rgb(0.0000%, 0.0000%, 0.0000%)'"]
+      }
+    },
+    {
+      "id": "nh-3-0.000-69-0",
+      "description": "A takes the primary color (sky blue)",
+      "expect": {
+        "data.pitch-class": ["== '9'"],
+        "visual.color": ["== 'rgb(31.3725%, 70.5882%, 91.3725%)'"]
+      }
+    },
+    {
+      "id": "nh-5-0.000-67-0",
+      "description": "G takes the secondary color (rose)",
+      "expect": {
+        "data.pitch-class": ["== '7'"],
+        "visual.color": ["== 'rgb(80.0000%, 47.4510%, 65.4902%)'"]
+      }
+    },
+    {
+      "id": "nh-7-0.000-64-0",
+      "description": "E shares the secondary color with G",
+      "expect": {
+        "data.pitch-class": ["== '4'"],
+        "visual.color": ["== prop('nh-5-0.000-67-0', 'visual.color')"]
+      }
+    },
+    {
+      "id": "nh-8-0.000-64-0",
+      "description": "A repeated pitch keeps its color across note values (whole note E)",
+      "expect": {
+        "data.duration": ["== '0'"],
+        "visual.color": ["== prop('nh-7-0.000-64-0', 'visual.color')"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: VERTICAL PLACEMENT ==="},
+
+    {
+      "id": "nh-3-0.000-69-0",
+      "description": "A4 sits below D5",
+      "expect": {
+        "staff_relative.vertical": ["< prop('nh-1-0.000-74-0', 'staff_relative.vertical')"]
+      }
+    },
+    {
+      "id": "nh-5-0.000-67-0",
+      "description": "G4 sits below A4",
+      "expect": {
+        "staff_relative.vertical": ["< prop('nh-3-0.000-69-0', 'staff_relative.vertical')"]
+      }
+    },
+    {
+      "id": "nh-7-0.000-64-0",
+      "description": "E4 sits below G4, still within the staff",
+      "expect": {
+        "staff_relative.vertical": [
+          "< prop('nh-5-0.000-67-0', 'staff_relative.vertical')", ">= 0.0"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-74-0",
+      "description": "A repeated pitch keeps its height (whole note D)",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.000-74-0', 'staff_relative.vertical')) < 0.001"]
+      }
+    }
+  ]
+}
