@@ -223,6 +223,7 @@ Each property maps to an array of Python expression strings. Every expression mu
 | `el` | dict | All harvested elements, keyed by `id` |
 | `prop(id, key)` | function | Cross-element property lookup, e.g., `prop('nh-1-0.000-60-0', 'data.midi')` |
 | `count(type)` | function | Count elements of a given type, e.g., `count('notehead')` |
+| `order(id)` | function | The element's index in SVG document order (its first occurrence); a larger index is drawn later, on top, e.g., `order('st-1-0.000-0') > order('nh-1-0.000-60-0')` |
 | `staff` | dict | Staff geometry (`top_line_y`, `bottom_line_y`, `center_y`, etc.) |
 | `measures` | dict | Measure boundaries (`left_x`, `right_x`, `width`) |
 | `lilypond` | str | The LilyPond version the run renders with (`'2.24'`, `'2.26'`), for an expectation that differs between versions |

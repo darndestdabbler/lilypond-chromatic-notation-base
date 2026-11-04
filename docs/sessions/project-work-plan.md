@@ -28,6 +28,12 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 14 | Harvest what is drawn, and claim only what works | no | 2026-11-03 |
 | 15 | A clean public archive, and 1.1.1 | no | 2026-11-03 |
 | 16 | Release 1.1.1 (release: 1.1.1) | yes | 2026-11-03 |
+| 17 | Stems attached at the notehead centre | no | 2026-11-04 |
+| 18 | One include makes any LilyPond score chromatic | — | not declared |
+| 19 | MusicXML smoke tier and the corpus gate | — | not declared |
+| 20 | Fix what the corpus found | — | not declared |
+| 21 | Document 1.2.0 | — | not declared |
+| 22 | Release 1.2.0 (release: 1.2.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -132,3 +138,14 @@ Make the public source zip clean (audit L5) and set the version to 1.1.1. The fi
 **Releasable: yes.**
 
 Release 1.1.1: the framework packs and publishes what is on the trunk.
+
+### Session 17 — Stems attached at the notehead centre
+
+**Releasable: no.**
+
+Prove that a stem anchored at the notehead centre, '(0 . 0), engraves well, and fix what does not. A new integration spec, tests/stem-centre.ly with tests/stem-centre.json, is baselined on LilyPond 2.24 and 2.26. Its small config registers one solid and one true-hollow 45-degree-tilted ellipse, each 4 semitones tall like Kite, with (0 . 0) for all four attachment points. It engraves stems up and down, a minim, a beamed pair and a chord. Per stem it asserts four things. The stem's x is the head's centre x. Its near end is at the head's centre y. Its far end is at LilyPond's standard stem length from the head's centre. The stem is drawn after (over) its head, so neither a true hole nor a false-hollow white overlay can hide it. The operator decided the length rule on 2026-11-04. LilyPond measures the far end from the head's centre whatever the anchor, and Kite's (0 . 0.9) anchors and the existing key-change test's (0 . 0) anchors already rely on that. So the engine keeps that length instead of lengthening inside-head anchors, and no existing harvest drifts. A 4-semitone centre-anchored stem therefore shows exactly as far past its head as a Kite stem does. The known defect is draw order: cnb/layout.ly puts NoteHead on layer 999 above stems. The fix draws stems above noteheads, and the only effect on existing tests is the element order inside their tracked SVGs. To assert draw order, the integration runner gains an order(id) helper: an element's index in the harvest, which is SVG document order. The README, under the attachment-registration row, says an anchor may be anywhere including the centre, what the engine does with length and draw order, and the toolkit rule a designer places an anchor by. Its headline test counts are refreshed.
+
+**Amended after acceptance:**
+
+- 2026-11-04 — step 'stem-centre': its files: The runner rewrites a harvest whose content matches its baseline, so drawing stems above noteheads reorders the elements of every existing tests/*.harvested.json and tests/lilypond-2.26/*.harvested.json. Element content is unchanged (verified against HEAD: same element set, same top-level keys); drift detection is order-insensitive and reports 0 drifted on 2.24 and 2.26. (claude-code (anthropic, claude-opus-5-5))
+- 2026-11-04 — the non-goal 'No existing harvest baseline (tests/*.harvested.json, tests/lilypond-2.26/*.harvested.json) is re-baselined; existing tracked SVGs change only in element order', dropped: Operator decision 2026-11-04: Stem.layer moves every stem later in the SVG, and the harvest records SVG document order, so every harvest baseline and tracked SVG reorders with no value changed (element sets and all other fields verified identical to HEAD in all 28 harvests; all 14 SVGs have the same lines). The non-goal's intent, no drift in harvested values, still holds (0 drifted on 2.24 and 2.26); the reviewer is asked to judge it on that. (claude-code (anthropic, claude-opus-5-5))

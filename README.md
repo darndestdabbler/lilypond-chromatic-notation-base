@@ -1,7 +1,7 @@
 # ChromaticNotationBase (CNB)
 
 > **Status: 1.1.0**
-> The engine is stable and tested (325 unit assertions, and 303 integration assertions — 620 expressions in 14 specs — passing on both LilyPond 2.24 and 2.26, measured November 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
+> The engine is stable and tested (325 unit assertions, and 314 integration assertions — 668 expressions in 16 specs — passing on both LilyPond 2.24 and 2.26, measured November 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
 
 A configurable engine for chromatic music notation in LilyPond.
 
@@ -231,6 +231,8 @@ Before the procedure, the config file registers named definitions that the proce
 | `cnb:register-color!` | Register a named color | `cnb:color-defs` |
 | `cnb:register-off-key-mark!` | Register a custom off-key mark | `cnb:off-key-mark-defs` |
 | `cnb:register-clef!` | Register a custom clef glyph (path + top-edge anchor) | `cnb:clef-defs` |
+
+A stem attachment point may be anywhere, including the head's centre, `'(0 . 0)`. Each point is an `(x . y)` pair in LilyPond's normalised notehead coordinates (±1 = the head's edges), and the engine hands it to LilyPond unchanged. The stem's far end stays LilyPond's standard length (3.5 staff spaces unbeamed) from the head's **centre**, whatever the anchor. A centre anchor on a 4-semitone head therefore shows as much stem past the head as Kite's `(0 . 0.9)` anchor does. Stems are drawn over noteheads, so a stem anchored inside its head stays visible across a hollow head, whether the hollow is true or false (white overlay). `tests/stem-centre.ly` (true hollow) and `tests/stem-centre-false-hollow.ly` prove this. To place an anchor with the Inkscape Music Glyph Toolkit: its export reads the **bottom-centre of the `stem-up` rect** and the **top-centre of the `stem-down` rect**. For a centre anchor, centre both rects on x = 0, put the `stem-up` rect's bottom edge on y = 0 and the `stem-down` rect's top edge on y = 0.
 
 A custom clef definition is an alist: required `(path . <command list>)` (same format as notehead paths) and `(anchor-semitones . <number>)` — the semitone position of the glyph's **top edge**, a float per the Configurator's anchor contract — plus optional `(height-semitones . <positive number>)` (design height; the explicit `cnb:clef-size-semitones` override wins) and `(color . "#RRGGBB")`. Select it with `cnb:clef-style 'custom` + `cnb:clef-name`.
 

@@ -81,6 +81,12 @@
 
     %% --- STEM PROPERTIES ---
 
+    %% Draw stems ABOVE noteheads. A stem anchored inside its head (a
+    %% centre anchor, '(0 . 0)) crosses the head, and on a hollow head the
+    %% hole: drawn under the head, it would be hidden by the head's ring
+    %% and, in false-hollow mode, by the white overlay.
+    \override Stem.layer = #1000
+
     %% Prevent stems from extending beyond the staff for short notes.
     %% (In chromatic notation, the "natural" stem extension rules from
     %% standard notation don't apply because the staff geometry is different.)

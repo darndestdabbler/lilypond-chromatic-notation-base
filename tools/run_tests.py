@@ -169,6 +169,24 @@ def make_count_helper(elements_by_id):
     return count
 
 
+def make_order_helper(harvested):
+    """Create the order() helper for use in eval expressions.
+
+    order('st-1-0.000-0') -> the index of the element's first occurrence
+    in the harvest, which is SVG document order: a larger index is drawn
+    later, on top.
+    """
+    first = {}
+    for i, el in enumerate(harvested.get("elements", [])):
+        first.setdefault(el["id"], i)
+
+    def order(element_id):
+        if element_id not in first:
+            raise ValueError(f"Element '{element_id}' not found")
+        return first[element_id]
+    return order
+
+
 def make_eval_namespace(v, elements_by_id, harvested,
                         lilypond=BASELINE_VERSION):
     """Build the restricted namespace for eval().
@@ -178,6 +196,7 @@ def make_eval_namespace(v, elements_by_id, harvested,
       - el: all elements dict
       - prop: cross-element property lookup
       - count: element type counter
+      - order: an element's index in SVG document order (drawn later = larger)
       - staff: staff geometry
       - measures: measure boundaries
       - lilypond: the LilyPond version under test, 'X.Y'
@@ -210,6 +229,7 @@ def make_eval_namespace(v, elements_by_id, harvested,
         "el": elements_by_id,
         "prop": make_prop_helper(elements_by_id),
         "count": make_count_helper(elements_by_id),
+        "order": make_order_helper(harvested),
         "staff": harvested.get("staff", {}),
         "measures": harvested.get("measures", {}),
         "lilypond": lilypond,
@@ -481,19 +501,21 @@ def harvest_differences(baseline, harvested):
 
 
 def save_harvest(harvested, harvest_path, update_baselines=False):
-    """Write a regenerated harvest unless it drifts from the tracked one.
+    """Write a regenerated harvest only when there is no tracked one yet, or
+    with update_baselines.
 
-    With no tracked harvest yet, or with update_baselines, the file is
-    written. Otherwise a drifted harvest leaves the file untouched and its
-    differences are returned; an empty list means nothing was refused.
+    Otherwise the tracked file is never rewritten: a drifted harvest leaves
+    it untouched and its differences are returned, and a harvest with no
+    differences leaves it untouched too -- harvest_differences ignores
+    element order, so an equal harvest whose elements merely come in a
+    different order must not churn the baseline. An empty list means
+    nothing was refused.
     """
     # Round-trip so the comparison sees exactly what would be written.
     harvested = json.loads(json.dumps(harvested, default=str))
     if os.path.exists(harvest_path) and not update_baselines:
         with open(harvest_path, encoding="utf-8") as f:
-            diffs = harvest_differences(json.load(f), harvested)
-        if diffs:
-            return diffs
+            return harvest_differences(json.load(f), harvested)
     with open(harvest_path, "w", encoding="utf-8") as f:
         json.dump(harvested, f, indent=2)
     return []

@@ -93,6 +93,14 @@ class SaveHarvestTest(unittest.TestCase):
         self.write_baseline()
         self.assertEqual(save_harvest(copy.deepcopy(HARVEST), self.path), [])
 
+    def test_reordered_equal_harvest_leaves_baseline_byte_identical(self):
+        before = self.write_baseline()
+        reordered = copy.deepcopy(HARVEST)
+        reordered["elements"].reverse()
+        self.assertEqual(save_harvest(reordered, self.path), [])
+        with open(self.path, "rb") as f:
+            self.assertEqual(f.read(), before)
+
     def test_drift_fails_and_leaves_baseline_untouched(self):
         before = self.write_baseline()
         changed = copy.deepcopy(HARVEST)
@@ -198,6 +206,37 @@ class LilypondInExpressionsTest(unittest.TestCase):
 
     def test_run_single_test_passes_its_version(self):
         self.assertEqual(self._run("2.26"), (0, 1, 1, 0))
+
+
+class OrderHelperTest(unittest.TestCase):
+    """order(id) is the element's index in SVG document order."""
+
+    HARVEST = {"elements": [
+        {"id": "nh-1", "type": "notehead"},
+        {"id": "st-1", "type": "stem"},
+        {"id": "nh-1", "type": "notehead"},
+    ]}
+    ELEMENTS = {el["id"]: el for el in HARVEST["elements"]}
+
+    def order(self):
+        return make_eval_namespace(None, self.ELEMENTS, self.HARVEST)["order"]
+
+    def test_document_order(self):
+        self.assertLess(self.order()("nh-1"), self.order()("st-1"))
+
+    def test_repeated_id_takes_its_first_occurrence(self):
+        self.assertEqual(self.order()("nh-1"), 0)
+
+    def test_unknown_id_raises(self):
+        with self.assertRaises(ValueError):
+            self.order()("st-9")
+
+    def test_expression_reads_the_order(self):
+        assertion = {"id": "st-1",
+                     "expect": {"type": ["order('st-1') > order('nh-1')"]}}
+        [result] = check_element_assertions(
+            self.ELEMENTS["st-1"], assertion, self.ELEMENTS, self.HARVEST)
+        self.assertIs(result["passed"], True)
 
 
 class DeclaredAbsenceTest(unittest.TestCase):
