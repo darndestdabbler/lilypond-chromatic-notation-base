@@ -418,3 +418,153 @@ found visible engraving errors that every suite passed:
    change.
 
 ### Session 16: Release 1.1.1 (release: 1.1.1)
+
+### Session 17: Stems attached at the notehead centre
+
+**Why.** The operator's second reference notation, 45deg-369 (plan:
+`D:\projects\chromatic-notation-musicxml-and-45deg-plan.md`, §3), attaches
+every stem at the centre of a 45°-tilted ellipse, so the stem crosses the
+head and, on a hollow head, the hole. The toolkit already exports a centre
+anchor (`'(0 . 0)`) when the `stem-up` rect's bottom edge and the
+`stem-down` rect's top edge sit on the origin, and `cnb:stem-attachment`
+passes any point through. Nothing has proved what the engine draws with
+it: whether the stem's far end still reaches the standard length past
+the head's far edge or shrinks by half a head, and whether the stem is
+drawn over the head or hidden under a false-hollow white overlay.
+
+1. Register.
+2. Add an integration spec, `tests/stem-centre.ly` plus its `.json`,
+   on both versions. Its small config registers one solid and one
+   true-hollow ellipse (a 4-semitone head, like Kite) whose attachment
+   alist is `(0 . 0)` for all four points, and it engraves stems up and
+   down, a minim, a beamed pair and a chord. Assert, per stem: its x is
+   the head's centre x; its near end is at the head's centre y; its far
+   end is the normal stem length beyond the head's far edge, not beyond
+   the centre (lengthen when the anchor is inside the head, never
+   shorten); and the stem is visible across a hollow head (draw order
+   or `Stem.layer`, and the false-hollow overlay must not cover it).
+   Fix what fails. Re-baseline nothing else: if an existing harvest
+   drifts, the fix is wrong.
+3. README, under the attachment-registration row: the anchor may be
+   anywhere, including the centre; what the engine does with length and
+   draw order. Note the toolkit rule (rect bottom-centre for up,
+   top-centre for down) so a designer can place one.
+
+### Session 18: One include makes any LilyPond score chromatic
+
+**Why.** On 2026-11-04 musicxml2ly output (Frescobaldi's *Import
+MusicXML* defaults, `--nd --nrp --npl --no-beaming`) engraved in Kite on
+2.24.2 and 2.26.0 with one `\include` added after `\version`: 20 of 20
+real scores that musicxml2ly turned into valid LilyPond, and 9 of 9
+LilyPond regression files (plan §1.2–1.3). But a plain score renders the
+heads at default staff size, small, and clips the instrument names at
+the left margin, because `\magnifyStaff #cnb:default-magnify` and
+`indent = #cnb:indent` are set by hand in every example score and not by
+the engine.
+
+1. Register.
+2. Add `cnb/score-defaults.ly`, included by `ChromaticNotationBase.ly`
+   unless `cnb:score-defaults` is `#f` before the include: a `\layout`
+   that applies `\magnifyStaff #cnb:default-magnify` to every `Staff`,
+   and a `\paper` with `indent = #cnb:indent` and whatever else every
+   example score sets that a converted score lacks (compare
+   `joy-to-the-world.ly`). A score's own `\paper` and `\layout` still win.
+   Run both integration suites: a spec that drifts set a different value
+   by hand, so that spec opts out with the flag rather than the baseline
+   moving. Add a spec `tests/from-musicxml.ly` whose music is the
+   committed musicxml2ly output of the Kainhofer file
+   `21d-Chords-SchubertStabatMater.xml` with only the include line
+   added; assert the magnified staff height and that the system's left
+   edge leaves room for the instrument name.
+3. README, new section "Starting from MusicXML" before the walkthrough:
+   Frescobaldi *File → Import/Export → Import MusicXML* with its default
+   boxes (page layout, beaming, rest positions and articulation
+   directions all unchecked), the one include line, the engine's
+   defaults and the opt-out flag; the three musicxml2ly failures seen on
+   real scores (`cresc. = #(make-dynamic-script …)`, note names like
+   `fisisisisisis`, the nested-tuplet crash) with the fix for each; and
+   MusicFormats `xml2ly` as the fallback converter.
+
+### Session 19: MusicXML smoke tier and the corpus gate
+
+**Why.** The Kainhofer "Unofficial MusicXML test suite" (MIT; the
+cuthbertLab fork is at `D:\musicxmlTestSuite-main`) exercises what the
+engine touches with files small enough to run on every close. Real
+scores (`D:\MusicXML`, 30 MuseScore, Finale and music21 exports, mostly
+unlicensed, so never committed) take up to 82 s each and belong to a
+gate run before a release. Plan §1.3 is the first corpus table.
+
+1. Register.
+2. Vendor the subset into `tests/musicxml/`, with the suite's `LICENSE`
+   beside it: pitches (01a–01e), rests (02a–02c), rhythm (03a–03d),
+   clefs (12a, 12b), key signatures (13a–13e), chords (21a–21h),
+   noteheads (22a–22d), tuplets (23a–23f), grace notes (24a–24h), ties
+   and slurs (33b, 33c, 33g, 33i, 33k), multi-part (41a–41d), multi-voice
+   (42a, 42b) and lyrics (61a–61k). Not the page-layout, direction or
+   notation-marking files. `tools/run_musicxml.py --lilypond-version X.Y`
+   finds musicxml2ly beside the chosen `lilypond` (on Windows
+   `bin\python.exe bin\musicxml2ly.py`, elsewhere `musicxml2ly` on
+   `PATH`; otherwise exit non-zero naming what is missing), converts each
+   file with `--nd --nrp --npl --no-beaming`, adds the Kite include,
+   engraves to the ignored `out/musicxml/`, and passes a file when both
+   exit 0 and the LilyPond log has no `error:` or `programming error`
+   line other than those listed for that file in `tests/musicxml/expect.json`.
+   A file listed there as a known musicxml2ly defect must still fail,
+   and passing is reported as an error, so the list cannot go stale.
+   musicxml2ly's own warnings are never failures. Declare the suite
+   `engine-musicxml` in `dabbler.yaml` (`expensive`, `whole_at_close`,
+   `runs_whole`, covering `cnb/`, `tests/musicxml/` and the tool), and
+   its 2.26 twin. Tests in `tools/test_run_musicxml.py` cover
+   resolution, the allowlist, the stale-expectation error and a missing
+   converter.
+3. `tools/run_corpus.py DIR [--max-bytes N] [--lilypond-version X.Y]`
+   runs the same pipeline over a directory of real scores and writes
+   `docs/runs/corpus-<date>.md`: file, convert exit, engrave exit,
+   seconds, musicxml2ly warning count, `-inf` count, pages. It compares
+   with the newest earlier table and exits non-zero when a file that
+   passed before fails now. Commit plan §1.3 as
+   `docs/runs/corpus-2026-11-04.md`, in that format, as the first
+   baseline. `docs/INTEGRATION-TESTING.md` names this the step before
+   every release session, run on `D:\MusicXML`, and says why the corpus
+   itself is not in the repository.
+
+### Session 20: Fix what the corpus found
+
+**Why.** Two defects are the engine's, not musicxml2ly's (plan §1.3):
+the plain conversions are clean of both.
+
+1. Register.
+2. `programming error: Improbable offset for stencil: -inf staff space`
+   appears only with a config, in 5 of 20 scores (Ave Maria, Spring
+   Waltz, Arabesque, Ständchen, BWV 140/1), always a multiple of 8, and
+   not from cautionary accidentals (those files have none). Reproduce
+   from the smallest (Ave Maria, 2 pages, in `D:\MusicXML`), bisect the
+   converted score to a minimal spec, fix the stencil, and add the spec
+   to `tests/`. Record what the trigger was in the session notes and
+   the CHANGELOG.
+3. Cautionary and forced accidentals (`gis?`, `c!`) print as
+   parenthesised traditional glyphs: `cnb/layout.ly` blanks
+   `Accidental.stencil` only, and LilyPond draws cautionary ones with
+   the separate `AccidentalCautionary` grob (and suggestions with
+   `AccidentalSuggestion`). Suppress those the same way, in the same
+   place, and extend the accidentals spec with `?` and `!` notes
+   asserting that nothing is drawn. Re-run the corpus gate
+   (`tools/run_corpus.py D:\MusicXML`) and commit its table: the `-inf`
+   column must be zero everywhere.
+
+### Session 21: Document 1.2.0
+
+1. Register.
+2. README: the "Starting from MusicXML" section is final; the test
+   section reports the smoke tier's real counts on 2.24 and 2.26 and
+   names the corpus gate; the stem-attachment paragraph from session 17.
+   `dabbler.yaml`'s header comment describes `engine-musicxml` the way it
+   describes the others. `docs/INTEGRATION-TESTING.md` covers
+   `run_musicxml.py` and `run_corpus.py`.
+3. `CHANGELOG.md` 1.2.0: score defaults now applied by the engine and
+   how to opt out (a score that set its own magnification may now be
+   magnified twice: say so); `AccidentalCautionary` suppressed; the
+   `-inf` stencil fix and its trigger; centre-anchored stems; the
+   MusicXML tier and the corpus gate. `version.json` to `1.2.0`.
+
+### Session 22: Release 1.2.0 (release: 1.2.0)
