@@ -266,3 +266,28 @@ python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly
 ```
 
 This renders the `.ly` file, harvests the SVG, and writes the version's `.harvested.json` baseline showing all element positions and properties. Use this output to write assertion specs. An existing baseline is not overwritten: to change one, run its spec with `--update-baselines` (or add `--update-baselines` to `--generate`).
+
+
+## MusicXML Corpus Gate
+
+The step before every release session is the corpus gate, run on this
+machine's corpus of real scores:
+
+```bash
+python tools/run_corpus.py D:\MusicXML --lilypond-version 2.24
+```
+
+It converts each score with musicxml2ly (Frescobaldi's import defaults),
+adds the Kite include, and engraves it, as the MusicXML smoke tier does.
+Then it writes the table `docs/runs/corpus-<date>.md`: per file, the
+convert and engrave exits, seconds, musicxml2ly warnings, `-inf` lines and
+pages. Files over `--max-bytes` (default 5 MB) are skipped. Commit the
+table with the release work. The run fails, naming each file, when a file
+that passed in the newest earlier table (both exits 0) fails now.
+`docs/runs/corpus-2026-11-04.md` is the first baseline.
+
+The corpus itself is not in the repository. Most of its scores carry no
+licence: they are MuseScore.com uploads whose engraving is the uploader's.
+Several are also tens of megabytes. The smoke tier in `tests/musicxml/`
+is the part that can be committed: a subset of the MIT-licensed
+Unofficial MusicXML test suite, small enough to run on every close.

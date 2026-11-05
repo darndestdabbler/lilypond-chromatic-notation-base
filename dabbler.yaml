@@ -90,6 +90,28 @@ testing:
         - tools/run_unit.py
         - tools/run_tests.py
         - tools/harvest_svg.py
+    - name: engine-musicxml
+      command: python tools/run_musicxml.py --lilypond-version 2.24
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tests/musicxml/
+        - tools/run_musicxml.py
+        - ChromaticNotationBase.ly
+        - kite-4-369-from-configurator.ly
+    - name: engine-musicxml-2.26
+      command: python tools/run_musicxml.py --lilypond-version 2.26
+      expensive: true
+      whole_at_close: true
+      runs_whole: true
+      covers:
+        - cnb/
+        - tests/musicxml/
+        - tools/run_musicxml.py
+        - ChromaticNotationBase.ly
+        - kite-4-369-from-configurator.ly
     - name: engine-tooling
       command: python -m unittest discover -s tools -p "test_*.py"
       runs_whole: true

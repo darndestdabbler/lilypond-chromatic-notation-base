@@ -1,0 +1,35 @@
+{
+  "_comment": "Files from the Unofficial MusicXML test suite (Reinhold Kainhofer; cuthbertLab fork, MIT, see LICENSE) that tools/run_musicxml.py does not expect to engrave cleanly, and why. A \"defect\" entry must still fail; its passing is an error. See that tool's docstring for the format.",
+  "02a-Rests-Durations.xml": {
+    "defect": "engine, session 20: with the Kite include LilyPond reports 'Improbable offset for stencil: inf/-inf staff space' and 'Infinity or NaN encountered' on the rests, then aborts on a skyline assertion (exit 3); the plain conversion engraves cleanly"
+  },
+  "02b-Rests-PitchedRests.xml": {
+    "defect": "engine, session 20: the -inf/inf stencil offset on rests aborts LilyPond (exit 3), as 02a; clean without the Kite include"
+  },
+  "02c-Rests-MultiMeasureRests.xml": {
+    "defect": "engine, session 20: the -inf/inf stencil offset on rests aborts LilyPond (exit 3), as 02a; clean without the Kite include"
+  },
+  "41b-MultiParts-MoreThan10.xml": {
+    "defect": "engine, session 20: 'Improbable offset for stencil: -inf staff space' with the Kite include only"
+  },
+  "24c-GraceNote-MeasureEnd.xml": {
+    "allow": ["No viable beam quanting found"],
+    "note": "engine, for session 20 to triage: with the Kite include only, LilyPond cannot quant a grace-note beam and places it unquanted"
+  },
+  "24d-AfterGrace.xml": {
+    "allow": ["No viable beam quanting found"],
+    "note": "engine, for session 20 to triage: as 24c"
+  },
+  "24e-GraceNote-StaffChange.xml": {
+    "allow": ["No viable beam quanting found"],
+    "note": "engine, for session 20 to triage: as 24c"
+  },
+  "61g-Lyrics-NameNumber.xml": {
+    "defect": "musicxml2ly 2.24 crashes: 'ValueError: No closing quotation' in shlex; 2.26's converts it",
+    "lilypond": ["2.24"]
+  },
+  "61k-Lyrics-SpannersExtenders.xml": {
+    "defect": "musicxml2ly 2.24 crashes: 'ValueError: No closing quotation' in shlex; 2.26's converts it",
+    "lilypond": ["2.24"]
+  }
+}
