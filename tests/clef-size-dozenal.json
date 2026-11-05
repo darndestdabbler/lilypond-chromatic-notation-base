@@ -1,0 +1,40 @@
+{
+  "test_name": "Dozenal clef obeys cnb:clef-size-semitones (set 005)",
+  "input_file": "clef-size-dozenal.ly",
+  "description": "cnb:clef-size-semitones 8 on the default sps-2 staff = 4 staff-spaces = 4/3 of the legacy 3-staff-space height. The dozenal display's two text anchors are separated horizontally by the scaled left-digit width, so the harvested bbox width scales linearly with the size setting: default renders w = 1.102 (tests/c-major-scale.json harvest, identical staff/config), so 8 semitones must render w = 1.102 * 4/3 = 1.469. The bbox HEIGHT is just the fixed 0.5 digit-anchor offset (text elements harvest as anchors, not glyph outlines) and is deliberately not asserted.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE SIZED CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The dozenal clef is engraved in measure 1",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: SEMITONE-DENOMINATED SIZE FLOWS INTO THE STENCIL ==="},
+
+    {
+      "id": "cl-1",
+      "description": "8 semitones = 4/3 of the default: bbox width 1.102 * 4/3 = 1.469",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 1.469) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the resized clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}
