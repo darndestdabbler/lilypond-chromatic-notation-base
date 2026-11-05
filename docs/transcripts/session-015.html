@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 015 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 015 transcript</h1>
+<p class="stamp">Rendered 2026-11-03T08:59:54.617Z by dabbler-ai-router 3.27.0 at 579d66681567cc188ca39cc9d20c7a393f4f7760.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-03T03:54:00.094-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 15: A clean public archive, and 1.1.1</h3>
+<ol><li>Register.</li><li>L5:</li></ol>
+<ul><li>Add <code>.gitattributes</code> <code>export-ignore</code> for <code>.vscode/</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>docs/sessions/</code>, <code>docs/transcripts/</code> and <code>docs/planning/</code>.</li><li>Re-render any tracked SVG that still carries a <code>textedit://D:/Projects/...</code> link with <code>-dno-point-and-click</code>.</li><li>Replace the <code>c:\Users\...</code> path in the findings file with a repository-relative one.</li><li>Prove it with <code>dabbler packaging --rehearse</code>: list the zip, and <code>grep</code> it for <code>textedit://</code>, <code>D:\</code> and <code>Users\</code>. None may appear.</li></ul>
+<ol><li>Set <code>version.json</code> to <code>1.1.1</code>, and add a <code>CHANGELOG.md</code> entry. Note that duration categories now follow the documented scale, so a hand-written config that relied on the old off-by-one numbering must change.</li></ol>
+<h2>Work Plan</h2>
+<p>Make the public source zip clean (audit L5) and set the version to 1.1.1. The findings file docs/session-sets/004-end-to-end-pipeline-verification/findings.md stops naming this machine's paths: its <code>c:\Users\denmi\source\repos\</code> path, and the <code>d:\Projects\chromatic-notation-configurator</code> paths in the same sentence and in its export command, become the sibling-relative <code>../chromatic-notation-configurator</code>. The five tracked evidence SVGs under docs/session-sets/008-pitch-axis-hook/s*-evidence/ that carry <code>textedit://D:/Projects/...</code> links are re-rendered from their own .ly files with LilyPond 2.24 and <code>-dno-point-and-click</code>; a trial render showed each comes out identical to the tracked file once links are removed, and a check proves that against fe23380. The literal strings the plan's grep looks for also occur in two tooling files that would ship: the <code>textedit://</code> in a tools/run_tests.py comment is reworded, and the <code>D:\ly\lilypond.exe</code> fixture in tools/test_run_tests.py becomes a path with no drive letter. A new .gitattributes marks <code>.vscode/</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>docs/sessions/</code>, <code>docs/transcripts/</code> and <code>docs/planning/</code> export-ignore. The proof is <code>dabbler packaging --rehearse</code> (the pack runs) and, because that pack archives HEAD and the session's work is committed only at the land, a check that archives the working tree the same way (<code>git archive --format=zip</code> of a tree written from a temporary index) and asserts that none of those paths is in the zip and that no entry contains <code>textedit://</code>, <code>D:\</code> or <code>Users\</code>. Finally version.json becomes 1.1.1 and CHANGELOG.md gains a 1.1.1 entry summarising sessions 12 to 15, stating that duration categories now follow the documented scale (breve 0, whole 1, half 2, quarter or shorter 3), so a hand-written config that relied on the old off-by-one numbering must change.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/29b2bf140a1537351e9313ab6678a4f951c4343e"><code>29b2bf140a1537351e9313ab6678a4f951c4343e</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Findings relative path</td><td><p>In docs/session-sets/004-end-to-end-pipeline-verification/findings.md, replace the <code>c:\Users\denmi\source\repos\</code> path and the <code>d:\Projects\chromatic-notation-configurator</code> path in the same sentence (lines 16-17) with the sibling-relative <code>../chromatic-notation-configurator</code>, and make the export command on line 32 <code>node ../chromatic-notation-configurator/cnb/fixtures/export-kite-4-369.mjs</code>. Change nothing else in the file.</p></td><td><span class="mono">docs/session-sets/004-end-to-end-pipeline-verification/findings.md</span></td><td><code>python -c import sys
+t = open('docs/session-sets/004-end-to-end-pipeline-verification/findings.md', encoding='utf-8').read()
+bad = [p for p in (':' + chr(92), 'Users' + chr(92)) if p in t]
+if '../chromatic-notation-configurator' not in t: bad.append('no sibling-relative path')
+print(bad); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Tooling literal paths</td><td><p>Reword the comment in tools/run_tests.py that says <code>-dno-point-and-click keeps textedit:// links ...</code> so it no longer contains the string <code>textedit://</code> (e.g. 'keeps point-and-click links, which embed the absolute path, out of the SVG'). In tools/test_run_tests.py replace the fixture path <code>D:\ly\lilypond.exe</code> (four occurrences) with a path that has no drive letter, such as <code>/opt/lilypond/bin/lilypond</code>; the tests assert only that the path is passed through.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code><br><code>python -c import sys
+bad = [(f, p) for f in ('tools/run_tests.py', 'tools/test_run_tests.py') for p in ('textedit://', 'D:' + chr(92), 'Users' + chr(92)) if p in open(f, encoding='utf-8').read()]
+print(bad); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Rerender evidence svgs</td><td><p>Re-render the five evidence SVGs from their own .ly files with LilyPond 2.24, from the repository root so the .ly files' includes resolve: <code>lilypond -I &lt;repo root&gt; -dbackend=svg -dno-point-and-click -o docs/session-sets/008-pitch-axis-hook/&lt;sN&gt;-evidence/&lt;name&gt; docs/session-sets/008-pitch-axis-hook/&lt;sN&gt;-evidence/&lt;name&gt;.ly</code> for s1-evidence/hook-parity, s2-evidence/collision-cases, s2-evidence/xoffset-cases, s2-evidence/xoffset-cases-ctrl and s3-evidence/keysig-clef-axis. Leave no other output (no extra pages or files) behind. Each SVG must lose its textedit:// links and be otherwise identical to the tracked version.</p></td><td><span class="mono">docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.svg</span><br><span class="mono">docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.svg</span><br><span class="mono">docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.svg</span><br><span class="mono">docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.svg</span><br><span class="mono">docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.svg</span></td><td><code>python -c import re, subprocess, sys
+st = lambda t: re.sub('&lt;/?a( [^&gt;]*)?&gt;' + chr(10) + '?', '', t)
+d = 'docs/session-sets/008-pitch-axis-hook/'
+bad = []
+for f in ('s1-evidence/hook-parity', 's2-evidence/collision-cases', 's2-evidence/xoffset-cases', 's2-evidence/xoffset-cases-ctrl', 's3-evidence/keysig-clef-axis'):
+    p = d + f + '.svg'
+    new = open(p, encoding='utf-8').read()
+    old = subprocess.run(['git', 'show', 'fe23380:' + p], capture_output=True, text=True, encoding='utf-8', check=True).stdout
+    if 'textedit://' in new: bad.append(p + ': textedit link')
+    if st(new) != st(old): bad.append(p + ': drawing changed')
+print(bad); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Export ignore</td><td><p>Add a .gitattributes at the repository root that marks <code>.vscode/</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>docs/sessions/</code>, <code>docs/transcripts/</code> and <code>docs/planning/</code> export-ignore, with a one-line comment saying they are process records kept out of the release zip. Use patterns git archive honours for directories (e.g. <code>/docs/sessions export-ignore</code>). The checks prove the whole of L5: the declared pack still runs, and an archive of the working tree (the same <code>git archive --format=zip</code>, of a tree written from a temporary index so uncommitted work is included) contains none of those paths, still contains the engine, and has no entry containing <code>textedit://</code>, <code>D:\</code> or <code>Users\</code>.</p></td><td><span class="mono">.gitattributes</span></td><td><code>dabbler packaging --rehearse --sessions-dir docs/sessions</code><br><code>python -c import io, os, subprocess, sys, tempfile, zipfile
+env = dict(os.environ, GIT_INDEX_FILE=os.path.join(tempfile.mkdtemp(), 'index'))
+g = lambda *a: subprocess.run(['git', *a], env=env, capture_output=True, check=True).stdout
+g('read-tree', 'HEAD'); g('add', '-A')
+tree = g('write-tree').decode().strip()
+z = zipfile.ZipFile(io.BytesIO(g('archive', '--format=zip', tree)))
+names = z.namelist()
+print(len(names), 'entries')
+bad = [n for n in names if n.startswith(('.vscode/', 'docs/sessions/', 'docs/transcripts/', 'docs/planning/')) or n in ('AGENTS.md', 'CLAUDE.md')]
+bad += [n + ': missing' for n in ('ChromaticNotationBase.ly', 'cnb/utils.ly', 'tools/run_tests.py', 'README.md', 'LICENSE') if n not in names]
+bs = bytes([92])
+for n in names:
+    data = z.read(n)
+    bad += [n + ': ' + p.decode() for p in (b'textedit://', b'D:' + bs, b'Users' + bs) if p in data]
+print(bad); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Version 1 1 1</td><td><p>Set version.json to <code>{ &quot;version&quot;: &quot;1.1.1&quot; }</code> and add a <code>## 1.1.1</code> entry at the top of CHANGELOG.md, in the style of the existing entries, summarising sessions 12 to 15 from their commits: duration categories now follow the documented scale (breve 0, whole 1, half 2, quarter or shorter 3) and ignore dots and tuplets, so a hand-written config that relied on the old off-by-one numbering must change; dots move off ledger lines by one staff position; a mid-score key change no longer rewrites earlier stems' attachment; the test runner fails a broken render; the harvester records drawn geometry (bbox of circles, ellipses, polygons and polylines, and visual.shape_hash); the unused articulation and beam/stem compensation code is removed; and the source zip leaves out process records and local paths.</p></td><td><span class="mono">version.json</span><br><span class="mono">CHANGELOG.md</span></td><td><code>python -c import json, sys
+v = json.load(open('version.json', encoding='utf-8'))['version']
+c = open('CHANGELOG.md', encoding='utf-8').read()
+heads = [l for l in c.splitlines() if l.startswith('## ')]
+ok = v == '1.1.1' and heads[:2] == ['## 1.1.1', '## 1.1.0'] and 'off-by-one' in c
+print(v, heads[:2]); sys.exit(0 if ok else 1)
+</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>Publishing 1.1.1: the release is a session of its own (Session 16).</li><li>Excluding docs/session-sets/ from the archive or rewriting its other records: the plan names only the six export-ignore paths and the findings file, so other session-set files keep their lowercase <code>d:\Projects\chromatic-notation-configurator</code> references to the sibling repository.</li><li>Re-harvesting or changing the evidence .ly, .harvested.json, measurement scripts or transcripts under docs/session-sets/008-pitch-axis-hook/: only the five SVGs are re-rendered, and their drawing must not change.</li><li>Changing the packaging declaration in dabbler.yaml, or any engine (cnb/, *.ly) or harvester behaviour.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[08:54:00]</span> <span class="muted">run-started</span> session=015 mode=pull</div>
+<div class="line"><span class="at">[08:54:00]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[08:57:08]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[08:57:08]</span> <span class="muted">plan-accepted</span> steps=[&quot;findings-relative-path&quot;,&quot;tooling-literal-paths&quot;,&quot;rerender-evidence-svgs&quot;,&quot;export-ignore&quot;,&quot;version-1-1-1&quot;] non_goals=4</div>
+<div class="line"><span class="at">[08:57:09]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[08:57:09]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=findings-relative-path</div>
+<div class="line"><span class="at">[08:57:25]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:57:26]</span> <span class="muted">check-passed</span> step=findings-relative-path argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys\nt = open('docs/session-sets/004-end-to-end-pipeline-verification/findings.md', encoding='utf-8').read()\nbad = [p for p in (':' + chr(92), 'Users' + chr(92)) if p in t]\nif '../chromatic-notation-configurator' not in t: bad.append('no sibling-relative path')\nprint(bad); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[08:57:26]</span> <span class="muted">report-accepted</span> seq=2 step=findings-relative-path files=[&quot;docs/session-sets/004-end-to-end-pipeline-verification/findings.md&quot;] notes=findings.md names the Configurator by the sibling-relative ../chromatic-notation-configurator in the sentence and the export command; no drive or user paths remain</div>
+<div class="line"><span class="at">[08:57:26]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=tooling-literal-paths</div>
+<div class="line"><span class="at">[08:57:43]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:57:43]</span> <span class="muted">check-passed</span> step=tooling-literal-paths argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[08:57:43]</span> <span class="muted">check-passed</span> step=tooling-literal-paths argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys\nbad = [(f, p) for f in ('tools/run_tests.py', 'tools/test_run_tests.py') for p in ('textedit://', 'D:' + chr(92), 'Users' + chr(92)) if p in open(f, encoding='utf-8').read()]\nprint(bad); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[08:57:43]</span> <span class="muted">report-accepted</span> seq=3 step=tooling-literal-paths files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=Reworded the point-and-click comment in run_tests.py and gave the four resolve_lilypond fixture paths no drive letter; test_run_tests.py passes</div>
+<div class="line"><span class="at">[08:57:43]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=rerender-evidence-svgs</div>
+<div class="line"><span class="at">[08:58:00]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:58:00]</span> <span class="muted">check-passed</span> step=rerender-evidence-svgs argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import re, subprocess, sys\nst = lambda t: re.sub('&lt;/?a( [^&gt;]*)?&gt;' + chr(10) + '?', '', t)\nd = 'docs/session-sets/008-pitch-axis-hook/'\nbad = []\nfor f in ('s1-evidence/hook-parity', 's2-evidence/collision-cases', 's2-evidence/xoffset-cases', 's2-evidence/xoffset-cases-ctrl', 's3-evidence/keysig-clef-axis'):\n    p = d + f + '.svg'\n    new = open(p, encoding='utf-8').read()\n    old = subprocess.run(['git', 'show', 'fe23380:' + p], capture_output=True, text=True, encoding='utf-8', check=True).stdout\n    if 'textedit://' in new: bad.append(p + ': textedit link')\n    if st(new) != st(old): bad.append(p + ': drawing changed')\nprint(bad); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[08:58:00]</span> <span class="muted">report-accepted</span> seq=4 step=rerender-evidence-svgs files=[&quot;docs/session-sets/008-pitch-axis-hook/s1-evidence/hook-parity.svg&quot;,&quot;docs/session-sets/008-pitch-axis-hook/s2-evidence/collision-cases.svg&quot;,&quot;docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases.svg&quot;,&quot;docs/session-sets/008-pitch-axis-hook/s2-evidence/xoffset-cases-ctrl.svg&quot;,&quot;docs/session-sets/008-pitch-axis-hook/s3-evidence/keysig-clef-axis.svg&quot;] notes=Re-rendered the five evidence SVGs with LilyPond 2.24.2 and -dno-point-and-click; each is identical to fe23380 once links are stripped, and none carries textedit://</div>
+<div class="line"><span class="at">[08:58:00]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=export-ignore</div>
+<div class="line"><span class="at">[08:58:13]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:58:14]</span> <span class="muted">check-passed</span> step=export-ignore argv=[&quot;dabbler&quot;,&quot;packaging&quot;,&quot;--rehearse&quot;,&quot;--sessions-dir&quot;,&quot;docs/sessions&quot;]</div>
+<div class="line"><span class="at">[08:58:14]</span> <span class="muted">check-passed</span> step=export-ignore argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import io, os, subprocess, sys, tempfile, zipfile\nenv = dict(os.environ, GIT_INDEX_FILE=os.path.join(tempfile.mkdtemp(), 'index'))\ng = lambda *a: subprocess.run(['git', *a], env=env, capture_output=True, check=True).stdout\ng('read-tree', 'HEAD'); g('add', '-A')\ntree = g('write-tree').decode().strip()\nz = zipfile.ZipFile(io.BytesIO(g('archive', '--format=zip', tree)))\nnames = z.namelist()\nprint(len(names), 'entries')\nbad = [n for n in names if n.startswith(('.vscode/', 'docs/sessions/', 'docs/transcripts/', 'docs/planning/')) or n in ('AGENTS.md', 'CLAUDE.md')]\nbad += [n + ': missing' for n in ('ChromaticNotationBase.ly', 'cnb/utils.ly', 'tools/run_tests.py', 'README.md', 'LICENSE') if n not in names]\nbs = bytes([92])\nfor n in names:\n    data = z.read(n)\n    bad += [n + ': ' + p.decode() for p in (b'textedit://', b'D:' + bs, b'Users' + bs) if p in data]\nprint(bad); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[08:58:15]</span> <span class="muted">report-accepted</span> seq=5 step=export-ignore files=[&quot;.gitattributes&quot;] notes=New .gitattributes export-ignores .vscode, AGENTS.md, CLAUDE.md, docs/sessions, docs/transcripts, docs/planning; an archive of the working tree has 199 entries, none of them, and no textedit://, D:\ or Users\</div>
+<div class="line"><span class="at">[08:58:15]</span> <span class="muted">instruction-issued</span> seq=6 kind=step step=version-1-1-1</div>
+<div class="line"><span class="at">[08:58:31]</span> <span class="muted">run-resumed</span> session=015 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:58:32]</span> <span class="muted">check-passed</span> step=version-1-1-1 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys\nv = json.load(open('version.json', encoding='utf-8'))['version']\nc = open('CHANGELOG.md', encoding='utf-8').read()\nheads = [l for l in c.splitlines() if l.startswith('## ')]\nok = v == '1.1.1' and heads[:2] == ['## 1.1.1', '## 1.1.0'] and 'off-by-one' in c\nprint(v, heads[:2]); sys.exit(0 if ok else 1)\n&quot;]</div>
+<div class="line"><span class="at">[08:58:32]</span> <span class="muted">report-accepted</span> seq=6 step=version-1-1-1 files=[&quot;version.json&quot;,&quot;CHANGELOG.md&quot;] notes=version.json is 1.1.1; CHANGELOG.md gains a 1.1.1 entry for sessions 12-15, noting that duration categories follow the documented scale and an off-by-one hand-written config must change</div>
+<div class="line"><span class="at">[08:58:32]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:58:32]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:58:32]</span> <span class="muted">job-started</span> name=verification pid=3856 log=.dabbler/runs/s15/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:59:21]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:59:21]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[08:59:21]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[08:59:21]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:59:21]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=17456 log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:59:28]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:59:28]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:59:28]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=9616 log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:59:30]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:59:30]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:59:30]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=37520 log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:59:37]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:59:37]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:59:37]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=19284 log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:59:38]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:59:38]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[08:59:42]</span> <span class="muted">landed</span> commit=29b2bf140a1537351e9313ab6678a4f951c4343e</div>
+<div class="line"><span class="at">[08:59:42]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[08:59:42]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[08:59:42]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[08:59:42]</span> <span class="muted">job-started</span> name=close pid=18852 log=.dabbler/runs/s15/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:59:54]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s15/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:59:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>7s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>6s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

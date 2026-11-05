@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 010 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 010 transcript</h1>
+<p class="stamp">Rendered 2026-10-31T09:29:37.551Z by dabbler-ai-router 3.27.0 at 39dfd46c51adfa367d187e07b72bc89a01845f25.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-10-31T05:23:12.967-04:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 10: Document LilyPond 2.26 support and bump to 1.1.0</h3>
+<ol><li>Register.</li><li>README:</li></ol>
+<ul><li>Requirements says LilyPond 2.24.x or 2.26.x. Replace the &quot;2.26 is not supported yet&quot; paragraph, and the Known limitations bullet, with what was measured.</li><li>&quot;Running the tests&quot; names all five suites exactly as <code>dabbler.yaml</code> declares them. Explain <code>--lilypond-version</code> and the <code>CNB_LILYPOND_X_Y</code> variable, and say that a contributor with only one version installed runs that version's suites.</li></ul>
+<ol><li>Set <code>version.json</code> to <code>{ &quot;version&quot;: &quot;1.1.0&quot; }</code>. Add a short <code>CHANGELOG.md</code> with 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).</li></ol>
+<h2>Work Plan</h2>
+<p>Document the LilyPond 2.26 support that session 9 delivered and bump the release version to 1.1.0. In README.md, Requirements names LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), and the &quot;2.26 is not supported yet&quot; paragraph and the Known limitations bullet are replaced with what was measured: all suites pass on both versions, each version has its own harvest baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/*.harvested.json for 2.26), and 2.26 lays scores out slightly differently (uniform vertical staff offset, small horizontal spacing shifts after the clef and key signature, the clef gutter's full width), as recorded in section 7.7 of docs/planning/project-plan.md. &quot;Running the tests&quot; lists all five suites exactly as dabbler.yaml declares them, explains --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH that reports X.Y), and says that a contributor with only one version installed runs that version's suites. version.json becomes { &quot;version&quot;: &quot;1.1.0&quot; }, the README status line says 1.1.0, and a short CHANGELOG.md records 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/9b3b3818be27ea847b6e60b1db14fbda75e19a86"><code>9b3b3818be27ea847b6e60b1db14fbda75e19a86</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Readme requirements</td><td><p>In README.md, make Requirements name LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), replace the '2.26 is not supported yet' paragraph with a short account of what was measured on 2.26 (all suites pass; separate harvest baselines; the layout differences recorded in section 7.7 of docs/planning/project-plan.md), and replace the 'LilyPond 2.24.x only' Known limitations bullet accordingly.</p></td><td><span class="mono">README.md</span></td><td><code>python -c import sys; t = open('README.md', encoding='utf-8').read(); sys.exit(0 if 'not supported yet' not in t and 'LilyPond 2.24.x only' not in t and '2.26.x' in t and 'tests/lilypond-2.26/' in t else 1)</code></td><td>yes</td></tr>
+<tr><td>Readme running tests</td><td><p>In README.md's 'Running the tests', list all five suites (engine-integration, engine-unit, engine-integration-2.26, engine-unit-2.26, engine-tooling) with their commands exactly as dabbler.yaml declares them, explain --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH if it reports X.Y), and say that a contributor with only one version installed runs that version's suites. Update the unit and integration command examples to match.</p></td><td><span class="mono">README.md</span></td><td><code>python -c import sys; t = open('README.md', encoding='utf-8').read(); need = ['`engine-integration`', '`engine-unit`', '`engine-integration-2.26`', '`engine-unit-2.26`', '`engine-tooling`', 'python tools/run_tests.py --lilypond-version 2.24', 'python tools/run_unit.py --lilypond-version 2.24', 'python tools/run_tests.py --lilypond-version 2.26', 'python tools/run_unit.py --lilypond-version 2.26', 'CNB_LILYPOND_X_Y']; missing = [n for n in need if n not in t]; print(missing); sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+<tr><td>Version changelog</td><td><p>Set version.json to { &quot;version&quot;: &quot;1.1.0&quot; }, change the README status line to 1.1.0, and add a short CHANGELOG.md with entries for 1.1.0 (LilyPond 2.26 support; harvest baselines per version) and 1.0.0 (first release).</p></td><td><span class="mono">version.json</span><br><span class="mono">README.md</span><br><span class="mono">CHANGELOG.md</span></td><td><code>python -c import json, sys; v = json.load(open('version.json', encoding='utf-8')); c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); sys.exit(0 if v == {'version': '1.1.0'} and '1.1.0' in c and '1.0.0' in c and 'Status: 1.1.0' in r else 1)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No change to the engine (cnb/), the test tooling (tools/), the tests or dabbler.yaml: this session documents what session 9 built.</li><li>No packing or publishing of 1.1.0: a release is a session of its own.</li><li>No rewrite of README sections beyond Requirements, Running the tests, Known limitations and the status line; INTEGRATION-TESTING.md is left as it is.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[09:23:12]</span> <span class="muted">run-started</span> session=010 mode=pull</div>
+<div class="line"><span class="at">[09:23:13]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[09:24:21]</span> <span class="muted">run-resumed</span> session=010 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[09:24:21]</span> <span class="muted">plan-accepted</span> steps=[&quot;readme-requirements&quot;,&quot;readme-running-tests&quot;,&quot;version-changelog&quot;] non_goals=3</div>
+<div class="line"><span class="at">[09:24:23]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[09:24:23]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=readme-requirements</div>
+<div class="line"><span class="at">[09:25:03]</span> <span class="muted">run-resumed</span> session=010 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:25:06]</span> <span class="muted">check-passed</span> step=readme-requirements argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); sys.exit(0 if 'not supported yet' not in t and 'LilyPond 2.24.x only' not in t and '2.26.x' in t and 'tests/lilypond-2.26/' in t else 1)&quot;]</div>
+<div class="line"><span class="at">[09:25:07]</span> <span class="muted">report-accepted</span> seq=2 step=readme-requirements files=[&quot;README.md&quot;] notes=Requirements names LilyPond 2.24.x or 2.26.x and summarises the measured 2.26 differences from project-plan 7.7; Known limitations bullet updated</div>
+<div class="line"><span class="at">[09:25:07]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=readme-running-tests</div>
+<div class="line"><span class="at">[09:25:44]</span> <span class="muted">run-resumed</span> session=010 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:25:50]</span> <span class="muted">check-passed</span> step=readme-running-tests argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); need = ['`engine-integration`', '`engine-unit`', '`engine-integration-2.26`', '`engine-unit-2.26`', '`engine-tooling`', 'python tools/run_tests.py --lilypond-version 2.24', 'python tools/run_unit.py --lilypond-version 2.24', 'python tools/run_tests.py --lilypond-version 2.26', 'python tools/run_unit.py --lilypond-version 2.26', 'CNB_LILYPOND_X_Y']; missing = [n for n in need if n not in t]; print(missing); sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[09:25:51]</span> <span class="muted">report-accepted</span> seq=3 step=readme-running-tests files=[&quot;README.md&quot;] notes=Running the tests lists the five dabbler.yaml suites, explains --lilypond-version and CNB_LILYPOND_X_Y, and says a one-version contributor runs that version's suites; examples updated</div>
+<div class="line"><span class="at">[09:25:51]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=version-changelog</div>
+<div class="line"><span class="at">[09:26:17]</span> <span class="muted">run-resumed</span> session=010 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:26:19]</span> <span class="muted">check-passed</span> step=version-changelog argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; v = json.load(open('version.json', encoding='utf-8')); c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); sys.exit(0 if v == {'version': '1.1.0'} and '1.1.0' in c and '1.0.0' in c and 'Status: 1.1.0' in r else 1)&quot;]</div>
+<div class="line"><span class="at">[09:26:20]</span> <span class="muted">report-accepted</span> seq=4 step=version-changelog files=[&quot;version.json&quot;,&quot;README.md&quot;,&quot;CHANGELOG.md&quot;] notes=version.json is 1.1.0, README status line says 1.1.0 with current assertion counts, CHANGELOG.md records 1.1.0 and 1.0.0</div>
+<div class="line"><span class="at">[09:26:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[09:26:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[09:26:22]</span> <span class="muted">job-started</span> name=verification pid=72728 log=.dabbler/runs/s10/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:26:52]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:26:52]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[09:26:52]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[09:26:55]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:26:56]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=50476 log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:27:11]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:27:14]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:27:16]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=63576 log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:27:25]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:27:27]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:27:28]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=25248 log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:27:37]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="bad">1</span> log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:27:37]</span> <span class="muted">tests-failed</span> command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:27:37]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=fix-run-of-record</div>
+<div class="line"><span class="at">[09:28:11]</span> <span class="muted">run-resumed</span> session=010 phase=<span class="milestone">run-of-record</span> mode=pull</div>
+<div class="line"><span class="at">[09:28:20]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); sys.exit(0 if 'not supported yet' not in t and 'LilyPond 2.24.x only' not in t and '2.26.x' in t and 'tests/lilypond-2.26/' in t else 1)&quot;] owner=readme-requirements</div>
+<div class="line"><span class="at">[09:28:23]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); need = ['`engine-integration`', '`engine-unit`', '`engine-integration-2.26`', '`engine-unit-2.26`', '`engine-tooling`', 'python tools/run_tests.py --lilypond-version 2.24', 'python tools/run_unit.py --lilypond-version 2.24', 'python tools/run_tests.py --lilypond-version 2.26', 'python tools/run_unit.py --lilypond-version 2.26', 'CNB_LILYPOND_X_Y']; missing = [n for n in need if n not in t]; print(missing); sys.exit(1 if missing else 0)&quot;] owner=readme-running-tests</div>
+<div class="line"><span class="at">[09:28:25]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; v = json.load(open('version.json', encoding='utf-8')); c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); sys.exit(0 if v == {'version': '1.1.0'} and '1.1.0' in c and '1.0.0' in c and 'Status: 1.1.0' in r else 1)&quot;] owner=version-changelog</div>
+<div class="line"><span class="at">[09:28:26]</span> <span class="muted">report-accepted</span> seq=5 step=fix-run-of-record files=[] notes=No tree change: the driver's environment lacked CNB_LILYPOND_2_26 (set at User scope); the answer command now runs with it loaded</div>
+<div class="line"><span class="at">[09:28:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[09:28:29]</span> <span class="muted">run-of-record-standing</span> suite=engine-integration reason=fresh, green, recorded 2026-10-31T05:27:11.303000-04:00</div>
+<div class="line"><span class="at">[09:28:31]</span> <span class="muted">run-of-record-standing</span> suite=engine-unit reason=fresh, green, recorded 2026-10-31T05:27:25.196000-04:00</div>
+<div class="line"><span class="at">[09:28:33]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:28:34]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=24700 log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:28:44]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:28:47]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:28:48]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=76416 log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:28:54]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:28:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[09:29:07]</span> <span class="muted">landed</span> commit=9b3b3818be27ea847b6e60b1db14fbda75e19a86</div>
+<div class="line"><span class="at">[09:29:07]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[09:29:07]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[09:29:07]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[09:29:09]</span> <span class="muted">job-started</span> name=close pid=74596 log=.dabbler/runs/s10/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:29:37]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s10/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:29:37]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>11s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>3s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="bad">failed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>6s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
