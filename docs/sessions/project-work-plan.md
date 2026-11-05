@@ -34,7 +34,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 20 | Fix what the corpus found | no | 2026-11-05 |
 | 21 | Document 1.2.0 | no | 2026-11-05 |
 | 22 | Work around LilyPond issue 2383 (beam quanting on magnified staves) | no | 2026-11-05 |
-| 23 | Release 1.2.0 (release: 1.2.0) | — | not declared |
+| 23 | Release 1.2.0 (release: 1.2.0) | yes | 2026-11-05 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -180,3 +180,9 @@ Document release 1.2.0. README: confirm the "Starting from MusicXML" section is 
 **Releasable: no.**
 
 Settle the three grace-note smoke allowances (24c, 24d, 24e: 'No viable beam quanting found') as LilyPond issue 2383, not an engine defect. Before this plan, a trial in a scratch copy of the repository applied the session plan's workaround, Beam.details.region-size = #4 in cnb/layout.ly. It cleared the error in all three files on 2.24 and 2.26, with no integration drift. But measured against the staff's top line, it placed every affected grace beam about 3.4 global units (about two staff spaces at 7/4) farther from the heads than LilyPond's unquanted fallback. The fallback is within 0.3 units of where a LilyPond master build carrying the upstream fix puts the same beam. The workaround fails the plan's third condition, so this session adds nothing to the engine. It re-labels the three expect.json entries as LilyPond issue 2383 with the trigger, keeping their allow lists so the smoke tier still passes. It adds a README Known Issues entry linking the issue: why there is no workaround, what the fallback looks like, and that the allowance can go once a LilyPond release carries the fix. It adds a CHANGELOG 1.2.0 line.
+
+### Session 23 — Release 1.2.0 (release: 1.2.0)
+
+**Releasable: yes.**
+
+Release 1.2.0: the framework packs and publishes what is on the trunk.
