@@ -398,9 +398,9 @@
     {
       "number": 20,
       "title": "Fix what the corpus found",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-05T02:56:52.160000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-05T03:15:31.227000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
