@@ -354,9 +354,9 @@
     {
       "number": 18,
       "title": "One include makes any LilyPond score chromatic",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-04T16:59:11.040000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-04T19:40:53.317000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
