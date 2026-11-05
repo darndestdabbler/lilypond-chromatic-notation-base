@@ -1,7 +1,7 @@
 # ChromaticNotationBase (CNB)
 
-> **Status: 1.1.0**
-> The engine is stable and tested (325 unit assertions, and 314 integration assertions — 668 expressions in 16 specs — passing on both LilyPond 2.24 and 2.26, measured November 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
+> **Status: 1.2.0**
+> The engine is stable and tested (325 unit assertions, 325 integration assertions in 19 specs, and 71 MusicXML smoke files, passing on both LilyPond 2.24 and 2.26, measured November 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
 
 A configurable engine for chromatic music notation in LilyPond.
 
@@ -375,12 +375,15 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 │   └── test-ids.ly                   SVG test-id tagging (included by test scores, not by the engine)
 │
 ├── tests/                            Integration test specs, scores, reference SVGs, and 2.24 harvest baselines
-│   └── lilypond-2.26/                2.26 harvest baselines
+│   ├── lilypond-2.26/                2.26 harvest baselines
+│   └── musicxml/                     MusicXML smoke tier (MIT test-suite subset, expect.json allowlist)
 │
 ├── tools/
 │   ├── harvest_svg.py                SVG harvester
 │   ├── run_tests.py                  Integration test runner
 │   ├── run_unit.py                   Unit test runner (gates test-unit.ly)
+│   ├── run_musicxml.py               MusicXML smoke tier runner
+│   ├── run_corpus.py                 Corpus gate over a directory of real scores
 │   └── test_*.py                     The tools' own tests
 │
 └── docs/
@@ -388,6 +391,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
     ├── CNB-PROJECT-PLAN-20260224.md  Architecture plan and roadmap
     ├── INTEGRATION-TESTING.md        Integration test pipeline documentation
     ├── planning/                     Project plan, brief, and audits
+    ├── runs/                         Corpus gate tables (corpus-<date>.md)
     ├── session-sets/                 Records of earlier development sessions
     ├── sessions/                     Session plan and records
     └── transcripts/                  Session transcripts
@@ -401,7 +405,7 @@ Modules are loaded in this exact order by `ChromaticNotationBase.ly`. Each modul
 ```
 utils.ly → colors.ly → config.ly → procedure.ly → path-geometry.ly →
 stencils.ly → noteheads.ly → stems.ly → clefs.ly → ledgers.ly →
-staff.ly → keysig.ly → dots.ly → off-key.ly → layout.ly
+staff.ly → keysig.ly → dots.ly → off-key.ly → layout.ly → score-defaults.ly
 ```
 
 
@@ -415,6 +419,8 @@ The repository declares its test suites in `dabbler.yaml`:
 | `engine-unit` | `python tools/run_unit.py --lilypond-version 2.24` | Renders `test-unit.ly` through LilyPond 2.24 and fails on any failed assertion |
 | `engine-integration-2.26` | `python tools/run_tests.py --lilypond-version 2.26` | The integration suite on LilyPond 2.26, compared with `tests/lilypond-2.26/*.harvested.json`; renders go to the ignored `out/lilypond-2.26/` |
 | `engine-unit-2.26` | `python tools/run_unit.py --lilypond-version 2.26` | The unit suite on LilyPond 2.26 |
+| `engine-musicxml` | `python tools/run_musicxml.py --lilypond-version 2.24` | Converts each `tests/musicxml/` file with LilyPond 2.24's musicxml2ly, adds the Kite include and engraves it (see [MusicXML smoke tier](#musicxml-smoke-tier)) |
+| `engine-musicxml-2.26` | `python tools/run_musicxml.py --lilypond-version 2.26` | The smoke tier on LilyPond 2.26 |
 | `engine-tooling` | `python -m unittest discover -s tools -p "test_*.py"` | The Python tooling's own tests (no LilyPond) |
 
 ### Choosing a LilyPond version
@@ -463,6 +469,40 @@ A regenerated harvest that differs from the version's tracked baseline (`tests/*
 The pipeline consists of three components: an ID engraver (`cnb/test-ids.ly`) that tags SVG output with structured metadata, an SVG harvester (`tools/harvest_svg.py`) that extracts element positions and properties, and a test runner (`tools/run_tests.py`) that orchestrates the full render → harvest → assert cycle.
 
 See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md) for full documentation of the testing pipeline, assertion format, coordinate systems, and how to create new tests.
+
+### MusicXML smoke tier
+
+```bash
+python tools/run_musicxml.py --lilypond-version 2.24
+python tools/run_musicxml.py --lilypond-version 2.26
+```
+
+`tests/musicxml/` holds 71 files from the MIT-licensed Unofficial MusicXML
+test suite: pitches, rests, rhythm, clefs, key signatures, chords,
+noteheads, tuplets, grace notes, ties and slurs, multi-part, multi-voice
+and lyrics. Each is converted with the musicxml2ly that ships with the
+chosen LilyPond (Frescobaldi's import defaults), given the Kite include
+and engraved. A file passes when both exit 0 and the LilyPond log has no
+`error:` or `programming error` line. All 71 pass on 2.24 and on 2.26
+(November 2026).
+
+`tests/musicxml/expect.json` lists the exceptions. Three grace-note files
+(24c, 24d, 24e) may log `No viable beam quanting found`. Two lyrics files
+(61g, 61k) are known musicxml2ly 2.24 crashes, so on 2.24 they must fail
+to convert; one that passes is reported as an error, so the list cannot
+go stale. musicxml2ly's own warnings never fail a file.
+
+**Corpus gate.** Before every release session, the same pipeline runs over
+a directory of real scores:
+
+```bash
+python tools/run_corpus.py D:\MusicXML --lilypond-version 2.24
+```
+
+It writes the table `docs/runs/corpus-<date>.md` and fails when a file
+that passed in the newest earlier table fails now. The corpus itself is
+not committed: most of its scores carry no licence, and several are tens
+of megabytes. See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md#musicxml-corpus-gate).
 
 
 ## Known limitations

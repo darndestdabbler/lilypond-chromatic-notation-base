@@ -408,7 +408,29 @@
         "identityProvenance": "direct"
       },
       "verificationVerdict": "VERIFIED",
-      "startCommit": "a23fe705742d37f75ff8034f78093a59f2083522",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "a23fe705742d37f75ff8034f78093a59f2083522"
+    },
+    {
+      "number": 21,
+      "title": "Document 1.2.0",
+      "status": "in-progress",
+      "startedAt": "2026-11-05T03:48:13.482000-05:00",
+      "completedAt": null,
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "startCommit": "f5f1cde12ee9d89856560a103452c0de07fe7418",
       "frameworkVersion": "3.29.0",
       "verification": {
         "rounds": 1,
@@ -416,15 +438,6 @@
         "verifierProvider": "openai",
         "transport": "api"
       }
-    },
-    {
-      "number": 21,
-      "title": "Document 1.2.0",
-      "status": "not-started",
-      "startedAt": null,
-      "completedAt": null,
-      "orchestrator": null,
-      "verificationVerdict": null
     },
     {
       "number": 22,

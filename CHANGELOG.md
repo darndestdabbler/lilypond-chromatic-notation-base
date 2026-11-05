@@ -1,7 +1,38 @@
 # Changelog
 
-## Unreleased
+## 1.2.0
 
+- One `\include` line now makes a plain LilyPond score chromatic, for
+  example musicxml2ly output. The engine applies `cnb/score-defaults.ly`
+  itself: every staff gets `\magnifyStaff #cnb:default-magnify`, and the
+  paper gets a 25 mm indent and a 12 mm short-indent, so instrument names
+  are no longer clipped at the page edge. A score's own `\paper` and
+  `\layout` still win. To opt out, write
+  `#(define cnb:score-defaults #f)` before the `\include`.
+  **A score that set its own size may now be magnified twice.** A staff
+  that already uses `\magnifyStaff` is not, because it replaces the
+  default. A score sized any other way is now magnified on top of its
+  own size and should opt out. Other ways include
+  `#(set-global-staff-size …)` and `fontSize` or `StaffSymbol.staff-space`
+  overrides.
+- Cautionary and forced accidentals (`gis?`, `c!`) and suggested
+  accidentals no longer print as parenthesised traditional glyphs.
+  `AccidentalCautionary` and `AccidentalSuggestion` are blanked beside
+  `Accidental`.
+- A stem may be anchored at its notehead's centre, `'(0 . 0)`. Its far end
+  stays LilyPond's standard length from the head's centre. Stems are now
+  drawn over noteheads, so a stem anchored inside a hollow head stays
+  visible across the hole, true or false. `tests/stem-centre.ly` and
+  `tests/stem-centre-false-hollow.ly` prove it on both versions.
+- The MusicXML smoke tier: `tools/run_musicxml.py` converts 71 files of
+  the MIT-licensed Unofficial MusicXML test suite (`tests/musicxml/`) with
+  LilyPond's own musicxml2ly, adds the Kite include and engraves them.
+  It runs as the suites `engine-musicxml` and `engine-musicxml-2.26`, and
+  `tests/musicxml/expect.json` lists the allowed exceptions.
+- The corpus gate: `tools/run_corpus.py DIR` runs the same pipeline over
+  a directory of real scores before every release. It writes
+  `docs/runs/corpus-<date>.md` and fails when a file that passed in the
+  previous table no longer does.
 - A key signature engraved before the score's first note now draws its
   noteheads. The trigger was a key signature at a moment with no note:
   a top staff opening on a rest or a spacer, or a staff with no notes

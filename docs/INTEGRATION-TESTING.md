@@ -21,6 +21,10 @@ python3 tools/run_tests.py --lilypond-version 2.24 --update-baselines
 
 # Generate the harvest baseline of a new test score:
 python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly
+
+# MusicXML smoke tier on LilyPond 2.24, or on 2.26:
+python3 tools/run_musicxml.py --lilypond-version 2.24
+python3 tools/run_musicxml.py --lilypond-version 2.26
 ```
 
 The run ends with `RESULTS: P passed, F failed (N assertions), D harvests
@@ -268,23 +272,78 @@ python3 tools/run_tests.py --lilypond-version 2.24 --generate tests/my-test.ly
 This renders the `.ly` file, harvests the SVG, and writes the version's `.harvested.json` baseline showing all element positions and properties. Use this output to write assertion specs. An existing baseline is not overwritten: to change one, run its spec with `--update-baselines` (or add `--update-baselines` to `--generate`).
 
 
+## MusicXML Smoke Tier
+
+The suites `engine-musicxml` and `engine-musicxml-2.26` check that a
+converted score engraves cleanly with a notation config:
+
+```bash
+python tools/run_musicxml.py --lilypond-version 2.24
+```
+
+`--lilypond-version X.Y` chooses `lilypond` as `run_tests.py` does. The
+converter is the musicxml2ly that ships with it: on Windows,
+`bin\python.exe bin\musicxml2ly.py` in the executable's folder; elsewhere,
+`musicxml2ly` in that folder or on `PATH`. If it is missing, the run exits
+non-zero naming what it looked for.
+
+Each `tests/musicxml/*.xml` and `*.musicxml` file is converted with
+`--nd --nrp --npl --no-beaming` (Frescobaldi's import defaults). The line
+`\include "kite-4-369-from-configurator.ly"` goes in after `\version`, and
+the score is engraved to SVG in the ignored `out/musicxml/lilypond-X.Y/`.
+A file passes when musicxml2ly and LilyPond both exit 0 and the LilyPond
+log has no `error:` or `programming error` line, apart from those
+`tests/musicxml/expect.json` allows for that file. musicxml2ly's own
+warnings never fail a file.
+
+`expect.json` maps a file name to an object:
+
+| Key | Meaning |
+|-----|---------|
+| `allow` | Substrings of log lines that are not failures |
+| `note` | Why they are allowed |
+| `defect` | The known defect that makes the file fail: musicxml2ly's, or the engine's with the session that fixes it |
+| `lilypond` | The versions the entry applies to (`["2.24"]`); absent means every version |
+
+For example:
+
+```json
+"61g-Lyrics-NameNumber.xml": {
+  "defect": "musicxml2ly 2.24 crashes: 'ValueError: No closing quotation' in shlex; 2.26's converts it",
+  "lilypond": ["2.24"]
+}
+```
+
+Keys starting with `_` are comments. A file listed with a `defect` must
+still fail. If it passes, the run reports `stale expectation` and fails,
+so a fixed defect cannot stay listed. An entry for a file that is not in
+`tests/musicxml/` also fails the run. The run ends
+with `RESULTS: P passed, F failed (N files, Ts)`, and it exits non-zero
+when any file fails.
+
+
 ## MusicXML Corpus Gate
 
 The step before every release session is the corpus gate, run on this
 machine's corpus of real scores:
 
 ```bash
+python tools/run_corpus.py DIR [--max-bytes N] [--lilypond-version X.Y]
 python tools/run_corpus.py D:\MusicXML --lilypond-version 2.24
 ```
 
-It converts each score with musicxml2ly (Frescobaldi's import defaults),
-adds the Kite include, and engraves it, as the MusicXML smoke tier does.
-Then it writes the table `docs/runs/corpus-<date>.md`: per file, the
-convert and engrave exits, seconds, musicxml2ly warnings, `-inf` lines and
-pages. Files over `--max-bytes` (default 5 MB) are skipped. Commit the
-table with the release work. The run fails, naming each file, when a file
-that passed in the newest earlier table (both exits 0) fails now.
-`docs/runs/corpus-2026-11-04.md` is the first baseline.
+It reads each `.xml`, `.musicxml` and `.mxl` file in `DIR`. It converts
+each score with musicxml2ly (Frescobaldi's import defaults), adds the
+Kite include, and engraves it into the ignored `out/corpus/`, as the
+MusicXML smoke tier does. Then it writes the table
+`docs/runs/corpus-<date>.md`: per file, the convert and engrave exits,
+seconds, musicxml2ly warnings, `-inf` lines and pages. Files over
+`--max-bytes` (default 5,000,000 bytes) are marked `skipped`. Commit the
+table with the release work. The run then compares the table with the
+newest earlier one. It fails, naming each file, when a file that passed
+there (both exits 0) does not pass now.
+`docs/runs/corpus-2026-11-04.md` is the first baseline;
+`docs/runs/corpus-2026-11-05.md`, after session 20's fixes, is the newest.
 
 The corpus itself is not in the repository. Most of its scores carry no
 licence: they are MuseScore.com uploads whose engraving is the uploader's.

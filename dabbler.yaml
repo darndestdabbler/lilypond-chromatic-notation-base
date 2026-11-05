@@ -19,8 +19,8 @@ schema_version: 1
 #
 # The integration suite is the run of record: it renders every tests/*.ly
 # through LilyPond 2.24, harvests the SVG and evaluates the JSON assertion
-# specs. 303 assertions (620 expressions) in 14 specs, in about 35 s on
-# 2026-11-03, so it runs whole every time. It renders with
+# specs. 325 assertions in 19 specs, in about 9 s on 2026-11-05, so it
+# runs whole every time. It renders with
 # -dno-point-and-click, so the tracked tests/*.svg are the same from any
 # checkout, and a regenerated tests/*.harvested.json that differs from the
 # tracked one fails the run (`--update-baselines` accepts an intended
@@ -31,6 +31,18 @@ schema_version: 1
 # "TEST RESULTS: N passed, M failed" line. 325 assertions in about 2 s; it
 # is declared expensive only because it alone covers test-unit.ly, so its
 # run must be a run of record.
+#
+# The MusicXML smoke tier, engine-musicxml (2.24) and engine-musicxml-2.26,
+# is tools/run_musicxml.py: it converts each tests/musicxml/ file with the
+# musicxml2ly beside the chosen lilypond (--nd --nrp --npl --no-beaming,
+# Frescobaldi's import defaults), adds the Kite include after \version and
+# engraves it to the ignored out/musicxml/lilypond-X.Y/. A file passes when
+# both exit 0 and the LilyPond log has no "error:" or "programming error"
+# line other than those tests/musicxml/expect.json allows for it; a file
+# listed there as a known defect must still fail. 71 files, all passing on
+# each version, in about 40 s on 2026-11-05. It is expensive because it
+# engraves every file and alone covers tests/musicxml/, and it runs whole
+# at close because a converted score exercises the whole engine.
 #
 # The tooling suite is the Python tooling's own tests (stdlib unittest, no
 # LilyPond): tools/test_<name>.py tests tools/<name>.py.
