@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 020 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 020 transcript</h1>
+<p class="stamp">Rendered 2026-11-05T08:15:33.982Z by dabbler-ai-router 3.29.0 at e105b3c001f35d112c8bbfcd8db8d562cee9aa2a.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-05T02:56:59.853-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 20: Fix what the corpus found</h3>
+<p><strong>Why.</strong> Two defects are the engine's, not musicxml2ly's (plan §1.3): the plain conversions are clean of both.</p>
+<ol><li>Register.</li><li><code>programming error: Improbable offset for stencil: -inf staff space</code> appears only with a config, in 5 of 20 scores (Ave Maria, Spring Waltz, Arabesque, Ständchen, BWV 140/1), always a multiple of 8, and not from cautionary accidentals (those files have none). Reproduce from the smallest (Ave Maria, 2 pages, in <code>D:\MusicXML</code>), bisect the converted score to a minimal spec, fix the stencil, and add the spec to <code>tests/</code>. Record what the trigger was in the session notes and the CHANGELOG.</li><li>Cautionary and forced accidentals (<code>gis?</code>, <code>c!</code>) print as parenthesised traditional glyphs: <code>cnb/layout.ly</code> blanks <code>Accidental.stencil</code> only, and LilyPond draws cautionary ones with the separate <code>AccidentalCautionary</code> grob (and suggestions with <code>AccidentalSuggestion</code>). Suppress those the same way, in the same place, and extend the accidentals spec with <code>?</code> and <code>!</code> notes asserting that nothing is drawn. Re-run the corpus gate (<code>tools/run_corpus.py D:\MusicXML</code>) and commit its table: the <code>-inf</code> column must be zero everywhere.</li></ol>
+<h2>Work Plan</h2>
+<p>Fix the two engine defects the corpus found. (1) The '-inf staff space' stencil offset: the key-signature engraver builds its notehead-chord display from the procedure config cache, which only the notehead engraver fills (cnb:handle-key-change, on its first note). When the first key signature of a score is engraved before any notehead -- the top staff opens on a rest or a spacer, or a staff has no notes at all (Ave Maria's spacer-only second voice) -- every lookup misses, cnb:get-keysig-note-stencil returns empty-stencil, its width is -inf, and the translate of each keysig notehead and of the separator bar is improbable (8 lines for a two-accidental key); the display renders as the bar alone, and on rest-only staves (smoke files 02a-02c) LilyPond aborts. The key-signature engraver will call cnb:handle-key-change before building its stencil, so the cache always matches the key being drawn. The minimal spec tests/keysig-before-first-note (one staff, \key bes \major, opening on a rest) asserts the display has width; the four 'engine, session 20' defect entries in tests/musicxml/expect.json (02a, 02b, 02c, 41b), which now engrave cleanly, are removed so the smoke tier does not report them stale; the trigger goes in a CHANGELOG 'Unreleased' entry and in the step notes. (2) cnb/layout.ly blanks AccidentalCautionary.stencil and AccidentalSuggestion.stencil beside Accidental.stencil; a new accidentals spec (tests/accidentals) renders a plain sharp, a cautionary d? and a forced es! and asserts none is drawn, with one Accidental re-enabled by a \once override as a control proving the harvester sees accidentals. (3) Re-run tools/run_corpus.py D:\MusicXML and commit its table docs/runs/corpus-2026-11-05.md, whose -inf column is zero for every engraved file.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/0415c27cb8812095156632a3bf80a2f5c08334f8"><code>0415c27cb8812095156632a3bf80a2f5c08334f8</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Keysig before first note</td><td><p>In cnb/keysig.ly, make cnb-key-signature-engraver call (cnb:handle-key-change context) before cnb:get-key-signature-stencil, with a comment saying why (the config cache is otherwise filled only by the first notehead, so a key signature engraved before any note found it empty and drew -inf-wide noteheads). Add tests/keysig-before-first-note.ly (Kite-free, ChromaticNotationBase with score defaults off and test-ids, one staff in Bb major opening on a rest) and tests/keysig-before-first-note.json asserting ks-1 exists with a bbox width above that of the bar alone; generate its 2.24 SVG and harvest baseline and its 2.26 harvest baseline with run_tests.py --update-baselines. Remove the 02a, 02b, 02c and 41b 'engine, session 20' defect entries from tests/musicxml/expect.json and reword the 24c-24e notes to drop 'for session 20 to triage'. Add a '## Unreleased' section to CHANGELOG.md recording the fix and its trigger.</p></td><td><span class="mono">cnb/keysig.ly</span><br><span class="mono">tests/keysig-before-first-note.ly</span><br><span class="mono">tests/keysig-before-first-note.json</span><br><span class="mono">tests/keysig-before-first-note.svg</span><br><span class="mono">tests/keysig-before-first-note.harvested.json</span><br><span class="mono">tests/lilypond-2.26/keysig-before-first-note.harvested.json</span><br><span class="mono">tests/musicxml/expect.json</span><br><span class="mono">CHANGELOG.md</span></td><td><code>python -X utf8 tools/run_tests.py --lilypond-version 2.24 tests/keysig-before-first-note.json</code><br><code>python -c import json; d = json.load(open('tests/musicxml/expect.json', encoding='utf-8')); stale = [k for k, v in d.items() if isinstance(v, dict) and 'session 20' in json.dumps(v)]; assert not stale, stale</code></td><td>yes</td></tr>
+<tr><td>Cautionary accidentals</td><td><p>In cnb/layout.ly, beside \override Accidental.stencil = ##f, add the same override for AccidentalCautionary and AccidentalSuggestion, extending the comment to say LilyPond draws cautionary (?) and suggested accidentals with those separate grobs. Add tests/accidentals.ly (ChromaticNotationBase with score defaults off and test-ids; a plain cis, a cautionary d?, a forced es!, and one fis whose Accidental stencil is re-enabled with \once as the control) and tests/accidentals.json asserting exactly one accidental is drawn -- the control -- and that the cautionary and forced ones are absent; generate its 2.24 SVG and harvest baseline and its 2.26 harvest baseline with run_tests.py --update-baselines.</p></td><td><span class="mono">cnb/layout.ly</span><br><span class="mono">tests/accidentals.ly</span><br><span class="mono">tests/accidentals.json</span><br><span class="mono">tests/accidentals.svg</span><br><span class="mono">tests/accidentals.harvested.json</span><br><span class="mono">tests/lilypond-2.26/accidentals.harvested.json</span></td><td><code>python -X utf8 tools/run_tests.py --lilypond-version 2.24 tests/accidentals.json</code></td><td>yes</td></tr>
+<tr><td>Corpus table</td><td><p>Run python tools/run_corpus.py D:\MusicXML (LilyPond 2.24, default size cap) and commit the table it writes, docs/runs/corpus-2026-11-05.md. Its -inf column must be 0 for every engraved file, and no file that passed in corpus-2026-11-04.md may fail.</p></td><td><span class="mono">docs/runs/corpus-2026-11-05.md</span></td><td><code>python -c rows = [l.split('|')[1:-1] for l in open('docs/runs/corpus-2026-11-05.md', encoding='utf-8') if l.startswith('| ') and not l.startswith('| File')]; assert len(rows) &gt;= 20, len(rows); bad = [r[0].strip() for r in rows if r[5].strip() not in ('0', '-')]; assert not bad, bad</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No fix for the 'No viable beam quanting found' warning on the grace-note smoke files 24c-24e: the session plan does not name it, and their allow entries stay (only their stale 'for session 20 to triage' wording is corrected).</li><li>No AccidentalSuggestion case in the accidentals spec: cnb/test-ids.ly crashes on a suggested accidental (ly:grob-property on ()), and fixing the test-id module is not this session's work; the suggestion grob is suppressed in layout.ly regardless.</li><li>No README, INTEGRATION-TESTING, dabbler.yaml header or 1.2.0 CHANGELOG/version work: session 21 writes those, folding this session's Unreleased entry into 1.2.0.</li><li>No change to musicxml2ly failures (nested tuplets, the Mozart and Turkish March engrave failures) or to the corpus files themselves, which stay out of the repository.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[07:56:59]</span> <span class="muted">run-started</span> session=020 mode=pull</div>
+<div class="line"><span class="at">[07:56:59]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[08:05:57]</span> <span class="muted">run-resumed</span> session=020 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[08:05:57]</span> <span class="muted">plan-accepted</span> steps=[&quot;keysig-before-first-note&quot;,&quot;cautionary-accidentals&quot;,&quot;corpus-table&quot;] non_goals=4</div>
+<div class="line"><span class="at">[08:05:57]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[08:05:57]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=keysig-before-first-note</div>
+<div class="line"><span class="at">[08:07:50]</span> <span class="muted">run-resumed</span> session=020 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:07:51]</span> <span class="muted">check-passed</span> step=keysig-before-first-note argv=[&quot;python&quot;,&quot;-X&quot;,&quot;utf8&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/keysig-before-first-note.json&quot;]</div>
+<div class="line"><span class="at">[08:07:51]</span> <span class="muted">check-passed</span> step=keysig-before-first-note argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json; d = json.load(open('tests/musicxml/expect.json', encoding='utf-8')); stale = [k for k, v in d.items() if isinstance(v, dict) and 'session 20' in json.dumps(v)]; assert not stale, stale&quot;]</div>
+<div class="line"><span class="at">[08:07:51]</span> <span class="muted">report-accepted</span> seq=2 step=keysig-before-first-note files=[&quot;cnb/keysig.ly&quot;,&quot;tests/keysig-before-first-note.ly&quot;,&quot;tests/keysig-before-first-note.json&quot;,&quot;tests/keysig-before-first-note.svg&quot;,&quot;tests/keysig-before-first-note.harvested.json&quot;,&quot;tests/lilypond-2.26/keysig-before-first-note.harvested.json&quot;,&quot;tests/musicxml/expect.json&quot;,&quot;CHANGELOG.md&quot;] notes=Trigger: a key signature engraved before any notehead (top staff opens on a rest/spacer, or a note-less staff such as Ave Maria's spacer-only voice 2) read the procedure config cache before the notehead engraver filled it; empty keysig noteheads had -inf width (8 lines per 2-accidental key with Kite; plain config aborts, exit 3). Fix: key-signature engraver calls cnb:handle-key-change first. Spec fails (aborts) without the fix; 02a-c and 41b now clean on 2.24 and 2.26, so their defect entries are removed.</div>
+<div class="line"><span class="at">[08:07:51]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=cautionary-accidentals</div>
+<div class="line"><span class="at">[08:08:37]</span> <span class="muted">run-resumed</span> session=020 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:08:38]</span> <span class="muted">check-passed</span> step=cautionary-accidentals argv=[&quot;python&quot;,&quot;-X&quot;,&quot;utf8&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/accidentals.json&quot;]</div>
+<div class="line"><span class="at">[08:08:38]</span> <span class="muted">report-accepted</span> seq=3 step=cautionary-accidentals files=[&quot;cnb/layout.ly&quot;,&quot;tests/accidentals.ly&quot;,&quot;tests/accidentals.json&quot;,&quot;tests/accidentals.svg&quot;,&quot;tests/accidentals.harvested.json&quot;,&quot;tests/lilypond-2.26/accidentals.harvested.json&quot;] notes=layout.ly blanks AccidentalCautionary and AccidentalSuggestion beside Accidental; new tests/accidentals spec (plain cis, cautionary d?, forced es! absent; one \once-enabled fis as control, count == 1). Without the fix the cautionary d? was drawn (ac-1-0.500-62-0); forced es! is a plain Accidental and was already blanked.</div>
+<div class="line"><span class="at">[08:08:38]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=corpus-table</div>
+<div class="line"><span class="at">[08:12:57]</span> <span class="muted">run-resumed</span> session=020 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:12:58]</span> <span class="muted">check-passed</span> step=corpus-table argv=[&quot;python&quot;,&quot;-c&quot;,&quot;rows = [l.split('|')[1:-1] for l in open('docs/runs/corpus-2026-11-05.md', encoding='utf-8') if l.startswith('| ') and not l.startswith('| File')]; assert len(rows) &gt;= 20, len(rows); bad = [r[0].strip() for r in rows if r[5].strip() not in ('0', '-')]; assert not bad, bad&quot;]</div>
+<div class="line"><span class="at">[08:12:58]</span> <span class="muted">report-accepted</span> seq=4 step=corpus-table files=[&quot;docs/runs/corpus-2026-11-05.md&quot;] notes=run_corpus.py D:\MusicXML on 2.24: -inf column 0 for all 20 engraved files (was 8/8/16/8/8/8 for Arabesque, Ave Maria, BWV 140/1, La Campanella, Standchen, Spring Waltz); 0 regressions vs corpus-2026-11-04. Page counts are higher than the hand-run baseline, likely the engine's score defaults (added after that baseline) -- not checked with a separate run.</div>
+<div class="line"><span class="at">[08:12:58]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:12:58]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:12:58]</span> <span class="muted">job-started</span> name=verification pid=2876 log=.dabbler/runs/s20/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:13:40]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:13:40]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[08:13:40]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[08:13:40]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:13:40]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=17604 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:13:49]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:13:49]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:13:49]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=13600 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:13:51]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:13:51]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:13:51]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=43648 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:14:00]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:14:00]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:14:00]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=11912 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:14:01]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:14:01]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:14:01]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=34008 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[08:14:45]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[08:14:45]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:14:45]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=17804 log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[08:15:26]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[08:15:26]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[08:15:29]</span> <span class="muted">landed</span> commit=0415c27cb8812095156632a3bf80a2f5c08334f8</div>
+<div class="line"><span class="at">[08:15:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[08:15:29]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[08:15:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[08:15:29]</span> <span class="muted">job-started</span> name=close pid=43984 log=.dabbler/runs/s20/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:15:33]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s20/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:15:33]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>9s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>8s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>44s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>40s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
