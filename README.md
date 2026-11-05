@@ -519,6 +519,8 @@ of megabytes. See [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md#musi
 
 2. **Multi-system SVG harvesting** — Edge cases exist with elements spanning system breaks. The harvester handles multiple systems but some boundary conditions may produce incorrect staff-relative coordinates.
 
+3. **"No viable beam quanting found" on grace-note beams** — On a magnified staff (every CNB staff is), a 16th grace beam above the staff, with its stems pointing up, makes LilyPond 2.24 and 2.26 log `programming error: No viable beam quanting found. Using unquanted y value.` This is LilyPond's own defect, [issue 2383](https://gitlab.com/lilypond/lilypond/-/work_items/2383): when `staff-space` is not 1, LilyPond computes the range a beam may occupy in the wrong units, and that range can exclude every candidate position. The beam LilyPond engraves instead is within about a third of a staff space of where a fixed LilyPond places it. CNB carries no workaround: raising `Beam.details.region-size` silences the message but lifts these beams about two staff spaces. The smoke files 24c–24e are allowed this line in `tests/musicxml/expect.json`; drop the allowance once a LilyPond release carries the fix.
+
 
 ## Related Projects
 

@@ -33,6 +33,10 @@
   a directory of real scores before every release. It writes
   `docs/runs/corpus-<date>.md` and fails when a file that passed in the
   previous table no longer does.
+- The `No viable beam quanting found` lines that grace-note beams log on a
+  magnified staff (smoke files 24c–24e) are LilyPond's own issue 2383,
+  not the engine's. They are documented under Known Issues, without a
+  workaround.
 - A key signature engraved before the score's first note now draws its
   noteheads. The trigger was a key signature at a moment with no note:
   a top staff opening on a rest or a spacer, or a staff with no notes

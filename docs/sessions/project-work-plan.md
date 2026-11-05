@@ -33,7 +33,8 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 19 | MusicXML smoke tier and the corpus gate | no | 2026-11-05 |
 | 20 | Fix what the corpus found | no | 2026-11-05 |
 | 21 | Document 1.2.0 | no | 2026-11-05 |
-| 22 | Release 1.2.0 (release: 1.2.0) | — | not declared |
+| 22 | Work around LilyPond issue 2383 (beam quanting on magnified staves) | no | 2026-11-05 |
+| 23 | Release 1.2.0 (release: 1.2.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -173,3 +174,9 @@ Fix the two engine defects the corpus found. (1) The '-inf staff space' stencil 
 **Releasable: no.**
 
 Document release 1.2.0. README: confirm the "Starting from MusicXML" section is final against session 18's list (Frescobaldi import defaults, the one include line, the engine's score defaults and the cnb:score-defaults opt-out, the three musicxml2ly failures with their fixes, MusicFormats xml2ly as fallback); bring the status line to 1.2.0 with the unit and integration counts the suites print on 2.24 and 2.26; add engine-musicxml and engine-musicxml-2.26 to the suites table and a short MusicXML smoke tier subsection with its real file counts on both versions and its known-failure allowlist, naming the corpus gate (tools/run_corpus.py, before every release session); list the new tools, tests/musicxml/ and docs/runs/ in the project tree and cnb/score-defaults.ly in the module order; and confirm the session 17 stem-attachment paragraph under the Registration API. dabbler.yaml's header comment gains a paragraph describing engine-musicxml and its 2.26 twin as it describes the other suites. docs/INTEGRATION-TESTING.md gains a MusicXML smoke tier section covering tools/run_musicxml.py (converter resolution, flags, the include, out/musicxml/, the pass rule, the expect.json allow/defect/lilypond format and the stale-defect error) and completes its corpus gate section on tools/run_corpus.py (DIR, --max-bytes, --lilypond-version, the table, the comparison with the newest earlier table). CHANGELOG.md turns its Unreleased entry into 1.2.0 and adds: score defaults applied by the engine and the opt-out, with the honest caveat that a staff sized by \magnifyStaff is not magnified twice but a score sized any other way (set-global-staff-size, fontSize or staff-space overrides) is now magnified on top of that; AccidentalCautionary and AccidentalSuggestion suppressed; centre-anchored stems; the MusicXML smoke tier and the corpus gate; the -inf stencil fix and its trigger stays as written. version.json goes to 1.2.0.
+
+### Session 22 — Work around LilyPond issue 2383 (beam quanting on magnified staves)
+
+**Releasable: no.**
+
+Settle the three grace-note smoke allowances (24c, 24d, 24e: 'No viable beam quanting found') as LilyPond issue 2383, not an engine defect. Before this plan, a trial in a scratch copy of the repository applied the session plan's workaround, Beam.details.region-size = #4 in cnb/layout.ly. It cleared the error in all three files on 2.24 and 2.26, with no integration drift. But measured against the staff's top line, it placed every affected grace beam about 3.4 global units (about two staff spaces at 7/4) farther from the heads than LilyPond's unquanted fallback. The fallback is within 0.3 units of where a LilyPond master build carrying the upstream fix puts the same beam. The workaround fails the plan's third condition, so this session adds nothing to the engine. It re-labels the three expect.json entries as LilyPond issue 2383 with the trigger, keeping their allow lists so the smoke tier still passes. It adds a README Known Issues entry linking the issue: why there is no workaround, what the fallback looks like, and that the allowance can go once a LilyPond release carries the fix. It adds a CHANGELOG 1.2.0 line.

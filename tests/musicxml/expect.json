@@ -2,15 +2,15 @@
   "_comment": "Files from the Unofficial MusicXML test suite (Reinhold Kainhofer; cuthbertLab fork, MIT, see LICENSE) that tools/run_musicxml.py does not expect to engrave cleanly, and why. A \"defect\" entry must still fail; its passing is an error. See that tool's docstring for the format.",
   "24c-GraceNote-MeasureEnd.xml": {
     "allow": ["No viable beam quanting found"],
-    "note": "engine, not yet triaged: with the Kite include only, LilyPond cannot quant a grace-note beam and places it unquanted"
+    "note": "LilyPond's own defect, issue 2383 (https://gitlab.com/lilypond/lilypond/-/work_items/2383), on 2.24 and 2.26: at the staff-space 7/4 that cnb:default-magnify sets, an up-stem 16th grace beam above the staff gets no viable quant, so LilyPond engraves its unquanted fallback beam"
   },
   "24d-AfterGrace.xml": {
     "allow": ["No viable beam quanting found"],
-    "note": "engine, not yet triaged: as 24c"
+    "note": "LilyPond issue 2383, as 24c"
   },
   "24e-GraceNote-StaffChange.xml": {
     "allow": ["No viable beam quanting found"],
-    "note": "engine, not yet triaged: as 24c"
+    "note": "LilyPond issue 2383, as 24c"
   },
   "61g-Lyrics-NameNumber.xml": {
     "defect": "musicxml2ly 2.24 crashes: 'ValueError: No closing quotation' in shlex; 2.26's converts it",
