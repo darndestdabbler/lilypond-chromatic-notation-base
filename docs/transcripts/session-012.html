@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 012 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 012 transcript</h1>
+<p class="stamp">Rendered 2026-11-02T12:15:14.615Z by dabbler-ai-router 3.27.0 at fa1722a1f938294d74ab843c828381111b9cd806.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-02T06:25:21.443-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 12: Engrave durations and dots correctly</h3>
+<p><strong>Why.</strong> A whole-repository audit on 2026-11-02 (<code>docs/planning/audit-2026-11-02.md</code>; finding IDs below refer to it) found visible engraving errors that every suite passed:</p>
+<ul><li><code>cnb:duration-category</code> is computed from the full duration length, so dots and tuplets change the category (H2).</li><li>It is off by one against the engine's own documented scale in <code>cnb/procedure.ly</code>: 0 = breve or longer, 1 = whole, 2 = half, 3 = quarter or shorter. The scale is also the export spec's, so a Configurator rule for minims hollows quarter notes (Configurator audit H4).</li><li>Dots on ledger-line notes land 6–8 staff spaces away (H3).</li></ul>
+<ol><li>Register.</li><li>Compute the category from the duration *log* alone, as <code>clamp(log + 1, 0, 3)</code>. That maps breve → 0, whole → 1, half → 2, and quarter or shorter → 3, ignoring dots and the tuplet factor. Update every consumer to that scale: <code>noteheads.ly</code> (repeat counts must still give 2 heads for a half and 4 for a whole), <code>off-key.ly</code>, <code>stems.ly</code>, <code>stencils.ly</code> and the cache key. Add unit tests to <code>test-unit.ly</code> for every duration log from −1 to 4, with and without dots, for triplets, and for the cache key.</li></ol>
+<p>Add an integration spec, <code>tests/duration-rules.ly</code> plus its <code>.json</code>. It uses a small config whose procedure gives each category a different colour, and engraves a breve, a whole, a half, a quarter, an eighth, dotted versions and triplets. It asserts the colour and head count of each note.</p>
+<ol><li>H3: in <code>cnb/dots.ly</code>, count the notehead offset once. Add an integration spec with dotted notes on and off ledger lines above and below the staff, asserting each dot's distance from its notehead.</li><li>M1: stem attachment uses the config the note was engraved with, not the global cache at layout time, so a later <code>\key</code> change no longer rewrites earlier stems. Add a spec with a key-dependent config and a mid-score key change.</li></ol>
+<p>Run all five suites. Where an existing harvest drifts, re-baseline it with <code>--update-baselines</code> on both versions only after checking that every difference is one of these three fixes. Record each re-baselined file and why in §7.7 of <code>docs/planning/project-plan.md</code>.</p>
+<h2>Work Plan</h2>
+<p>Fix three engraving errors from the 2026-11-02 audit (H2, H3, M1) that every suite passed. H2: cnb:duration-category (cnb/utils.ly) is recomputed from the duration log alone as clamp(log + 1, 0, 3), so breve -&gt; 0, whole -&gt; 1, half -&gt; 2 and quarter or shorter -&gt; 3, the scale cnb/procedure.ly and the export spec already document; dots and the tuplet factor no longer change it. The consumers follow that scale: the repeat rule in cnb/stencils.ly (still 4 heads for whole and breve, 2 for a half, 1 for a quarter or shorter) and the cache-key comments; noteheads.ly, off-key.ly and stems.ly pass the category straight to the lookup and are confirmed. test-unit.ly gains unit tests for every duration log from -1 to 4, with and without dots, triplets and the cache key, and a new integration spec tests/duration-rules.ly/.json engraves breve, whole, half, quarter, eighth, dotted notes and triplets under a config that colours each category differently, asserting each note's colour and head count. H3: cnb/dots.ly stops counting the notehead's offset twice when it moves a dot off a ledger line, proved by a spec with dotted notes on and off ledger lines above and below the staff asserting each dot's distance from its notehead. M1: the notehead acknowledger captures the attachment record from the config current at acknowledge time onto the grob (as it already does for x-offset) and cnb:stem-attachment reads it from there, so a later \key change no longer rewrites earlier stems, proved by a spec with a key-dependent attachment and a mid-score key change. Finally all five suites run; any existing harvest that drifts is re-baselined on both versions only after every difference is checked to be one of these three fixes, and each re-baselined file (or that none drifted) is recorded in section 7.7 of docs/planning/project-plan.md.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/536c15790202ec63a5a9ad0ae861135193d0c2bc"><code>536c15790202ec63a5a9ad0ae861135193d0c2bc</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Duration category</td><td><p>In cnb/utils.ly compute cnb:duration-category from (ly:duration-log dur) alone as clamp(log + 1, 0, 3), dropping the length arithmetic and the cnb:duration-&gt;number shim if nothing else uses it, and fix the comments and cache-key examples to the documented scale (0 breve, 1 whole, 2 half, 3 quarter or shorter). In cnb/stencils.ly make cnb:build-duration-stencil double the head for category &lt;= 2 and again for &lt;= 1, so a half gets 2 heads and a whole or breve 4, and fix its comments. Confirm noteheads.ly and off-key.ly need no change (they pass the category straight to the lookup). In test-unit.ly replace the SKIP with tests built from ly:make-duration: every log from -1 to 4 undotted, single- and double-dotted, triplets (2/3 factor) of breve, whole, half and quarter, and cnb:make-cache-key over the four categories.</p></td><td><span class="mono">cnb/utils.ly</span><br><span class="mono">cnb/stencils.ly</span><br><span class="mono">test-unit.ly</span></td><td><code>python tools/run_unit.py --lilypond-version 2.24</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))</code></td><td>yes</td></tr>
+<tr><td>Duration rules spec</td><td><p>Add tests/duration-rules.ly: a small procedure config that gives each duration category a different hex colour (repeat on), engraving a breve, a whole, a half, a quarter, an eighth, dotted versions of the half, quarter and whole, a double-dotted quarter, and triplet halves and quarters, with cnb/test-ids.ly included. Add tests/duration-rules.json asserting each notehead's visual.color is its category's colour and its head count through bbox width relative to the quarter (4x breve and whole, 2x half, 1x quarter or shorter). Render it on 2.24 and 2.26 so its svg and both harvest baselines are written, and check each by eye before reporting.</p></td><td><span class="mono">tests/duration-rules.ly</span><br><span class="mono">tests/duration-rules.json</span><br><span class="mono">tests/duration-rules.svg</span><br><span class="mono">tests/duration-rules.harvested.json</span><br><span class="mono">tests/lilypond-2.26/duration-rules.harvested.json</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24 tests/duration-rules.json</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/duration-rules.json']))</code></td><td>yes</td></tr>
+<tr><td>Dots ledger</td><td><p>H3: in cnb/dots.ly move the dot relative to its notehead instead of to the notehead's absolute position, so the notehead's offset is counted once (for example a staff-position or Y-offset of dodge-dir half a staff space from the notehead), and update the module comment. Add tests/dots-ledger-lines.ly/.json with dotted notes on ledger lines above and below the staff and dotted notes off ledger lines (inside the staff and in ledger gaps), asserting each dot's vertical distance from its notehead is at most half a staff space plus tolerance and that dots on ledger lines dodge away from the staff. Render on 2.24 and 2.26 to write the svg and both harvest baselines.</p></td><td><span class="mono">cnb/dots.ly</span><br><span class="mono">tests/dots-ledger-lines.ly</span><br><span class="mono">tests/dots-ledger-lines.json</span><br><span class="mono">tests/dots-ledger-lines.svg</span><br><span class="mono">tests/dots-ledger-lines.harvested.json</span><br><span class="mono">tests/lilypond-2.26/dots-ledger-lines.harvested.json</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24 tests/dots-ledger-lines.json</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/dots-ledger-lines.json']))</code></td><td>yes</td></tr>
+<tr><td>Stem attachment capture</td><td><p>M1: in cnb/noteheads.ly declare a cnb-attachment grob property and, in the acknowledger block that already looks up the config for x-offset, store that config's attachment record on the notehead. In cnb/stems.ly make cnb:stem-attachment read the record from the grob, falling back to the default side record when it is absent, instead of calling cnb:lookup-config at layout time; update both modules' comments. Add tests/stem-attachment-key-change.ly/.json: a config whose attachment depends on whether F# is in the key, measure 1 in C major and measure 2 after \key g \major, asserting measure-1 stems keep the C-major attachment (stem x relative to its notehead) while measure-2 stems take the G-major one. Render on 2.24 and 2.26 to write the svg and both harvest baselines.</p></td><td><span class="mono">cnb/noteheads.ly</span><br><span class="mono">cnb/stems.ly</span><br><span class="mono">tests/stem-attachment-key-change.ly</span><br><span class="mono">tests/stem-attachment-key-change.json</span><br><span class="mono">tests/stem-attachment-key-change.svg</span><br><span class="mono">tests/stem-attachment-key-change.harvested.json</span><br><span class="mono">tests/lilypond-2.26/stem-attachment-key-change.harvested.json</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24 tests/stem-attachment-key-change.json</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/stem-attachment-key-change.json']))</code><br><code>python tools/run_unit.py --lilypond-version 2.24</code></td><td>yes</td></tr>
+<tr><td>Rebaseline record</td><td><p>Run all five suites. Where an existing harvest drifts, check that every difference is one of the three fixes above, then re-baseline it with --update-baselines on both 2.24 and 2.26 (amending this step's files through dabbler session plan amend to name each re-baselined harvest). Add a 'Session 12 re-baselines (2026-11-02)' paragraph to section 7.7 of docs/planning/project-plan.md naming each re-baselined file and why, or stating that no existing harvest drifted.</p></td><td><span class="mono">docs/planning/project-plan.md</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']))</code><br><code>python -c import sys; s=open('docs/planning/project-plan.md', encoding='utf-8').read(); sec=s[s.index('### 7.7'):]; sys.exit(0 if 'Session 12 re-baselines' in sec else 1)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No other audit finding is fixed here (M2 harvester geometry and the rest belong to sessions 13-16 of the session plan).</li><li>No change to the configs in Kite-4-369-Notation-Procedure.ly, kite-4-369-from-configurator.ly or joy-to-the-world.ly, none of which branch on duration, and no change to the export spec, which already states the corrected scale.</li><li>No release, version bump or CHANGELOG entry: the 1.1.1 release is a session of its own.</li><li>No change to the test-ids data-duration attribute, which stays the raw duration log.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[11:25:21]</span> <span class="muted">run-started</span> session=012 mode=pull</div>
+<div class="line"><span class="at">[11:25:21]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[11:34:25]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[11:34:25]</span> <span class="muted">plan-accepted</span> steps=[&quot;duration-category&quot;,&quot;duration-rules-spec&quot;,&quot;dots-ledger&quot;,&quot;stem-attachment-capture&quot;,&quot;rebaseline-record&quot;] non_goals=4</div>
+<div class="line"><span class="at">[11:34:37]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[11:34:37]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=duration-category</div>
+<div class="line"><span class="at">[11:38:25]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[11:38:41]</span> <span class="muted">check-passed</span> step=duration-category argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[11:38:52]</span> <span class="muted">check-passed</span> step=duration-category argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))&quot;]</div>
+<div class="line"><span class="at">[11:38:54]</span> <span class="muted">report-accepted</span> seq=2 step=duration-category files=[&quot;cnb/utils.ly&quot;,&quot;cnb/stencils.ly&quot;,&quot;test-unit.ly&quot;] notes=duration-category = clamp(log+1,0,3); repeat doubles at &lt;=2 and &lt;=1; length shim and the now-unused cnb:log2 (and its tests) removed; noteheads.ly/off-key.ly confirmed unchanged; 325 unit passes on 2.24 and 2.26, no integration drift</div>
+<div class="line"><span class="at">[11:38:54]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=duration-rules-spec</div>
+<div class="line"><span class="at">[11:44:35]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[11:45:03]</span> <span class="muted">check-passed</span> step=duration-rules-spec argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/duration-rules.json&quot;]</div>
+<div class="line"><span class="at">[11:45:18]</span> <span class="muted">check-passed</span> step=duration-rules-spec argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/duration-rules.json']))&quot;]</div>
+<div class="line"><span class="at">[11:45:25]</span> <span class="muted">report-accepted</span> seq=3 step=duration-rules-spec files=[&quot;tests/duration-rules.ly&quot;,&quot;tests/duration-rules.json&quot;,&quot;tests/duration-rules.svg&quot;,&quot;tests/duration-rules.harvested.json&quot;,&quot;tests/lilypond-2.26/duration-rules.harvested.json&quot;] notes=20-note G4 score (breve, whole, half, quarter, eighth, 16th, dotted half/quarter/whole, double-dotted quarter, triplet halves and quarters) under a per-category colour config; spec asserts colour and width (1x, 1.5x, 2.5x the quarter); both versions pass; PNG checked by eye</div>
+<div class="line"><span class="at">[11:45:25]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=dots-ledger</div>
+<div class="line"><span class="at">[11:52:21]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[11:52:36]</span> <span class="muted">check-passed</span> step=dots-ledger argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/dots-ledger-lines.json&quot;]</div>
+<div class="line"><span class="at">[11:52:47]</span> <span class="muted">check-passed</span> step=dots-ledger argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/dots-ledger-lines.json']))&quot;]</div>
+<div class="line"><span class="at">[11:52:53]</span> <span class="muted">report-accepted</span> seq=4 step=dots-ledger files=[&quot;cnb/dots.ly&quot;,&quot;tests/dots-ledger-lines.ly&quot;,&quot;tests/dots-ledger-lines.json&quot;,&quot;tests/dots-ledger-lines.svg&quot;,&quot;tests/dots-ledger-lines.harvested.json&quot;,&quot;tests/lilypond-2.26/dots-ledger-lines.harvested.json&quot;] notes=dots.ly sets the dot's staff-position to the dodge alone (relative to its notehead); before, c'2. put its dot at -12.5 for a notehead at -6.0, now -6.5; spec covers 15 dotted halves on/between ledger lines above and below and inside the staff; both versions pass, full integration suites pass with no drift</div>
+<div class="line"><span class="at">[11:52:53]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=stem-attachment-capture</div>
+<div class="line"><span class="at">[11:58:46]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[11:59:06]</span> <span class="muted">check-passed</span> step=stem-attachment-capture argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/stem-attachment-key-change.json&quot;]</div>
+<div class="line"><span class="at">[11:59:13]</span> <span class="muted">check-passed</span> step=stem-attachment-capture argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26', 'tests/stem-attachment-key-change.json']))&quot;]</div>
+<div class="line"><span class="at">[11:59:25]</span> <span class="muted">check-passed</span> step=stem-attachment-capture argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[11:59:31]</span> <span class="muted">report-accepted</span> seq=5 step=stem-attachment-capture files=[&quot;cnb/noteheads.ly&quot;,&quot;cnb/stems.ly&quot;,&quot;tests/stem-attachment-key-change.ly&quot;,&quot;tests/stem-attachment-key-change.json&quot;,&quot;tests/stem-attachment-key-change.svg&quot;,&quot;tests/stem-attachment-key-change.harvested.json&quot;,&quot;tests/lilypond-2.26/stem-attachment-key-change.harvested.json&quot;] notes=notehead engraver captures the config's attachment record as grob property cnb-attachment at acknowledge time; cnb:stem-attachment reads it (default side record when absent) instead of the layout-time cache; the new spec failed before the fix (measure-1 stems centred) and passes on both versions; full suites pass with no drift</div>
+<div class="line"><span class="at">[11:59:31]</span> <span class="muted">instruction-issued</span> seq=6 kind=step step=rebaseline-record</div>
+<div class="line"><span class="at">[12:02:26]</span> <span class="muted">run-resumed</span> session=012 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[12:02:51]</span> <span class="muted">check-passed</span> step=rebaseline-record argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[12:03:20]</span> <span class="muted">check-passed</span> step=rebaseline-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']))&quot;]</div>
+<div class="line"><span class="at">[12:03:26]</span> <span class="muted">check-passed</span> step=rebaseline-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s=open('docs/planning/project-plan.md', encoding='utf-8').read(); sec=s[s.index('### 7.7'):]; sys.exit(0 if 'Session 12 re-baselines' in sec else 1)&quot;]</div>
+<div class="line"><span class="at">[12:03:28]</span> <span class="muted">report-accepted</span> seq=6 step=rebaseline-record files=[&quot;docs/planning/project-plan.md&quot;] notes=all five suites pass on 2.24 and 2.26 (303 integration tests, 325 unit, 34 tooling) with no existing harvest drift, so nothing was re-baselined; section 7.7 records that and why, and names the three new specs' first baselines</div>
+<div class="line"><span class="at">[12:03:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[12:03:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[12:03:34]</span> <span class="muted">job-started</span> name=verification pid=49308 log=.dabbler/runs/s12/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[12:05:08]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[12:05:08]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[12:05:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[12:05:26]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[12:05:28]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=53044 log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[12:06:05]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[12:06:10]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[12:06:12]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=80244 log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[12:06:35]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[12:06:46]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[12:06:49]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=80548 log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[12:08:12]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[12:08:23]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[12:08:26]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=3752 log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[12:09:10]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[12:09:10]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[12:11:29]</span> <span class="muted">landed</span> commit=536c15790202ec63a5a9ad0ae861135193d0c2bc</div>
+<div class="line"><span class="at">[12:11:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[12:11:36]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[12:11:36]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[12:11:49]</span> <span class="muted">job-started</span> name=close pid=81916 log=.dabbler/runs/s12/driver/jobs/close.log</div>
+<div class="line"><span class="at">[12:15:14]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s12/driver/jobs/close.log</div>
+<div class="line"><span class="at">[12:15:14]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>2 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** The unit coverage does not literally cover tuplets for every required duration log.</td><td>not answered</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>`test-unit.ly` tests plain/dotted/double-dotted logs −1 through 4, but its triplet cases stop at quarter (`log 2`) except for one dotted triplet half. Add unit assertions with `(ly:make-duration 3 0 2 3)` and `(ly:make-duration 4 0 2 3)`—and ideally dotted equivalents—expecting category `3`. The current implementation returns `3`; this is a non-blocking gap in the session-promised regression matrix rather than evidence of a product defect.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>21s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>10s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>51s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>14s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
