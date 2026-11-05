@@ -1,0 +1,38 @@
+{
+  "test_name": "A key signature engraved before the first note draws its noteheads (session 20)",
+  "input_file": "keysig-before-first-note.ly",
+  "description": "Regression test for 'Improbable offset for stencil: -inf staff space'. The staff opens on a rest, so the Bb-major key signature is engraved before any notehead. Its display used to read the procedure config cache before the notehead engraver had filled it: every keysig notehead was empty-stencil with -inf width, and the display shrank to its separator bar (zero width) or, on this config, LilyPond aborted. The key-signature engraver now refreshes the cache for the current key first. The key signature must be present and as wide as its two noteheads, not the zero width of the bar alone.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE KEY SIGNATURE DRAWS ITS NOTEHEADS ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Bb-major key signature present, with the width of its noteheads (the bar alone is 0 wide)",
+      "expect": {
+        "type":          ["== 'key-signature'", "count('key-signature') == 1"],
+        "visual.bbox.w": ["v > 1.5"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE MUSIC AFTER THE REST RENDERS ==="},
+
+    {
+      "id": "rs-1-0.000-0",
+      "description": "The opening rest that puts the key signature before the first note",
+      "expect": {
+        "type": ["== 'rest'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.250-60-0",
+      "description": "The three notes after the rest render",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 3"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}
