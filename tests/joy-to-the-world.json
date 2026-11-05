@@ -1,0 +1,747 @@
+{
+  "test_name": "Joy to the World, Kite 4-369 notation (D major, 2/4, 4 systems)",
+  "input_file": "joy-to-the-world.ly",
+  "assertions": [
+
+    {"_comment": "====== SECTION 1: Element Counts ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "Element counts: 57 noteheads, 17 beams, 7 flags, 11 dots",
+      "expect": {
+        "type": ["== 'notehead'"],
+        "data.midi": [
+          "count('notehead') == 57",
+          "count('beam') == 17",
+          "count('flag') == 7",
+          "count('dots') == 11"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 2: Staff Geometry ======"},
+    {
+      "id": "staff-symbol",
+      "description": "Kite 4-369 staff has 6 lines",
+      "expect": {
+        "type": ["== 'staff-symbol'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 3: Multi-System Assignment ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "System 0: measure 1 (D5 opening note)",
+      "expect": {
+        "staff_relative.system": ["== 0"]
+      }
+    },
+    {
+      "id": "nh-8-0.000-74-0",
+      "description": "System 1: measure 8 (D5 descending run)",
+      "expect": {
+        "staff_relative.system": ["== 1"]
+      }
+    },
+    {
+      "id": "nh-12-0.000-66-0",
+      "description": "System 2: measure 12 (F#4 repeated notes)",
+      "expect": {
+        "staff_relative.system": ["== 2"]
+      }
+    },
+    {
+      "id": "nh-16-0.000-62-0",
+      "description": "System 3: measure 16 (D4 octave leap)",
+      "expect": {
+        "staff_relative.system": ["== 3"]
+      }
+    },
+
+    {"_comment": "====== SECTION 4: Opening Descending Scale (m1) ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "m1 beat 1: D5 quarter note",
+      "expect": {
+        "data.midi": ["== '74'"],
+        "data.pitch-class": ["== '2'"],
+        "data.duration": ["== '2'"],
+        "data.measure": ["== '1'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+    {
+      "id": "nh-1-0.250-73-0",
+      "description": "m1 beat 2: C#5 dotted eighth",
+      "expect": {
+        "data.midi": ["== '73'"],
+        "data.pitch-class": ["== '1'"],
+        "data.duration": ["== '3'"]
+      }
+    },
+    {
+      "id": "nh-1-0.438-71-0",
+      "description": "m1 beat 2+: B4 sixteenth",
+      "expect": {
+        "data.midi": ["== '71'"],
+        "data.pitch-class": ["== '11'"],
+        "data.duration": ["== '4'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 5: Dotted Quarter + Eighth (m2) ======"},
+    {
+      "id": "nh-2-0.000-69-0",
+      "description": "m2 beat 1: A4 dotted quarter",
+      "expect": {
+        "data.midi": ["== '69'"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-2-0.375-67-0",
+      "description": "m2 beat 2: G4 eighth",
+      "expect": {
+        "data.midi": ["== '67'"],
+        "data.duration": ["== '3'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 6: Quarter Notes (m3) ======"},
+    {
+      "id": "nh-3-0.000-66-0",
+      "description": "m3 beat 1: F#4 quarter",
+      "expect": {
+        "data.midi": ["== '66'"],
+        "data.pitch-class": ["== '6'"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-3-0.250-64-0",
+      "description": "m3 beat 2: E4 quarter",
+      "expect": {
+        "data.midi": ["== '64'"],
+        "data.pitch-class": ["== '4'"],
+        "data.duration": ["== '2'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 7: Low D + Upward Leap (m4) ======"},
+    {
+      "id": "nh-4-0.000-62-0",
+      "description": "m4 beat 1: D4 dotted quarter (lowest D)",
+      "expect": {
+        "data.midi": ["== '62'"],
+        "data.pitch-class": ["== '2'"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-4-0.375-69-0",
+      "description": "m4 beat 2: A4 eighth (upward fifth leap)",
+      "expect": {
+        "data.midi": ["== '69'"],
+        "data.duration": ["== '3'"],
+        "staff_relative.vertical": [
+          "v > prop('nh-4-0.000-62-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 8: Repeated Notes (m5-m6) ======"},
+    {
+      "id": "nh-5-0.000-71-0",
+      "description": "m5: B4 dotted quarter, same pitch as beat 2",
+      "expect": {
+        "data.midi": ["== '71'"],
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-5-0.375-71-0', 'staff_relative.vertical')) < 0.01"
+        ]
+      }
+    },
+    {
+      "id": "nh-6-0.000-73-0",
+      "description": "m6: C#5 repeated, same pitch both beats",
+      "expect": {
+        "data.midi": ["== '73'"],
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-6-0.375-73-0', 'staff_relative.vertical')) < 0.01"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 9: Ascending Sequence m5-m7 ======"},
+    {
+      "id": "nh-7-0.000-74-0",
+      "description": "m7: D5 at top of ascending sequence B4-C#5-D5",
+      "expect": {
+        "data.midi": ["== '74'"],
+        "data.duration": ["== '2'"],
+        "staff_relative.vertical": [
+          "v > prop('nh-6-0.000-73-0', 'staff_relative.vertical')",
+          "v > prop('nh-5-0.000-71-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 10: Descending Eighth-Note Run (m8) ======"},
+    {
+      "id": "nh-8-0.000-74-0",
+      "description": "m8 note 1: D5 eighth",
+      "expect": {
+        "data.midi": ["== '74'"],
+        "data.duration": ["== '3'"]
+      }
+    },
+    {
+      "id": "nh-8-0.125-73-0",
+      "description": "m8 note 2: C#5 eighth",
+      "expect": {
+        "data.midi": ["== '73'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-8-0.000-74-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-8-0.250-71-0",
+      "description": "m8 note 3: B4 eighth",
+      "expect": {
+        "data.midi": ["== '71'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-8-0.125-73-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-8-0.375-69-0",
+      "description": "m8 note 4: A4 eighth (lowest in run)",
+      "expect": {
+        "data.midi": ["== '69'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-8-0.250-71-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 11: Dotted-Eighth + 16th + Leap (m9) ======"},
+    {
+      "id": "nh-9-0.000-69-0",
+      "description": "m9 beat 1: A4 dotted eighth",
+      "expect": {
+        "data.midi": ["== '69'"],
+        "data.duration": ["== '3'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+    {
+      "id": "nh-9-0.188-67-0",
+      "description": "m9: G4 sixteenth (ornamental)",
+      "expect": {
+        "data.midi": ["== '67'"],
+        "data.duration": ["== '4'"],
+        "data.beat": ["== '0.188'"]
+      }
+    },
+    {
+      "id": "nh-9-0.250-66-0",
+      "description": "m9: F#4 eighth",
+      "expect": {
+        "data.midi": ["== '66'"]
+      }
+    },
+    {
+      "id": "nh-9-0.375-74-0",
+      "description": "m9: D5 eighth (octave leap up from F#4)",
+      "expect": {
+        "data.midi": ["== '74'"],
+        "staff_relative.vertical": [
+          "v > prop('nh-9-0.250-66-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 12: Repeated F# Section (m12) ======"},
+    {
+      "id": "nh-12-0.000-66-0",
+      "description": "m12 note 1: F#4 repeated (4 of same pitch)",
+      "expect": {
+        "data.midi": ["== '66'"],
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-12-0.125-66-0', 'staff_relative.vertical')) < 0.01",
+          "abs(v - prop('nh-12-0.250-66-0', 'staff_relative.vertical')) < 0.01",
+          "abs(v - prop('nh-12-0.375-66-0', 'staff_relative.vertical')) < 0.01"
+        ]
+      }
+    },
+    {
+      "id": "nh-12-0.438-67-0",
+      "description": "m12 last note: G4 sixteenth (turn figure, above F#)",
+      "expect": {
+        "data.midi": ["== '67'"],
+        "data.duration": ["== '4'"],
+        "staff_relative.vertical": [
+          "v > prop('nh-12-0.375-66-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 13: Repeated E Section (m14) ======"},
+    {
+      "id": "nh-14-0.000-64-0",
+      "description": "m14 note 1: E4 repeated (parallel to m12 F#4)",
+      "expect": {
+        "data.midi": ["== '64'"],
+        "data.duration": ["== '3'"],
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-14-0.125-64-0', 'staff_relative.vertical')) < 0.01",
+          "abs(v - prop('nh-14-0.250-64-0', 'staff_relative.vertical')) < 0.01"
+        ]
+      }
+    },
+    {
+      "id": "nh-14-0.438-66-0",
+      "description": "m14 last note: F#4 sixteenth (turn figure)",
+      "expect": {
+        "data.midi": ["== '66'"],
+        "data.duration": ["== '4'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 14: Octave Leap (m16) ======"},
+    {
+      "id": "nh-16-0.000-62-0",
+      "description": "m16: D4 eighth (low D, start of octave leap)",
+      "expect": {
+        "data.midi": ["== '62'"],
+        "data.duration": ["== '3'"],
+        "staff_relative.system": ["== 3"]
+      }
+    },
+    {
+      "id": "nh-16-0.125-74-0",
+      "description": "m16: D5 quarter (high D, octave above D4)",
+      "expect": {
+        "data.midi": ["== '74'"],
+        "data.duration": ["== '2'"],
+        "staff_relative.vertical": [
+          "v > prop('nh-16-0.000-62-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-16-0.375-71-0",
+      "description": "m16: B4 eighth",
+      "expect": {
+        "data.midi": ["== '71'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-16-0.125-74-0', 'staff_relative.vertical')",
+          "v > prop('nh-16-0.000-62-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 15: Final Cadence (m17-m19) ======"},
+    {
+      "id": "nh-17-0.250-66-0",
+      "description": "m17: F#4 eighth",
+      "expect": {
+        "data.midi": ["== '66'"],
+        "data.measure": ["== '17'"]
+      }
+    },
+    {
+      "id": "nh-18-0.000-66-0",
+      "description": "m18: F#4 quarter (penultimate bar, tonic approach)",
+      "expect": {
+        "data.midi": ["== '66'"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-18-0.250-64-0",
+      "description": "m18: E4 quarter (leading tone resolution to D)",
+      "expect": {
+        "data.midi": ["== '64'"],
+        "data.duration": ["== '2'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-18-0.000-66-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-19-0.000-62-0",
+      "description": "m19: D4 half note (final tonic)",
+      "expect": {
+        "data.midi": ["== '62'"],
+        "data.duration": ["== '1'"],
+        "data.pitch-class": ["== '2'"],
+        "staff_relative.vertical": [
+          "v < prop('nh-18-0.250-64-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 16: D Major Scale Membership ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "All pitch classes in D major: {1,2,4,6,7,9,11}",
+      "expect": {
+        "data.pitch-class": [
+          "all(prop(e_id, 'data.pitch-class') in ('1','2','4','6','7','9','11') for e_id in el if el[e_id].get('type') == 'notehead')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 17: Vertical Ordering ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "m1 descending: D5 > C#5 > B4",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-1-0.250-73-0', 'staff_relative.vertical')",
+          "prop('nh-1-0.250-73-0', 'staff_relative.vertical') > prop('nh-1-0.438-71-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-2-0.000-69-0",
+      "description": "m2: A4 > G4 (descending)",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-2-0.375-67-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-3-0.000-66-0",
+      "description": "m3: F#4 > E4 (descending)",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-3-0.250-64-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+    {
+      "id": "nh-10-0.000-74-0",
+      "description": "m10 descending run: D5 > C#5 > B4 > A4",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-10-0.125-73-0', 'staff_relative.vertical')",
+          "prop('nh-10-0.125-73-0', 'staff_relative.vertical') > prop('nh-10-0.250-71-0', 'staff_relative.vertical')",
+          "prop('nh-10-0.250-71-0', 'staff_relative.vertical') > prop('nh-10-0.375-69-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 18: Chromatic Spacing ======"},
+    {
+      "id": "nh-8-0.000-74-0",
+      "description": "1-semitone step D5→C#5 ≈ 0.0556 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs((v - prop('nh-8-0.125-73-0', 'staff_relative.vertical')) - 0.0556) < 0.015"
+        ]
+      }
+    },
+    {
+      "id": "nh-8-0.125-73-0",
+      "description": "2-semitone step C#5→B4 ≈ 0.111 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs((v - prop('nh-8-0.250-71-0', 'staff_relative.vertical')) - 0.111) < 0.02"
+        ]
+      }
+    },
+    {
+      "id": "nh-8-0.250-71-0",
+      "description": "2-semitone step B4→A4 ≈ 0.111 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs((v - prop('nh-8-0.375-69-0', 'staff_relative.vertical')) - 0.111) < 0.02"
+        ]
+      }
+    },
+    {
+      "id": "nh-16-0.125-74-0",
+      "description": "Octave leap D4→D5 ≈ 0.667 vertical (12 × 0.0556)",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs((v - prop('nh-16-0.000-62-0', 'staff_relative.vertical')) - 0.667) < 0.04"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 19: Color Consistency ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "D5 and D4 same pitch class → same color",
+      "expect": {
+        "visual.color": [
+          "v is not None",
+          "v == prop('nh-4-0.000-62-0', 'visual.color')",
+          "v == prop('nh-19-0.000-62-0', 'visual.color')"
+        ]
+      }
+    },
+    {
+      "id": "nh-1-0.250-73-0",
+      "description": "All C#5 noteheads share the same color",
+      "expect": {
+        "visual.color": [
+          "v is not None",
+          "v == prop('nh-6-0.000-73-0', 'visual.color')",
+          "v == prop('nh-8-0.125-73-0', 'visual.color')"
+        ]
+      }
+    },
+    {
+      "id": "nh-2-0.000-69-0",
+      "description": "All A4 noteheads share the same color",
+      "expect": {
+        "visual.color": [
+          "v is not None",
+          "v == prop('nh-8-0.375-69-0', 'visual.color')",
+          "v == prop('nh-13-0.000-69-0', 'visual.color')"
+        ]
+      }
+    },
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "Three distinct color groups (D≠C#, D≠A, via pitch class mod 3)",
+      "expect": {
+        "visual.color": [
+          "v != prop('nh-1-0.250-73-0', 'visual.color')",
+          "v != prop('nh-2-0.000-69-0', 'visual.color')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 20: Horizontal Ordering ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "m1 horizontal order: beat 0.000 < 0.250 < 0.438",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v is not None",
+          "v < prop('nh-1-0.250-73-0', 'staff_relative.horizontal')",
+          "prop('nh-1-0.250-73-0', 'staff_relative.horizontal') < prop('nh-1-0.438-71-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+    {
+      "id": "nh-8-0.000-74-0",
+      "description": "m8 horizontal: 4 even eighths in order",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-8-0.125-73-0', 'staff_relative.horizontal')",
+          "prop('nh-8-0.125-73-0', 'staff_relative.horizontal') < prop('nh-8-0.250-71-0', 'staff_relative.horizontal')",
+          "prop('nh-8-0.250-71-0', 'staff_relative.horizontal') < prop('nh-8-0.375-69-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+    {
+      "id": "nh-12-0.000-66-0",
+      "description": "m12 horizontal: 5 notes in order (system 2)",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-12-0.125-66-0', 'staff_relative.horizontal')",
+          "prop('nh-12-0.250-66-0', 'staff_relative.horizontal') < prop('nh-12-0.375-66-0', 'staff_relative.horizontal')",
+          "prop('nh-12-0.375-66-0', 'staff_relative.horizontal') < prop('nh-12-0.438-67-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+    {
+      "id": "nh-16-0.000-62-0",
+      "description": "m16 horizontal: D4 < D5 < B4 (system 3)",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-16-0.125-74-0', 'staff_relative.horizontal')",
+          "prop('nh-16-0.125-74-0', 'staff_relative.horizontal') < prop('nh-16-0.375-71-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 21: Beams ======"},
+    {"_comment": "Beam IDs now reflect the first note in the beam group (after test-ids.ly fix)."},
+    {
+      "id": "bm-1-0.250-0",
+      "description": "m1 beam: cis8. b16",
+      "expect": {
+        "type": ["== 'beam'"],
+        "data.measure": ["== '1'"],
+        "data.beat": ["== '0.250'"]
+      }
+    },
+    {
+      "id": "bm-8-0.000-0",
+      "description": "m8 beat-1 beam: d8 cis8",
+      "expect": {
+        "type": ["== 'beam'"],
+        "data.measure": ["== '8'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+    {
+      "id": "bm-8-0.250-0",
+      "description": "m8 beat-2 beam: b8 a8",
+      "expect": {
+        "type": ["== 'beam'"],
+        "data.measure": ["== '8'"],
+        "data.beat": ["== '0.250'"]
+      }
+    },
+    {
+      "id": "bm-12-0.000-0",
+      "description": "m12 beat-1 beam: fis8 fis8",
+      "expect": {
+        "type": ["== 'beam'"],
+        "data.measure": ["== '12'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+    {
+      "id": "bm-17-0.000-0",
+      "description": "m17 beat-1 beam: a8. g16",
+      "expect": {
+        "type": ["== 'beam'"],
+        "data.measure": ["== '17'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 22: Flags ======"},
+    {
+      "id": "fl-2-0.375-0",
+      "description": "m2: g8 gets flag (isolated eighth after dotted quarter)",
+      "expect": {
+        "type": ["== 'flag'"],
+        "data.measure": ["== '2'"]
+      }
+    },
+    {
+      "id": "fl-4-0.375-0",
+      "description": "m4: a8 gets flag (isolated eighth after dotted quarter)",
+      "expect": {
+        "type": ["== 'flag'"],
+        "data.measure": ["== '4'"]
+      }
+    },
+    {
+      "id": "fl-16-0.000-0",
+      "description": "m16: d8 gets flag (isolated eighth before quarter)",
+      "expect": {
+        "type": ["== 'flag'"],
+        "data.measure": ["== '16'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 23: Dots ======"},
+    {
+      "id": "dt-1-0.250-73-0",
+      "description": "m1: C#5 dotted eighth has dot element",
+      "expect": {
+        "type": ["== 'dots'"],
+        "data.midi": ["== '73'"]
+      }
+    },
+    {
+      "id": "dt-2-0.000-69-0",
+      "description": "m2: A4 dotted quarter has dot element",
+      "expect": {
+        "type": ["== 'dots'"],
+        "data.midi": ["== '69'"]
+      }
+    },
+    {
+      "id": "dt-7-0.000-74-0",
+      "description": "m7: D5 dotted quarter has dot element (system 1)",
+      "expect": {
+        "type": ["== 'dots'"],
+        "data.midi": ["== '74'"]
+      }
+    },
+    {
+      "id": "dt-13-0.000-69-0",
+      "description": "m13: A4 dotted quarter has dot element (system 2)",
+      "expect": {
+        "type": ["== 'dots'"],
+        "data.midi": ["== '69'"]
+      }
+    },
+
+    {"_comment": "====== SECTION 24: Cross-System Vertical Consistency ======"},
+    {
+      "id": "nh-8-0.000-74-0",
+      "description": "D5 on system 1 ≈ same vertical as D5 on system 0",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.000-74-0', 'staff_relative.vertical')) < 0.02"
+        ]
+      }
+    },
+    {
+      "id": "nh-12-0.000-66-0",
+      "description": "F#4 on system 2 ≈ same vertical as F#4 on system 0",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-3-0.000-66-0', 'staff_relative.vertical')) < 0.02"
+        ]
+      }
+    },
+    {
+      "id": "nh-19-0.000-62-0",
+      "description": "D4 on system 3 ≈ same vertical as D4 on system 0",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-4-0.000-62-0', 'staff_relative.vertical')) < 0.02"
+        ]
+      }
+    },
+
+    {"_comment": "====== SECTION 25: Horizontal Sanity (in-measure range) ======"},
+    {
+      "id": "nh-9-0.000-69-0",
+      "description": "m9 first note horizontal in [0, 0.5] of measure",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.0", "<= 0.5"]
+      }
+    },
+    {
+      "id": "nh-13-0.438-66-0",
+      "description": "m13 last note horizontal in [0.5, 1.0] of measure",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.5", "<= 1.05"]
+      }
+    },
+    {
+      "id": "nh-15-0.000-67-0",
+      "description": "m15 first note horizontal in [0, 0.5] (system 3)",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.0", "<= 0.5"]
+      }
+    },
+
+    {"_comment": "====== SECTION 26: Same-Pitch Same-Shape ======"},
+    {
+      "id": "nh-1-0.000-74-0",
+      "description": "All D5 noteheads share the same path shape",
+      "expect": {
+        "visual.path_hash": [
+          "v is not None",
+          "v == prop('nh-7-0.000-74-0', 'visual.path_hash')"
+        ]
+      }
+    },
+    {
+      "id": "nh-3-0.000-66-0",
+      "description": "F#4 noteheads share the same path shape across systems",
+      "expect": {
+        "visual.path_hash": [
+          "v is not None",
+          "v == prop('nh-12-0.000-66-0', 'visual.path_hash')"
+        ]
+      }
+    }
+  ]
+}
