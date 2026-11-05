@@ -15,6 +15,8 @@
 %% in it. Measure 1 is in C major and measure 2 in G major, with the same
 %% notes: measure 1 must keep side-attached stems.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(cnb:register-attachment! 'center-stem

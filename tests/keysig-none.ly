@@ -12,6 +12,8 @@
 %% The paired JSON spec asserts the key-signature element is absent from
 %% the SVG while the noteheads render normally.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:keysig-style 'none)

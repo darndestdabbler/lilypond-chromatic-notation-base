@@ -25,6 +25,8 @@
 %% off-key indicator was retired); this test previously covered the
 %% vector-model off-key call site, which no longer exists.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:use-procedure-model #t)

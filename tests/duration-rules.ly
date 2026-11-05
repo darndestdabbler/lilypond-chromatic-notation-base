@@ -11,6 +11,8 @@
 %% a half, 1 for a quarter or shorter) from its width. Every note is G4,
 %% so widths compare directly.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:get-notehead-config

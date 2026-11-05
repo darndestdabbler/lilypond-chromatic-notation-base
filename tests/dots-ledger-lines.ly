@@ -15,6 +15,8 @@
 %%   on ledger lines above the staff:   c''' d''' e''' gis'''
 %%   between ledger lines above:        f'''
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 \include "cnb/test-ids.ly"
 

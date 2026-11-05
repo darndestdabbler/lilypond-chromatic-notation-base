@@ -10,6 +10,8 @@
 %% overlay would hide it. Same shapes and attachment as stem-centre.ly;
 %% every note here is hollow (odd semitones).
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:semitones-per-staff-space 3)

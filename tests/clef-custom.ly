@@ -16,6 +16,8 @@
 %% The paired JSON spec asserts the harvested clef bbox (a path stencil
 %% harvests real outline geometry, unlike the dozenal text anchors).
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(cnb:register-clef! 'test-rect

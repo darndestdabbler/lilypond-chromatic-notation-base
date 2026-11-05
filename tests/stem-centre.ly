@@ -13,6 +13,8 @@
 %% Measure 1: crotchets with stems up and down on each head.
 %% Measure 2: a minim, a beamed pair of quavers and a two-note chord.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:semitones-per-staff-space 3)

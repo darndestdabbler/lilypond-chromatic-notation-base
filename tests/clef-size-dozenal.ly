@@ -15,6 +15,8 @@
 %% default-render width measured from tests/c-major-scale.json's
 %% harvest (1.102).
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:clef-size-semitones 8)

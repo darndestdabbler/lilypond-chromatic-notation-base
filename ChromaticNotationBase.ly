@@ -32,6 +32,13 @@
 %%
 %%   See Kite-4-369-Notation-Procedure.ly for a complete config example.
 %%
+%%   A plain score (for example musicxml2ly output) needs nothing but the
+%%   include line: cnb/score-defaults.ly magnifies every staff by
+%%   cnb:default-magnify and indents systems so instrument names fit.
+%%   To opt out, define the flag BEFORE including the engine or config:
+%%        #(define cnb:score-defaults #f)
+%%        \include "MyNotation.ly"
+%%
 %% BASE PROPERTIES (defaults, overridable in config files):
 %%   - Dozenal clef notation (numbers instead of clef symbols)
 %%   - Notehead key signatures (chord stacks instead of sharps/flats)
@@ -60,6 +67,8 @@
 %%   cnb/dots.ly            — Augmentation dot avoidance for ledger lines
 %%   cnb/off-key.ly         — Off-key note flags (configurable visual indicators)
 %%   cnb/layout.ly          — Engraver registration and paper settings
+%%   cnb/score-defaults.ly  — Staff magnification and instrument-name indent
+%%                            (opt out: cnb:score-defaults #f)
 %%
 %%   Modules are loaded in dependency order — each module may rely on
 %%   modules listed above it, but never on modules listed below it.
@@ -87,3 +96,4 @@
 \include "cnb/dots.ly"
 \include "cnb/off-key.ly"
 \include "cnb/layout.ly"
+\include "cnb/score-defaults.ly"

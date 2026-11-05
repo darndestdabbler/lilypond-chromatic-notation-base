@@ -116,6 +116,65 @@ lilypond -dbackend=eps -dno-gs-load-fonts -dinclude-eps-fonts --png my-score.ly
 Output files appear in the current directory.
 
 
+## Starting from MusicXML
+
+A score exported from MuseScore, Finale, Sibelius or Dorico as MusicXML
+needs no converter of its own. `musicxml2ly` ships with LilyPond, and
+[Frescobaldi](https://frescobaldi.org/) wraps it.
+
+1. In Frescobaldi, choose **File → Import/Export → Import MusicXML…** and
+   keep the dialog's default boxes: *page layout*, *beaming*, *rest
+   positions* and *articulation directions* all **unchecked**. That is
+   `musicxml2ly --nd --nrp --npl --no-beaming` on the command line.
+2. Add one line after `\version`, naming your notation config (or
+   `ChromaticNotationBase.ly` for the engine's plain defaults):
+
+   ```lilypond
+   \version "2.24.2"
+   \include "kite-4-369-from-configurator.ly"
+   % ... musicxml2ly's output, unchanged ...
+   ```
+
+3. Engrave. Clefs, key signatures and time signatures come from the score,
+   so no other translation is needed.
+
+**What the engine applies by itself.** A converted score sets no staff size
+and no indent, so `cnb/score-defaults.ly` does: every staff gets
+`\magnifyStaff #cnb:default-magnify`, the first system gets a 25 mm indent,
+and later systems get a 12 mm short-indent, so instrument names and their
+abbreviations are not clipped at the page edge. A score's own `\paper` and
+`\layout` still win. A staff that already magnifies itself is not magnified
+twice. The magnification is read when the engine is included, so a config
+that later `set!`s `cnb:default-magnify` does not change it. To use another
+size, give the staff its own `\magnifyStaff` in its `\with` block, which
+replaces the default.
+
+To opt out of these defaults, define the flag **before** the `\include`:
+
+```lilypond
+#(define cnb:score-defaults #f)
+\include "kite-4-369-from-configurator.ly"
+```
+
+[`tests/from-musicxml.ly`](tests/from-musicxml.ly) is a converted score
+with only the include lines added. Its spec proves the magnified staff and
+the indent.
+
+**When musicxml2ly gets it wrong.** These three failures came from
+musicxml2ly, not the engine: each one also fails without a config.
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `cresc. = #(make-dynamic-script "cresc.")` is a syntax error | musicxml2ly names a text dynamic with a dot, which is not a valid identifier | Rename it without the dot (for example `crescText = #(make-dynamic-script "cresc.")`), and rename every `\cresc.` that uses it to match |
+| Note names like `fisisisisisis` | a bad `<alter>` mapping stacks sharps or flats | Correct the `<alter>` in the MusicXML and convert again, or replace each such note with the pitch the original score shows |
+| musicxml2ly crashes on nested tuplets (`TypeError: '>' not supported between instances of 'int' and 'NoneType'`) | a bug in musicxml2ly 2.24.2 | Convert that file with the fallback converter below |
+
+**Fallback converter.** When musicxml2ly cannot convert a file,
+[MusicFormats](https://github.com/jacques-menu/musicformats) `xml2ly`
+(Jacques Menu, MPL-2.0, with Windows binaries) converts MusicXML to
+LilyPond independently. Add the same include line to its output.
+
+
 ## End-to-End Walkthrough: Rendering an Exported Config
 
 This is the render half of the three-tool pipeline — the same path used to
@@ -260,6 +319,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:keysig-tonic-octave` | `#f` | Tonic-octave anchor: `#f` derives from `middleCPosition` (middle-C anchoring); an integer anchors the tonic notehead at that LilyPond octave (`0` = the middle-C octave) |
 | `cnb:use-accessible-colors` | `#f` | Use a config's colorblind-safe alternative palette (see below) |
 | `cnb:indent` | `0` | First system left indent (staff-spaces) |
+| `cnb:score-defaults` | `#t` | Apply `cnb/score-defaults.ly` (staff magnification, 25 mm indent and 12 mm short-indent); define as `#f` **before** the `\include` to opt out (see [Starting from MusicXML](#starting-from-musicxml)) |
 | `cnb:file-suffix` | `"-Oval-2-024-Notation"` | Appended to output filenames |
 | `cnb:notation-label` | `"Oval 2-024 Notation"` | Human-readable notation name |
 | `cnb:notation-footnote` | *(descriptive string)* | Footnote text for notation parameters |
@@ -295,7 +355,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ├── version.json                      Engine version
 ├── dabbler.yaml                      Test suites and packaging, as the repository declares them
 │
-├── cnb/                              Engine modules (16 files)
+├── cnb/                              Engine modules (17 files)
 │   ├── utils.ly                      Math, list, color, and caching utilities
 │   ├── colors.ly                     Named color palette (hex strings)
 │   ├── config.ly                     All configurable variables with defaults
@@ -311,6 +371,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 │   ├── dots.ly                       Augmentation dot avoidance for ledger lines
 │   ├── off-key.ly                    Off-key note flags (configurable indicators)
 │   ├── layout.ly                     Engraver registration and paper settings
+│   ├── score-defaults.ly             Staff magnification and instrument-name indent (opt out: cnb:score-defaults #f)
 │   └── test-ids.ly                   SVG test-id tagging (included by test scores, not by the engine)
 │
 ├── tests/                            Integration test specs, scores, reference SVGs, and 2.24 harvest baselines

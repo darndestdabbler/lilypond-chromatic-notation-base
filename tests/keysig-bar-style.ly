@@ -11,6 +11,8 @@
 %% bounding box is TALLER than the default (extent drives the bar height),
 %% confirming the settings reach the rendered stencil.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:keysig-bar-color (rgb-color 0 0 1))   %% pure blue, not gold

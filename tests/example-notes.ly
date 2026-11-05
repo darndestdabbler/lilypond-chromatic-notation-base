@@ -1,5 +1,7 @@
 \version "2.24.2"
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "Kite-4-369-Notation-Procedure.ly"
 \include "cnb/test-ids.ly"
 

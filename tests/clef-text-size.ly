@@ -10,6 +10,8 @@
 %% height, which the paired JSON spec asserts against the harvested
 %% staff geometry.
 
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "ChromaticNotationBase.ly"
 
 #(set! cnb:clef-style 'text)

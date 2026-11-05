@@ -4,6 +4,8 @@
 %% joy-to-the-world.ly, but the notation config is the Configurator-
 %% generated export instead of the hand-written Kite include. The golden
 %% score's CB-safe color overrides are baked into the generated config.
+%% Rendered as before the engine's score defaults, so the baseline holds.
+#(define cnb:score-defaults #f)
 \include "kite-4-369-from-configurator.ly"
 \include "cnb/test-ids.ly"
 
