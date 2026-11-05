@@ -567,4 +567,43 @@ the plain conversions are clean of both.
    `-inf` stencil fix and its trigger; centre-anchored stems; the
    MusicXML tier and the corpus gate. `version.json` to `1.2.0`.
 
-### Session 22: Release 1.2.0 (release: 1.2.0)
+### Session 22: Work around LilyPond issue 2383 (beam quanting on magnified staves)
+
+**Why.** Three smoke files (24c, 24d, 24e) log `programming error: No
+viable beam quanting found. Using unquanted y value.`, and
+`tests/musicxml/expect.json` allows it as "engine, not yet triaged". It
+is LilyPond's own defect, open upstream since 2012 as
+[issue 2383](https://gitlab.com/lilypond/lilypond/-/work_items/2383).
+Plain LilyPond logs it whenever `StaffSymbol.staff-space` is about 1.75
+or more (`\magnifyStaff #7/4` sets that), the stems point away from the
+staff, and the heads sit well outside it: `\new Staff \with {
+\magnifyStaff #7/4 } { \grace { a''16 a''16 } e'2 }` on 2.24.2 and 2.26.0.
+The cause is in `lily/beam-quanting.cc`. `quant_range_` is computed in
+global units, but the quants it filters are in staff spaces, so the
+bound is scaled by the staff-space and can rise above every candidate. The
+upstream fix goes to LilyPond as a merge request, outside this
+repository. It would land in 2.27 or later, not in 2.24 or 2.26, so CNB
+needs a workaround. Every CNB staff is magnified, by hand or by
+`cnb/score-defaults.ly`. `\override Beam.details.region-size = #4`
+(LilyPond's default is 2) makes the quanter generate candidates high
+enough to clear the inflated bound. On 2.24 that clears the error.
+
+1. Register.
+2. Apply `Beam.details.region-size = #4` where the engine sets its own
+   layout (`cnb/layout.ly`), so it holds whether or not a score uses the
+   score defaults. Keep it only if all of these hold:
+   - the three files engrave without the error on both versions;
+   - the integration suites show no harvest drift on either version;
+   - the beams it chooses for 24c–24e are no farther from the heads
+     than LilyPond's unquanted fallback, measured from the harvested or
+     rendered beam and stem ends and stated in the step notes.
+   If any of these fails, add nothing to the engine. Instead re-label the
+   three entries as LilyPond issue 2383 and go straight to step 3.
+3. Remove the three `allow` entries from `tests/musicxml/expect.json`,
+   so the smoke tier enforces the workaround (or, without it, re-label
+   them as LilyPond issue 2383). Add a CHANGELOG 1.2.0 line. Add a
+   README Known Issues entry that links issue 2383 and names the
+   workaround and when it can be dropped (a LilyPond release that
+   carries the fix).
+
+### Session 23: Release 1.2.0 (release: 1.2.0)
