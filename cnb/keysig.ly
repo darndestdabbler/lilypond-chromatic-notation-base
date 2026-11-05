@@ -355,6 +355,14 @@
 %% notehead-chord display, or — when cnb:keysig-style is 'none — suppresses
 %% it entirely (stencil #f, mirroring the clef engraver's 'none), so a
 %% config with keys.keySignature.enabled: false renders no key signature.
+%%
+%% The display's noteheads come from the procedure config cache, which
+%% otherwise only the notehead engraver fills, on its first note. A key
+%% signature engraved before any note (a top staff opening on a rest or a
+%% spacer, a staff with no notes) found it empty: every notehead was
+%% empty-stencil, its -inf width became an "Improbable offset for stencil"
+%% translate, and the display was drawn as its bar alone. So the cache is
+%% brought up to the current key here first.
 #(define cnb-key-signature-engraver
    (lambda (context)
      (make-engraver
@@ -362,5 +370,8 @@
          ((key-signature-interface engraver grob source-engraver)
            (if (eq? (cnb:keysig-resolved-style) 'none)
                (ly:grob-set-property! grob 'stencil #f)
-               (let* ((stencil (cnb:get-key-signature-stencil grob context)))
-                 (ly:grob-set-property! grob 'stencil stencil))))))))
+               (begin
+                 (cnb:handle-key-change context)
+                 (ly:grob-set-property!
+                   grob 'stencil
+                   (cnb:get-key-signature-stencil grob context)))))))))

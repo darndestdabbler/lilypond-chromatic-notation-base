@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- A key signature engraved before the score's first note now draws its
+  noteheads. The trigger was a key signature at a moment with no note:
+  a top staff opening on a rest or a spacer, or a staff with no notes
+  (Ave Maria's second voice is all spacer rests). The display read the
+  notehead config cache before the notehead engraver had filled it, so
+  each of its noteheads was empty and its `-inf` width produced
+  `programming error: Improbable offset for stencil: -inf staff space`
+  (8 lines for a two-accidental key with the Kite config, hence counts
+  in multiples of 8). The key signature was drawn as its bar alone, and
+  a staff of nothing but rests made LilyPond abort. The key-signature
+  engraver now refreshes the cache for the current key before it draws.
+  The corpus scores and the smoke files 02a–02c and 41b now engrave
+  without the error.
+
 ## 1.1.1
 
 - Duration categories now follow the documented scale: breve 0, whole 1,

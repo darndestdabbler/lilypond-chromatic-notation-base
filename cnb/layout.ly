@@ -54,8 +54,14 @@
     %% chromatic staff: every pitch has its own staff position, so accidental
     %% symbols are never needed to specify pitch. Out-of-key notes are marked
     %% instead by the off-key engraver, driven per note by the config's
-    %% off-key-mark field.
+    %% off-key-mark field. LilyPond draws cautionary accidentals (c?) with
+    %% the separate AccidentalCautionary grob, as parenthesised glyphs, and
+    %% suggested ones (suggestAccidentals) with AccidentalSuggestion, so
+    %% those are suppressed the same way; forced ones (c!) are plain
+    %% Accidental grobs.
     \override Accidental.stencil = ##f
+    \override AccidentalCautionary.stencil = ##f
+    \override AccidentalSuggestion.stencil = ##f
 
 
     %% --- OFF-KEY NOTE FLAGS ---
