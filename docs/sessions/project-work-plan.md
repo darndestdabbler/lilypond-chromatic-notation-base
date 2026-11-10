@@ -35,6 +35,9 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 21 | Document 1.2.0 | no | 2026-11-05 |
 | 22 | Work around LilyPond issue 2383 (beam quanting on magnified staves) | no | 2026-11-05 |
 | 23 | Release 1.2.0 (release: 1.2.0) | yes | 2026-11-05 |
+| 24 | Clefs and key signatures engrave where the Configurator draws them | no | 2026-11-10 |
+| 25 | The breve as tied semibreves | — | not declared |
+| 26 | Release 1.3.0 (release: 1.3.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -186,3 +189,13 @@ Settle the three grace-note smoke allowances (24c, 24d, 24e: 'No viable beam qua
 **Releasable: yes.**
 
 Release 1.2.0: the framework packs and publishes what is on the trunk.
+
+### Session 24 — Clefs and key signatures engrave where the Configurator draws them
+
+**Releasable: no.**
+
+Close the three engraving gaps the Configurator's LY export spec 1.3.8 records as engine-only (§5.4d, §5.5), each behind a new setting whose default is today's behaviour, so every tracked golden and harvest stays byte-identical. (1) cnb:clef-anchor-semitones (#f = today's fixed placement): a number puts a 'text clef's top edge at that semitone, through cnb:clef-anchor-y-offset, the path a 'custom clef's anchor-semitones already takes (the pitch-axis hook when set, with fractional anchors interpolated; the linear middleCPosition formula otherwise); the text stencil is then built with its top edge at y = 0, as a custom one is, and the setting joins the clef stencil-cache key. (2) cnb:clef-gutter-left-semitones (#f = none): blank space before the clef's ink, in the same units as cnb:clef-gutter-semitones, for every rendered style, also in the cache key. (3) A 'centred value for cnb:keysig-tonic-octave: for each key, the tonic octave whose span [t, t+12] is centred on the staff's centre semitone M, ties going up — the Configurator's CNBKeySignature.tonicSemi rule, k = floor((M - 6 - pc)/12 + 1/2) — where M is the lowest semitone the hook sends nearest staff position 0, or -2 x middleCPosition on a linear staff (12 under the treble clef, the Configurator's default midpoint). New pure helpers get unit tests in test-unit.ly on 2.24 and 2.26. Integration specs (tests/*.ly + .json, with their tracked SVG and 2.24/2.26 harvest baselines) assert: a text clef's top edge at a fractional anchor on a linear staff and under the Twinline hook (the label is a path markup, because a plain string harvests as a 0x0 text anchor); the gap before and after a custom path clef with both gutters set, measured per LilyPond version; and, on the Twinline geometry (sps 2, lines -6 -3 -1 1 4 6, the Configurator fixture's hook, middle G), all twelve tonics' signature marks against the Configurator's choice, with a short separator bar so the harvested key-signature bbox is the marks'. Then README rows for the three settings, a CHANGELOG line under a new 1.3.0 heading (the release the plan already schedules as session 26), and docs/session-sets/024-configurator-gaps/configurator-handoff.md giving each setting's name, default, units and measured behaviour for the Configurator's export.
+
+**Amended after acceptance:**
+
+- 2026-11-10 — step 'keysig-centred': its files: Fixing a pre-existing bug the twelve-tonic spec exposed, approved by the operator: the key-signature stencil cache was keyed on the context property keySignature, which LilyPond 2.24/2.26 never set, so every signature after the first in a file drew the first one's marks (tracked golden stem-attachment-key-change showed G major as C major). The cache now keys on the grob's alteration-alist and the tonic; that golden's SVG and both harvests change, correctly, despite the non-goal that no existing golden changes. (claude-code (anthropic, claude-opus-5-5))

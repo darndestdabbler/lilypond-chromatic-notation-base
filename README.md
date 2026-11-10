@@ -312,11 +312,13 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces for `'dozenal`/`'text`, or the registered definition's own height for `'custom`) |
 | `cnb:clef-name` | `#f` | Which registered custom clef to display in `'custom` style (see `cnb:register-clef!`) |
 | `cnb:clef-gutter-semitones` | `#f` | Extra blank space after the clef, in semitones (`#f` = legacy spacing); applies to every rendered clef style |
+| `cnb:clef-gutter-left-semitones` | `#f` | Extra blank space before the clef, in semitones (`#f` = none); applies to every rendered clef style |
+| `cnb:clef-anchor-semitones` | `#f` | `'text` clef only: the semitone of the label's top edge, placed as a `'custom` clef's anchor is (linear, or through the pitch-axis hook; fractional values interpolate); `#f` = the fixed placement around the staff center |
 | `cnb:keysig-style` | `'chord` | Key-signature display: `'chord` (notehead-chord display) or `'none` (suppress entirely, so a Configurator `keys.keySignature.enabled: false` is honored) |
 | `cnb:keysig-bar-color` | `cnb:gold` | Color of the separator bar drawn through the two notehead columns |
 | `cnb:keysig-bar-thickness` | `4` | Separator-bar thickness, in LilyPond `#:draw-line` units (≈ 0.4 staff-space before magnification) |
 | `cnb:keysig-bar-extent-semis` | `12` | Separator-bar half-extent in semitones; `12` = today's ±1 octave on any staff |
-| `cnb:keysig-tonic-octave` | `#f` | Tonic-octave anchor: `#f` derives from `middleCPosition` (middle-C anchoring); an integer anchors the tonic notehead at that LilyPond octave (`0` = the middle-C octave) |
+| `cnb:keysig-tonic-octave` | `#f` | Tonic-octave anchor: `#f` derives from `middleCPosition` (middle-C anchoring); an integer anchors the tonic notehead at that LilyPond octave (`0` = the middle-C octave); `'centred` picks each key's octave so the tonic's octave span is centred on the staff's centre semitone (the one the pitch-axis hook sends to position 0, or the middle line's), ties going up — the Configurator's automatic rule |
 | `cnb:use-accessible-colors` | `#f` | Use a config's colorblind-safe alternative palette (see below) |
 | `cnb:indent` | `0` | First system left indent (staff-spaces) |
 | `cnb:score-defaults` | `#t` | Apply `cnb/score-defaults.ly` (staff magnification, 25 mm indent and 12 mm short-indent); define as `#f` **before** the `\include` to opt out (see [Starting from MusicXML](#starting-from-musicxml)) |

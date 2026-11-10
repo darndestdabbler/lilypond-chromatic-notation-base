@@ -94,6 +94,40 @@
           (/ 1 cnb:semitones-per-staff-space) mag)))
 
 
+%% The semitone the staff centres on, for cnb:keysig-tonic-octave
+%% 'centred: with the pitch-axis hook, the lowest semitone it sends
+%% nearest staff position 0 (searched over -120..120; a many-to-one map
+%% sends several there, and the lowest is the Configurator's midpoint
+%% for its pitch-class maps); on a linear staff, the middle line's
+%% semitone, -2 × middleCPosition (12 under the treble clef — the
+%% Configurator's default staff.midpoint).
+#(define (cnb:keysig-centre-semitone middle-c-position)
+   (if (procedure? cnb:get-pitch-staff-position)
+       (let loop ((s -120) (best #f) (best-dist #f))
+         (if (> s 120)
+             best
+             (let ((d (abs (cnb:get-pitch-staff-position s))))
+               (if (or (not best-dist) (< d best-dist))
+                   (loop (+ s 1) s d)
+                   (loop (+ s 1) best best-dist)))))
+       (* -2 middle-c-position)))
+
+%% The ly:make-pitch octave for TONIC-PITCH under 'centred: the
+%% Configurator's CNBKeySignature.tonicSemi rule — the tonic t = pc + 12k
+%% whose span [t, t+12] is centred on CENTRE, k = round((CENTRE − 6 −
+%% pc) / 12) with ties going up — converted to the octave of the tonic's
+%% own spelling, so B♯ or C♭ lands on the Configurator's semitone too.
+#(define (cnb:keysig-centred-octave tonic-pitch centre)
+   (let* ((s0 (ly:pitch-semitones
+                (ly:make-pitch 0 (ly:pitch-notename tonic-pitch)
+                                 (ly:pitch-alteration tonic-pitch))))
+          (o0 (floor (/ s0 12)))
+          (pc (- s0 (* 12 o0)))
+          (k  (floor (+ (/ (- centre 6 pc) 12) 1/2))))
+     ;; t = pc + 12k = s0 + 12(k − o0): the octave is k − o0.
+     (inexact->exact (- k o0))))
+
+
 %% ---------------------------------------------------------------------------
 %%  CALCULATE KEY SIGNATURE PITCHES
 %%
@@ -106,9 +140,11 @@
 %%    tonic-pitch        — the tonic as a LilyPond pitch object
 %%    middle-c-position  — clef-dependent offset for positioning
 %%    tonic-octave-override — #f to derive the octave from middle-c-position
-%%                          (today's behavior), or an integer to anchor the
+%%                          (today's behavior), an integer to anchor the
 %%                          tonic notehead at that LilyPond ly:make-pitch
-%%                          octave (0 = the octave starting at middle C).
+%%                          octave (0 = the octave starting at middle C),
+%%                          or 'centred for the Configurator's per-tonic
+%%                          rule (cnb:keysig-centred-octave).
 %%                          This is cnb:keysig-tonic-octave; an explicit
 %%                          value closes the preview/engine placement
 %%                          divergence for non-C tonics.
@@ -127,9 +163,15 @@
            (tonic-alteration    (ly:pitch-alteration tonic-pitch))
            (tonic-tones-asc     (+ tonic-steps 7))
            (octaves-above-mid-c (floor (/ (* -1 middle-c-position) 6)))
-           (current-octave      (if (integer? tonic-octave-override)
-                                    tonic-octave-override
-                                    (+ tonic-octave octaves-above-mid-c))))
+           (current-octave      (cond
+                                  ((integer? tonic-octave-override)
+                                   tonic-octave-override)
+                                  ((eq? tonic-octave-override 'centred)
+                                   (cnb:keysig-centred-octave
+                                     tonic-pitch
+                                     (cnb:keysig-centre-semitone middle-c-position)))
+                                  (else
+                                   (+ tonic-octave octaves-above-mid-c)))))
       (map (lambda (t)
              (let* (
                      (tonic-idx-tmp    (+ t tonic-tones-asc))
@@ -302,9 +344,11 @@
 %%  (eq? comparison) because the key is a list that needs structural
 %%  comparison.
 %%
-%%  CACHE KEY: covers EVERY input the stencil depends on — the score's
-%%  keySignature, the two positioning inputs the engraver reads per grob
-%%  (middleCPosition and font magnification), the staff geometry
+%%  CACHE KEY: covers EVERY input the stencil depends on — the key itself
+%%  (the grob's alteration-alist and the context's tonic, the two inputs
+%%  cnb:keysig-pitches reads), the two positioning inputs the engraver
+%%  reads per grob (middleCPosition and font magnification), the staff
+%%  geometry
 %%  (cnb:semitones-per-staff-space AND the pitch-axis hook
 %%  cnb:get-pitch-staff-position, which replaces the linear placement
 %%  formula when set — set 008; procedures compare by identity under
@@ -313,18 +357,23 @@
 %%  the three separator-bar settings). Before set 006 the key was ONLY
 %%  keySignature, which would leak a stale stencil the moment any of
 %%  those changed (e.g. a different setting, or the same key on a second
-%%  staff with a different clef). 'none never reaches here — the
-%%  engraver suppresses that case before caching.
+%%  staff with a different clef). Until session 24 the key's part was
+%%  the context property keySignature, which LilyPond 2.24 and 2.26 never
+%%  set (the key is in keyAlterations), so every key signature after the
+%%  first in a file drew the first one's marks. 'none never reaches
+%%  here — the engraver suppresses that case before caching.
 %% ---------------------------------------------------------------------------
 
 #(define cnb:key-signature-stencil-cache '())
 
 #(define (cnb:get-key-signature-stencil grob context)
    (let* (
-           (keySignature    (ly:context-property context 'keySignature))
+           (alteration-alist (ly:grob-property grob 'alteration-alist))
+           (tonic-pitch     (ly:context-property context 'tonic))
            (mag             (magstep (ly:grob-property grob 'font-size 0.0)))
            (middleCPosition (ly:context-property context 'middleCPosition))
-           (cache-key       (list keySignature
+           (cache-key       (list alteration-alist
+                                  tonic-pitch
                                   middleCPosition
                                   mag
                                   cnb:semitones-per-staff-space
@@ -338,8 +387,6 @@
       (if cached
           cached
           (let* (
-                  (alteration-alist (ly:grob-property grob 'alteration-alist))
-                  (tonic-pitch      (ly:context-property context 'tonic))
                   (keysig-pitches   (cnb:keysig-pitches alteration-alist
                                                          tonic-pitch
                                                          middleCPosition

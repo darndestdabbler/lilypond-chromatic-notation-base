@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.3.0
+
+- Three settings let a Configurator export engrave its clef and key
+  signature where the preview draws them; each defaults to the old
+  behaviour. `cnb:clef-anchor-semitones` puts a `'text` clef's top edge
+  at a semitone, placed as a `'custom` clef's anchor is.
+  `cnb:clef-gutter-left-semitones` adds blank space before the clef, as
+  `cnb:clef-gutter-semitones` does after it. `cnb:keysig-tonic-octave
+  'centred` picks each key's octave by the Configurator's rule, centring
+  the tonic's octave span on the staff's centre semitone.
+  `docs/session-sets/024-configurator-gaps/configurator-handoff.md` gives
+  their units and measured behaviour.
+- A score with a key change now engraves each key's own signature. Before,
+  every key signature after the first in a file drew the first one's
+  marks, because the stencil cache was keyed on a context property
+  LilyPond never sets.
+
 ## 1.2.0
 
 - One `\include` line now makes a plain LilyPond score chromatic, for

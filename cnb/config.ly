@@ -204,6 +204,29 @@
 %% Applies to every rendered style ('dozenal, 'text, 'custom).
 #(define cnb:clef-gutter-semitones #f)
 
+%% Extra blank horizontal space BEFORE the clef, in the same SEMITONE
+%% units as cnb:clef-gutter-semitones (its left-hand counterpart).
+%%
+%%   #f       — legacy default: no extra space (today's spacing).
+%%   number N — leave N / cnb:semitones-per-staff-space staff-spaces of
+%%              blank space before the clef's ink.
+%%
+%% Applies to every rendered style ('dozenal, 'text, 'custom).
+#(define cnb:clef-gutter-left-semitones #f)
+
+%% Vertical anchor of a 'text clef: the semitone position of the
+%% label's TOP edge, as a 'custom clef's anchor-semitones is (a number,
+%% fractional values included, on the notehead grid: middle C = 0 with
+%% middleCPosition, or through cnb:get-pitch-staff-position when set).
+%%
+%%   #f       — legacy default: the fixed placement around the staff
+%%              center (today's behavior).
+%%   number N — the label's top edge lands where a notehead of
+%%              semitone N would have its center.
+%%
+%% Ignored unless cnb:clef-style is 'text.
+#(define cnb:clef-anchor-semitones #f)
+
 
 %% ---------------------------------------------------------------------------
 %%  KEY SIGNATURE DISPLAY SETTINGS
@@ -262,6 +285,12 @@
 %%              Configurator emit keySignature.placement.tonicOctave and
 %%              close the documented preview/engine placement divergence
 %%              for non-C tonics (see cnb/keysig.ly).
+%%   'centred — pick each key's octave as the Configurator's automatic
+%%              rule does (CNBKeySignature.tonicSemi): the tonic t whose
+%%              span [t, t+12] is centred on the staff's centre semitone,
+%%              ties going up. The centre is the semitone the pitch-axis
+%%              hook sends to staff position 0, or the middle line's
+%%              semitone on a linear staff (see cnb:keysig-centre-semitone).
 #(define cnb:keysig-tonic-octave #f)
 
 

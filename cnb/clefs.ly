@@ -53,6 +53,11 @@
 %%                                in 'custom style.
 %%    cnb:clef-gutter-semitones — extra blank space after the clef, in
 %%                                semitones; #f (default) = none.
+%%    cnb:clef-gutter-left-semitones — the same before the clef.
+%%    cnb:clef-anchor-semitones — 'text style only: the semitone of the
+%%                                label's top edge, placed as a 'custom
+%%                                clef's anchor is; #f (default) = the
+%%                                legacy fixed placement.
 %%
 %%  CUSTOM CLEF REGISTRATION (set 005, Configurator set-009 contract):
 %%    (cnb:register-clef! name def) registers a named clef glyph, where
@@ -75,9 +80,10 @@
 %%  CACHING:
 %%    Clef stencils are cached to avoid re-rendering the same display.
 %%    The cache key covers everything the stencil depends on:
-%%    (style, middleCPosition, ottava, text label ['text style only],
-%%    custom clef name ['custom style only], size setting, gutter
-%%    setting, cnb:semitones-per-staff-space, font magnification).
+%%    (style, middleCPosition, ottava, text label and anchor setting
+%%    ['text style only], custom clef name ['custom style only], size
+%%    setting, both gutter
+%%    settings, cnb:semitones-per-staff-space, font magnification).
 %%    cnb:register-clef! clears the whole cache, because registration
 %%    changes what an existing 'custom key would render.
 %%    The cache uses assoc-ref (equal? comparison) instead of assq-ref
@@ -183,6 +189,13 @@
 #(define (cnb:clef-gutter-pad mag)
    (if (number? cnb:clef-gutter-semitones)
        (* mag (/ cnb:clef-gutter-semitones cnb:semitones-per-staff-space))
+       0))
+
+%% Gutter padding before the clef, the same way, from
+%% cnb:clef-gutter-left-semitones. 0 when it is #f (legacy).
+#(define (cnb:clef-gutter-left-pad mag)
+   (if (number? cnb:clef-gutter-left-semitones)
+       (* mag (/ cnb:clef-gutter-left-semitones cnb:semitones-per-staff-space))
        0))
 
 
@@ -372,9 +385,20 @@
      (if (<= height 0)
          stencil
          (let ((scale-factor (/ (cnb:clef-target-height mag) height)))
-           (ly:stencil-translate
+           (cnb:clef-text-place
              (ly:stencil-scale stencil scale-factor scale-factor)
-             (cons 0 (* -.5 mag)))))))
+             mag)))))
+
+%% Vertical placement of a scaled 'text label: the legacy -.5 × mag
+%% translate, or — with cnb:clef-anchor-semitones set — its TOP edge at
+%% y = 0, as a 'custom glyph's is, so the engraver can Y-offset it to
+%% the anchor semitone.
+#(define (cnb:clef-text-place scaled mag)
+   (ly:stencil-translate
+     scaled
+     (cons 0 (if (number? cnb:clef-anchor-semitones)
+                 (- (cdr (ly:stencil-extent scaled 1)))
+                 (* -.5 mag)))))
 
 #(define (cnb:build-custom-clef-stencil def mag)
    (let* (
@@ -405,19 +429,25 @@
      ;; Y-offsets the grob so y = 0 lands on the anchor semitone.
      (ly:stencil-translate scaled (cons 0 (- scaled-top)))))
 
-%% Widen a built clef stencil's right X-extent by the configured gutter
-%% padding — blank space, no ink — so LilyPond's horizontal spacing
-%% pushes the following material further from the clef. No-op at the
-%% legacy default (cnb:clef-gutter-semitones = #f) or on empty stencils.
+%% Add the configured gutter padding to a built clef stencil — blank
+%% space, no ink. The right pad widens its right X-extent, so LilyPond's
+%% horizontal spacing pushes the following material further from the
+%% clef. The left pad moves the ink right while the X-extent keeps its
+%% left edge, so the blank space sits before the ink. No-op at the
+%% legacy defaults (both gutter settings #f) or on empty stencils.
 #(define (cnb:clef-apply-gutter stencil mag)
-   (let ((pad (cnb:clef-gutter-pad mag)))
-     (if (or (= pad 0) (ly:stencil-empty? stencil X))
+   (let ((pad      (cnb:clef-gutter-pad mag))
+         (left-pad (cnb:clef-gutter-left-pad mag)))
+     (if (or (and (= pad 0) (= left-pad 0)) (ly:stencil-empty? stencil X))
          stencil
          (let ((x-extent (ly:stencil-extent stencil 0))
                (y-extent (ly:stencil-extent stencil 1)))
-           (ly:make-stencil (ly:stencil-expr stencil)
-                            (cons (car x-extent) (+ (cdr x-extent) pad))
-                            y-extent)))))
+           (ly:make-stencil
+             (ly:stencil-expr (if (= left-pad 0)
+                                  stencil
+                                  (ly:stencil-translate-axis stencil left-pad X)))
+             (cons (car x-extent) (+ (cdr x-extent) left-pad pad))
+             y-extent)))))
 
 #(define (cnb:get-clef-stencil grob context style)
    (let* (
@@ -431,9 +461,11 @@
            ;; invalidated by label edits or name switches.
            (cache-key       (list style middleCPosition ottava
                                   (if (eq? style 'text) cnb:clef-text #f)
+                                  (if (eq? style 'text) cnb:clef-anchor-semitones #f)
                                   (if (eq? style 'custom) cnb:clef-name #f)
                                   cnb:clef-size-semitones
                                   cnb:clef-gutter-semitones
+                                  cnb:clef-gutter-left-semitones
                                   cnb:semitones-per-staff-space
                                   mag))
            (cached          (assoc-ref cnb:clef-stencil-cache cache-key)))
@@ -468,7 +500,8 @@
 %%    center (Y-offset -1 staff-space × mag, plus the -.5 translate
 %%    baked into the builders). These are register displays centered on
 %%    the staff, not pitch-anchored — the pitch-axis hook does not move
-%%    them.
+%%    them. Exception: a 'text clef with cnb:clef-anchor-semitones set is
+%%    anchored like 'custom, at that semitone.
 %%    'custom — the anchor contract: the stencil's top edge (y = 0 by
 %%    construction) is offset to the anchor semitone with the notehead
 %%    engraver's own formula — linear, or through the pitch-axis hook
@@ -492,18 +525,25 @@
                          (mag     (magstep (ly:grob-property grob 'font-size 0.0))))
 
                    (ly:grob-set-property! grob 'X-offset (+ (* mag -.00001) 1))
-                   (if (eq? style 'custom)
-                       (let* (
-                               (def    (cnb:clef-lookup cnb:clef-name))
-                               (anchor (assq-ref def 'anchor-semitones))
-                               (middleCPosition
-                                 (ly:context-property context 'middleCPosition))
-                               (staff-def
-                                 (ly:context-grob-definition context 'StaffSymbol))
-                               (staff-space
-                                 (or (assq-ref staff-def 'staff-space) 1.0)))
-                         (ly:grob-set-property! grob 'Y-offset
-                           (* (cnb:clef-anchor-y-offset anchor middleCPosition)
-                              staff-space)))
-                       (ly:grob-set-property! grob 'Y-offset (* mag -1)))
+                   (let ((anchor
+                           (cond
+                             ((eq? style 'custom)
+                              (assq-ref (cnb:clef-lookup cnb:clef-name)
+                                        'anchor-semitones))
+                             ((and (eq? style 'text)
+                                   (number? cnb:clef-anchor-semitones))
+                              cnb:clef-anchor-semitones)
+                             (else #f))))
+                     (if anchor
+                         (let* (
+                                 (middleCPosition
+                                   (ly:context-property context 'middleCPosition))
+                                 (staff-def
+                                   (ly:context-grob-definition context 'StaffSymbol))
+                                 (staff-space
+                                   (or (assq-ref staff-def 'staff-space) 1.0)))
+                           (ly:grob-set-property! grob 'Y-offset
+                             (* (cnb:clef-anchor-y-offset anchor middleCPosition)
+                                staff-space)))
+                         (ly:grob-set-property! grob 'Y-offset (* mag -1))))
                    (ly:grob-set-property! grob 'stencil stencil)))))))))

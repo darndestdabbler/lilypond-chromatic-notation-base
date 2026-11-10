@@ -1292,6 +1292,14 @@
    (defined? 'cnb:clef-gutter-semitones))
 #(cnb:assert-equal "cnb:clef-gutter-semitones defaults to #f"
    cnb:clef-gutter-semitones #f)
+#(cnb:assert-true "cnb:clef-gutter-left-semitones is defined"
+   (defined? 'cnb:clef-gutter-left-semitones))
+#(cnb:assert-equal "cnb:clef-gutter-left-semitones defaults to #f"
+   cnb:clef-gutter-left-semitones #f)
+#(cnb:assert-true "cnb:clef-anchor-semitones is defined"
+   (defined? 'cnb:clef-anchor-semitones))
+#(cnb:assert-equal "cnb:clef-anchor-semitones defaults to #f (fixed placement)"
+   cnb:clef-anchor-semitones #f)
 
 
 %% =========================================================================
@@ -1512,6 +1520,24 @@
 #(set! cnb:clef-gutter-semitones cnb:saved-gutter)
 #(set! cnb:semitones-per-staff-space cnb:saved-sps)
 
+#(cnb:test-group "clefs.ly — cnb:clef-gutter-left-pad")
+
+#(cnb:assert-equal "default #f → no padding before the clef"
+   (cnb:clef-gutter-left-pad 1) 0)
+#(set! cnb:clef-gutter-left-semitones 3)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "3 semitones at sps-2 = 3/2 staff-spaces"
+   (cnb:clef-gutter-left-pad 1) 3/2)
+#(set! cnb:semitones-per-staff-space 3)
+#(cnb:assert-equal "3 semitones at sps-3 = 1 staff-space"
+   (cnb:clef-gutter-left-pad 1) 1)
+#(cnb:assert-equal "padding before the clef scales with font magnification"
+   (cnb:clef-gutter-left-pad 2) 2)
+#(cnb:assert-equal "the right-hand gutter is independent of it"
+   (cnb:clef-gutter-pad 1) 0)
+#(set! cnb:clef-gutter-left-semitones #f)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
 
 %% =========================================================================
 %%  TEST: cnb/clefs.ly — Custom clef stencil geometry
@@ -1567,6 +1593,22 @@
       (car (ly:stencil-extent cnb:ut-stencil-d 1)))
    4 0.001)
 
+#(cnb:test-group "clefs.ly — cnb:clef-text-place ('text label placement)")
+
+%% Placed with the 1×2 rectangle standing in for a scaled label
+%% (y 0..2): the legacy translate, or its top edge at y = 0 when
+%% cnb:clef-anchor-semitones is set.
+#(define cnb:ut-label
+   (make-path-stencil (cnb:flatten-path cnb:test-clef-path) 0.0001 1 1 #t))
+#(cnb:assert-near "anchor #f: the legacy -.5 × mag translate (top at 2 − 1)"
+   (cdr (ly:stencil-extent (cnb:clef-text-place cnb:ut-label 2) 1)) 1 0.001)
+#(set! cnb:clef-anchor-semitones 15.5)
+#(cnb:assert-near "anchor set: the label's TOP edge sits at y = 0"
+   (cdr (ly:stencil-extent (cnb:clef-text-place cnb:ut-label 2) 1)) 0 0.001)
+#(cnb:assert-near "anchor set: the label keeps its height"
+   (car (ly:stencil-extent (cnb:clef-text-place cnb:ut-label 2) 1)) -2 0.001)
+#(set! cnb:clef-anchor-semitones #f)
+
 #(cnb:test-group "clefs.ly — cnb:clef-apply-gutter")
 
 #(set! cnb:clef-gutter-semitones 3)
@@ -1581,6 +1623,23 @@
 #(cnb:assert-near "gutter #f leaves the X-extent alone"
    (cdr (ly:stencil-extent (cnb:clef-apply-gutter cnb:ut-stencil-a 1) 0))
    (cdr (ly:stencil-extent cnb:ut-stencil-a 0)) 0.001)
+
+%% Padding before the clef: the X-extent keeps its left edge and grows
+%% by both pads, and the ink moves right by the left pad.
+#(set! cnb:clef-gutter-semitones 3)
+#(set! cnb:clef-gutter-left-semitones 2)
+#(define cnb:ut-stencil-l (cnb:clef-apply-gutter cnb:ut-stencil-a 1))
+#(cnb:assert-near "left gutter keeps the X-extent's left edge"
+   (car (ly:stencil-extent cnb:ut-stencil-l 0))
+   (car (ly:stencil-extent cnb:ut-stencil-a 0)) 0.001)
+#(cnb:assert-near "left 2 + right 3 at sps-2 widen the X-extent by 5/2"
+   (cdr (ly:stencil-extent cnb:ut-stencil-l 0))
+   (+ (cdr (ly:stencil-extent cnb:ut-stencil-a 0)) 5/2) 0.001)
+#(cnb:assert-true "the ink moves right by the left pad (1 staff-space)"
+   (equal? (ly:stencil-expr cnb:ut-stencil-l)
+           (ly:stencil-expr (ly:stencil-translate-axis cnb:ut-stencil-a 1 X))))
+#(set! cnb:clef-gutter-semitones #f)
+#(set! cnb:clef-gutter-left-semitones #f)
 
 %% Restore config state
 #(set! cnb:clef-gutter-semitones cnb:saved-gutter)
@@ -1779,6 +1838,92 @@
    (ly:pitch-notename (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 #f))) 1)
 #(cnb:assert-equal "D tonic notehead stays step 1 (D) under explicit anchoring"
    (ly:pitch-notename (car (cnb:keysig-pitches '() cnb:ut-tonic-d 0 4))) 1)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — cnb:keysig-tonic-octave 'centred (session 24)
+%%
+%%  The Configurator's CNBKeySignature.tonicSemi rule: the tonic
+%%  t = pc + 12k centring [t, t+12] on the staff's centre semitone M,
+%%  k = round((M − 6 − pc) / 12), ties going up.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-centre-semitone")
+
+#(cnb:assert-equal "linear, treble (mcp -6) → semitone 12, the default midpoint"
+   (cnb:keysig-centre-semitone -6) 12)
+#(cnb:assert-equal "linear, mcp 0 → semitone 0 (middle C on the middle line)"
+   (cnb:keysig-centre-semitone 0) 0)
+
+%% The Twinline hook of the Configurator's fixture: 12 pcs on 7 axis
+%% positions, octave stride 7, middle G (semitone 7) at position 0.
+#(define (cnb:ut-twinline-axis semitone)
+   (let* ((pc  (modulo semitone 12))
+          (oct (/ (- semitone pc) 12))
+          (pos (+ (vector-ref #(0 0 1 2 2 3 3 4 5 5 6 6) pc)
+                  (* oct 7))))
+     (- pos 4)))
+#(set! cnb:get-pitch-staff-position cnb:ut-twinline-axis)
+#(cnb:assert-equal "Twinline hook → semitone 7 (middle G), whatever the clef"
+   (cnb:keysig-centre-semitone -6) 7)
+%% The same axis shifted down 3 positions sends the shared pair C and C♯
+%% of octave 1 (semitones 12 and 13) both to position 0: the lowest wins.
+#(set! cnb:get-pitch-staff-position (lambda (s) (- (cnb:ut-twinline-axis s) 3)))
+#(cnb:assert-equal "many-to-one: C and C♯ (12, 13) share position 0 → 12, the lowest"
+   (cnb:keysig-centre-semitone 0) 12)
+#(set! cnb:get-pitch-staff-position #f)
+
+#(cnb:test-group "keysig.ly — cnb:keysig-centred-octave (the Configurator's rule)")
+
+%% All twelve tonics around the Twinline centre 7: [t, t+12] centred on
+%% 7 puts t at 0..7 for pc 0..7 (k = 0, the tie at G going up) and
+%% G♯..B an octave lower (k = -1) — the four tonics on which one
+%% explicit octave cannot match the Configurator.
+#(define cnb:ut-sharp-tonics
+   (list (ly:make-pitch 0 0 0) (ly:make-pitch 0 0 SHARP)
+         (ly:make-pitch 0 1 0) (ly:make-pitch 0 1 SHARP)
+         (ly:make-pitch 0 2 0) (ly:make-pitch 0 3 0)
+         (ly:make-pitch 0 3 SHARP) (ly:make-pitch 0 4 0)
+         (ly:make-pitch 0 4 SHARP) (ly:make-pitch 0 5 0)
+         (ly:make-pitch 0 5 SHARP) (ly:make-pitch 0 6 0)))
+#(cnb:assert-equal "Twinline centre 7: C..G in octave 0, G♯ A A♯ B in octave −1"
+   (map (lambda (p) (cnb:keysig-centred-octave p 7)) cnb:ut-sharp-tonics)
+   '(0 0 0 0 0 0 0 0 -1 -1 -1 -1))
+#(cnb:assert-equal "Twinline centre 7: tonic semitones match pc + 12 × round((1 − pc) / 12)"
+   (map (lambda (p)
+          (ly:pitch-semitones
+            (ly:make-pitch (cnb:keysig-centred-octave p 7)
+                           (ly:pitch-notename p) (ly:pitch-alteration p))))
+        cnb:ut-sharp-tonics)
+   '(0 1 2 3 4 5 6 7 -4 -3 -2 -1))
+#(cnb:assert-equal "linear treble centre 12, tie goes up: C at 12, not 0 (today's middle-C anchor)"
+   (cnb:keysig-centred-octave (ly:make-pitch -1 0 0) 12) 1)
+#(cnb:assert-equal "linear treble centre 12: G at semitone 7 (today's anchor too)"
+   (cnb:keysig-centred-octave (ly:make-pitch -1 4 0) 12) 0)
+#(cnb:assert-equal "the tonic's own octave does not matter: C written in octave 3, centre 12 → 1"
+   (cnb:keysig-centred-octave (ly:make-pitch 3 0 0) 12) 1)
+%% Enharmonic spellings land on the Configurator's semitone: B♯ is pc 0
+%% (t = 0 at centre 7) and so sits in octave −1; C♭ is pc 11 (t = −1).
+#(cnb:assert-equal "B♯ at centre 7 → octave −1 (semitone 0, as C)"
+   (cnb:keysig-centred-octave (ly:make-pitch 0 6 SHARP) 7) -1)
+#(cnb:assert-equal "C♭ at centre 7 → octave 0 (semitone −1, as B)"
+   (cnb:keysig-centred-octave (ly:make-pitch 0 0 FLAT) 7) 0)
+
+#(cnb:test-group "keysig.ly — cnb:keysig-pitches with 'centred")
+
+#(set! cnb:get-pitch-staff-position cnb:ut-twinline-axis)
+#(cnb:assert-equal "'centred under the Twinline hook: A tonic notehead at semitone −3"
+   (ly:pitch-semitones
+     (car (cnb:keysig-pitches '() (ly:make-pitch -1 5 0) -6 'centred))) -3)
+#(cnb:assert-equal "'centred under the Twinline hook: G tonic notehead at semitone 7"
+   (ly:pitch-semitones
+     (car (cnb:keysig-pitches '() (ly:make-pitch -1 4 0) -6 'centred))) 7)
+#(set! cnb:get-pitch-staff-position #f)
+#(cnb:assert-equal "'centred on a linear treble staff: C tonic at semitone 12, as #f gives"
+   (ly:pitch-semitones
+     (car (cnb:keysig-pitches '() (ly:make-pitch 0 0 0) -6 'centred)))
+   (ly:pitch-semitones
+     (car (cnb:keysig-pitches '() (ly:make-pitch 0 0 0) -6 #f))))
 
 
 %% =========================================================================

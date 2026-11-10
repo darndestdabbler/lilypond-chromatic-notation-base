@@ -1,0 +1,134 @@
+{
+  "test_name": "Key-signature octave per tonic: cnb:keysig-tonic-octave 'centred under the pitch-axis hook (session 24)",
+  "input_file": "keysig-centred-axis.ly",
+  "description": "The Twinline geometry of the Configurator's fixture (12 pitch classes on 7 axis positions, octave stride 7, sps 2, lines -6 -3 -1 1 4 6, middle G = semitone 7 at position 0) with cnb:keysig-tonic-octave 'centred and twelve key signatures, tonics C to B. The Configurator's CNBKeySignature.tonicSemi rule centres each tonic's span [t, t+12] on the midpoint 7, ties going up: k = round((7 - 6 - pc) / 12), so C..G sit at t = 0..7 and G#, A, A# and B an octave lower, at t = -4..-1. With the separator bar shortened to 0.5 semitones a side, the harvested key-signature bbox is the marks' own, and its vertical centre is the centre of [hook(t), hook(t+12)]: (hook(t) + hook(t+12)) / 4 staff-spaces above the staff centre. Measured 2026-11-10 on 2.24 and 2.26: every signature within 0.006 of its expected centre. The spec also proves the session-24 fix of the key-signature stencil cache, which before it drew every signature after the first in a file with the first one's marks.",
+  "assertions": [
+    {
+      "_comment": "=== SECTION 1: TWELVE SIGNATURES, EACH ITS OWN KEY ==="
+    },
+    {
+      "id": "ks-1",
+      "description": "Twelve key signatures are engraved, one per measure, on one system",
+      "expect": {
+        "type": [
+          "== 'key-signature'",
+          "count('key-signature') == 12"
+        ],
+        "data.measure": [
+          "== '1'"
+        ]
+      }
+    },
+    {
+      "_comment": "=== SECTION 2: EACH TONIC'S OCTAVE IS THE CONFIGURATOR'S (CENTRED ON MIDDLE G) ==="
+    },
+    {
+      "id": "ks-1",
+      "description": "C tonic at semitone 0 (k = 0): the marks span hook positions -4..3, so the signature is centred -0.25 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-1', 'visual.bbox.h') / 2 - (staff['center_y'] - (-0.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "C# tonic at semitone 1 (k = 0): the marks span hook positions -4..3, so the signature is centred -0.25 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-2', 'visual.bbox.h') / 2 - (staff['center_y'] - (-0.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-3",
+      "description": "D tonic at semitone 2 (k = 0): the marks span hook positions -3..4, so the signature is centred +0.25 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-3', 'visual.bbox.h') / 2 - (staff['center_y'] - (0.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-4",
+      "description": "D# tonic at semitone 3 (k = 0): the marks span hook positions -2..5, so the signature is centred +0.75 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-4', 'visual.bbox.h') / 2 - (staff['center_y'] - (0.75))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-5",
+      "description": "E tonic at semitone 4 (k = 0): the marks span hook positions -2..5, so the signature is centred +0.75 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-5', 'visual.bbox.h') / 2 - (staff['center_y'] - (0.75))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-6",
+      "description": "F tonic at semitone 5 (k = 0): the marks span hook positions -1..6, so the signature is centred +1.25 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-6', 'visual.bbox.h') / 2 - (staff['center_y'] - (1.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-7",
+      "description": "F# tonic at semitone 6 (k = 0): the marks span hook positions -1..6, so the signature is centred +1.25 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-7', 'visual.bbox.h') / 2 - (staff['center_y'] - (1.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-8",
+      "description": "G tonic at semitone 7 (k = 0): the marks span hook positions 0..7, so the signature is centred +1.75 staff-spaces from the staff centre",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-8', 'visual.bbox.h') / 2 - (staff['center_y'] - (1.75))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-9",
+      "description": "G# tonic at semitone -4 (k = -1): the marks span hook positions -6..1, so the signature is centred -1.25 staff-spaces from the staff centre; the single octave 0 would put it at +2.25, 3.5 staff-spaces higher",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-9', 'visual.bbox.h') / 2 - (staff['center_y'] - (-1.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-10",
+      "description": "A tonic at semitone -3 (k = -1): the marks span hook positions -6..1, so the signature is centred -1.25 staff-spaces from the staff centre; the single octave 0 would put it at +2.25, 3.5 staff-spaces higher",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-10', 'visual.bbox.h') / 2 - (staff['center_y'] - (-1.25))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-11",
+      "description": "A# tonic at semitone -2 (k = -1): the marks span hook positions -5..2, so the signature is centred -0.75 staff-spaces from the staff centre; the single octave 0 would put it at +2.75, 3.5 staff-spaces higher",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-11', 'visual.bbox.h') / 2 - (staff['center_y'] - (-0.75))) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "ks-12",
+      "description": "B tonic at semitone -1 (k = -1): the marks span hook positions -5..2, so the signature is centred -0.75 staff-spaces from the staff centre; the single octave 0 would put it at +2.75, 3.5 staff-spaces higher",
+      "expect": {
+        "visual.bbox.y": [
+          "abs(v + prop('ks-12', 'visual.bbox.h') / 2 - (staff['center_y'] - (-0.75))) < 0.05"
+        ]
+      }
+    }
+  ]
+}
