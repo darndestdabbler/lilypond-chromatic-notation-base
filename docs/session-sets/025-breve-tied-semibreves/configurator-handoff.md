@@ -5,7 +5,7 @@ tied semibreves").
 **To:** `chromatic-notation-configurator` — its session 44 ("The breve as
 tied semibreves"), whose preview draws the same composite and whose engine
 round trip waits on this session.
-**Date:** 2026-11-10. **Release:** ships in engine 1.3.0 (session 26).
+**Date:** 2026-11-10. **Release:** ships in engine 1.3.0 (session 27).
 
 > **Cross-repo rule of engagement (unchanged since set 005):** export-spec
 > changes are authored **Configurator-side** from this record. This

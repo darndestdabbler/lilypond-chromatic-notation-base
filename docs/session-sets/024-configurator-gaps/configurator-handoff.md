@@ -5,7 +5,7 @@ signatures engrave where the Configurator draws them").
 **To:** `chromatic-notation-configurator` — for its plan item "Export what
 engine session 24 adds", against its LY export spec 1.3.8.
 **Date:** 2026-11-10. **Release:** the settings ship in engine 1.3.0
-(session 26).
+(session 27).
 
 > **Cross-repo rule of engagement (unchanged since set 005):** export-spec
 > changes are authored **Configurator-side** from this record. This
