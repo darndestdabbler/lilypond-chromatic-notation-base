@@ -697,4 +697,20 @@ goldens and harvests that contain one change.
    space: each group's width, the gap, the tie's end points, its bow height
    and thickness, and the whole stencil's X and Y extents.
 
-### Session 26: Release 1.3.0 (release: 1.3.0)
+### Session 26: Document 1.3.0
+
+**Why.** A release packs what is on the trunk and never bumps the
+version, so `version.json` must read the release's version before the
+release session starts (the start of session 27 refuses otherwise). 1.3.0
+is a minor release: sessions 24 and 25 add behaviour (three settings, the
+breve as tied semibreves) and change no default but the breve's repeat-mode
+stencil.
+
+1. Register.
+2. `version.json` to `1.3.0`. Confirm the `CHANGELOG.md` 1.3.0 section
+   covers sessions 24 and 25, and make the two Configurator handoffs
+   (`docs/session-sets/024-configurator-gaps/`,
+   `docs/session-sets/025-breve-tied-semibreves/`) name session 27 as the
+   release.
+
+### Session 27: Release 1.3.0 (release: 1.3.0)
