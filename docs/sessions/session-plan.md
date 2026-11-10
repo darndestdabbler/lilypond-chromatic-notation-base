@@ -607,3 +607,94 @@ enough to clear the inflated bound. On 2.24 that clears the error.
    carries the fix).
 
 ### Session 23: Release 1.2.0 (release: 1.2.0)
+
+### Session 24: Clefs and key signatures engrave where the Configurator draws them
+
+**Why.** The Configurator's session 34 (2026-11-07) closes every gap between
+its preview and the engraving that it can close on its own side. Three
+remain that only the engine can close. Its LY export spec 1.3.8 records
+them as known divergences (§5.4d, §5.5):
+
+- **A text clef ignores its height.** `'custom` clefs are placed by
+  `anchor-semitones`, but `'text` clefs sit at a fixed height of the
+  engine's own. The Configurator draws a text clef with its top edge at
+  the definition's `anchorSemi`, as it does a glyph.
+- **The clef gutter is padded on one side.** `cnb:clef-gutter-semitones`
+  adds blank space after the clef only. The Configurator pads both sides
+  of the clef by the same amount (`clef.gutter.paddingH`).
+- **The key-signature octave under a pitch axis.** With the hook set, the
+  engine takes one octave for every key: `cnb:keysig-tonic-octave`, or
+  else `middleCPosition`. The Configurator's automatic rule picks, for each
+  tonic, the octave whose span from the tonic to the octave above is centred
+  on the staff's middle, with ties going up (`CNBKeySignature.tonicSemi`).
+  For the Twinline fixture (middle G) the tonics G♯, A, A♯ and B land an
+  octave apart.
+
+Every new setting defaults to today's behaviour, so every existing golden
+and harvest stays byte-identical.
+
+1. Register.
+2. **Text clef anchor.** Add a setting, say `cnb:clef-anchor-semitones`
+   (`#f` = today's fixed placement). It puts a `'text` clef's top edge at
+   that semitone through the same path a `'custom` clef's `anchor-semitones`
+   takes (the hook under an axis, `middleCPosition` otherwise), fractional
+   values included. Add an integration spec on both LilyPond versions,
+   linear and with the hook, that asserts the label's top edge.
+3. **Padding before the clef.** Add a setting, say
+   `cnb:clef-gutter-left-semitones` (`#f` = none), that adds blank space
+   before the clef, in the same units as `cnb:clef-gutter-semitones`. Add a
+   spec asserting the gap on each side.
+4. **Key-signature octave per tonic.** Add an automatic mode for
+   `cnb:keysig-tonic-octave`, say `'centred`, that picks each key's octave
+   as the Configurator's rule does, around the semitone the staff centres
+   on: the semitone the hook sends to staff position 0, or the middle line
+   on a linear staff. Add a spec on the Twinline geometry checking all
+   twelve tonics against the Configurator's choice.
+5. README rows for the three settings, and a CHANGELOG line. Write
+   `docs/session-sets/024-configurator-gaps/configurator-handoff.md`, in
+   the form of the earlier handoffs. It gives each setting's name, default,
+   units and measured behaviour, so the Configurator can export them (its
+   plan's "Export what engine session 24 adds").
+
+### Session 25: The breve as tied semibreves
+
+**Why.** In repeat mode the semibreve and the breve both engrave as 4
+heads (`cnb:build-duration-stencil`, `cnb/stencils.ly`), so the two cannot
+be told apart. Doubling to 8 heads for the breve strings too many heads
+together. The Configurator's operator prefers a breve written as tied
+semibreves (Configurator session 42), and chose (Configurator session 44,
+2026-11-10) to keep the breve as one note whose stencil is the composite,
+not to split the music into real tied notes. Dots, spacing, the per-pitch
+`repeat` field and the duration category the procedure gets all stay as
+they are. Configurator session 44 draws the same composite in its preview,
+and its engine round trip waits on this session.
+
+This deliberately changes what a breve engraves in repeat mode, so the
+goldens and harvests that contain one change.
+
+1. Register.
+2. **The composite.** In repeat mode (the config's `repeat` is not `#f`), a
+   note of duration log L ≤ −1 (breve −1, longa −2, maxima −3) engraves as
+   2^(−L) of today's semibreve stencils (the 4-copy whole-note stencil),
+   left to right, 1 staff space apart. Each gap holds
+   `(make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN)`, from the left
+   group's right edge x1 to the right group's left edge x2, at the head's
+   centre line, bowing down, with LilyPond's default height limit (1.0) and
+   ratio (0.33). The procedure still gets duration category 0 for all
+   three. The stencil cache keeps the longa and the maxima apart from the
+   breve. With `repeat` `#f` nothing changes, and whole notes and shorter
+   values are unchanged.
+3. **Specs.** Add an integration spec on 2.24 and 2.26 asserting the
+   engraved width of a breve (2 groups and 1 gap) and a longa (4 groups and
+   3 gaps), and that a whole note keeps its width. Regenerate the harvests
+   and goldens that contain breves (`tests/duration-rules.ly` among them) on
+   both versions. Add a `test-unit.ly` case for the composite's group count
+   by duration log.
+4. A README line beside the repeat counts, and a CHANGELOG line. Write
+   `docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md`, in
+   the form of the earlier handoffs. It gives the composite's measured
+   geometry for the default Configurator notehead at 4 semitones per staff
+   space: each group's width, the gap, the tie's end points, its bow height
+   and thickness, and the whole stencil's X and Y extents.
+
+### Session 26: Release 1.3.0 (release: 1.3.0)
