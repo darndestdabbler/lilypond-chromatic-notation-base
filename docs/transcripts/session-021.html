@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 021 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 021 transcript</h1>
+<p class="stamp">Rendered 2026-11-05T08:56:29.787Z by dabbler-ai-router 3.29.0 at ee7753e5f6030ecaa8a2edf3dfcc73c2c9420c98.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-05T03:48:21.935-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 21: Document 1.2.0</h3>
+<ol><li>Register.</li><li>README: the &quot;Starting from MusicXML&quot; section is final; the test section reports the smoke tier's real counts on 2.24 and 2.26 and names the corpus gate; the stem-attachment paragraph from session 17. <code>dabbler.yaml</code>'s header comment describes <code>engine-musicxml</code> the way it describes the others. <code>docs/INTEGRATION-TESTING.md</code> covers <code>run_musicxml.py</code> and <code>run_corpus.py</code>.</li><li><code>CHANGELOG.md</code> 1.2.0: score defaults now applied by the engine and how to opt out (a score that set its own magnification may now be magnified twice: say so); <code>AccidentalCautionary</code> suppressed; the <code>-inf</code> stencil fix and its trigger; centre-anchored stems; the MusicXML tier and the corpus gate. <code>version.json</code> to <code>1.2.0</code>.</li></ol>
+<h2>Work Plan</h2>
+<p>Document release 1.2.0. README: confirm the &quot;Starting from MusicXML&quot; section is final against session 18's list (Frescobaldi import defaults, the one include line, the engine's score defaults and the cnb:score-defaults opt-out, the three musicxml2ly failures with their fixes, MusicFormats xml2ly as fallback); bring the status line to 1.2.0 with the unit and integration counts the suites print on 2.24 and 2.26; add engine-musicxml and engine-musicxml-2.26 to the suites table and a short MusicXML smoke tier subsection with its real file counts on both versions and its known-failure allowlist, naming the corpus gate (tools/run_corpus.py, before every release session); list the new tools, tests/musicxml/ and docs/runs/ in the project tree and cnb/score-defaults.ly in the module order; and confirm the session 17 stem-attachment paragraph under the Registration API. dabbler.yaml's header comment gains a paragraph describing engine-musicxml and its 2.26 twin as it describes the other suites. docs/INTEGRATION-TESTING.md gains a MusicXML smoke tier section covering tools/run_musicxml.py (converter resolution, flags, the include, out/musicxml/, the pass rule, the expect.json allow/defect/lilypond format and the stale-defect error) and completes its corpus gate section on tools/run_corpus.py (DIR, --max-bytes, --lilypond-version, the table, the comparison with the newest earlier table). CHANGELOG.md turns its Unreleased entry into 1.2.0 and adds: score defaults applied by the engine and the opt-out, with the honest caveat that a staff sized by \magnifyStaff is not magnified twice but a score sized any other way (set-global-staff-size, fontSize or staff-space overrides) is now magnified on top of that; AccidentalCautionary and AccidentalSuggestion suppressed; centre-anchored stems; the MusicXML smoke tier and the corpus gate; the -inf stencil fix and its trigger stays as written. version.json goes to 1.2.0.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/b7a7a67afb14b86a08b0f8c149a511a75379ea04"><code>b7a7a67afb14b86a08b0f8c149a511a75379ea04</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Readme</td><td><p>Update README.md: status line to 1.2.0 with the unit count and the integration assertion and spec counts as the suites print them on 2.24 and 2.26; confirm 'Starting from MusicXML' covers every item session 18 lists and fix any gap; in 'Running the tests' add rows for engine-musicxml and engine-musicxml-2.26 and a 'MusicXML smoke tier' subsection giving the files run and passed on each version (as tools/run_musicxml.py prints them), what the allowlist in tests/musicxml/expect.json permits, and the corpus gate (python tools/run_corpus.py D:\MusicXML, run before every release session; the corpus is not committed), linking to docs/INTEGRATION-TESTING.md; add tools/run_musicxml.py, tools/run_corpus.py, tests/musicxml/ and docs/runs/ to the project tree and cnb/score-defaults.ly to the module dependency order; confirm the stem-attachment paragraph from session 17 stands.</p></td><td><span class="mono">README.md</span></td><td><code>python -c import sys; t = open('README.md', encoding='utf-8').read(); need = ['Status: 1.2.0', '## Starting from MusicXML', 'cnb:score-defaults', 'xml2ly', 'engine-musicxml-2.26', 'tools/run_musicxml.py', 'tools/run_corpus.py', 'tests/musicxml/', 'docs/runs/', 'layout.ly → score-defaults.ly', &quot;'(0 . 0)&quot;]; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+<tr><td>Yaml comment</td><td><p>In dabbler.yaml's header comment, add a paragraph describing engine-musicxml and engine-musicxml-2.26 as the other suites are described: what tools/run_musicxml.py does (convert each tests/musicxml/ file with the musicxml2ly beside the chosen LilyPond, add the Kite include, engrave to the ignored out/musicxml/), the pass rule and the expect.json allowlist, the file count and measured duration, and why it is expensive and whole at close. Change no YAML value.</p></td><td><span class="mono">dabbler.yaml</span></td><td><code>python -c import sys; c = [l for l in open('dabbler.yaml', encoding='utf-8') if l.lstrip().startswith('#')]; t = ''.join(c); sys.exit(0 if 'engine-musicxml' in t and 'run_musicxml.py' in t and 'expect.json' in t else 1)</code></td><td>yes</td></tr>
+<tr><td>Integration doc</td><td><p>In docs/INTEGRATION-TESTING.md add the two smoke-tier commands to the Quick Reference and a 'MusicXML Smoke Tier' section before the corpus gate: tools/run_musicxml.py --lilypond-version X.Y, how musicxml2ly is found, the conversion flags, the include, out/musicxml/lilypond-X.Y/, the pass rule, the expect.json format (allow, note, defect, lilypond, _comment keys) and why a defect that passes is an error, and the RESULTS line. Complete the corpus gate section with the tool's arguments (DIR, --max-bytes, --lilypond-version) and the input extensions, and name docs/runs/corpus-2026-11-05.md as the newest table.</p></td><td><span class="mono">docs/INTEGRATION-TESTING.md</span></td><td><code>python -c import sys; t = open('docs/INTEGRATION-TESTING.md', encoding='utf-8').read(); need = ['## MusicXML Smoke Tier', 'tools/run_musicxml.py', 'expect.json', '&quot;defect&quot;', '--max-bytes', 'corpus-2026-11-05.md']; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+<tr><td>Changelog version</td><td><p>In CHANGELOG.md rename '## Unreleased' to '## 1.2.0', keep its -inf stencil entry (fix and trigger), and add entries for: score defaults applied by the engine (staff magnification, 25 mm indent, 12 mm short-indent) and the cnb:score-defaults #f opt-out before the include, with the caveat that a staff that magnifies itself with \magnifyStaff is not magnified twice but a score sized another way (set-global-staff-size, fontSize or StaffSymbol staff-space overrides) is now magnified on top of it, so it should opt out; AccidentalCautionary and AccidentalSuggestion suppressed like Accidental; centre-anchored stems proved by tests/stem-centre.ly; the MusicXML smoke tier (engine-musicxml, both versions) and the corpus gate. Set version.json to 1.2.0.</p></td><td><span class="mono">CHANGELOG.md</span><br><span class="mono">version.json</span></td><td><code>python -c import json, sys; v = json.load(open('version.json', encoding='utf-8'))['version']; t = open('CHANGELOG.md', encoding='utf-8').read(); ok = v == '1.2.0' and '## 1.2.0' in t and '## Unreleased' not in t and all(s in t for s in ['cnb:score-defaults', 'AccidentalCautionary', '-inf', 'engine-musicxml', 'run_corpus.py']); sys.exit(0 if ok else 1)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No engine, tool, test or baseline change: this session writes prose, a YAML comment and the version only; the suites declared in dabbler.yaml are unchanged.</li><li>No release: packing and publishing 1.2.0 is session 22's.</li><li>No triage of the 24c/24d/24e grace-note beam-quanting allowances in tests/musicxml/expect.json: they are documented as they stand.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[08:48:21]</span> <span class="muted">run-started</span> session=021 mode=pull</div>
+<div class="line"><span class="at">[08:48:21]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[08:51:00]</span> <span class="muted">run-resumed</span> session=021 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[08:51:00]</span> <span class="muted">plan-accepted</span> steps=[&quot;readme&quot;,&quot;yaml-comment&quot;,&quot;integration-doc&quot;,&quot;changelog-version&quot;] non_goals=3</div>
+<div class="line"><span class="at">[08:51:00]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[08:51:00]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=readme</div>
+<div class="line"><span class="at">[08:51:47]</span> <span class="muted">run-resumed</span> session=021 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:51:48]</span> <span class="muted">check-passed</span> step=readme argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); need = ['Status: 1.2.0', '## Starting from MusicXML', 'cnb:score-defaults', 'xml2ly', 'engine-musicxml-2.26', 'tools/run_musicxml.py', 'tools/run_corpus.py', 'tests/musicxml/', 'docs/runs/', 'layout.ly → score-defaults.ly', \&quot;'(0 . 0)\&quot;]; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[08:51:48]</span> <span class="muted">report-accepted</span> seq=2 step=readme files=[&quot;README.md&quot;] notes=README at 1.2.0: measured counts (325 unit, 325 integration in 19 specs, 71/71 smoke on 2.24 and 2.26), smoke-tier rows and subsection naming the corpus gate, tree and module order updated; MusicXML and stem-attachment sections confirmed complete</div>
+<div class="line"><span class="at">[08:51:48]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=yaml-comment</div>
+<div class="line"><span class="at">[08:52:28]</span> <span class="muted">run-resumed</span> session=021 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:52:28]</span> <span class="muted">check-passed</span> step=yaml-comment argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; c = [l for l in open('dabbler.yaml', encoding='utf-8') if l.lstrip().startswith('#')]; t = ''.join(c); sys.exit(0 if 'engine-musicxml' in t and 'run_musicxml.py' in t and 'expect.json' in t else 1)&quot;]</div>
+<div class="line"><span class="at">[08:52:28]</span> <span class="muted">report-accepted</span> seq=3 step=yaml-comment files=[&quot;dabbler.yaml&quot;] notes=Header comment describes engine-musicxml and its 2.26 twin (pipeline, pass rule, expect.json, 71 files ~40 s, why expensive/whole at close); stale integration count corrected to 325 assertions in 19 specs; no YAML value changed</div>
+<div class="line"><span class="at">[08:52:28]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=integration-doc</div>
+<div class="line"><span class="at">[08:53:31]</span> <span class="muted">run-resumed</span> session=021 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:53:31]</span> <span class="muted">check-passed</span> step=integration-doc argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('docs/INTEGRATION-TESTING.md', encoding='utf-8').read(); need = ['## MusicXML Smoke Tier', 'tools/run_musicxml.py', 'expect.json', '\&quot;defect\&quot;', '--max-bytes', 'corpus-2026-11-05.md']; missing = [s for s in need if s not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[08:53:32]</span> <span class="muted">report-accepted</span> seq=4 step=integration-doc files=[&quot;docs/INTEGRATION-TESTING.md&quot;] notes=Smoke-tier commands in Quick Reference; new MusicXML Smoke Tier section (converter resolution, flags, include, out dir, pass rule, expect.json keys with example, stale-defect error, RESULTS line); corpus gate section gains its arguments, extensions, out/corpus/ and names corpus-2026-11-05.md as newest</div>
+<div class="line"><span class="at">[08:53:32]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=changelog-version</div>
+<div class="line"><span class="at">[08:54:04]</span> <span class="muted">run-resumed</span> session=021 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:54:05]</span> <span class="muted">check-passed</span> step=changelog-version argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; v = json.load(open('version.json', encoding='utf-8'))['version']; t = open('CHANGELOG.md', encoding='utf-8').read(); ok = v == '1.2.0' and '## 1.2.0' in t and '## Unreleased' not in t and all(s in t for s in ['cnb:score-defaults', 'AccidentalCautionary', '-inf', 'engine-musicxml', 'run_corpus.py']); sys.exit(0 if ok else 1)&quot;]</div>
+<div class="line"><span class="at">[08:54:05]</span> <span class="muted">report-accepted</span> seq=5 step=changelog-version files=[&quot;CHANGELOG.md&quot;,&quot;version.json&quot;] notes=CHANGELOG Unreleased becomes 1.2.0 with score defaults and opt-out (double-magnification caveat for scores sized other than by magnifyStaff), cautionary/suggested accidentals suppressed, centre-anchored stems drawn over heads, smoke tier, corpus gate; -inf entry kept; version.json 1.2.0</div>
+<div class="line"><span class="at">[08:54:05]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:54:05]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:54:05]</span> <span class="muted">job-started</span> name=verification pid=35968 log=.dabbler/runs/s21/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:54:33]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:54:33]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[08:54:33]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[08:54:34]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:54:34]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=23112 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:54:43]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:54:43]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:54:43]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=45980 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:54:45]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:54:45]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:54:45]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=41788 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:54:54]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[08:54:54]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:54:54]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=37784 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:54:55]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[08:54:55]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:54:55]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=44068 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[08:55:39]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[08:55:39]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[08:55:39]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=15968 log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[08:56:20]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[08:56:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[08:56:24]</span> <span class="muted">landed</span> commit=b7a7a67afb14b86a08b0f8c149a511a75379ea04</div>
+<div class="line"><span class="at">[08:56:24]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[08:56:24]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[08:56:24]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[08:56:24]</span> <span class="muted">job-started</span> name=close pid=31156 log=.dabbler/runs/s21/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:56:29]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s21/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:56:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>1 finding</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** The MusicXML prose is internally ambiguous about expected converter failures. `README.md` says “All 71 pass on 2.24,” but later defines a pass as successful conversion and engraving, then says `61g` and `61k` “must fail to convert” on 2.24. `dabbler.yaml` similarly says all 71 pass while describing known-defect files that must fail. Rephrase this as 71 successfully evaluated smoke cases, with two expected conversion failures on 2.24, or give separate normal-pass and expected-defect counts.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>9s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>8s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>43s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>40s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
