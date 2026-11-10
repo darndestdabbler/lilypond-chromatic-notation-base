@@ -500,9 +500,9 @@
     {
       "number": 25,
       "title": "The breve as tied semibreves",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-10T16:35:05.786000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-10T16:47:15.735000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
