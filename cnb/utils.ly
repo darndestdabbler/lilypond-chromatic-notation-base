@@ -289,20 +289,25 @@
 %%  CACHE KEY HELPERS
 %% ---------------------------------------------------------------------------
 
-%% Create a numeric cache key from a pitch class (0-11) and a
-%% duration category.
+%% Create a numeric cache key from a pitch class (0-11), a duration
+%% category and, optionally, a semibreve group count
+%% (cnb:semibreve-groups, default 1).
 %%
 %% ENCODING SCHEME:
-%%   key = (pitch-class * 100) + duration-category
-%%   This works because pitch-class is 0-11 and duration-category
-%%   is 0-3 (see cnb:duration-category), so keys never collide.
+%%   key = (pitch-class * 100) + 10 * (groups - 1) + duration-category
+%%   This works because pitch-class is 0-11, duration-category is 0-3
+%%   (see cnb:duration-category) and groups is 1, 2, 4 or 8, so keys
+%%   never collide. With the default group count of 1 the key is the
+%%   pitch-class and category alone.
 %%
 %% EXAMPLES:
 %%   C quarter note:  (cnb:make-cache-key 0 3) => 3
 %%   F# half note:    (cnb:make-cache-key 6 2) => 602
 %%   B whole note:    (cnb:make-cache-key 11 1) => 1101
-#(define (cnb:make-cache-key pitch-class duration-category)
-   (+ (* pitch-class 100) duration-category))
+%%   C longa:         (cnb:make-cache-key 0 0 4) => 30
+#(define* (cnb:make-cache-key pitch-class duration-category
+                              #:optional (groups 1))
+   (+ (* pitch-class 100) (* 10 (- groups 1)) duration-category))
 
 
 %% Compute the duration category for a note event, on the scale the
@@ -315,6 +320,14 @@
 %% both halves.
 #(define (cnb:duration-category duration-prop)
    (max 0 (min 3 (+ (ly:duration-log duration-prop) 1))))
+
+
+%% The number of semibreve groups a note of this duration LOG engraves
+%% as in repeat mode: 2^(-log) for a breve or longer (breve -1 -> 2,
+%% longa -2 -> 4, maxima -3 -> 8), 1 for a whole note or shorter. The
+%% groups are tied (cnb:build-duration-stencil, cnb/stencils.ly).
+#(define (cnb:semibreve-groups duration-log)
+   (if (< duration-log 0) (expt 2 (- duration-log)) 1))
 
 
 %% ---------------------------------------------------------------------------

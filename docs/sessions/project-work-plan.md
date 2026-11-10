@@ -36,7 +36,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 22 | Work around LilyPond issue 2383 (beam quanting on magnified staves) | no | 2026-11-05 |
 | 23 | Release 1.2.0 (release: 1.2.0) | yes | 2026-11-05 |
 | 24 | Clefs and key signatures engrave where the Configurator draws them | no | 2026-11-10 |
-| 25 | The breve as tied semibreves | — | not declared |
+| 25 | The breve as tied semibreves | no | 2026-11-10 |
 | 26 | Release 1.3.0 (release: 1.3.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
@@ -199,3 +199,9 @@ Close the three engraving gaps the Configurator's LY export spec 1.3.8 records a
 **Amended after acceptance:**
 
 - 2026-11-10 — step 'keysig-centred': its files: Fixing a pre-existing bug the twelve-tonic spec exposed, approved by the operator: the key-signature stencil cache was keyed on the context property keySignature, which LilyPond 2.24/2.26 never set, so every signature after the first in a file drew the first one's marks (tracked golden stem-attachment-key-change showed G major as C major). The cache now keys on the grob's alteration-alist and the tonic; that golden's SVG and both harvests change, correctly, despite the non-goal that no existing golden changes. (claude-code (anthropic, claude-opus-5-5))
+
+### Session 25 — The breve as tied semibreves
+
+**Releasable: no.**
+
+In repeat mode (the config's repeat is not #f), engrave a note of duration log L <= -1 (breve -1, longa -2, maxima -3) as 2^(-L) of today's semibreve stencil (the 4-copy whole-note stencil), left to right, 1 staff space apart, each gap holding (make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN) from the left group's right edge to the right group's left edge, with LilyPond's default height limit and ratio. A pure helper in cnb/utils.ly gives the group count by duration log (1 for a whole or shorter); cnb:build-duration-stencil builds the composite from it; the stencil cache key gains the group count (an optional argument of cnb:make-cache-key whose default leaves every existing key unchanged) so the longa and the maxima are cached apart from the breve. The procedure still gets duration category 0 for all three; dots, spacing, the per-pitch repeat field and repeat #f are untouched, and whole notes and shorter engrave as before. test-unit.ly tests the group count by duration log, the new cache keys, and the composite's width for 2 and 4 groups. tests/duration-rules (the one tracked golden with a breve) gets its breve assertion updated and its SVG and 2.24/2.26 harvests regenerated. A new integration spec, tests/breve-tied-semibreves, drawn with the Configurator's default notehead (its exported crotchet-minim path) at 4 semitones per staff space with repeat on, asserts on 2.24 and 2.26 the width of a breve (2 groups and 1 gap) and a longa (4 groups and 3 gaps) against the whole note, and that the whole note keeps its width. Then a README line beside the repeat counts, a CHANGELOG line under 1.3.0, and docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md giving the composite's measured geometry for that notehead: each group's width, the gap, the tie's end points, its bow height and thickness, and the whole stencil's X and Y extents.

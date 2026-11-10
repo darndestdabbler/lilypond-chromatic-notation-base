@@ -12,6 +12,13 @@
   the tonic's octave span on the staff's centre semitone.
   `docs/session-sets/024-configurator-gaps/configurator-handoff.md` gives
   their units and measured behaviour.
+- In repeat mode a breve now engraves as tied semibreves, so it no longer
+  looks like a whole note: 2 of the whole note's 4-head groups, 1 staff
+  space apart, with a tie bowing down between them; a longa as 4 groups
+  and a maxima as 8. It stays one note, and dots, spacing, the procedure's
+  duration category and `(repeat . #f)` are unchanged.
+  `docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md`
+  gives the measured geometry for the Configurator's default notehead.
 - A score with a key change now engraves each key's own signature. Before,
   every key signature after the first in a file drew the first one's
   marks, because the stencil cache was keyed on a context property

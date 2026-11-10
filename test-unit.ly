@@ -32,6 +32,7 @@
 \include "cnb/config.ly"
 \include "cnb/procedure.ly"
 \include "cnb/path-geometry.ly"
+\include "cnb/stencils.ly"
 \include "cnb/ledgers.ly"
 \include "cnb/off-key.ly"
 \include "cnb/clefs.ly"
@@ -151,6 +152,19 @@
           (flat (apply append keys))
           (unique (delete-duplicates flat)))
      (= (length flat) (length unique))))
+%% The optional semibreve group count keeps the breve, longa and maxima
+%% (all category 0) apart, and its default leaves every key unchanged.
+#(cnb:assert-equal "cache key with 1 group = key without it" (cnb:make-cache-key 5 1 1) 501)
+#(cnb:assert-equal "cache key for C breve, 2 groups"  (cnb:make-cache-key 0 0 2)    10)
+#(cnb:assert-equal "cache key for C longa, 4 groups"  (cnb:make-cache-key 0 0 4)    30)
+#(cnb:assert-equal "cache key for B maxima, 8 groups" (cnb:make-cache-key 11 0 8) 1170)
+#(cnb:assert-true "all cache keys unique over 12 pitch classes x categories and groups"
+   (let* ((keys (map (lambda (p)
+                       (append (map (lambda (d) (cnb:make-cache-key p d)) '(1 2 3))
+                               (map (lambda (g) (cnb:make-cache-key p 0 g)) '(1 2 4 8))))
+                     (iota 12)))
+          (flat (apply append keys)))
+     (= (length flat) (length (delete-duplicates flat)))))
 %% A dotted or triplet note keys the same as its plain duration.
 #(cnb:assert-equal "cache key of a triplet half = cache key of a half"
    (cnb:make-cache-key 7 (cnb:duration-category (ly:make-duration 1 0 2 3)))
@@ -184,6 +198,41 @@
 #(cnb:assert-equal "triplet half -> 2"    (cnb:duration-category (ly:make-duration 1 0 2 3)) 2)
 #(cnb:assert-equal "triplet quarter -> 3" (cnb:duration-category (ly:make-duration 2 0 2 3)) 3)
 #(cnb:assert-equal "dotted triplet half -> 2" (cnb:duration-category (ly:make-duration 1 1 2 3)) 2)
+
+#(cnb:test-group "utils.ly — cnb:semibreve-groups")
+%% A breve or longer engraves in repeat mode as 2^(-log) tied semibreve
+%% groups; a whole note or shorter as one. Each entry: (log groups name).
+#(for-each
+   (lambda (entry)
+     (cnb:assert-equal (format #f "~a (log ~a) -> ~a group(s)"
+                               (caddr entry) (car entry) (cadr entry))
+       (cnb:semibreve-groups (car entry)) (cadr entry)))
+   '((-3 8 "maxima")
+     (-2 4 "longa")
+     (-1 2 "breve")
+     (0 1 "whole")
+     (1 1 "half")
+     (2 1 "quarter")))
+
+#(cnb:test-group "stencils.ly — cnb:build-duration-stencil tied semibreves")
+%% A 1 x 1 box as the head: the whole-note group is its 4-copy stencil;
+%% a breve is 2 groups 1 staff space apart, a longa 4 groups and 3 gaps,
+%% each gap holding a tie. The composite starts where its first group
+%% does.
+#(let* ((box   (make-filled-box-stencil '(-0.5 . 0.5) '(-0.5 . 0.5)))
+        (whole (ly:stencil-extent (cnb:build-duration-stencil box 1) X))
+        (gw    (interval-length whole)))
+   (cnb:assert-equal "1 group = the whole-note stencil's extent"
+     (ly:stencil-extent (cnb:build-duration-stencil box 0 1) X) whole)
+   (for-each
+     (lambda (groups)
+       (let ((ext (ly:stencil-extent (cnb:build-duration-stencil box 0 groups) X)))
+         (cnb:assert-near (format #f "~a groups: width = ~a group widths + ~a gaps"
+                                  groups groups (- groups 1))
+           (interval-length ext) (+ (* groups gw) (- groups 1)) 0.001)
+         (cnb:assert-near (format #f "~a groups: left edge = the group's" groups)
+           (car ext) (car whole) 0.001)))
+     '(2 4)))
 
 #(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")
 %% The composer is pure: it takes the property's current value and a new

@@ -16,11 +16,11 @@
     },
     {
       "id": "nh-1-0.000-67-0",
-      "description": "Breve: category 0 (red), 4 heads",
+      "description": "Breve: category 0 (red), two tied 4-head semibreve groups 1 staff space apart (the staff space is 1 SVG unit here: staff height 4)",
       "expect": {
         "data.duration": ["== '-1'"],
         "visual.color":  ["== 'rgb(100.0000%, 0.0000%, 0.0000%)'"],
-        "visual.bbox.w": ["abs(v - 2.5 * prop('nh-3-0.500-67-0', 'visual.bbox.w')) < 0.1"]
+        "visual.bbox.w": ["abs(v - (2 * prop('nh-2-0.000-67-0', 'visual.bbox.w') + 1.0)) < 0.05"]
       }
     },
     {

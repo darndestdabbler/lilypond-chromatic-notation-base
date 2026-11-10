@@ -7,9 +7,10 @@
 %%
 %% The config below colours each category differently and keeps repeat
 %% on, so the paired JSON spec can read every note's category from its
-%% colour and its notehead repetition (4 heads for breve and whole, 2 for
-%% a half, 1 for a quarter or shorter) from its width. Every note is G4,
-%% so widths compare directly.
+%% colour and its notehead repetition (4 heads for a whole, 2 for a half,
+%% 1 for a quarter or shorter; a breve is two 4-head semibreve groups, 1
+%% staff space apart and tied) from its width. Every note is G4, so widths
+%% compare directly.
 
 %% Rendered as before the engine's score defaults, so the baseline holds.
 #(define cnb:score-defaults #f)

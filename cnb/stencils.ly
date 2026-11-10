@@ -43,7 +43,8 @@
 %%    The key insight: make-path-stencil doesn't need a grob.
 %%    So we can build all 12 stencils at load time, before any music
 %%    is even typeset. The per-note cost drops to a vector lookup,
-%%    optional duplication for half/whole notes, and a scale operation.
+%%    optional duplication for half/whole notes (and, for a breve or
+%%    longer, tied semibreve groups), and a scale operation.
 %%
 %%  FILL RULE NOTE:
 %%    make-path-stencil uses the "non-zero winding" fill rule.
@@ -120,8 +121,10 @@
 %%  DURATION-SPECIFIC STENCIL CACHE
 %%
 %%  The per-duration variants (single for quarter+, doubled for half,
-%%  quadrupled for whole) are cached by (pitch-class, duration-category)
-%%  since the combine-at-edge has some cost.
+%%  quadrupled for whole, tied semibreve groups for breve and longer) are
+%%  cached by (pitch-class, duration-category, semibreve groups) since the
+%%  combine-at-edge has some cost; the group count keeps the longa and
+%%  the maxima apart from the breve, which share category 0.
 %%
 %%  Uses integer keys with hashq-ref (correctly matched by eq?).
 %%
@@ -150,12 +153,20 @@
 %%  Takes a base stencil and creates the appropriate repetition:
 %%    category  = 3 -> quarter or shorter: 1 copy (no repetition)
 %%    category  = 2 -> half note: 2 copies side by side
-%%    category <= 1 -> whole/breve: 4 copies
+%%    category <= 1 -> whole or longer: 4 copies (the semibreve group)
 %%
 %%  The copies overlap by cnb:multinote-padding (usually negative = overlap).
+%%
+%%  TIED SEMIBREVES: a breve or longer passes GROUPS above 1
+%%  (cnb:semibreve-groups: breve 2, longa 4, maxima 8). That many
+%%  semibreve groups are laid left to right, 1 staff space apart, and
+%%  each gap holds a tie bowing down at the head's centre line (y = 0),
+%%  from the left group's right edge x1 to the right group's left edge
+%%  x2, with LilyPond's default height limit and ratio.
 %% ---------------------------------------------------------------------------
 
-#(define (cnb:build-duration-stencil base-stencil duration-category)
+#(define* (cnb:build-duration-stencil base-stencil duration-category
+                                      #:optional (groups 1))
    (let* ((stencil base-stencil))
 
       ;; Double once for a half or longer, and again for a whole or longer.
@@ -165,6 +176,19 @@
                     (ly:stencil-combine-at-edge
                       stencil 0 1 stencil cnb:multinote-padding))))
         '(2 1))
+
+      (if (> groups 1)
+          (let* ((ext   (ly:stencil-extent stencil X))
+                 (step  (+ (interval-length ext) 1))
+                 (group stencil))
+            (do ((k 1 (1+ k))) ((= k groups))
+              (let ((x1 (+ (cdr ext) (* (- k 1) step))))
+                (set! stencil
+                      (ly:stencil-add
+                        stencil
+                        (make-tie-stencil (cons x1 0) (cons (+ x1 1) 0)
+                                          0.12 DOWN)
+                        (ly:stencil-translate-axis group (* k step) X)))))))
 
       stencil))
 
@@ -194,8 +218,10 @@
            (pitch-class     (modulo note-semis 12))
            (note-dur-prop   (ly:event-property note-event 'duration))
            (dur-cat         (cnb:duration-category note-dur-prop))
+           (groups          (cnb:semibreve-groups
+                              (ly:duration-log note-dur-prop)))
            (mag             (magstep (ly:grob-property grob 'font-size 0.0)))
-           (cache-key       (cnb:make-cache-key pitch-class dur-cat))
+           (cache-key       (cnb:make-cache-key pitch-class dur-cat groups))
            (cached          (hashq-ref cnb:note-stencil-cache cache-key)))
 
       (if cached
@@ -228,7 +254,7 @@
                  (base   (car base-and-repeat))
                  (repeat (cdr base-and-repeat))
                  (result (if (not (eq? repeat #f))
-                             (cnb:build-duration-stencil base dur-cat)
+                             (cnb:build-duration-stencil base dur-cat groups)
                              base)))
 
             (hashq-set! cnb:note-stencil-cache cache-key result)
