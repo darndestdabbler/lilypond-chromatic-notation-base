@@ -38,7 +38,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 24 | Clefs and key signatures engrave where the Configurator draws them | no | 2026-11-10 |
 | 25 | The breve as tied semibreves | no | 2026-11-10 |
 | 26 | Document 1.3.0 | no | 2026-11-10 |
-| 27 | Release 1.3.0 (release: 1.3.0) | — | not declared |
+| 27 | Release 1.3.0 (release: 1.3.0) | yes | 2026-11-10 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -212,3 +212,9 @@ In repeat mode (the config's repeat is not #f), engrave a note of duration log L
 **Releasable: no.**
 
 Prepare the 1.3.0 release: set version.json to 1.3.0 so the release session 27 can start, confirm the existing CHANGELOG.md 1.3.0 section already covers sessions 24 (the three clef/key-signature settings and the key-change fix) and 25 (the breve as tied semibreves), and correct the two Configurator handoffs (docs/session-sets/024-configurator-gaps/ and docs/session-sets/025-breve-tied-semibreves/) so they name session 27, not session 26, as the release.
+
+### Session 27 — Release 1.3.0 (release: 1.3.0)
+
+**Releasable: yes.**
+
+Release 1.3.0: the framework packs and publishes what is on the trunk.
