@@ -1,0 +1,59 @@
+{
+  "test_name": "Clef padding on both sides: cnb:clef-gutter-left-semitones and cnb:clef-gutter-semitones (session 24)",
+  "input_file": "clef-gutter-left.ly",
+  "description": "The registered 1x2 rectangle clef of clef-custom.ly (2 staff-spaces wide at height 8 semitones, sps 2) with cnb:clef-gutter-left-semitones 3 (1.5 staff-spaces before the ink) and cnb:clef-gutter-semitones 4 (2 staff-spaces after it). Measured 2026-11-10 against an identical render without either setting. Before the clef: the control's ink starts at x = 3.645 on both versions, and with the setting at 5.145, the full 1.5. After the clef: from the ink's right edge to the key signature the control has 0.834 (2.24) / 0.920 (2.26) and the padded render 2.334 / 2.920; to the first notehead the control has 7.617 / 7.704 and the padded render 9.117 / 9.704. So 2.26 adds the full 2.0 after the clef, and 2.24 adds 1.5, as with the right gutter alone (clef-custom.json): on 2.24 the key signature sits at least 2.834 after the clef's left extent edge, else 0.334 after its right one, so the first 0.5 of extent the gutters add fills that slack. A render with the left setting only (measured, not tracked) leaves 0.5 less after the ink on 2.24 (key signature 0.334, first notehead 7.117) and the control's spacing after the ink on 2.26.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE CLEF RENDERS AT ITS SIZE ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The custom clef is engraved in measure 1, 2 staff-spaces wide (the padding is blank, not ink)",
+      "expect": {
+        "type":          ["== 'clef'"],
+        "data.measure":  ["== '1'"],
+        "visual.bbox.w": ["abs(v - 2.0) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE GAP BEFORE THE CLEF ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The ink starts 1.5 staff-spaces (3 semitones at sps 2) later than the control's 3.645, on both versions",
+      "expect": {
+        "visual.bbox.x": ["abs(v - 3.645 - 1.5) < 0.02"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE GAP AFTER THE CLEF ==="},
+
+    {
+      "id": "ks-1",
+      "description": "The key signature starts 2.334 (2.24) / 2.920 (2.26) after the clef's ink: the control's 0.834 / 0.920 plus 1.5 / 2.0",
+      "expect": {
+        "visual.bbox.x": ["abs(v - prop('cl-1', 'visual.bbox.x') - prop('cl-1', 'visual.bbox.w') - {'2.24': 2.334, '2.26': 2.920}[lilypond]) < 0.05"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "The first notehead sits 9.117 (2.24) / 9.704 (2.26) after the clef's ink: the control's 7.617 / 7.704 plus 1.5 / 2.0",
+      "expect": {
+        "visual.bbox.x": ["abs(v - prop('cl-1', 'visual.bbox.x') - prop('cl-1', 'visual.bbox.w') - {'2.24': 9.117, '2.26': 9.704}[lilypond]) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 4: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the padded clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4", "count('clef') == 1"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}
