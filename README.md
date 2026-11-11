@@ -1,7 +1,7 @@
 # ChromaticNotationBase (CNB)
 
 > **Status: 1.2.0**
-> The engine is stable and tested (325 unit assertions, 325 integration assertions in 19 specs, and 71 MusicXML smoke files, passing on both LilyPond 2.24 and 2.26, measured November 2026). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
+> The engine is stable and tested (399 unit assertions, 391 integration assertions in 26 specs, and 71 MusicXML smoke files, passing on both LilyPond 2.24 and 2.26, measured 2026-11-11). The release criterion — the Configurator generates a working `.ly` config file that produces correct output end-to-end — was verified on 2026-07-05: a Configurator-exported config renders the golden test score identically to the hand-written baseline (see the [walkthrough](#end-to-end-walkthrough-rendering-an-exported-config) below).
 
 A configurable engine for chromatic music notation in LilyPond.
 
@@ -315,7 +315,8 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:clef-gutter-semitones` | `#f` | Extra blank space after the clef, in semitones (`#f` = legacy spacing); applies to every rendered clef style |
 | `cnb:clef-gutter-left-semitones` | `#f` | Extra blank space before the clef, in semitones (`#f` = none); applies to every rendered clef style |
 | `cnb:clef-anchor-semitones` | `#f` | `'text` clef only: the semitone of the label's top edge, placed as a `'custom` clef's anchor is (linear, or through the pitch-axis hook; fractional values interpolate); `#f` = the fixed placement around the staff center |
-| `cnb:keysig-style` | `'chord` | Key-signature display: `'chord` (notehead-chord display) or `'none` (suppress entirely, so a Configurator `keys.keySignature.enabled: false` is honored) |
+| `cnb:keysig-style` | `'chord` | Key-signature display: `'chord` (notehead-chord display), `'marks` (draw the key's entry in `cnb:keysig-marks`; see [Key signatures from a mark list](#key-signatures-from-a-mark-list)) or `'none` (suppress entirely, so a Configurator `keys.keySignature.enabled: false` is honored) |
+| `cnb:keysig-marks` | `'()` | The mark table `'marks` draws from: one entry per key |
 | `cnb:keysig-bar-color` | `cnb:gold` | Color of the separator bar drawn through the two notehead columns |
 | `cnb:keysig-bar-thickness` | `4` | Separator-bar thickness, in LilyPond `#:draw-line` units (≈ 0.4 staff-space before magnification) |
 | `cnb:keysig-bar-extent-semis` | `12` | Separator-bar half-extent in semitones; `12` = today's ±1 octave on any staff |
@@ -343,6 +344,32 @@ Because the conditional executes when the config file is included, the flag must
 
 The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so configs work whether or not the engine defines the flag, and the flag has no effect on configs that don't include the conditional color-registration block. See [CNB-LY-EXPORT-SPEC-v1_2.md](docs/CNB-LY-EXPORT-SPEC-v1_2.md) (Section A, "Accessible color switching") for the Configurator-side format.
 
+### Key signatures from a mark list
+
+With `cnb:keysig-style 'marks`, the key signature is drawn from `cnb:keysig-marks`, a table with one entry per key that the Configurator writes. The engine computes no layout: every mark and bar is drawn where the entry puts it.
+
+An entry's key is the tonic's note name and alteration, as `\key` gives them (`0` = C … `6` = B; `1/2` sharp, `-1/2` flat), and the key's seven pitch classes in ascending order. C major and A minor differ by their tonic, and F♯ and G♭ major by their spelling. The entry itself gives:
+
+- `(columns x …)`: each column's centre, in staff spaces from the signature's start.
+- `(bars (x bottom top color thickness) …)`: a stem at `x` from semitone `bottom` to semitone `top`. `color` is a registered colour name or a hex string, and `thickness` is in staff spaces.
+- `(marks …)`: each mark is either `(semi column head shape hollow color)` or `(semi column sharp)` / `(semi column flat)`.
+  - For a `head`, `shape` is a registered path name (a sized variant is its own name), `hollow` is a registered hollow name or `#f`, and `color` is a registered colour name.
+  - `sharp` and `flat` are Emmentaler's accidentals and get no ledger lines.
+  - `semi` is the engine semitone (middle C = 0), placed as notes are, through the pitch-axis hook when it is set.
+  - Two marks at one semitone in neighbouring columns make a double notehead.
+
+```lilypond
+#(set! cnb:keysig-style 'marks)
+#(define cnb:keysig-marks
+   '((((0 . 0) . (0 2 4 5 7 9 11))            ; C major
+      . ((columns 0.5 1.5)
+         (bars (1.0 8 16 "#ffd42a" 0.2))
+         (marks (12 0 head crotchet-minim #f black-000000)
+                (14 1 head crotchet-minim crotchet-minim-cutout black-000000))))))
+```
+
+Each head is drawn with its ledger lines beneath it. A key change draws the new key's marks and no cancelling naturals. A key the table lacks draws no signature at all, and the engine warns, naming the key; it does not fall back to `'chord`. `docs/session-sets/030-keysig-mark-list/configurator-handoff.md` gives the format and the measured spacing.
+
 
 ## Project Structure
 
@@ -351,7 +378,7 @@ The exported conditional guards with `(defined? 'cnb:use-accessible-colors)`, so
 ├── Kite-4-369-Notation-Procedure.ly  Reference config (Kite notation, procedure model)
 ├── kite-4-369-from-configurator.ly   Kite 4-369 config as generated by the Configurator
 ├── joy-to-the-world.ly               Example score (tests/ holds the copy the tests render)
-├── test-unit.ly                      Unit test suite (325 assertions)
+├── test-unit.ly                      Unit test suite
 ├── README.md                         This file
 ├── CHANGELOG.md                      Release notes
 ├── LICENSE
@@ -449,7 +476,7 @@ python tools/run_unit.py --lilypond-version 2.26
 
 `lilypond test-unit.ly` runs the same assertions, but LilyPond exits 0 even when they fail; `tools/run_unit.py` reads its `TEST RESULTS: N passed, M failed` line and exits non-zero on any failure.
 
-325 assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, clef style/size settings, and custom-clef registration (anchor placement, size precedence, gutter padding, stencil geometry).
+Assertions covering: utility functions, path geometry, ledger line generation, key pitch class computation, config defaults, registration and resolution, config caching, clef style/size settings, custom-clef registration (anchor placement, size precedence, gutter padding, stencil geometry), and mark-list key signatures (the table's keys and the drawn stencil).
 
 ### Integration Tests
 

@@ -54,13 +54,25 @@
 %% Validate cnb:keysig-style. Unrecognized values warn and fall back to
 %% 'chord so a typo degrades to today's display instead of erroring.
 #(define (cnb:keysig-resolved-style)
-   (if (memq cnb:keysig-style '(chord none))
+   (if (memq cnb:keysig-style '(chord marks none))
        cnb:keysig-style
        (begin
          (ly:warning
-           "cnb:keysig-style ~a not recognized (expected chord or none); using chord"
+           "cnb:keysig-style ~a not recognized (expected chord, marks or none); using chord"
            cnb:keysig-style)
          'chord)))
+
+%% The key cnb:keysig-marks files an entry under (cnb/config.ly): the
+%% tonic's note name and alteration, and the key's pitch classes from
+%% KEY-ALTERATIONS (the context's keyAlterations), ascending.
+#(define (cnb:keysig-marks-key tonic-pitch key-alterations)
+   (cons (cons (ly:pitch-notename tonic-pitch)
+               (ly:pitch-alteration tonic-pitch))
+         (sort (cnb:get-key-pitch-classes key-alterations) <)))
+
+%% The table's entry for KEY, or #f when the table has none.
+#(define (cnb:keysig-marks-entry key)
+   (assoc-ref cnb:keysig-marks key))
 
 %% Vertical half-extent of the separator bar, in staff-spaces, from
 %% cnb:keysig-bar-extent-semis. Divides through cnb:semitones-per-staff-space
@@ -338,6 +350,102 @@
 
 
 %% ---------------------------------------------------------------------------
+%%  THE MARK-LIST KEY SIGNATURE ('marks, session 30)
+%%
+%%  Draws one entry of cnb:keysig-marks (format: cnb/config.ly) where the
+%%  entry puts everything; the engine computes no layout. x is staff
+%%  spaces from the signature's start, a semitone's height is
+%%  cnb:keysig-note-y-offset's (so the pitch-axis hook applies as for
+%%  'chord), and both scale with the font magnification MAG.
+%%
+%%  Layers, bottom up: the bars; each head with its ledger lines; the
+%%  heads again, over the ledgers of a neighbouring column (as 'chord
+%%  draws them); the sharps and flats, Emmentaler's, with no ledgers.
+%% ---------------------------------------------------------------------------
+
+%% A colour name registered with cnb:register-color!, or a hex string.
+#(define (cnb:keysig-marks-color color)
+   (if (symbol? color)
+       (or (hashq-ref cnb:color-defs color)
+           (begin
+             (ly:warning "cnb:keysig-marks: unregistered color name '~a' — using black"
+                         color)
+             "#000000"))
+       color))
+
+#(define (cnb:keysig-marks-stencil entry middleCPosition mag grob)
+   (let* ((columns   (or (assq-ref entry 'columns) '()))
+          (custom-ledger-cnt (cnb:custom-ledger-count))
+          (y-of      (lambda (semi)
+                       (cnb:keysig-note-y-offset semi middleCPosition mag)))
+          ;; STENCIL with its X extent centred on COLUMN, its origin at SEMI.
+          (place     (lambda (stencil column semi)
+                       (let ((ext (ly:stencil-extent stencil X)))
+                         (ly:stencil-translate
+                           stencil
+                           (cons (- (* mag (list-ref columns column))
+                                    (/ (+ (car ext) (cdr ext)) 2))
+                                 (y-of semi))))))
+          (bars
+            (map (lambda (bar)
+                   (let ((x (* mag (list-ref bar 0))))
+                     (cnb:colorize-stencil
+                       (make-line-stencil (* mag (list-ref bar 4))
+                                          x (y-of (list-ref bar 1))
+                                          x (y-of (list-ref bar 2)))
+                       (cnb:keysig-marks-color (list-ref bar 3)))))
+                 (or (assq-ref entry 'bars) '())))
+          ;; (semi stencil) for each head whose shape is registered.
+          (heads
+            (filter-map
+              (lambda (mark)
+                (and (eq? (list-ref mark 2) 'head)
+                     (let* ((shape  (list-ref mark 3))
+                            (hollow (list-ref mark 4))
+                            (path   (hashq-ref cnb:path-defs shape)))
+                       (if (not path)
+                           (begin
+                             (ly:warning "cnb:keysig-marks: unregistered shape '~a' — mark skipped"
+                                         shape)
+                             #f)
+                           (list (car mark)
+                                 (place
+                                   (ly:stencil-scale
+                                     (cnb:build-stencil-from-config
+                                       `((shape  . ,path)
+                                         (hollow . ,(and hollow
+                                                         (hashq-ref cnb:hollow-defs hollow)))
+                                         (color  . ,(cnb:keysig-marks-color
+                                                      (list-ref mark 5)))))
+                                     mag mag)
+                                   (cadr mark) (car mark)))))))
+              (or (assq-ref entry 'marks) '())))
+          (with-ledgers
+            (map (lambda (head)
+                   (let* ((stencil (cadr head))
+                          (y       (y-of (car head))))
+                     (cnb:add-keysig-ledgers
+                       stencil
+                       (cnb:notehead-ledgers y (ly:stencil-extent stencil Y)
+                                             mag custom-ledger-cnt)
+                       0 grob mag custom-ledger-cnt)))
+                 heads))
+          (signs
+            (filter-map
+              (lambda (mark)
+                (and (memq (list-ref mark 2) '(sharp flat))
+                     (place (ly:font-get-glyph
+                              (ly:grob-default-font grob)
+                              (if (eq? (list-ref mark 2) 'sharp)
+                                  "accidentals.sharp"
+                                  "accidentals.flat"))
+                            (cadr mark) (car mark))))
+              (or (assq-ref entry 'marks) '()))))
+     (apply ly:stencil-add
+            (append bars with-ledgers (map cadr heads) signs))))
+
+
+%% ---------------------------------------------------------------------------
 %%  KEY SIGNATURE CACHE AND ENGRAVER
 %%
 %%  The cache uses assoc-ref (equal? comparison) instead of assq-ref
@@ -398,10 +506,45 @@
                   (assoc-set! cnb:key-signature-stencil-cache cache-key stencil))
             stencil))))
 
+%% 'marks: the stencil of the table's entry for the context's key, or #f
+%% when the table has none (warned once per key, with no fallback to the
+%% scale stack). Cached on every input cnb:keysig-marks-stencil reads.
+#(define cnb:keysig-marks-stencil-cache '())
+#(define cnb:keysig-marks-warned '())
+
+#(define (cnb:get-keysig-marks-stencil grob context)
+   (let* ((tonic (ly:context-property context 'tonic))
+          (key   (cnb:keysig-marks-key
+                   tonic (ly:context-property context 'keyAlterations '())))
+          (entry (cnb:keysig-marks-entry key)))
+     (if (not entry)
+         (begin
+           (if (not (member key cnb:keysig-marks-warned))
+               (begin
+                 (set! cnb:keysig-marks-warned (cons key cnb:keysig-marks-warned))
+                 (ly:warning "cnb:keysig-marks has no entry for the key of ~a, ~a (tonic, pitch classes); no key signature drawn"
+                             tonic key)))
+           #f)
+         (let* ((mag             (magstep (ly:grob-property grob 'font-size 0.0)))
+                (middleCPosition (ly:context-property context 'middleCPosition))
+                (cache-key       (list entry middleCPosition mag
+                                       cnb:semitones-per-staff-space
+                                       cnb:get-pitch-staff-position
+                                       cnb:false-hollow))
+                (cached          (assoc-ref cnb:keysig-marks-stencil-cache cache-key)))
+           (or cached
+               (let ((stencil (cnb:keysig-marks-stencil
+                                entry middleCPosition mag grob)))
+                 (set! cnb:keysig-marks-stencil-cache
+                       (assoc-set! cnb:keysig-marks-stencil-cache cache-key stencil))
+                 stencil))))))
+
 %% The engraver replaces every KeySignature grob's stencil with the
 %% notehead-chord display, or — when cnb:keysig-style is 'none — suppresses
 %% it entirely (stencil #f, mirroring the clef engraver's 'none), so a
 %% config with keys.keySignature.enabled: false renders no key signature.
+%% Under 'marks it draws the cnb:keysig-marks entry for the key instead,
+%% and a KeyCancellation (the naturals a key change cancels) draws nothing.
 %%
 %% The display's noteheads come from the procedure config cache, which
 %% otherwise only the notehead engraver fills, on its first note. A key
@@ -415,10 +558,19 @@
      (make-engraver
        (acknowledgers
          ((key-signature-interface engraver grob source-engraver)
-           (if (eq? (cnb:keysig-resolved-style) 'none)
-               (ly:grob-set-property! grob 'stencil #f)
-               (begin
-                 (cnb:handle-key-change context)
-                 (ly:grob-set-property!
-                   grob 'stencil
-                   (cnb:get-key-signature-stencil grob context)))))))))
+           (let ((style (cnb:keysig-resolved-style)))
+             (cond
+               ((eq? style 'none)
+                (ly:grob-set-property! grob 'stencil #f))
+               ;; 'marks: a key change draws the new key's marks and no
+               ;; cancelling naturals.
+               ((eq? style 'marks)
+                (ly:grob-set-property!
+                  grob 'stencil
+                  (and (not (grob::has-interface grob 'key-cancellation-interface))
+                       (cnb:get-keysig-marks-stencil grob context))))
+               (else
+                (cnb:handle-key-change context)
+                (ly:grob-set-property!
+                  grob 'stencil
+                  (cnb:get-key-signature-stencil grob context))))))))))

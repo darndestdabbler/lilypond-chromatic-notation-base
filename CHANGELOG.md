@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.4.0
+
+- A key signature can be drawn from a mark list. With
+  `cnb:keysig-style 'marks`, the engine draws the score's key from
+  `cnb:keysig-marks`, which has one entry per key: the columns' offsets,
+  the gold bars, and the marks (noteheads through their registered path,
+  hollow and colour, or Emmentaler sharps and flats). The engine computes
+  no layout of its own. An entry's key is the tonic's spelling and the
+  key's pitch classes, so F♯ and G♭ major can differ. A key change draws
+  the new key's marks with no cancelling naturals. A key the table lacks
+  draws no signature and warns. `'chord`, `'none` and every existing
+  output are unchanged.
+  `docs/session-sets/030-keysig-mark-list/configurator-handoff.md` gives
+  the format and the measured spacing around the signature.
+
 ## 1.3.1
 
 - A breve's tie now runs below the noteheads, as a tie under a note does:

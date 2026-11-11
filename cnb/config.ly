@@ -243,6 +243,8 @@
 %%   'none  — suppress the key signature entirely (no stencil is
 %%            engraved), so a Configurator config with
 %%            keys.keySignature.enabled: false becomes emittable.
+%%   'marks — draw the score's key from the mark table cnb:keysig-marks
+%%            (below): every mark and bar where the table puts it.
 %%
 %% Kept a SYMBOL (not a boolean) so the valueset can grow as new styles
 %% are implemented. Any other value warns and falls back to 'chord.
@@ -292,6 +294,36 @@
 %%              hook sends to staff position 0, or the middle line's
 %%              semitone on a linear staff (see cnb:keysig-centre-semitone).
 #(define cnb:keysig-tonic-octave #f)
+
+%% The mark table cnb:keysig-style 'marks draws from: an alist with one
+%% entry per key, written by the Configurator (CNBKeySignature.marks), so
+%% the engine computes no layout of its own.
+%%
+%%   Entry key:  ((notename . alteration) . pitch-classes)
+%%               the tonic's note name (0 = C … 6 = B) and alteration
+%%               (1/2 sharp, -1/2 flat) as \key gives them, and the key's
+%%               seven pitch classes, ascending. C major and A minor differ
+%%               by tonic, F sharp and G flat major by spelling.
+%%   Entry value: an alist of
+%%     (columns x …)  each column's centre, staff spaces from the
+%%                    signature's start.
+%%     (bars (x bottom top color thickness) …)
+%%                    a stem at x (staff spaces) from semitone bottom to
+%%                    semitone top, color a registered colour name or a
+%%                    hex string, thickness in staff spaces.
+%%     (marks mark …) each mark one of
+%%                    (semi column head shape hollow color): a notehead,
+%%                      shape a registered path name (a sized variant is
+%%                      its own name), hollow a registered hollow name or
+%%                      #f, color a registered colour name;
+%%                    (semi column sharp) or (semi column flat): an
+%%                      Emmentaler accidental, with no ledger lines.
+%%                    semi is the engine semitone, middle C = 0; column
+%%                    indexes columns. Two marks at one semitone in
+%%                    neighbouring columns are a double notehead.
+%%
+%% A key with no entry draws no signature, and the engine warns naming it.
+#(define cnb:keysig-marks '())
 
 
 %% ---------------------------------------------------------------------------

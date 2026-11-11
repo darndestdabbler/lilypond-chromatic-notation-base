@@ -36,6 +36,7 @@
 \include "cnb/ledgers.ly"
 \include "cnb/off-key.ly"
 \include "cnb/clefs.ly"
+\include "cnb/staff.ly"
 \include "cnb/keysig.ly"
 
 
@@ -1754,7 +1755,150 @@
 #(set! cnb:keysig-style 'bogus-style)
 #(cnb:assert-equal "unrecognized value falls back to 'chord"
    (cnb:keysig-resolved-style) 'chord)
+#(set! cnb:keysig-style 'marks)
+#(cnb:assert-equal "'marks resolves to 'marks"
+   (cnb:keysig-resolved-style) 'marks)
 #(set! cnb:keysig-style cnb:saved-keysig-style)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — The mark table's keys (session 30)
+%%
+%%  cnb:keysig-marks-key files a key under its tonic's spelling and its
+%%  sorted pitch classes; cnb:keysig-marks-entry looks it up.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-marks-key and cnb:keysig-marks-entry")
+
+#(cnb:assert-equal "cnb:keysig-marks defaults to '()"
+   cnb:keysig-marks '())
+
+#(define cnb:test-fis-alts
+   '((3 . 1/2) (0 . 1/2) (4 . 1/2) (1 . 1/2) (5 . 1/2) (2 . 1/2)))
+#(define cnb:test-ges-alts
+   '((6 . -1/2) (2 . -1/2) (5 . -1/2) (1 . -1/2) (4 . -1/2) (0 . -1/2)))
+#(define cnb:test-c-major-key
+   (cnb:keysig-marks-key (ly:make-pitch 0 0 0) '()))
+#(define cnb:test-a-minor-key
+   (cnb:keysig-marks-key (ly:make-pitch 0 5 0) '()))
+#(define cnb:test-fis-major-key
+   (cnb:keysig-marks-key (ly:make-pitch 0 3 1/2) cnb:test-fis-alts))
+#(define cnb:test-ges-major-key
+   (cnb:keysig-marks-key (ly:make-pitch 0 4 -1/2) cnb:test-ges-alts))
+
+#(cnb:assert-equal "C major's key is ((0 . 0) 0 2 4 5 7 9 11)"
+   cnb:test-c-major-key '((0 . 0) 0 2 4 5 7 9 11))
+#(cnb:assert-equal "C major and A minor share their pitch classes"
+   (cdr cnb:test-c-major-key) (cdr cnb:test-a-minor-key))
+#(cnb:assert-false "C major and A minor have different keys (their tonics)"
+   (equal? cnb:test-c-major-key cnb:test-a-minor-key))
+#(cnb:assert-equal "F sharp and G flat major share their pitch classes"
+   (cdr cnb:test-fis-major-key) (cdr cnb:test-ges-major-key))
+#(cnb:assert-equal "F sharp major's pitch classes are sorted"
+   (cdr cnb:test-fis-major-key) '(1 3 5 6 8 10 11))
+#(cnb:assert-false "F sharp and G flat major have different keys (their spellings)"
+   (equal? cnb:test-fis-major-key cnb:test-ges-major-key))
+#(cnb:assert-equal "B flat major's key is ((6 . -1/2) 0 2 3 5 7 9 10)"
+   (cnb:keysig-marks-key (ly:make-pitch -1 6 -1/2) '((6 . -1/2) (2 . -1/2)))
+   '((6 . -1/2) 0 2 3 5 7 9 10))
+
+#(define cnb:saved-keysig-marks cnb:keysig-marks)
+#(set! cnb:keysig-marks
+   `((,cnb:test-c-major-key . ((columns 0.5) (bars) (marks (0 0 sharp))))))
+#(cnb:assert-equal "an entry is found for a key in the table"
+   (cnb:keysig-marks-entry cnb:test-c-major-key)
+   '((columns 0.5) (bars) (marks (0 0 sharp))))
+#(cnb:assert-false "no entry for a key the table lacks (A minor)"
+   (cnb:keysig-marks-entry cnb:test-a-minor-key))
+#(set! cnb:keysig-marks cnb:saved-keysig-marks)
+
+
+%% =========================================================================
+%%  TEST: cnb/keysig.ly — cnb:keysig-marks-stencil (session 30)
+%%
+%%  The stencil needs a grob, for Emmentaler's glyphs and the ledger
+%%  lines' markup, so these assertions run inside a one-note score
+%%  typeset in a markup, when an engraver acknowledges its KeySignature
+%%  (a grob is only alive then). Treble clef (middleCPosition -6), font
+%%  magnification 1.
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:keysig-marks-stencil")
+
+#(cnb:register-color! 'cnb-test-red "#ff0000")
+
+#(define (cnb:test-keysig-marks grob)
+   (let* ((st     (lambda (entry) (cnb:keysig-marks-stencil entry -6 1 grob)))
+          (head   (lambda (semi column)
+                    `(,semi ,column head default-oval #f cnb-test-red)))
+          (alone  (cnb:build-stencil-from-config
+                    `((shape  . ,(hashq-ref cnb:path-defs 'default-oval))
+                      (hollow . #f)
+                      (color  . "#ff0000"))))
+          (w      (interval-length (ly:stencil-extent alone X)))
+          (h      (interval-length (ly:stencil-extent alone Y)))
+          (y      (lambda (semi) (cnb:keysig-note-y-offset semi -6 1)))
+          (sharp  (ly:font-get-glyph (ly:grob-default-font grob) "accidentals.sharp"))
+          (two    (st `((columns 1.0 3.0) (bars)
+                        (marks ,(head 12 0)
+                               (16 1 head default-oval default-oval-cutout cnb-test-red)))))
+          (double (st `((columns 0.5 1.5) (bars) (marks ,(head 12 0) ,(head 12 1)))))
+          (bar    (st '((columns 0.5) (bars (1.0 0 24 "#ffd42a" 0.2)) (marks))))
+          (low    (st `((columns 1.0) (bars) (marks ,(head -24 0)))))
+          (low-sh (st '((columns 1.0) (bars) (marks (-24 0 sharp)))))
+          (flat   (st '((columns 1.0) (bars) (marks (12 0 flat)))))
+          (bogus  (st '((columns 1.0) (bars) (marks (12 0 head no-such-shape #f cnb-test-red))))))
+     (cnb:assert-near "two columns: the first head is centred on x 1.0"
+       (car (ly:stencil-extent two X)) (- 1.0 (/ w 2)) 0.0001)
+     (cnb:assert-near "two columns: the second head is centred on x 3.0"
+       (cdr (ly:stencil-extent two X)) (+ 3.0 (/ w 2)) 0.0001)
+     (cnb:assert-near "a double notehead is two heads, a column apart"
+       (interval-length (ly:stencil-extent double X)) (+ 1.0 w) 0.0001)
+     (cnb:assert-near "a double notehead's heads share one height"
+       (interval-length (ly:stencil-extent double Y)) h 0.0001)
+     (cnb:assert-near "a bar reaches its bottom semitone (less half its thickness)"
+       (car (ly:stencil-extent bar Y)) (- (y 0) 0.1) 0.0001)
+     (cnb:assert-near "a bar reaches its top semitone (plus half its thickness)"
+       (cdr (ly:stencil-extent bar Y)) (+ (y 24) 0.1) 0.0001)
+     (cnb:assert-true "a head below the staff gets ledger lines, wider than the head"
+       (> (interval-length (ly:stencil-extent low X)) (+ w 0.0001)))
+     (cnb:assert-true "the ledger lines run from the head up towards the staff"
+       (> (cdr (ly:stencil-extent low Y)) (+ (y -24) (/ h 2) 0.0001)))
+     (cnb:assert-near "a sharp at the same place gets no ledger lines (its glyph's width)"
+       (interval-length (ly:stencil-extent low-sh X))
+       (interval-length (ly:stencil-extent sharp X)) 0.0001)
+     (cnb:assert-near "a sharp is centred on its column"
+       (car (ly:stencil-extent low-sh X))
+       (- 1.0 (/ (interval-length (ly:stencil-extent sharp X)) 2)) 0.0001)
+     (cnb:assert-false "a sharp gives a non-empty stencil"
+       (ly:stencil-empty? low-sh))
+     (cnb:assert-false "a flat gives a non-empty stencil"
+       (ly:stencil-empty? flat))
+     ;; This will produce a warning — that's expected
+     (cnb:assert-true "an unregistered shape is skipped"
+       (ly:stencil-empty? bogus))))
+
+#(define cnb:test-keysig-grob-proc cnb:test-keysig-marks)
+#(define (cnb:test-keysig-grob-engraver context)
+   (make-engraver
+     (acknowledgers
+       ((key-signature-interface engraver grob source-engraver)
+        (if cnb:test-keysig-grob-proc
+            (let ((proc cnb:test-keysig-grob-proc))
+              (set! cnb:test-keysig-grob-proc #f)
+              (proc grob)))))))
+
+#(interpret-markup $defaultpaper
+   (list (ly:output-def-lookup $defaultpaper 'text-font-defaults))
+   #{ \markup \score {
+        \new Staff { \key d \major c'1 }
+        \layout {
+          indent = 0 line-width = 100\mm ragged-right = ##t
+          \context { \Staff \consists #cnb:test-keysig-grob-engraver }
+        }
+      } #})
+#(cnb:assert-false "the KeySignature grob was acknowledged (the stencil tests ran)"
+   cnb:test-keysig-grob-proc)
 
 
 %% =========================================================================
