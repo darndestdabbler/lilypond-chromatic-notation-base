@@ -1,0 +1,100 @@
+{
+  "test_name": "Mark-list key signatures: a key change, a transposed passage, an enharmonic pair, a system start and a missing key (session 30)",
+  "input_file": "keysig-marks.ly",
+  "description": "cnb:keysig-style 'marks draws the cnb:keysig-marks entry for the score's key. m1 C major (two columns of noteheads, a double notehead on c'' one column apart, a hollow head, a bar), m2 D major by \\transpose c d of a passage in C, m3 C major again with no cancelling naturals, m4 F sharp major (sharps) and m5 G flat major (flats), one set of pitch classes with two entries, m6 G flat's signature repeated at the second system's start, m7 D sharp major, which the table lacks: no signature (the engine warns). Widths are staff spaces, from the harvest's control-point hulls.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: ONE SIGNATURE PER KEY, NONE FOR THE CANCELLATION OR THE MISSING KEY ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Six signatures are drawn (m1-m6): the KeyCancellation at m3 draws nothing, and D sharp major (m7) has no entry",
+      "expect": {
+        "type": ["== 'key-signature'", "count('key-signature') == 6"]
+      }
+    },
+    {
+      "id": "ks-7",
+      "description": "D sharp major is not in the table: no signature, no fallback to the scale stack",
+      "absent": true
+    },
+
+    {"_comment": "=== SECTION 2: C MAJOR, ITS DOUBLE NOTEHEAD, AND C AGAIN AFTER D ==="},
+
+    {
+      "id": "ks-1",
+      "description": "C major's two columns of 1.0-wide heads span 2.0 (the double notehead's heads one column apart)",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 2.0) < 0.005"],
+        "visual.bbox.h": ["abs(v - 5.0) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-3",
+      "description": "C major after D major draws C's own entry and no naturals: the same width and height as m1's",
+      "expect": {
+        "visual.bbox.w": ["abs(v - prop('ks-1', 'visual.bbox.w')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('ks-1', 'visual.bbox.h')) < 0.005"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE TRANSPOSED PASSAGE TAKES D MAJOR'S ENTRY ==="},
+
+    {
+      "id": "ks-2",
+      "description": "\\transpose c d of a C-major passage draws D major's entry (heads at 10 and 14, bar 8-16), not C's",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 4.0) < 0.005", "abs(v - prop('ks-1', 'visual.bbox.h')) > 0.5"]
+      }
+    },
+
+    {"_comment": "=== SECTION 4: F SHARP AND G FLAT MAJOR ARE TOLD APART BY SPELLING ==="},
+
+    {
+      "id": "ks-4",
+      "description": "F sharp major draws its sharps entry",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 2.052) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-5",
+      "description": "G flat major (the same pitch classes) draws its own flats entry, not F sharp's",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 1.78) < 0.005"],
+        "visual.path_hash": ["!= prop('ks-4', 'visual.path_hash')"]
+      }
+    },
+
+    {"_comment": "=== SECTION 5: THE SIGNATURE REPEATED AT THE SECOND SYSTEM'S START ==="},
+
+    {
+      "id": "ks-6",
+      "description": "The second system opens with G flat major's signature, as m5 drew it",
+      "expect": {
+        "staff_relative.system": ["== 1"],
+        "visual.path_hash": ["== prop('ks-5', 'visual.path_hash')"],
+        "visual.bbox.w": ["abs(v - prop('ks-5', 'visual.bbox.w')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('ks-5', 'visual.bbox.h')) < 0.005"]
+      }
+    },
+
+    {"_comment": "=== SECTION 6: THE NOTES STILL RENDER ==="},
+
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "Every note renders, the missing key's measure included",
+      "expect": {
+        "type": ["== 'notehead'", "count('notehead') == 28"]
+      }
+    },
+    {
+      "id": "nh-7-0.000-63-0",
+      "description": "D sharp major's first note renders without a signature",
+      "expect": {
+        "type": ["== 'notehead'"]
+      }
+    }
+  ]
+}

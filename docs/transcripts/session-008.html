@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 008 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 008 transcript</h1>
+<p class="stamp">Rendered 2026-10-31T08:52:06.195Z by dabbler-ai-router 3.27.0 at 0658f5183411a4b42934d1c7a0500e2a5cc126d1.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-10-31T04:38:51.668-04:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 8: Let the test runners choose a LilyPond version</h3>
+<p><strong>Why.</strong> 1.0.0 supports LilyPond 2.24.x only, and 2.26 is the current stable release, so a new user is likely to have it. Measured on 2026-10-31 in a scratch worktree: with the session 9 fixes, every engine-unit and engine-integration assertion passes on 2.26.0, but 11 of the tracked harvests differ in layout coordinates. Supporting both versions needs a harvest baseline set per version, and suites that prove each one. On the operator's machine 2.24.2 is on <code>PATH</code> and 2.26.0 is at <code>D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe</code>, named by the user environment variable <code>CNB_LILYPOND_2_26</code>.</p>
+<ol><li>Register.</li><li>Give <code>tools/run_tests.py</code> and <code>tools/run_unit.py</code> a <code>--lilypond-version X.Y</code> option. It uses the executable named by <code>CNB_LILYPOND_X_Y</code> (dots become underscores), or else the <code>lilypond</code> on <code>PATH</code> if its <code>--version</code> reports X.Y. Otherwise it exits non-zero with a message naming the variable to set. Without the option, both behave as today. The supported set is 2.24 and 2.26. The 2.24 harvest baselines stay at <code>tests/*.harvested.json</code>, and 2.26's go in <code>tests/lilypond-2.26/</code>. For any version other than 2.24, renders go to the ignored <code>out/lilypond-X.Y/</code>, so the tracked <code>tests/*.svg</code> are never rewritten by a 2.26 run. For a version outside the supported set, warn and skip the drift comparison; assertions still run. Replace the &quot;baselined on 2.24&quot; warning with this. Tests in <code>tools/test_run_tests.py</code> cover: resolution from the variable, from <code>PATH</code>, and the failure message; the baseline path for 2.24 and for 2.26; and the unsupported-version skip. Prove it by running the engine-tooling suite, then <code>python tools/run_tests.py --lilypond-version 2.24</code> and <code>python tools/run_unit.py --lilypond-version 2.24</code>. Both pass, and <code>git status -- tests</code> is clean.</li><li>Add <code>--lilypond-version 2.24</code> to the engine-integration and engine-unit suite commands in <code>dabbler.yaml</code>, so the run of record names the version it proves.</li></ol>
+<h2>Work Plan</h2>
+<p>Give tools/run_tests.py and tools/run_unit.py a --lilypond-version X.Y option. run_tests.py gains small helpers that both runners use: the variable name for a version (CNB_LILYPOND_X_Y), the version a lilypond executable reports (X.Y from the first line of --version), resolution of the executable (the variable's value, else the lilypond on PATH if it reports X.Y, else exit non-zero with a message naming the variable to set), the render directory (out/lilypond-X.Y/ for any version other than 2.24, so tracked tests/*.svg are never rewritten by such a run) and the harvest baseline directory (beside the spec for 2.24, tests/lilypond-2.26/ for 2.26, none for a version outside the supported set {2.24, 2.26}). The LilyPond executable is passed to run_lilypond instead of the hard-coded name. For an unsupported version run_tests.py warns once and skips the drift comparison while every assertion still runs; this replaces the old 'baselined on 2.24' warning, which is removed. Without the option both runners behave as today: lilypond from PATH, renders beside the spec (run_unit.py into out/), drift compared with tests/*.harvested.json. Tests in tools/test_run_tests.py cover resolution from the variable, from PATH, and the failure message; the baseline path for 2.24 and 2.26; and the unsupported-version skip. Then dabbler.yaml's engine-integration and engine-unit suite commands gain --lilypond-version 2.24 so the run of record names the version it proves.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/905561cbc2cb785f3dfeb8b129afdabfddf5c5b7"><code>905561cbc2cb785f3dfeb8b129afdabfddf5c5b7</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Version option</td><td><p>In tools/run_tests.py add SUPPORTED_LILYPOND_VERSIONS = (&quot;2.24&quot;, &quot;2.26&quot;) and helpers lilypond_env_var(version), lilypond_version(executable), resolve_lilypond(version), render_dir(version) and baseline_dir(version, spec_dir) as described in the task; thread the executable through run_lilypond, run_single_test and generate_golden; render into render_dir(version) when it is set and compare/write the harvest at baseline_dir (creating tests/lilypond-2.26/ on first write), skipping the drift comparison with a single warning when the version is unsupported; remove warn_unless_supported_lilypond. In tools/run_unit.py add the same --lilypond-version option using resolve_lilypond and render_dir from run_tests.py. Add tests to tools/test_run_tests.py (unittest.mock for the environment and the --version call): resolution from the variable, from PATH, the failure message naming CNB_LILYPOND_2_26; baseline_dir for 2.24 and 2.26; render_dir; and that an unsupported version yields no baseline (drift skipped). Prove it with the tooling suite, then both runners at --lilypond-version 2.24, and that the tracked tests tree is unchanged.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/run_unit.py</span><br><span class="mono">tools/test_run_tests.py</span></td><td><code>python -m unittest discover -s tools -p test_*.py</code><br><code>python tools/run_tests.py --lilypond-version 2.24</code><br><code>python tools/run_unit.py --lilypond-version 2.24</code><br><code>git diff --exit-code -- tests</code></td><td>yes</td></tr>
+<tr><td>Suite commands</td><td><p>In dabbler.yaml change the engine-integration command to <code>python tools/run_tests.py --lilypond-version 2.24</code> and the engine-unit command to <code>python tools/run_unit.py --lilypond-version 2.24</code>, and bring the comment above them up to date (the suites name the LilyPond version they prove).</p></td><td><span class="mono">dabbler.yaml</span></td><td><code>git grep -q -F command: python tools/run_tests.py --lilypond-version 2.24 -- dabbler.yaml</code><br><code>git grep -q -F command: python tools/run_unit.py --lilypond-version 2.24 -- dabbler.yaml</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No engine, harvester or spec fixes for LilyPond 2.26 (duration-length, rgba colours, the clef-custom gutter assertion): session 9 makes them.</li><li>No tests/lilypond-2.26/ baselines are written and no 2.26 suites are declared in dabbler.yaml: session 9 does both.</li><li>No README, version.json or CHANGELOG changes: session 10 documents --lilypond-version and CNB_LILYPOND_X_Y and bumps to 1.1.0.</li><li>No LilyPond versions beyond 2.24 and 2.26 are supported, and no automatic discovery of installed LilyPonds beyond the variable and PATH.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[08:38:51]</span> <span class="muted">run-started</span> session=008 mode=pull</div>
+<div class="line"><span class="at">[08:38:51]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[08:40:37]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[08:40:37]</span> <span class="muted">plan-accepted</span> steps=[&quot;version-option&quot;,&quot;suite-commands&quot;] non_goals=4</div>
+<div class="line"><span class="at">[08:40:41]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[08:40:41]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=version-option</div>
+<div class="line"><span class="at">[08:43:34]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:43:37]</span> <span class="muted">check-passed</span> step=version-option argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_*.py&quot;]</div>
+<div class="line"><span class="at">[08:43:49]</span> <span class="muted">check-passed</span> step=version-option argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[08:43:51]</span> <span class="muted">check-passed</span> step=version-option argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[08:43:52]</span> <span class="muted">check-passed</span> step=version-option argv=[&quot;git&quot;,&quot;diff&quot;,&quot;--exit-code&quot;,&quot;--&quot;,&quot;tests&quot;]</div>
+<div class="line"><span class="at">[08:43:53]</span> <span class="muted">report-accepted</span> seq=2 step=version-option files=[&quot;tools/run_tests.py&quot;,&quot;tools/run_unit.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=Option lilypond-version X.Y resolves CNB_LILYPOND_X_Y else PATH lilypond reporting X.Y, else exits naming the variable; non-2.24 renders to out/lilypond-X.Y/, 2.26 baselines in tests/lilypond-2.26/, unsupported versions skip drift with one warning; old 2.24 warning removed. Tooling 21 OK, run_tests 2.24 259 passed, run_unit 2.24 303 passed, tests tree clean</div>
+<div class="line"><span class="at">[08:43:53]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=suite-commands</div>
+<div class="line"><span class="at">[08:44:20]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[08:44:23]</span> <span class="muted">check-passed</span> step=suite-commands argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_tests.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;]</div>
+<div class="line"><span class="at">[08:44:24]</span> <span class="muted">check-passed</span> step=suite-commands argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_unit.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;]</div>
+<div class="line"><span class="at">[08:44:25]</span> <span class="muted">report-accepted</span> seq=3 step=suite-commands files=[&quot;dabbler.yaml&quot;] notes=engine-integration and engine-unit commands now pass lilypond-version 2.24; comment names the version option and refreshed counts (259 tests / 365 assertions)</div>
+<div class="line"><span class="at">[08:44:25]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:44:25]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:44:28]</span> <span class="muted">job-started</span> name=verification pid=70692 log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:46:03]</span> <span class="muted">job-finished</span> name=verification exit=<span class="bad">4</span> log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:46:03]</span> <span class="muted">verification-blocking</span></div>
+<div class="line"><span class="at">[08:46:03]</span> <span class="milestone">phase</span> phase=<span class="milestone">dispositions</span></div>
+<div class="line"><span class="at">[08:46:03]</span> <span class="muted">instruction-issued</span> seq=4 kind=rejection reasons=2</div>
+<div class="line"><span class="at">[08:46:25]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">dispositions</span> mode=pull</div>
+<div class="line"><span class="at">[08:46:25]</span> <span class="muted">dispositions-accepted</span> round=1 fix=[0,1] reject=[] answers=[{&quot;finding&quot;:0,&quot;action&quot;:&quot;fix&quot;},{&quot;finding&quot;:1,&quot;action&quot;:&quot;fix&quot;}]</div>
+<div class="line"><span class="at">[08:46:25]</span> <span class="milestone">phase</span> phase=<span class="milestone">fix</span></div>
+<div class="line"><span class="at">[08:46:25]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=fix-round-1</div>
+<div class="line"><span class="at">[08:47:41]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">fix</span> mode=pull</div>
+<div class="line"><span class="at">[08:47:47]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_*.py&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:47:57]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:47:59]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:48:01]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;git&quot;,&quot;diff&quot;,&quot;--exit-code&quot;,&quot;--&quot;,&quot;tests&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:48:02]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_tests.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;] owner=suite-commands</div>
+<div class="line"><span class="at">[08:48:04]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_unit.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;] owner=suite-commands</div>
+<div class="line"><span class="at">[08:48:08]</span> <span class="muted">report-accepted</span> seq=5 step=fix-round-1 files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=run_lilypond creates its output dir; generate_golden renders (and by default writes its harvest) into render_dir(version) for non-2.24 versions; tests cover both. Tooling 23 OK, run_tests and run_unit at 2.24 pass, tests tree clean</div>
+<div class="line"><span class="at">[08:48:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:48:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:48:10]</span> <span class="muted">job-started</span> name=verification pid=60544 log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:49:12]</span> <span class="muted">job-finished</span> name=verification exit=<span class="bad">4</span> log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:49:12]</span> <span class="muted">verification-blocking</span></div>
+<div class="line"><span class="at">[08:49:12]</span> <span class="milestone">phase</span> phase=<span class="milestone">dispositions</span></div>
+<div class="line"><span class="at">[08:49:12]</span> <span class="muted">instruction-issued</span> seq=6 kind=rejection reasons=1</div>
+<div class="line"><span class="at">[08:49:28]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">dispositions</span> mode=pull</div>
+<div class="line"><span class="at">[08:49:28]</span> <span class="muted">dispositions-accepted</span> round=2 fix=[0] reject=[] answers=[{&quot;finding&quot;:0,&quot;action&quot;:&quot;fix&quot;}]</div>
+<div class="line"><span class="at">[08:49:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">fix</span></div>
+<div class="line"><span class="at">[08:49:28]</span> <span class="muted">instruction-issued</span> seq=7 kind=step step=fix-round-2</div>
+<div class="line"><span class="at">[08:50:11]</span> <span class="muted">run-resumed</span> session=008 phase=<span class="milestone">fix</span> mode=pull</div>
+<div class="line"><span class="at">[08:50:14]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_*.py&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:50:23]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:50:24]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:50:26]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;git&quot;,&quot;diff&quot;,&quot;--exit-code&quot;,&quot;--&quot;,&quot;tests&quot;] owner=version-option</div>
+<div class="line"><span class="at">[08:50:28]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_tests.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;] owner=suite-commands</div>
+<div class="line"><span class="at">[08:50:30]</span> <span class="muted">check-passed</span> step=fix-round-2 argv=[&quot;git&quot;,&quot;grep&quot;,&quot;-q&quot;,&quot;-F&quot;,&quot;command: python tools/run_unit.py --lilypond-version 2.24&quot;,&quot;--&quot;,&quot;dabbler.yaml&quot;] owner=suite-commands</div>
+<div class="line"><span class="at">[08:50:31]</span> <span class="muted">report-accepted</span> seq=7 step=fix-round-2 files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=generate_golden's default harvest now goes to baseline_dir(version) (tests/lilypond-2.26/ for 2.26; render dir only for an unsupported version); test asserts it. Tooling 23 OK, both runners at 2.24 pass, tests tree clean</div>
+<div class="line"><span class="at">[08:50:31]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[08:50:31]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[08:50:32]</span> <span class="muted">job-started</span> name=verification pid=73536 log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:50:56]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s8/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[08:50:56]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[08:50:56]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[08:50:58]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:50:59]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=2688 log=.dabbler/runs/s8/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:51:12]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s8/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[08:51:13]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[08:51:14]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=39720 log=.dabbler/runs/s8/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:51:20]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s8/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[08:51:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[08:51:30]</span> <span class="muted">landed</span> commit=905561cbc2cb785f3dfeb8b129afdabfddf5c5b7</div>
+<div class="line"><span class="at">[08:51:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[08:51:31]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[08:51:31]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[08:51:33]</span> <span class="muted">job-started</span> name=close pid=61816 log=.dabbler/runs/s8/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:52:06]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s8/driver/jobs/close.log</div>
+<div class="line"><span class="at">[08:52:06]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="bad">ISSUES_FOUND</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details open><summary>2 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>major</strong> <span class="bad">blocking</span></td><td>`run_tests.py` does not create the versioned render directory before invoking LilyPond.</td><td>fixed — run_lilypond creates its output dir; generate_golden renders (and by default writes its harvest) into render_dir(version) for non-2.24 versions; tests cover both. Tooling 23 OK, run_tests and run_unit at 2.24 pass, tests tree clean — (tools/run_tests.py, tools/test_run_tests.py)</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>**Nit:** `--generate` bypasses `render_dir(version)`: `generate_golden()` always renders beside the `.ly` input. With `python tools/run_tests.py --lilypond-version 2.26 --generate tests/example.ly`, it can rewrite `tests/example.svg`, contradicting the stated invariant that a 2.26 run never rewrites tracked `tests/*.svg`. A focused test should start with a sentinel `tests/example.svg`, invoke the 2.26 generate path with LilyPond mocked, and assert that the renderer receives `out/lilypond-2.26/` rather than `tests/`.</td><td>fixed — run_lilypond creates its output dir; generate_golden renders (and by default writes its harvest) into render_dir(version) for non-2.24 versions; tests cover both. Tooling 23 OK, run_tests and run_unit at 2.24 pass, tests tree clean — (tools/run_tests.py, tools/test_run_tests.py)</td></tr>
+</table></td></tr>
+<tr><td>2</td><td>fix-delta</td><td><span class="bad">ISSUES_FOUND</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details open><summary>1 finding</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>major</strong> <span class="bad">blocking</span></td><td>`--generate --lilypond-version 2.26` writes its default harvested JSON into the ignored render directory instead of the configured 2.26 baseline directory.</td><td>fixed — generate_golden's default harvest now goes to baseline_dir(version) (tests/lilypond-2.26/ for 2.26; render dir only for an unsupported version); test asserts it. Tooling 23 OK, both runners at 2.24 pass, tests tree clean — (tools/run_tests.py, tools/test_run_tests.py)</td></tr>
+</table></td></tr>
+<tr><td>3</td><td>fix-delta</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>9s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

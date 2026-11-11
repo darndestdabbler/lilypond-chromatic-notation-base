@@ -1,0 +1,80 @@
+{
+  "test_name": "Stem attachment keeps each note's own key across a mid-score key change",
+  "input_file": "stem-attachment-key-change.ly",
+  "description": "Audit 2026-11-02 M1. The score's config attaches stems at the notehead's side (default-side) while F# is out of the key and at its centre (center-stem) once F# is in it. Measure 1 (C major) and measure 2 (G major) hold the same notes: G4 quarter, A4 quarter, G4 half, all stems up. cnb:stem-attachment runs at layout time, when the config cache holds the last key of the score; it used to look the attachment up there, so measure 1 took G major's centred stems. The notehead engraver now captures the attachment on each notehead at acknowledge time. An up-stem attached at the side has its right edge on the notehead's right edge; a centred stem has its centre on the notehead's centre.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: MEASURE 1 (C MAJOR) KEEPS SIDE-ATTACHED STEMS ==="},
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "C major, G4 quarter: stem's right edge on the notehead's right edge",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.000-0', 'visual.bbox.w') - prop('nh-1-0.000-67-0', 'visual.bbox.x') - prop('nh-1-0.000-67-0', 'visual.bbox.w')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.250-0",
+      "description": "C major, A4 quarter: stem's right edge on the notehead's right edge",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.250-0', 'visual.bbox.w') - prop('nh-1-0.250-69-0', 'visual.bbox.x') - prop('nh-1-0.250-69-0', 'visual.bbox.w')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.500-0",
+      "description": "C major, G4 half: stem's right edge on the (doubled) notehead's right edge",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.500-0', 'visual.bbox.w') - prop('nh-1-0.500-67-0', 'visual.bbox.x') - prop('nh-1-0.500-67-0', 'visual.bbox.w')) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: MEASURE 2 (G MAJOR) TAKES CENTRED STEMS ==="},
+
+    {
+      "id": "st-2-0.000-0",
+      "description": "G major, G4 quarter: stem centred on the notehead",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.000-0', 'visual.bbox.w') / 2 - prop('nh-2-0.000-67-0', 'visual.bbox.x') - prop('nh-2-0.000-67-0', 'visual.bbox.w') / 2) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.250-0",
+      "description": "G major, A4 quarter: stem centred on the notehead",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.250-0', 'visual.bbox.w') / 2 - prop('nh-2-0.250-69-0', 'visual.bbox.x') - prop('nh-2-0.250-69-0', 'visual.bbox.w') / 2) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.500-0",
+      "description": "G major, G4 half: stem centred on the (doubled) notehead",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.500-0', 'visual.bbox.w') / 2 - prop('nh-2-0.500-67-0', 'visual.bbox.x') - prop('nh-2-0.500-67-0', 'visual.bbox.w') / 2) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE SAME NOTE DIFFERS ONLY BY KEY ==="},
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "Measure-1 and measure-2 G4 quarter stems sit at different offsets from their noteheads",
+      "expect": {
+        "visual.bbox.x": [
+          "abs((v - prop('nh-1-0.000-67-0', 'visual.bbox.x')) - (prop('st-2-0.000-0', 'visual.bbox.x') - prop('nh-2-0.000-67-0', 'visual.bbox.x'))) > 0.3"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "test_name": "Augmentation dots stay beside their noteheads on and off ledger lines",
+  "input_file": "dots-ledger-lines.ly",
+  "description": "Audit 2026-11-02 H3. cnb:dots-avoid-ledgers (cnb/dots.ly) moves the dot of a note on a ledger line one staff-position away from the staff. It used to set the dot's staff-position to the notehead's absolute position plus the dodge, but the dot is positioned relative to its notehead, so the notehead's offset was counted twice: c'2. put its dot 6.5 staff spaces below the note and e'''2. 8.5 above. Every measure holds one dotted half; positions are read as staff_relative.staff_spaces_from_center (1.0 = one staff space, one staff-position = 0.5). Dots of notes on ledger lines must sit exactly half a staff space away from their notehead, below the staff downward and above it upward; dots of notes in spaces (inside the staff or between ledger lines) stay level with the notehead, and the note on a staff line keeps LilyPond's own upward half-space shift.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: ON LEDGER LINES BELOW THE STAFF: DOT HALF A SPACE BELOW ==="},
+
+    {
+      "id": "dt-2-0.000-58-0",
+      "description": "Bb3 (on a ledger line below the staff): dot half a staff space below its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-2-0.000-58-0', 'staff_relative.staff_spaces_from_center') - 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-4-0.000-60-0",
+      "description": "C4 (on a ledger line below the staff): dot half a staff space below its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-4-0.000-60-0', 'staff_relative.staff_spaces_from_center') - 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-6-0.000-62-0",
+      "description": "D4 (on a ledger line below the staff): dot half a staff space below its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-6-0.000-62-0', 'staff_relative.staff_spaces_from_center') - 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-7-0.000-64-0",
+      "description": "E4 (on a ledger line below the staff): dot half a staff space below its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-7-0.000-64-0', 'staff_relative.staff_spaces_from_center') - 0.5)) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: ON LEDGER LINES ABOVE THE STAFF: DOT HALF A SPACE ABOVE ==="},
+
+    {
+      "id": "dt-11-0.000-84-0",
+      "description": "C6 (on a ledger line above the staff): dot half a staff space above its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-11-0.000-84-0', 'staff_relative.staff_spaces_from_center') + 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-12-0.000-86-0",
+      "description": "D6 (on a ledger line above the staff): dot half a staff space above its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-12-0.000-86-0', 'staff_relative.staff_spaces_from_center') + 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-13-0.000-88-0",
+      "description": "E6 (on a ledger line above the staff): dot half a staff space above its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-13-0.000-88-0', 'staff_relative.staff_spaces_from_center') + 0.5)) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-15-0.000-92-0",
+      "description": "G#6 (on a ledger line above the staff): dot half a staff space above its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-15-0.000-92-0', 'staff_relative.staff_spaces_from_center') + 0.5)) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: BETWEEN LEDGER LINES: DOT LEVEL WITH THE NOTEHEAD ==="},
+
+    {
+      "id": "dt-1-0.000-57-0",
+      "description": "A3 (between ledger lines below the staff): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-1-0.000-57-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-3-0.000-59-0",
+      "description": "B3 (between ledger lines below the staff): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-3-0.000-59-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-5-0.000-61-0",
+      "description": "C#4 (between ledger lines below the staff): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-5-0.000-61-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-14-0.000-89-0",
+      "description": "F6 (between ledger lines above the staff): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-14-0.000-89-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 4: INSIDE THE STAFF: UNCHANGED BY THE CALLBACK ==="},
+
+    {
+      "id": "dt-8-0.000-67-0",
+      "description": "G4 (in a staff space): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-8-0.000-67-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-9-0.000-71-0",
+      "description": "B4 (in a staff space): dot level with its notehead",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - prop('nh-9-0.000-71-0', 'staff_relative.staff_spaces_from_center')) < 0.05"
+        ]
+      }
+    },
+    {
+      "id": "dt-10-0.000-76-0",
+      "description": "E5 (on the top staff line): LilyPond's own avoidance lifts the dot half a staff space",
+      "expect": {
+        "staff_relative.staff_spaces_from_center": [
+          "abs(v - (prop('nh-10-0.000-76-0', 'staff_relative.staff_spaces_from_center') + 0.5)) < 0.05"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 5: EVERY DOTTED NOTE HAS ITS DOT ==="},
+
+    {
+      "id": "nh-1-0.000-57-0",
+      "description": "All 15 dotted notes carry a dot",
+      "expect": {
+        "type": ["count('dots') == 15"]
+      }
+    }
+  ]
+}

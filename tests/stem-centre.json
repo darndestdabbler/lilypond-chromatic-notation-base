@@ -1,0 +1,146 @@
+{
+  "test_name": "Stems attached at the notehead centre",
+  "input_file": "stem-centre.ly",
+  "description": "Session 17. A solid and a true-hollow 45-degree-tilted ellipse, 4 semitones (4/3 staff space) tall, on Kite's 3-6-9 staff, attach every stem at '(0 . 0). Each stem's x centre is its head's x centre. Its near end is at the centre of its head: for the chord, the head farthest from the tip. Its far end is LilyPond's standard 3.5 staff spaces from the centre of the head nearest the tip (the engine measures stem length from the head's centre whatever the anchor, as it does for Kite's (0 . 0.9) anchors; staff space = staff_height / 6 on this six-line staff). Beamed stems end in their beam. Every stem follows its head(s) in SVG document order, so it is drawn on top and crosses a hollow head visibly, in true- or false-hollow mode. SVG y grows downward: an up stem's bbox.y is its far end.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: CROTCHETS, STEMS UP AND DOWN ON EACH HEAD ==="},
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "A4 crotchet (hollow), stem up: centred, from the head's centre, 3.5 staff spaces long, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.000-0', 'visual.bbox.w') / 2 - prop('nh-1-0.000-69-0', 'visual.bbox.x') - prop('nh-1-0.000-69-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-1-0.000-0', 'visual.bbox.h') - (prop('nh-1-0.000-69-0', 'visual.bbox.y') + prop('nh-1-0.000-69-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v - (prop('nh-1-0.000-69-0', 'visual.bbox.y') + prop('nh-1-0.000-69-0', 'visual.bbox.h') / 2 - 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-1-0.000-0') > order('nh-1-0.000-69-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.250-0",
+      "description": "D5 crotchet (solid), stem down: centred, from the head's centre, 3.5 staff spaces long, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.250-0', 'visual.bbox.w') / 2 - prop('nh-1-0.250-74-0', 'visual.bbox.x') - prop('nh-1-0.250-74-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v - (prop('nh-1-0.250-74-0', 'visual.bbox.y') + prop('nh-1-0.250-74-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v + prop('st-1-0.250-0', 'visual.bbox.h') - (prop('nh-1-0.250-74-0', 'visual.bbox.y') + prop('nh-1-0.250-74-0', 'visual.bbox.h') / 2 + 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-1-0.250-0') > order('nh-1-0.250-74-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.500-0",
+      "description": "Ab4 crotchet (solid), stem up: centred, from the head's centre, 3.5 staff spaces long, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.500-0', 'visual.bbox.w') / 2 - prop('nh-1-0.500-68-0', 'visual.bbox.x') - prop('nh-1-0.500-68-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-1-0.500-0', 'visual.bbox.h') - (prop('nh-1-0.500-68-0', 'visual.bbox.y') + prop('nh-1-0.500-68-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v - (prop('nh-1-0.500-68-0', 'visual.bbox.y') + prop('nh-1-0.500-68-0', 'visual.bbox.h') / 2 - 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-1-0.500-0') > order('nh-1-0.500-68-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.750-0",
+      "description": "Eb5 crotchet (hollow), stem down: centred, from the head's centre, 3.5 staff spaces long, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.750-0', 'visual.bbox.w') / 2 - prop('nh-1-0.750-75-0', 'visual.bbox.x') - prop('nh-1-0.750-75-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v - (prop('nh-1-0.750-75-0', 'visual.bbox.y') + prop('nh-1-0.750-75-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v + prop('st-1-0.750-0', 'visual.bbox.h') - (prop('nh-1-0.750-75-0', 'visual.bbox.y') + prop('nh-1-0.750-75-0', 'visual.bbox.h') / 2 + 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-1-0.750-0') > order('nh-1-0.750-75-0')"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: A MINIM, A BEAMED PAIR AND A CHORD ==="},
+
+    {
+      "id": "st-2-0.000-0",
+      "description": "A4 minim (hollow, doubled head), stem up: centred on the doubled head, from its centre, 3.5 staff spaces long, drawn over it",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.000-0', 'visual.bbox.w') / 2 - prop('nh-2-0.000-69-0', 'visual.bbox.x') - prop('nh-2-0.000-69-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-2-0.000-0', 'visual.bbox.h') - (prop('nh-2-0.000-69-0', 'visual.bbox.y') + prop('nh-2-0.000-69-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v - (prop('nh-2-0.000-69-0', 'visual.bbox.y') + prop('nh-2-0.000-69-0', 'visual.bbox.h') / 2 - 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-2-0.000-0') > order('nh-2-0.000-69-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.500-0",
+      "description": "G4 quaver (hollow), first of a beamed pair, stem up: centred, from the head's centre, ending in the beam, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.500-0', 'visual.bbox.w') / 2 - prop('nh-2-0.500-67-0', 'visual.bbox.x') - prop('nh-2-0.500-67-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-2-0.500-0', 'visual.bbox.h') - (prop('nh-2-0.500-67-0', 'visual.bbox.y') + prop('nh-2-0.500-67-0', 'visual.bbox.h') / 2)) < 0.02",
+          "v >= prop('bm-2-0.500-0', 'visual.bbox.y') - 0.02",
+          "v <= prop('bm-2-0.500-0', 'visual.bbox.y') + prop('bm-2-0.500-0', 'visual.bbox.h')"
+        ],
+        "type": [
+          "order('st-2-0.500-0') > order('nh-2-0.500-67-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.625-0",
+      "description": "G4 quaver (hollow), second of a beamed pair, stem up: centred, from the head's centre, ending in the beam, drawn over the head",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.625-0', 'visual.bbox.w') / 2 - prop('nh-2-0.625-67-0', 'visual.bbox.x') - prop('nh-2-0.625-67-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-2-0.625-0', 'visual.bbox.h') - (prop('nh-2-0.625-67-0', 'visual.bbox.y') + prop('nh-2-0.625-67-0', 'visual.bbox.h') / 2)) < 0.02",
+          "v >= prop('bm-2-0.500-0', 'visual.bbox.y') - 0.02",
+          "v <= prop('bm-2-0.500-0', 'visual.bbox.y') + prop('bm-2-0.500-0', 'visual.bbox.h')"
+        ],
+        "type": [
+          "order('st-2-0.625-0') > order('nh-2-0.625-67-0')"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.750-0",
+      "description": "Chord F4 (hollow) + Bb4 (solid), stem up: centred on both heads, from F4's centre (farthest from the tip), 3.5 staff spaces past Bb4's centre (nearest the tip), drawn over both heads",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.750-0', 'visual.bbox.w') / 2 - prop('nh-2-0.750-65-0', 'visual.bbox.x') - prop('nh-2-0.750-65-0', 'visual.bbox.w') / 2) < 0.02",
+          "abs(v + prop('st-2-0.750-0', 'visual.bbox.w') / 2 - prop('nh-2-0.750-70-0', 'visual.bbox.x') - prop('nh-2-0.750-70-0', 'visual.bbox.w') / 2) < 0.02"
+        ],
+        "visual.bbox.y": [
+          "abs(v + prop('st-2-0.750-0', 'visual.bbox.h') - (prop('nh-2-0.750-65-0', 'visual.bbox.y') + prop('nh-2-0.750-65-0', 'visual.bbox.h') / 2)) < 0.02",
+          "abs(v - (prop('nh-2-0.750-70-0', 'visual.bbox.y') + prop('nh-2-0.750-70-0', 'visual.bbox.h') / 2 - 3.5 * staff['staff_height'] / 6)) < 0.02"
+        ],
+        "type": [
+          "order('st-2-0.750-0') > order('nh-2-0.750-65-0')",
+          "order('st-2-0.750-0') > order('nh-2-0.750-70-0')"
+        ]
+      }
+    }
+  ]
+}
