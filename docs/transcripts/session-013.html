@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 013 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 013 transcript</h1>
+<p class="stamp">Rendered 2026-11-03T00:53:54.749Z by dabbler-ai-router 3.27.0 at 7e9260c6105a6e97c72235326644fd634423c0bc.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-02T19:21:19.041-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 13: The test runner cannot pass a broken render</h3>
+<ol><li>Register.</li><li>H1: before rendering, <code>run_tests.py</code> deletes any earlier output for the spec, including tracked <code>tests/{base}.svg</code> when rendering in place, so it can only harvest what this run wrote. A multi-page render (<code>{base}-1.svg</code>, <code>{base}-2.svg</code>, …) is harvested page by page, or fails with a message; it never falls back to a stale file. M5: &quot;No test specs found&quot; exits non-zero. L3: without <code>--lilypond-version</code>, detect the version on <code>PATH</code>, and for anything but 2.24 write to <code>out/lilypond-X.Y/</code> and compare against that version's baselines.</li><li>M3, L6: drift comparison keys repeated ids by <code>id</code> plus occurrence index, so an edit to the second <code>staff-symbol</code> or a duplicated ledger id shows as drift. An absence check passes only for a declared absence, never because an expression contains <code>is None</code>.</li><li>M4: verify that the executable named by <code>CNB_LILYPOND_X_Y</code> reports X.Y, and fail otherwise. L4: add <code>tools/run_tests.py</code> and <code>tools/harvest_svg.py</code> to the engine-unit suites' <code>covers:</code>. Each fix gets a test in <code>tools/test_run_tests.py</code>. Check the result the way the audit did, by re-running its probes: the key-signature regression plus <code>\pageBreak</code>, the edited duplicate ids, and the env var pointed at 2.24. Each must now fail.</li></ol>
+<h2>Work Plan</h2>
+<p>Close the audit's holes in the integration test runner so it cannot pass a broken render. In tools/run_tests.py: run_lilypond deletes every earlier render of the spec ({base}.svg and {base}-N.svg, including the tracked tests/{base}.svg) before LilyPond runs, so it can only harvest what this run wrote, and a multi-page render ({base}-1.svg, {base}-2.svg, ...) fails with a message instead of falling back to a stale file (H1); the default spec path is PROJECT_ROOT/tests, and a named path that does not exist or an empty spec list exits non-zero (M5); without --lilypond-version the runner detects the version of the lilypond on PATH and uses that version's render folder and baselines, so anything but 2.24 renders into out/lilypond-X.Y/ (L3); harvest_differences keys elements by id plus occurrence index, so an edit to a repeated id's later occurrence, or a newly duplicated id, shows as drift (M3);an element counts as absent-as-expected only when its assertion declares &quot;absent&quot;: true, never because an expression contains <code>is None</code>, and an assertion with nothing to check fails (L6), with the two specs that use absence (clef-none, keysig-none) and the documented convention moved to the marker; resolve_lilypond checks that the executable CNB_LILYPOND_X_Y names reports X.Y and exits naming the variable otherwise (M4). dabbler.yaml adds tools/run_tests.py and tools/harvest_svg.py to both engine-unit suites' covers (L4). Each fix gets a test in tools/test_run_tests.py, and the audit's probes (key-signature regression plus \pageBreak, edited duplicate ids, CNB_LILYPOND_2_26 pointed at 2.24) are re-run outside the tracked tree and must each fail.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/8a76c8ecc26ee9b452ed3c04f62bb26f73170a1e"><code>8a76c8ecc26ee9b452ed3c04f62bb26f73170a1e</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Fresh render and version</td><td><p>H1, M5, L3 in tools/run_tests.py. run_lilypond removes {base}.svg and {base}-N.svg (exactly those names, so another spec's {base}-custom.svg survives) from the output folder before rendering; afterwards it returns {base}.svg when that is what LilyPond wrote, fails with a message naming the pages when it wrote {base}-1.svg, {base}-2.svg, ..., and fails when it wrote none; the -page1 and any-match fallbacks go. main resolves the default spec path as PROJECT_ROOT/tests, exits non-zero on a named path that does not exist and on 'No test specs found'. Without --lilypond-version, main detects the PATH lilypond's version with lilypond_version (exiting if there is none) and passes it on as the version, so render_dir and baseline_dir choose out/lilypond-X.Y/ and that version's baselines; the docstring's version notes are updated to match. Tests in tools/test_run_tests.py: a stale {base}.svg is deleted and not harvested when the render writes nothing, an unrelated file survives, a multi-page render fails, a fresh single page is returned, no specs and a missing path exit non-zero, and a version-less run passes the detected version on.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code></td><td>yes</td></tr>
+<tr><td>Repeated ids and declared absence</td><td><p>M3, L6. harvest_differences keys elements by (id, occurrence index), naming a later occurrence as id[n] in its messages, so an edit to the second staff-symbol or a duplicated ll id is reported. In run_single_test a missing element passes only when its assertion has &quot;absent&quot;: true; an assertion declaring absence fails when the element is present; an assertion with neither absent nor any expectation fails; an <code>is None</code> expression is no longer special. Move tests/clef-none.json and tests/keysig-none.json to the marker, and update the absence example in the run_tests.py docstring and docs/INTEGRATION-TESTING.md. Tests in tools/test_run_tests.py for each case.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span><br><span class="mono">tests/clef-none.json</span><br><span class="mono">tests/keysig-none.json</span><br><span class="mono">docs/INTEGRATION-TESTING.md</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code></td><td>yes</td></tr>
+<tr><td>Verified env var and unit covers</td><td><p>M4: resolve_lilypond runs lilypond_version on the executable CNB_LILYPOND_X_Y names and exits, naming the variable and what it reports, when that is not X.Y; the test that asserted no subprocess call is replaced by tests for a matching and a mismatched variable. L4: add tools/run_tests.py and tools/harvest_svg.py to the covers of engine-unit and engine-unit-2.26 in dabbler.yaml. Then re-run the audit's probes in a scratch copy outside the tracked tree -- keysig-none with its keysig-style line removed plus \pageBreak, the joy-to-the-world baseline with its first staff-symbol and first ll-1-0.000-0 edited, and CNB_LILYPOND_2_26 pointed at 2.24 for run_unit.py and run_tests.py -- and report that each now fails.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span><br><span class="mono">dabbler.yaml</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code><br><code>python -c import sys; s = open('dabbler.yaml', encoding='utf-8').read(); sys.exit(0 if s.count('- tools/run_tests.py') == 2 and s.count('- tools/harvest_svg.py') == 2 else 1)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>Harvesting the geometry of circle, ellipse, polygon, polyline and text elements (M2) -- Session 14.</li><li>Correcting the README and INTEGRATION-TESTING.md counts, project tree, baseline workflow, --generate overwrite and --keep-svg (M6, M7, L1, L2) -- Session 14; only the one documented absence example that this session's marker makes wrong is updated.</li><li>Making element ids unique in cnb/test-ids.ly, or changing how assertions and prop() look up a repeated id: the session plan fixes repeated ids in drift comparison only.</li><li>Harvesting a multi-page render page by page: a multi-page render fails with a message, which the session plan allows.</li><li>Any change to cnb/ engine code, to harvest baselines, or to the release archive and version (L5, 1.1.1) -- Sessions 15 and 16.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[00:21:19]</span> <span class="muted">run-started</span> session=013 mode=pull</div>
+<div class="line"><span class="at">[00:21:19]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[00:25:38]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[00:25:38]</span> <span class="muted">plan-accepted</span> steps=[&quot;fresh-render-and-version&quot;,&quot;repeated-ids-and-declared-absence&quot;,&quot;verified-env-var-and-unit-covers&quot;] non_goals=5</div>
+<div class="line"><span class="at">[00:25:56]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[00:25:56]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=fresh-render-and-version</div>
+<div class="line"><span class="at">[00:29:01]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:29:22]</span> <span class="muted">check-passed</span> step=fresh-render-and-version argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[00:29:34]</span> <span class="muted">report-accepted</span> seq=2 step=fresh-render-and-version files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=run_lilypond deletes {base}.svg/{base}-N.svg first and fails on multi-page or missing output; main defaults to PROJECT_ROOT/tests, exits non-zero on a missing path or no specs, and detects PATH's version without --lilypond-version</div>
+<div class="line"><span class="at">[00:29:34]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=repeated-ids-and-declared-absence</div>
+<div class="line"><span class="at">[00:32:58]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:33:19]</span> <span class="muted">check-passed</span> step=repeated-ids-and-declared-absence argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[00:33:28]</span> <span class="muted">report-accepted</span> seq=3 step=repeated-ids-and-declared-absence files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;,&quot;tests/clef-none.json&quot;,&quot;tests/keysig-none.json&quot;,&quot;docs/INTEGRATION-TESTING.md&quot;] notes=harvest_differences keys repeated ids as id[n]; a missing element passes only \</div>
+<div class="line"><span class="at">[00:33:28]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=verified-env-var-and-unit-covers</div>
+<div class="line"><span class="at">[00:37:51]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:38:09]</span> <span class="muted">check-passed</span> step=verified-env-var-and-unit-covers argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[00:38:23]</span> <span class="muted">check-passed</span> step=verified-env-var-and-unit-covers argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s = open('dabbler.yaml', encoding='utf-8').read(); sys.exit(0 if s.count('- tools/run_tests.py') == 2 and s.count('- tools/harvest_svg.py') == 2 else 1)&quot;]</div>
+<div class="line"><span class="at">[00:38:32]</span> <span class="muted">report-accepted</span> seq=4 step=verified-env-var-and-unit-covers files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;,&quot;dabbler.yaml&quot;] notes=resolve_lilypond version-checks CNB_LILYPOND_X_Y; unit suites cover run_tests.py and harvest_svg.py. Audit probes re-run in a scratch copy all exit 1: keysig regression (3 failures), +pageBreak (2 pages refused), joy first staff-symbol/ll-1-0.000-0 edits (drift), CNB_LILYPOND_2_26 at 2.24 for run_unit and run_tests (named mismatch)</div>
+<div class="line"><span class="at">[00:38:32]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[00:38:32]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[00:38:44]</span> <span class="muted">job-started</span> name=verification pid=73056 log=.dabbler/runs/s13/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:40:43]</span> <span class="muted">job-finished</span> name=verification exit=<span class="bad">4</span> log=.dabbler/runs/s13/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:40:43]</span> <span class="muted">verification-blocking</span></div>
+<div class="line"><span class="at">[00:40:43]</span> <span class="milestone">phase</span> phase=<span class="milestone">dispositions</span></div>
+<div class="line"><span class="at">[00:40:43]</span> <span class="muted">instruction-issued</span> seq=5 kind=rejection reasons=1</div>
+<div class="line"><span class="at">[00:42:03]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">dispositions</span> mode=pull</div>
+<div class="line"><span class="at">[00:42:03]</span> <span class="muted">dispositions-accepted</span> round=1 fix=[0] reject=[] answers=[{&quot;finding&quot;:0,&quot;action&quot;:&quot;fix&quot;}]</div>
+<div class="line"><span class="at">[00:42:03]</span> <span class="milestone">phase</span> phase=<span class="milestone">fix</span></div>
+<div class="line"><span class="at">[00:42:03]</span> <span class="muted">instruction-issued</span> seq=6 kind=step step=fix-round-1</div>
+<div class="line"><span class="at">[00:44:14]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">fix</span> mode=pull</div>
+<div class="line"><span class="at">[00:44:32]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=fresh-render-and-version</div>
+<div class="line"><span class="at">[00:44:37]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=repeated-ids-and-declared-absence</div>
+<div class="line"><span class="at">[00:44:43]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=verified-env-var-and-unit-covers</div>
+<div class="line"><span class="at">[00:44:48]</span> <span class="muted">check-passed</span> step=fix-round-1 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s = open('dabbler.yaml', encoding='utf-8').read(); sys.exit(0 if s.count('- tools/run_tests.py') == 2 and s.count('- tools/harvest_svg.py') == 2 else 1)&quot;] owner=verified-env-var-and-unit-covers</div>
+<div class="line"><span class="at">[00:44:54]</span> <span class="muted">report-accepted</span> seq=6 step=fix-round-1 files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=Dropped the hard-coded supported-version list: every version but 2.24 has its baselines in tests/lilypond-X.Y/ and drift from them fails; test for a 2.27 baseline drift replaces the skip-drift test</div>
+<div class="line"><span class="at">[00:44:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[00:44:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[00:44:59]</span> <span class="muted">job-started</span> name=verification pid=5224 log=.dabbler/runs/s13/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:46:05]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:46:05]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[00:46:05]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[00:46:08]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[00:46:10]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=15584 log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[00:46:48]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[00:46:52]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[00:46:53]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=19044 log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[00:47:05]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[00:47:08]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:47:10]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=62240 log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:47:27]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="bad">1</span> log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:47:27]</span> <span class="muted">tests-failed</span> command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:47:27]</span> <span class="muted">instruction-issued</span> seq=7 kind=step step=fix-run-of-record</div>
+<div class="line"><span class="at">[00:48:11]</span> <span class="muted">run-resumed</span> session=013 phase=<span class="milestone">run-of-record</span> mode=pull</div>
+<div class="line"><span class="at">[00:48:25]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=fresh-render-and-version</div>
+<div class="line"><span class="at">[00:48:33]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=repeated-ids-and-declared-absence</div>
+<div class="line"><span class="at">[00:48:37]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=verified-env-var-and-unit-covers</div>
+<div class="line"><span class="at">[00:48:45]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s = open('dabbler.yaml', encoding='utf-8').read(); sys.exit(0 if s.count('- tools/run_tests.py') == 2 and s.count('- tools/harvest_svg.py') == 2 else 1)&quot;] owner=verified-env-var-and-unit-covers</div>
+<div class="line"><span class="at">[00:48:54]</span> <span class="muted">report-accepted</span> seq=7 step=fix-run-of-record files=[] notes=No change: the driver's environment lacked CNB_LILYPOND_2_26 (set at User scope, not inherited); the answer shell now carries it</div>
+<div class="line"><span class="at">[00:49:05]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[00:49:11]</span> <span class="muted">run-of-record-standing</span> suite=engine-integration reason=fresh, green, recorded 2026-11-02T19:46:47.508000-05:00</div>
+<div class="line"><span class="at">[00:49:15]</span> <span class="muted">run-of-record-standing</span> suite=engine-unit reason=fresh, green, recorded 2026-11-02T19:47:05.130000-05:00</div>
+<div class="line"><span class="at">[00:49:18]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:49:20]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=68152 log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:50:00]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:50:04]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:50:06]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=35636 log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[00:50:28]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[00:50:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[00:51:24]</span> <span class="muted">landed</span> commit=8a76c8ecc26ee9b452ed3c04f62bb26f73170a1e</div>
+<div class="line"><span class="at">[00:51:24]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[00:51:29]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[00:51:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[00:51:36]</span> <span class="muted">job-started</span> name=close pid=40496 log=.dabbler/runs/s13/driver/jobs/close.log</div>
+<div class="line"><span class="at">[00:53:54]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s13/driver/jobs/close.log</div>
+<div class="line"><span class="at">[00:53:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="bad">ISSUES_FOUND</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details open><summary>1 finding</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>major</strong> <span class="bad">blocking</span></td><td>Default runs on a detected LilyPond version other than 2.24/2.26 deliberately skip that version’s drift baselines, contrary to L3.</td><td>fixed — Dropped the hard-coded supported-version list: every version but 2.24 has its baselines in tests/lilypond-X.Y/ and drift from them fails; test for a 2.27 baseline drift replaces the skip-drift test — (tools/run_tests.py, tools/test_run_tests.py)</td></tr>
+</table></td></tr>
+<tr><td>2</td><td>fix-delta</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>22s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>3s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="bad">failed</span></td><td>2s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>23s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>8s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
