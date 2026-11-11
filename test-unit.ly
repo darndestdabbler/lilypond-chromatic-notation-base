@@ -1868,7 +1868,7 @@
 #(cnb:register-color! 'cnb-test-red "#ff0000")
 
 #(define (cnb:test-keysig-marks grob)
-   (let* ((st     (lambda (entry) (cnb:keysig-marks-stencil entry -6 1 grob)))
+   (let* ((st     (lambda (entry) (cnb:keysig-marks-stencil entry -6 1 grob 'test-key)))
           (head   (lambda (semi column)
                     `(,semi ,column head default-oval #f cnb-test-red)))
           (alone  (cnb:build-stencil-from-config
@@ -1916,7 +1916,50 @@
        (ly:stencil-empty? flat))
      ;; This will produce a warning — that's expected
      (cnb:assert-true "an unregistered shape is skipped"
-       (ly:stencil-empty? bogus))))
+       (ly:stencil-empty? bogus))
+     (cnb:test-keysig-sign-scale st y grob 'sharp "accidentals.sharp")
+     (cnb:test-keysig-sign-scale st y grob 'flat "accidentals.flat")))
+
+%% A sign's optional scale (session 35): absent or 1 as today; 0.5 half as
+%% wide and tall, about its origin at the semitone, still centred on its
+%% column; a scale that is not a positive number unscaled, with a warning.
+#(define (cnb:test-keysig-sign-scale st y grob sign glyph-name)
+   (let* ((sign-at (lambda (scale)
+                     (st `((columns 1.0) (bars) (marks (12 0 ,sign ,@scale))))))
+          (glyph   (ly:font-get-glyph (ly:grob-default-font grob) glyph-name))
+          (gx      (ly:stencil-extent glyph X))
+          (gy      (ly:stencil-extent glyph Y))
+          (plain   (sign-at '()))
+          (one     (sign-at '(1)))
+          (half    (sign-at '(0.5)))
+          (same?   (lambda (a b)
+                     (and (< (abs (- (car (ly:stencil-extent a X)) (car (ly:stencil-extent b X)))) 0.0001)
+                          (< (abs (- (cdr (ly:stencil-extent a X)) (cdr (ly:stencil-extent b X)))) 0.0001)
+                          (< (abs (- (car (ly:stencil-extent a Y)) (car (ly:stencil-extent b Y)))) 0.0001)
+                          (< (abs (- (cdr (ly:stencil-extent a Y)) (cdr (ly:stencil-extent b Y)))) 0.0001)))))
+     (cnb:assert-true (format #f "a ~a with scale 1 draws as one with none" sign)
+       (same? one plain))
+     (cnb:assert-near (format #f "a ~a with no scale is its glyph's height, at the semitone" sign)
+       (car (ly:stencil-extent plain Y)) (+ (y 12) (car gy)) 0.0001)
+     (cnb:assert-near (format #f "a ~a at scale 0.5 is half as wide" sign)
+       (interval-length (ly:stencil-extent half X))
+       (* 0.5 (interval-length (ly:stencil-extent plain X))) 0.0001)
+     (cnb:assert-near (format #f "a ~a at scale 0.5 is half as tall" sign)
+       (interval-length (ly:stencil-extent half Y))
+       (* 0.5 (interval-length (ly:stencil-extent plain Y))) 0.0001)
+     (cnb:assert-near (format #f "a ~a at scale 0.5: its bottom is half the glyph's below the semitone" sign)
+       (car (ly:stencil-extent half Y)) (+ (y 12) (* 0.5 (car gy))) 0.0001)
+     (cnb:assert-near (format #f "a ~a at scale 0.5: its top is half the glyph's above the semitone" sign)
+       (cdr (ly:stencil-extent half Y)) (+ (y 12) (* 0.5 (cdr gy))) 0.0001)
+     (cnb:assert-near (format #f "a ~a at scale 0.5 is still centred on its column" sign)
+       (/ (+ (car (ly:stencil-extent half X)) (cdr (ly:stencil-extent half X))) 2)
+       1.0 0.0001)
+     ;; These will produce warnings — that's expected
+     (for-each
+       (lambda (bad)
+         (cnb:assert-true (format #f "a ~a with scale ~a draws unscaled" sign bad)
+           (same? (sign-at (list bad)) plain)))
+       '(0 -1 big))))
 
 #(define cnb:test-keysig-grob-proc cnb:test-keysig-marks)
 #(define (cnb:test-keysig-grob-engraver context)

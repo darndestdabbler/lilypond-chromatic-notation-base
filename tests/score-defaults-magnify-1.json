@@ -1,0 +1,22 @@
+{
+  "test_name": "A plain score engraves at the magnification its config set!s: 1 (session 35)",
+  "input_file": "score-defaults-magnify-1.ly",
+  "description": "The engine's score defaults on, no \\magnifyStaff in the score, cnb:default-magnify set! to 1 after the include. Measured on 2.24 and 2.26: the staff symbol is 4.0 tall (the engine's default staff, four staff spaces at magnification 1) and the default notehead 1.0 x 1.0. The same file at 7/4 gives a staff 7.0 tall and a notehead 1.75 x 1.75, and before session 35 this file gave those too, because the score defaults read the variable when the engine was included.",
+
+  "assertions": [
+    {
+      "id": "staff-symbol",
+      "description": "The staff is 4.0 tall: 1 of the 4-space staff, 4/7 of 7/4's 7.0",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 4.0) < 0.005", "abs(v - 7.0 * 1 / (7/4)) < 0.005"]
+      }
+    },
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "The first notehead is drawn at magnification 1: 1.0 tall (1.75 at 7/4)",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 1.0) < 0.005"]
+      }
+    }
+  ]
+}

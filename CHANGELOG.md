@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.5.0
+
+- A mark-table sharp or flat can be drawn at a scale. A sign mark takes
+  an optional fourth element, a positive number:
+  `(semi column sharp 0.6473)` or `(semi column flat 0.6473)`. The
+  Emmentaler glyph is scaled by it about its origin, on both axes, so
+  the sharp's centre or the flat's bowl stays at the semitone's height,
+  and is then centred on its column as before. Without the element, or
+  with `1`, a sign draws exactly as in 1.4.1. Any other value warns,
+  naming the key, and the sign draws unscaled. The format note in
+  `cnb/config.ly` and the README give the element. New spec
+  `tests/keysig-marks-scaled`: D and B♭ major on the default 4-8 staff
+  at scale 0.6473.
+- A plain score engraves at the magnification its config sets.
+  `cnb/score-defaults.ly` now reads `cnb:default-magnify` when each staff
+  starts, not when the engine is included, so a config included after
+  the engine that `set!`s it takes effect. Before, every staff in a plain
+  score engraved at 7/4 whatever the config said, unless it magnified
+  itself with `\magnifyStaff #cnb:default-magnify`. A staff's own
+  `\magnifyStaff` still wins, `\magnifyStaff` is still not applied twice,
+  and `cnb:score-defaults #f` still opts out. New specs
+  `tests/score-defaults-magnify-1` and `tests/score-defaults-magnify-5-2`.
+- No existing golden changed: none uses a sign scale, and none `set!`s a
+  magnification other than 7/4.
+  `docs/session-sets/035-sized-signs-and-magnify/configurator-handoff.md`
+  gives a worked case for each change.
+
 ## 1.4.1
 
 - A key signature's noteheads take their ledger lines from the

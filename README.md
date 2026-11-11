@@ -145,10 +145,10 @@ and no indent, so `cnb/score-defaults.ly` does: every staff gets
 and later systems get a 12 mm short-indent, so instrument names and their
 abbreviations are not clipped at the page edge. A score's own `\paper` and
 `\layout` still win. A staff that already magnifies itself is not magnified
-twice. The magnification is read when the engine is included, so a config
-that later `set!`s `cnb:default-magnify` does not change it. To use another
-size, give the staff its own `\magnifyStaff` in its `\with` block, which
-replaces the default.
+twice. The magnification is read when each staff starts, so a config
+included after the engine that `set!`s `cnb:default-magnify` takes effect.
+To give one staff another size, give it its own `\magnifyStaff` in its
+`\with` block, which replaces the default.
 
 To opt out of these defaults, define the flag **before** the `\include`:
 
@@ -352,9 +352,9 @@ An entry's key is the tonic's note name and alteration, as `\key` gives them (`0
 
 - `(columns x …)`: each column's centre, in staff spaces from the signature's start.
 - `(bars (x bottom top color thickness) …)`: a stem at `x` from semitone `bottom` to semitone `top`. `color` is a registered colour name or a hex string, and `thickness` is in staff spaces.
-- `(marks …)`: each mark is either `(semi column head shape hollow color)` or `(semi column sharp)` / `(semi column flat)`.
+- `(marks …)`: each mark is either `(semi column head shape hollow color)` or `(semi column sharp [scale])` / `(semi column flat [scale])`.
   - For a `head`, `shape` is a registered path name (a sized variant is its own name), `hollow` is a registered hollow name or `#f`, and `color` is a registered colour name.
-  - `sharp` and `flat` are Emmentaler's accidentals and get no ledger lines.
+  - `sharp` and `flat` are Emmentaler's accidentals and get no ledger lines. The optional `scale`, a positive number such as `(semi column sharp 0.6473)`, scales the glyph about its origin, so the sharp's centre or the flat's bowl stays at the semitone. Without it, or with `1`, the glyph is drawn as Emmentaler draws it at the staff's size. Any other value warns, naming the key, and the sign is drawn unscaled.
   - `semi` is the engine semitone (middle C = 0), placed as notes are, through the pitch-axis hook when it is set.
   - Two marks at one semitone in neighbouring columns make a double notehead.
 

@@ -326,8 +326,15 @@
 %%                      shape a registered path name (a sized variant is
 %%                      its own name), hollow a registered hollow name or
 %%                      #f, color a registered colour name;
-%%                    (semi column sharp) or (semi column flat): an
-%%                      Emmentaler accidental, with no ledger lines.
+%%                    (semi column sharp [scale]) or
+%%                    (semi column flat [scale]): an Emmentaler
+%%                      accidental, with no ledger lines. scale, a
+%%                      positive number, scales the glyph about its
+%%                      origin (the sharp's centre or the flat's bowl
+%%                      stays at the semitone); absent or 1, the glyph
+%%                      is as Emmentaler draws it at the staff's size.
+%%                      Any other scale warns naming the key, and the
+%%                      sign draws unscaled.
 %%                    semi is the engine semitone, middle C = 0; column
 %%                    indexes columns. Two marks at one semitone in
 %%                    neighbouring columns are a double notehead.

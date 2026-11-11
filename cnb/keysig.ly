@@ -369,6 +369,11 @@
 %%  Layers, bottom up: the bars; each head with its ledger lines; the
 %%  heads again, over the ledgers of a neighbouring column (as 'chord
 %%  draws them); the sharps and flats, Emmentaler's, with no ledgers.
+%%
+%%  A sign's optional scale (session 35) scales its glyph about its
+%%  origin, so the sharp's centre or the flat's bowl stays at the
+%%  semitone, before it is centred on its column. A scale that is not a
+%%  positive number warns naming KEY, and the sign draws unscaled.
 %% ---------------------------------------------------------------------------
 
 %% A colour name registered with cnb:register-color!, or a hex string.
@@ -381,7 +386,7 @@
              "#000000"))
        color))
 
-#(define (cnb:keysig-marks-stencil entry middleCPosition mag grob)
+#(define (cnb:keysig-marks-stencil entry middleCPosition mag grob key)
    (let* ((columns   (or (assq-ref entry 'columns) '()))
           (custom-ledger-cnt (cnb:custom-ledger-count))
           (y-of      (lambda (semi)
@@ -442,12 +447,22 @@
             (filter-map
               (lambda (mark)
                 (and (memq (list-ref mark 2) '(sharp flat))
-                     (place (ly:font-get-glyph
-                              (ly:grob-default-font grob)
-                              (if (eq? (list-ref mark 2) 'sharp)
-                                  "accidentals.sharp"
-                                  "accidentals.flat"))
-                            (cadr mark) (car mark))))
+                     (let* ((glyph (ly:font-get-glyph
+                                     (ly:grob-default-font grob)
+                                     (if (eq? (list-ref mark 2) 'sharp)
+                                         "accidentals.sharp"
+                                         "accidentals.flat")))
+                            (scale (if (> (length mark) 3) (list-ref mark 3) 1)))
+                       (place (cond
+                                ((and (number? scale) (positive? scale))
+                                 (if (= scale 1)
+                                     glyph
+                                     (ly:stencil-scale glyph scale scale)))
+                                (else
+                                 (ly:warning "cnb:keysig-marks: the key of ~a has mark ~a whose scale ~a is not a positive number — drawn unscaled"
+                                             key mark scale)
+                                 glyph))
+                              (cadr mark) (car mark)))))
               (or (assq-ref entry 'marks) '()))))
      (apply ly:stencil-add
             (append bars with-ledgers (map cadr heads) signs))))
@@ -546,7 +561,7 @@
                 (cached          (assoc-ref cnb:keysig-marks-stencil-cache cache-key)))
            (or cached
                (let ((stencil (cnb:keysig-marks-stencil
-                                entry middleCPosition mag grob)))
+                                entry middleCPosition mag grob key)))
                  (set! cnb:keysig-marks-stencil-cache
                        (assoc-set! cnb:keysig-marks-stencil-cache cache-key stencil))
                  stencil))))))
