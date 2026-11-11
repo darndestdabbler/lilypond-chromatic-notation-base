@@ -818,4 +818,37 @@ This adds a style and changes no existing output.
    form of the earlier handoffs: the format as landed, a worked entry, the
    measured spacing of item 4, and session 31 as the release.
 
-### Session 31: Release 1.4.0 (release: 1.4.0)
+### Session 31: A key's pitch classes with double sharps and flats
+
+**Why.** Session 30 found that `cnb:get-key-pitch-classes`
+(`cnb/procedure.ly`) misreads a key with double sharps or flats: `\key
+dis \major` gives `(2 2 3 7 7 8 10)`, with repeated pitch classes, in place
+of `(0 2 3 5 7 8 10)`. It changes the list in place, replacing every pitch
+class equal to a letter's natural one, so an alteration that lands on
+another letter's natural pitch class (E♯ on F, F𝄪 on G) can be overwritten
+by a later one, depending on the order of `keyAlterations`. Every key with
+at most seven sharps or flats happens to read correctly in the order
+LilyPond gives (session 30 checked C♯, C♭, F♯ and G♭ major and A♯, A♭ and
+G♯ minor from real `\key` events). A key with double sharps or flats is
+read wrongly. That reaches the configuration procedure's `key` argument
+(and so off-key marks), and a missing key's warning under `'marks`. The
+operator asked for the fix before the release.
+
+1. Register.
+2. **The fix.** `cnb:get-key-pitch-classes` gives each of the seven
+   letters its pitch class from its own alteration (natural when the alist
+   has none), `(natural + 2 × alteration) mod 12`, in letter order C to B
+   as today, accepting the `((octave . step) . alteration)` form it
+   accepts now. No other function changes.
+3. **Tests.** `test-unit.ly`'s `cnb:get-key-pitch-classes` group keeps its
+   cases and adds D♯ major and its order-reversed alist, a double-flat key
+   (F♭ major), C♯ and C♭ major in LilyPond's order and reversed, and
+   `cnb:keysig-marks-key` for D♯ major. Every existing golden stays
+   byte-identical on LilyPond 2.24 and 2.26 (no existing spec has a
+   double-sharp or double-flat key).
+4. A line in `CHANGELOG.md`'s unreleased 1.4.0 section. Correct
+   `docs/session-sets/030-keysig-mark-list/configurator-handoff.md`: every
+   key's pitch classes are now read correctly (D♯ major's warning gives
+   `(0 2 3 5 7 8 10)`), and session 32 is the release.
+
+### Session 32: Release 1.4.0 (release: 1.4.0)
