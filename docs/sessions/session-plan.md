@@ -714,3 +714,43 @@ stencil.
    release.
 
 ### Session 27: Release 1.3.0 (release: 1.3.0)
+
+### Session 28: The breve's tie below the noteheads
+
+**Why.** In the Configurator's session-45 try-out the operator found the
+breve's tie wrong (2026-11-11, Configurator session 46): it should be
+below the noteheads, not in the gap between the two semibreve groups on
+the heads' centre line. Ideally one tie spans from the centre of the first
+notehead of the first group to the centre of the last notehead of the last
+group. Configurator session 46 draws the same tie in its preview, and its
+engine round trip waits on this session.
+
+This changes what a breve (and a longa or maxima) engraves in repeat mode,
+so the goldens and harvests that contain one change.
+
+1. Register.
+2. **The tie.** In `cnb:build-duration-stencil` (`cnb/stencils.ly`), for
+   `groups` above 1, one
+   `(make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN)` replaces the
+   ties in the gaps: `xa` is the centre of the first head of the first
+   group, `xb` the centre of the last head of the last group, and `y0` the
+   bottom of the group stencil's Y extent, so the tie runs below the heads
+   and curves down as LilyPond's ties under a note do, with LilyPond's
+   default height limit (1.0) and ratio (0.33). The groups and the 1 staff
+   space gaps between them are unchanged, so the X extent is too. The tie
+   stays black (it is added after the head is coloured). With `repeat`
+   `#f`, and for whole notes and shorter values, nothing changes.
+3. **Specs.** The integration specs on 2.24 and 2.26 assert that the
+   breve's and the longa's width are unchanged and give their new lower Y
+   extent. Regenerate the harvests and goldens that contain breves on both
+   versions, and update the `test-unit.ly` case.
+4. A README line beside the repeat counts, a `CHANGELOG.md` 1.3.1 section,
+   and `version.json` to `1.3.1`: a patch release, one stencil corrected
+   and nothing added. Write
+   `docs/session-sets/028-breve-tie-below/configurator-handoff.md`, in the
+   form of the earlier handoffs. It gives the measured tie for the default
+   Configurator notehead at 4 semitones per staff space (its end points,
+   lowest point and thickness, and the whole stencil's X and Y extents) and
+   names session 29 as the release.
+
+### Session 29: Release 1.3.1 (release: 1.3.1)
