@@ -204,25 +204,33 @@
 %%  LEDGER LINES FOR KEY SIGNATURE NOTEHEADS
 %%
 %%  Determine which ledger line positions are needed for a notehead
-%%  at a given Y offset in the key signature display.
+%%  of engine semitone SEMI at a given Y offset in the key signature
+%%  display.
 %%
-%%  Uses the same proximity rule as the main staff ledger system:
-%%  show ledger candidates that lie between the outermost staff line
-%%  and the notehead position.
+%%  A semitone with an entry in cnb:ledgers-by-semitone (cnb/config.ly)
+%%  takes exactly that entry's ledgers, none for an empty one, as the
+%%  score's notes do. Any other semitone, or a score with no table, uses
+%%  the same proximity rule as the main staff ledger system: show ledger
+%%  candidates that lie between the outermost staff line and the
+%%  notehead position.
 %%
 %%  The Y offset is in rendered coordinates (scaled by mag), so we
 %%  de-magnify to get staff positions, apply the proximity rule, then
 %%  convert back to rendered coordinates.
 %% ---------------------------------------------------------------------------
 
-#(define (cnb:notehead-ledgers y-offset y-extent mag custom-ledger-cnt)
+#(define (cnb:notehead-ledgers semi y-offset y-extent mag custom-ledger-cnt)
    (let* (
+           (entry         (assv semi cnb:ledgers-by-semitone))
            (notehead-pos  (inexact->exact (round (/ (* 2 y-offset) mag))))
-           (candidates    (cnb:get-ledger-candidates cnb:staff-line-positions))
            (ledgers
-             (if (eq? custom-ledger-cnt 0)
-                 (cnb:proximity-rule cnb:staff-line-positions notehead-pos candidates)
-                 (or (hashv-ref cnb:ledgers-by-notehead-position notehead-pos) '()))))
+             (cond
+               (entry (cdr entry))
+               ((eq? custom-ledger-cnt 0)
+                (cnb:proximity-rule cnb:staff-line-positions notehead-pos
+                                    (cnb:get-ledger-candidates cnb:staff-line-positions)))
+               (else
+                (or (hashv-ref cnb:ledgers-by-notehead-position notehead-pos) '())))))
       (map (lambda (y) (* y mag 1/2)) ledgers)))
 
 
@@ -299,7 +307,7 @@
                 (width         (- (cdr x-extent) (car x-extent)))
                 (x-offset      (+ base-x-offset (if (even? i) 0 width)))
                 (y-offset      (cnb:keysig-note-y-offset semi middleCPosition mag))
-                (ledger-offsets (cnb:notehead-ledgers y-offset y-extent mag custom-ledger-cnt))
+                (ledger-offsets (cnb:notehead-ledgers semi y-offset y-extent mag custom-ledger-cnt))
                 (stencil       (ly:stencil-translate nh-stencil `(,x-offset . ,y-offset)))
                 (with-ledgers  (cnb:add-keysig-ledgers
                                  stencil ledger-offsets x-offset grob mag custom-ledger-cnt)))
@@ -426,7 +434,7 @@
                           (y       (y-of (car head))))
                      (cnb:add-keysig-ledgers
                        stencil
-                       (cnb:notehead-ledgers y (ly:stencil-extent stencil Y)
+                       (cnb:notehead-ledgers (car head) y (ly:stencil-extent stencil Y)
                                              mag custom-ledger-cnt)
                        0 grob mag custom-ledger-cnt)))
                  heads))
@@ -462,7 +470,8 @@
 %%  formula when set — set 008; procedures compare by identity under
 %%  equal?, so re-setting the hook to a new procedure invalidates), and
 %%  all of the key-signature display settings (tonic-octave anchor, and
-%%  the three separator-bar settings). Before set 006 the key was ONLY
+%%  the three separator-bar settings), and the notation's ledgers by
+%%  pitch, cnb:ledgers-by-semitone (session 33). Before set 006 the key was ONLY
 %%  keySignature, which would leak a stale stencil the moment any of
 %%  those changed (e.g. a different setting, or the same key on a second
 %%  staff with a different clef). Until session 24 the key's part was
@@ -489,7 +498,8 @@
                                   cnb:keysig-tonic-octave
                                   cnb:keysig-bar-color
                                   cnb:keysig-bar-thickness
-                                  cnb:keysig-bar-extent-semis))
+                                  cnb:keysig-bar-extent-semis
+                                  cnb:ledgers-by-semitone))
            (cached          (assoc-ref cnb:key-signature-stencil-cache cache-key)))
 
       (if cached
@@ -508,7 +518,8 @@
 
 %% 'marks: the stencil of the table's entry for the context's key, or #f
 %% when the table has none (warned once per key, with no fallback to the
-%% scale stack). Cached on every input cnb:keysig-marks-stencil reads.
+%% scale stack). Cached on every input cnb:keysig-marks-stencil reads,
+%% cnb:ledgers-by-semitone among them.
 #(define cnb:keysig-marks-stencil-cache '())
 #(define cnb:keysig-marks-warned '())
 
@@ -530,7 +541,8 @@
                 (cache-key       (list entry middleCPosition mag
                                        cnb:semitones-per-staff-space
                                        cnb:get-pitch-staff-position
-                                       cnb:false-hollow))
+                                       cnb:false-hollow
+                                       cnb:ledgers-by-semitone))
                 (cached          (assoc-ref cnb:keysig-marks-stencil-cache cache-key)))
            (or cached
                (let ((stencil (cnb:keysig-marks-stencil

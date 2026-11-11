@@ -44,6 +44,8 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 30 | Key signatures from a mark list | no | 2026-11-11 |
 | 31 | A key's pitch classes with double sharps and flats | no | 2026-11-11 |
 | 32 | Release 1.4.0 (release: 1.4.0) | yes | 2026-11-11 |
+| 33 | Key-signature ledgers from the notation's ledger rules | no | 2026-11-11 |
+| 34 | Release 1.4.1 (release: 1.4.1) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -253,3 +255,9 @@ Correct cnb:get-key-pitch-classes (cnb/procedure.ly) for keys with double sharps
 **Releasable: yes.**
 
 Release 1.4.0: the framework packs and publishes what is on the trunk.
+
+### Session 33 — Key-signature ledgers from the notation's ledger rules
+
+**Releasable: no.**
+
+Make the key signature's noteheads take their ledger lines from the notation's ledger rules, cnb:ledgers-by-semitone (engine semitone, middle C = 0, -> ledger staff positions), which every Configurator export since LY spec 1.3.9 section 5.7 defines and its notes already follow through NoteHead.ledger-positions. cnb/config.ly gains #(define cnb:ledgers-by-semitone '()) with a comment giving the format, so the engine can read it in a score with no table and an export's later define replaces it (a top-level define of a bound name rebinds it, as cnb:keysig-marks's does since session 30, so the export keeps define and need not set!). In cnb/keysig.ly cnb:notehead-ledgers takes the head's engine semitone: a semitone with an entry gets exactly that entry's positions as ledgers (none for an empty entry), each half a staff space from the middle line scaled by the magnification as today; a semitone with no entry, or a score with no table, keeps today's rule (cnb:proximity-rule on the rounded staff position, or the advanced-mode lookup). Both callers pass it: 'chord its heads' semitones from cnb:keysig-pitches, 'marks each mark's semi. Ledger length (4/3 of the head's width), thickness, caps and layering are unchanged, and the table joins both key-signature stencil cache keys, since the stencil now depends on it. Unit tests in test-unit.ly and two integration specs on LilyPond 2.24 and 2.26 for the default 4-8 staff's C major under 'chord and 'marks (C and D with their in-gap ledgers, B with none); every existing golden, none of which defines the table, stays byte-identical. Then a CHANGELOG.md 1.4.1 section, version.json 1.4.1 (a patch: the signature follows ledger rules every export already carries), and docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md with what changed, a worked case and session 34 as the release.

@@ -1,0 +1,58 @@
+{
+  "test_name": "Key-signature ledgers from cnb:ledgers-by-semitone under 'chord on the default 4-8 staff (session 33)",
+  "input_file": "keysig-ledgers-chord.ly",
+  "description": "The default Configurator 4-8 staff (4 semitones per staff space, lines -4 -2 2 4) with the export's cnb:ledgers-by-semitone (semitones 0-24) and 'chord. Each signature head takes its semitone's entry: C (12) its in-gap ledger on the middle position, D (14) its ledgers on the middle position and one above, B (23) none. m1 C major, anchored 'centred on semitones 12-24: its in-gap ledgers lie inside its heads' extent (C 24's ledger spans both columns), so its extent is the same as by the engine's rule, 2.334 x 6.5 staff spaces with the first note's left edge 6.783 from the signature's. m2 G major, semitones 7-19: C and D are its only heads with ledgers, one in each column, so their ledgers widen the signature to 2.334 staff spaces and move the first note to 4.433 from the signature's left edge. With the table removed (the engine's rule, before session 33) the same file gives m2 a signature 2.0 wide, its heads alone, and the first note 4.0 from its left edge; m1 is unchanged. Measured on LilyPond 2.24 and 2.26 alike, to 0.001 staff spaces. Widths are staff spaces, from the harvest's control-point hulls.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: C MAJOR, ITS IN-GAP LEDGERS INSIDE ITS HEADS' EXTENT ==="},
+
+    {
+      "id": "ks-1",
+      "description": "C major's signature: two signatures drawn; this one 2.334 x 6.5 staff spaces, as by the engine's rule",
+      "expect": {
+        "type":          ["== 'key-signature'", "count('key-signature') == 2"],
+        "visual.bbox.w": ["abs(v - 2.334) < 0.01"],
+        "visual.bbox.h": ["abs(v - 6.5) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "The first note, c'', 6.783 staff spaces from the signature's left edge",
+      "expect": {
+        "type":         ["== 'notehead'"],
+        "visual.bbox.x": ["abs(v - prop('ks-1', 'visual.bbox.x') - 6.783) < 0.01"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: G MAJOR, WHERE C AND D's IN-GAP LEDGERS WIDEN THE SIGNATURE ==="},
+
+    {
+      "id": "ks-2",
+      "description": "G major's signature is 2.334 staff spaces wide: C (12) and D (14) draw their in-gap ledgers, 4/3 of a head, in their columns (the engine's rule gives none: 2.0, its heads alone)",
+      "expect": {
+        "type":          ["== 'key-signature'"],
+        "visual.bbox.w": ["abs(v - 2.334) < 0.01"],
+        "visual.bbox.h": ["abs(v - 6.0) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "The first note after G major's signature, g', 4.433 staff spaces from the signature's left edge (4.0 by the engine's rule)",
+      "expect": {
+        "type":          ["== 'notehead'"],
+        "visual.bbox.x": ["abs(v - prop('ks-2', 'visual.bbox.x') - 4.433) < 0.01"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE NOTES RENDER ==="},
+
+    {
+      "id": "nh-1-0.250-74-0",
+      "description": "All eight notes render",
+      "expect": {
+        "type": ["== 'notehead'", "count('notehead') == 8"]
+      }
+    }
+  ]
+}

@@ -1942,6 +1942,82 @@
 
 
 %% =========================================================================
+%%  TEST: cnb/keysig.ly — cnb:notehead-ledgers by semitone (session 33)
+%%
+%%  A key-signature head whose engine semitone has an entry in
+%%  cnb:ledgers-by-semitone takes exactly that entry's ledgers; any other
+%%  head, or a score with no table, keeps the engine's rule. On the
+%%  default 4-8 staff (4 semitones per staff space, lines -4 -2 2 4),
+%%  treble clef (middleCPosition -6), so semitone 12 is on the middle line;
+%%  the table is the default Configurator export's (semitones 0-24).
+%% =========================================================================
+
+#(cnb:test-group "keysig.ly — cnb:notehead-ledgers by semitone")
+
+#(cnb:assert-equal "cnb:ledgers-by-semitone defaults to '()"
+   cnb:ledgers-by-semitone '())
+
+#(define cnb:saved-ledger-sps cnb:semitones-per-staff-space)
+#(define cnb:saved-ledger-lines cnb:staff-line-positions)
+#(set! cnb:semitones-per-staff-space 4)
+#(set! cnb:staff-line-positions '(-4 -2 2 4))
+%% The ledger candidates are cached: resolve them for this staff.
+#(set! cnb:resolved-ledger-candidates #f)
+
+%% The head's ledger offsets (rendered, mag-scaled) at MAG.
+#(define (cnb:test-ks-ledgers semi mag)
+   (cnb:notehead-ledgers semi (cnb:keysig-note-y-offset semi -6 mag) '(-0.5 . 0.5) mag 0))
+
+%% Today's rule for the head, with no table.
+#(define (cnb:test-ks-rule semi mag)
+   (let ((saved cnb:ledgers-by-semitone))
+     (set! cnb:ledgers-by-semitone '())
+     (let ((r (cnb:test-ks-ledgers semi mag)))
+       (set! cnb:ledgers-by-semitone saved)
+       r)))
+
+#(cnb:assert-equal "no table: C (12) gets today's rule"
+   (cnb:test-ks-ledgers 12 1)
+   (map (lambda (p) (* p 1/2))
+        (cnb:proximity-rule '(-4 -2 2 4) 0 (cnb:get-ledger-candidates '(-4 -2 2 4)))))
+#(cnb:assert-equal "no table: D (14) gets today's rule"
+   (cnb:test-ks-ledgers 14 1)
+   (map (lambda (p) (* p 1/2))
+        (cnb:proximity-rule '(-4 -2 2 4) 1 (cnb:get-ledger-candidates '(-4 -2 2 4)))))
+#(cnb:assert-equal "no table: B (23) gets today's rule"
+   (cnb:test-ks-ledgers 23 1)
+   (map (lambda (p) (* p 1/2))
+        (cnb:proximity-rule '(-4 -2 2 4) 6 (cnb:get-ledger-candidates '(-4 -2 2 4)))))
+
+#(set! cnb:ledgers-by-semitone
+   '((0 . (-6)) (1 . (-6)) (2 . (-6 -5)) (3 . ()) (4 . ()) (5 . ())
+     (6 . ()) (7 . ()) (8 . ()) (9 . ()) (10 . (-1)) (11 . ())
+     (12 . (0)) (13 . (0)) (14 . (0 1)) (15 . ()) (16 . ()) (17 . ())
+     (18 . ()) (19 . ()) (20 . ()) (21 . ()) (22 . (5)) (23 . ())
+     (24 . (6))))
+
+#(cnb:assert-equal "an entry: D (14) gets exactly (0 1), in half staff spaces"
+   (cnb:test-ks-ledgers 14 1) '(0 1/2))
+#(cnb:assert-equal "an entry: C (12) gets its in-gap ledger on the middle line"
+   (cnb:test-ks-ledgers 12 1) '(0))
+#(cnb:assert-equal "an entry scales with the magnification (D at mag 2)"
+   (cnb:test-ks-ledgers 14 2) '(0 1))
+#(cnb:assert-equal "an empty entry: B (23) gets none"
+   (cnb:test-ks-ledgers 23 1) '())
+#(cnb:assert-true "an empty entry overrides a ledger today's rule gives B (23)"
+   (pair? (cnb:test-ks-rule 23 1)))
+#(cnb:assert-equal "no entry: semitone 30 keeps today's rule"
+   (cnb:test-ks-ledgers 30 1) (cnb:test-ks-rule 30 1))
+#(cnb:assert-true "no entry: semitone 30 has ledgers by today's rule"
+   (pair? (cnb:test-ks-ledgers 30 1)))
+
+#(set! cnb:ledgers-by-semitone '())
+#(set! cnb:semitones-per-staff-space cnb:saved-ledger-sps)
+#(set! cnb:staff-line-positions cnb:saved-ledger-lines)
+#(set! cnb:resolved-ledger-candidates #f)
+
+
+%% =========================================================================
 %%  TEST: cnb/keysig.ly — Separator-bar half-extent (semitone-denominated)
 %%
 %%  The bar spans ±cnb:keysig-bar-extent-semis semitones around the staff

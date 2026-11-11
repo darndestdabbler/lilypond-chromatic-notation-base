@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.4.1
+
+- A key signature's noteheads take their ledger lines from the
+  notation's ledger rules, as the score's notes do. A head whose pitch
+  has an entry in `cnb:ledgers-by-semitone`, the table every
+  Configurator export defines, draws exactly that entry's ledgers, and
+  none for an empty entry. This covers `'chord` and `'marks` alike. A
+  head with no entry, or a score with no table, keeps the engine's own
+  rule. On the Configurator's default 4-8 staff, C major's C and D now
+  draw their in-gap ledgers and its B none, where the signature drew a
+  ledger on B above the staff and none on C and D. Ledger length,
+  thickness, caps and layering are unchanged. `cnb:ledgers-by-semitone`
+  now defaults to `'()` in `cnb/config.ly`. New specs
+  `tests/keysig-ledgers-chord` and `tests/keysig-ledgers-marks`; no
+  existing golden defines the table, and none changed.
+  `docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md`
+  gives a worked case.
+
 ## 1.4.0
 
 - A key signature can be drawn from a mark list. With

@@ -83,6 +83,16 @@
 %% from the staff line pattern.
 #(define cnb:ledger-positions '())
 
+%% The notation's ledgers by pitch: an alist from engine semitone
+%% (middle C = 0) to the list of ledger staff positions, in
+%% half-staff-spaces from the middle line, that a head at that pitch
+%% gets; an empty list means none. A Configurator export defines it (LY
+%% spec 1.3.9 §5.7) and gives its notes their entries through
+%% NoteHead.ledger-positions. The key signature's heads take theirs from
+%% it too (cnb/keysig.ly); a semitone with no entry, or '() here, keeps
+%% the engine's own ledger rule.
+#(define cnb:ledgers-by-semitone '())
+
 %% Pitch-axis hook: an arbitrary (possibly many-to-one, non-uniform)
 %% semitone -> staff-position map for compact staves (the Twinline
 %% family), replacing the linear cnb:semitones-per-staff-space formula
