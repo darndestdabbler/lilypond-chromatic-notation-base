@@ -754,3 +754,68 @@ so the goldens and harvests that contain one change.
    names session 29 as the release.
 
 ### Session 29: Release 1.3.1 (release: 1.3.1)
+
+### Session 30: Key signatures from a mark list
+
+**Why.** The Configurator's key-signature designer (its session 47, the
+operator-approved design `docs/planning/key-signature-designer-design.md`
+§9 in the Configurator repository) lets a designer choose a signature once
+for every key: scale notes with their own looks, four stacking rules, gold
+stems between the stacks, and the signature on the staff's middle, its
+bottom or top line set, or every line set; later, traditional sharps or
+flats. The engine's `'chord` style draws only today's two-column stack.
+Configurator session 48 computes every other signature as an explicit list
+of marks (`CNBKeySignature.marks`), so the engine needs the **mark-list
+hook** this repository's backlog §2.3 says such signatures need
+(`docs/planning/configurator-coordination-backlog.md`). Configurator
+session 49 exports it and its engine round trip waits on this session.
+
+The key's identity is settled: Configurator session 48's probe read, from
+real `\key` events with an engraver acknowledging each KeySignature grob,
+the context's `tonic` (note name and alteration) and the seven pitch
+classes from `keyAlterations`, for F♯ and G♭ major (one set of pitch
+classes, two spellings), B♭ major, a key change, the signature repeated at
+a system start and a `\transpose`d score.
+
+This adds a style and changes no existing output.
+
+1. Register.
+2. **The setting.** `cnb:keysig-style 'marks` and `cnb:keysig-marks`, a
+   list with one entry per key. An entry's key is the tonic's note name and
+   alteration (as `\key` gives them) and the key's sorted pitch classes, so
+   C major and A minor are told apart by their tonic, and F♯ and G♭ major
+   by their spelling. An entry gives its **columns** (each one's x offset
+   in staff spaces from the signature's start), its **bars** (each one's x,
+   its two ends in engine semitones, its colour and thickness in staff
+   spaces) and its **marks** (each one's engine semitone, middle C = 0, its
+   column, and either `head` with the shape, hollow and colour names
+   Section A registers, a sized variant where it has a size, or `sharp` or
+   `flat`). Two marks at one semitone in neighbouring columns are a double
+   notehead and need nothing of their own. The engine computes no layout:
+   the offsets are the Configurator's.
+3. **Drawing.** The key-signature engraver draws the entry for the score's
+   `\key`: each head through its registered stencil, with each head
+   column's ledger lines beneath it, sharps and flats from Emmentaler
+   (`accidentals.sharp`, `accidentals.flat`) with no ledgers, and the bars
+   beneath the marks. A key change draws the new key's marks and no
+   cancelling naturals. A key not in the table draws no signature, and the
+   engine warns naming it; it does not fall back to the scale stack.
+   `'chord` and `'none` are unchanged.
+4. **The space around it.** Measure the space before the signature and
+   after its last column with the mark list, for two, three and four
+   columns, and give it in the handoff, so the Configurator's preview puts
+   the first note where the engraving does (its 0.75, 3.5 and 4.8636 staff
+   spaces are measured for `'chord`'s two columns).
+5. **Tests.** Unit and integration specs for a key change, an enharmonic
+   pair, a transposed score, the signature at each system start, a double
+   notehead, three and four columns with their bars, sharps and flats, and
+   a key the table lacks; goldens and integration specs on LilyPond 2.24
+   and 2.26. Existing goldens stay byte-identical.
+6. A README section, a `CHANGELOG.md` 1.4.0 section, and `version.json` to
+   `1.4.0`: a minor release, a setting added and no existing output
+   changed. Write
+   `docs/session-sets/030-keysig-mark-list/configurator-handoff.md`, in the
+   form of the earlier handoffs: the format as landed, a worked entry, the
+   measured spacing of item 4, and session 31 as the release.
+
+### Session 31: Release 1.4.0 (release: 1.4.0)
