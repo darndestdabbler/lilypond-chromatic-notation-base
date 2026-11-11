@@ -160,9 +160,11 @@
 %%  TIED SEMIBREVES: a breve or longer passes GROUPS above 1
 %%  (cnb:semibreve-groups: breve 2, longa 4, maxima 8). That many
 %%  semibreve groups are laid left to right, 1 staff space apart, and
-%%  each gap holds a tie bowing down at the head's centre line (y = 0),
-%%  from the left group's right edge x1 to the right group's left edge
-%%  x2, with LilyPond's default height limit and ratio.
+%%  one tie runs below them, bowing down from the bottom of the group's
+%%  Y extent: from the centre of the first head of the first group to
+%%  the centre of the last head of the last group, with LilyPond's
+%%  default height limit and ratio. The tie is added after the head is
+%%  coloured, so it stays black.
 %% ---------------------------------------------------------------------------
 
 #(define* (cnb:build-duration-stencil base-stencil duration-category
@@ -180,15 +182,24 @@
       (if (> groups 1)
           (let* ((ext   (ly:stencil-extent stencil X))
                  (step  (+ (interval-length ext) 1))
-                 (group stencil))
+                 (group stencil)
+                 (y0    (car (ly:stencil-extent group Y)))
+                 (base  (ly:stencil-extent base-stencil X))
+                 (xa    (interval-center base)))
             (do ((k 1 (1+ k))) ((= k groups))
-              (let ((x1 (+ (cdr ext) (* (- k 1) step))))
-                (set! stencil
-                      (ly:stencil-add
-                        stencil
-                        (make-tie-stencil (cons x1 0) (cons (+ x1 1) 0)
-                                          0.12 DOWN)
-                        (ly:stencil-translate-axis group (* k step) X)))))))
+              (set! stencil
+                    (ly:stencil-add
+                      stencil
+                      (ly:stencil-translate-axis group (* k step) X))))
+            (set! stencil
+                  (ly:stencil-add
+                    stencil
+                    (make-tie-stencil
+                      (cons xa y0)
+                      (cons (+ xa (- (cdr (ly:stencil-extent stencil X))
+                                     (cdr base)))
+                            y0)
+                      0.12 DOWN)))))
 
       stencil))
 

@@ -242,9 +242,6 @@ c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c3 6 10 3 16 0c13 -6 27 -13 42 -13z" fill=
 <path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.5000 0.1702C-0.5000 0.3953 -0.3384 0.5000 -0.1682 0.5000C-0.0415 0.5000 0.0808 0.4528 0.1856 0.3743C0.3297 0.2696 0.5000 0.0864 0.5000 -0.1702C0.5000 -0.3953 0.3384 -0.5000 0.1682 -0.5000C0.0415 -0.5000 -0.0808 -0.4528 -0.1856 -0.3743C-0.3297 -0.2696 -0.5000 -0.0864 -0.5000 0.1702z"/>
 </g>
 </g>
-<g transform="translate(10.3134, 10.3455)">
-<path stroke-width="0.1000" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M2.0004 -0.0000C2.2504 0.4059 2.7504 0.4059 3.0004 -0.0000C2.7504 0.2859 2.2504 0.2859 2.0004 -0.0000z"/>
-</g>
 <g color="rgb(100.0000%, 0.0000%, 0.0000%)">
 <g transform="translate(15.3141, 10.3455)">
 <path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.5000 0.1702C-0.5000 0.3953 -0.3384 0.5000 -0.1682 0.5000C-0.0415 0.5000 0.0808 0.4528 0.1856 0.3743C0.3297 0.2696 0.5000 0.0864 0.5000 -0.1702C0.5000 -0.3953 0.3384 -0.5000 0.1682 -0.5000C0.0415 -0.5000 -0.0808 -0.4528 -0.1856 -0.3743C-0.3297 -0.2696 -0.5000 -0.0864 -0.5000 0.1702z"/>
@@ -264,6 +261,9 @@ c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c3 6 10 3 16 0c13 -6 27 -13 42 -13z" fill=
 <g transform="translate(13.8138, 10.3455)">
 <path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M-0.5000 0.1702C-0.5000 0.3953 -0.3384 0.5000 -0.1682 0.5000C-0.0415 0.5000 0.0808 0.4528 0.1856 0.3743C0.3297 0.2696 0.5000 0.0864 0.5000 -0.1702C0.5000 -0.3953 0.3384 -0.5000 0.1682 -0.5000C0.0415 -0.5000 -0.0808 -0.4528 -0.1856 -0.3743C-0.3297 -0.2696 -0.5000 -0.0864 -0.5000 0.1702z"/>
 </g>
+</g>
+<g transform="translate(10.3134, 10.3455)">
+<path stroke-width="0.1000" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.0000 0.5000C1.2502 1.5209 3.7505 1.5209 5.0007 0.5000C3.7505 1.4009 1.2502 1.4009 0.0000 0.5000z"/>
 </g>
 </g>
 </g>

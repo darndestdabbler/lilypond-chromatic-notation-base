@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.1
+
+- A breve's tie now runs below the noteheads, as a tie under a note does:
+  one tie from the centre of the first head to the centre of the last,
+  bowing down from the bottom of the heads, in place of a tie in each gap
+  on the heads' centre line. A longa and a maxima get one longer tie the
+  same way. The groups, the gaps and the width are unchanged, and so is
+  everything shorter than a breve or engraved with `(repeat . #f)`.
+  `docs/session-sets/028-breve-tie-below/configurator-handoff.md` gives
+  the measured tie for the Configurator's default notehead.
+
 ## 1.3.0
 
 - Three settings let a Configurator export engrave its clef and key

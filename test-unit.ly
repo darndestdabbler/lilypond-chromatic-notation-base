@@ -217,8 +217,9 @@
 #(cnb:test-group "stencils.ly — cnb:build-duration-stencil tied semibreves")
 %% A 1 x 1 box as the head: the whole-note group is its 4-copy stencil;
 %% a breve is 2 groups 1 staff space apart, a longa 4 groups and 3 gaps,
-%% each gap holding a tie. The composite starts where its first group
-%% does.
+%% and one tie below them all. The composite starts where its first group
+%% does, keeps the head's top edge, and the tie takes its bottom below
+%% the head's.
 #(let* ((box   (make-filled-box-stencil '(-0.5 . 0.5) '(-0.5 . 0.5)))
         (whole (ly:stencil-extent (cnb:build-duration-stencil box 1) X))
         (gw    (interval-length whole)))
@@ -226,12 +227,18 @@
      (ly:stencil-extent (cnb:build-duration-stencil box 0 1) X) whole)
    (for-each
      (lambda (groups)
-       (let ((ext (ly:stencil-extent (cnb:build-duration-stencil box 0 groups) X)))
+       (let* ((st  (cnb:build-duration-stencil box 0 groups))
+              (ext (ly:stencil-extent st X))
+              (yx  (ly:stencil-extent st Y)))
          (cnb:assert-near (format #f "~a groups: width = ~a group widths + ~a gaps"
                                   groups groups (- groups 1))
            (interval-length ext) (+ (* groups gw) (- groups 1)) 0.001)
          (cnb:assert-near (format #f "~a groups: left edge = the group's" groups)
-           (car ext) (car whole) 0.001)))
+           (car ext) (car whole) 0.001)
+         (cnb:assert-near (format #f "~a groups: top edge = the head's" groups)
+           (cdr yx) 0.5 0.001)
+         (cnb:assert-true (format #f "~a groups: the tie takes the bottom below the head's" groups)
+           (< (car yx) -0.5))))
      '(2 4)))
 
 #(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")
