@@ -852,3 +852,50 @@ operator asked for the fix before the release.
    `(0 2 3 5 7 8 10)`), and session 32 is the release.
 
 ### Session 32: Release 1.4.0 (release: 1.4.0)
+
+### Session 33: Key-signature ledgers from the notation's ledger rules
+
+**Why.** The Configurator's session 49 engine round trip
+(`cnb/tests/cnb-lilypond-tests.js`, "mark table (engine)") found that a key
+signature's noteheads take their ledger lines from the engine's own rule,
+`cnb:notehead-ledgers` (`cnb/keysig.ly`): `cnb:proximity-rule` on the
+head's staff position rounded to a whole number. Since the Configurator's
+LY spec 1.3.9 §5.7 every export carries the notation's ledgers by pitch,
+`cnb:ledgers-by-semitone` (engine semitone, middle C = 0, → ledger staff
+positions), and every note's head takes its entry through
+`NoteHead.ledger-positions`. The signature does not, so it disagrees with
+the notes and with the Configurator's canvas: on the default 4-8 staff the
+engraved C-major signature gives B a ledger above the staff and C and D
+none, where the notes, and the canvas's signature, give C and D their
+in-gap ledgers and B none. This holds for `'chord` and `'marks` alike, and
+a ledger past the marks also moves the signature's ink and so the first
+note. The operator chose to fix it here rather than copy the engine's rule
+into the canvas (Configurator session 49).
+
+1. Register.
+2. **The fix.** A key-signature head whose engine semitone has an entry in
+   `cnb:ledgers-by-semitone`, when the export defines it, takes exactly
+   that entry's ledgers (half staff spaces from the middle line, scaled by
+   the magnification as today), none for an empty entry. A head with no
+   entry, or a score with no table, keeps today's rule. This covers
+   `'chord`'s heads (their semitones from `cnb:keysig-pitches`) and
+   `'marks`'s (each mark's `semi`). Lengths, thickness, caps and layering
+   are unchanged: 4/3 of the head's width, 0.2 staff spaces, round caps.
+   `cnb:ledgers-by-semitone` keeps its format; if the engine needs to read
+   it before the export defines it, give it a default of `'()` in
+   `cnb/config.ly` and say in the handoff whether the export should `set!`
+   rather than `define` it.
+3. **Tests.** Unit specs for a signature head with an entry, one with an
+   empty entry, one with none (today's rule), and no table at all;
+   integration specs for the default 4-8 staff's C major under `'chord` and
+   `'marks` (C and D with their in-gap ledgers, B with none). Goldens on
+   LilyPond 2.24 and 2.26 without a table stay byte-identical; any golden
+   whose score defines the table and whose signature ledgers change is
+   named in the handoff.
+4. A `CHANGELOG.md` section and `version.json` to `1.4.1`: a patch, the
+   signature following the notation's ledger rules that every export
+   already carries. Write
+   `docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md`:
+   what changed, a worked case, and session 34 as the release.
+
+### Session 34: Release 1.4.1 (release: 1.4.1)
