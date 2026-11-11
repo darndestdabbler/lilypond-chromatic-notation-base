@@ -899,3 +899,55 @@ into the canvas (Configurator session 49).
    what changed, a worked case, and session 34 as the release.
 
 ### Session 34: Release 1.4.1 (release: 1.4.1)
+
+### Session 35: Sized sharps and flats, and the magnification a config sets
+
+**Why.** The Configurator's session 51 draws a traditional signature's
+sharps and flats through the mark table, `(semi column sharp)` and
+`(semi column flat)`, and the engine draws each one as Emmentaler's glyph at
+the staff's size. A sharp is then 3 staff spaces tall. On the default 4-8
+staff, at 4 semitones a staff space, that is 12 semitones, an octave, far
+too big beside the noteheads (operator, 2026-11-11). Configurator session 52
+sizes the signs in semitones, by default the least of the noteheads' mean
+height, one staff space and 3 semitones, measured as the gap between the
+sharp's bars. It needs the engine to draw a sign at a given scale.
+
+The same session's round trips found that `cnb/score-defaults.ly` reads
+`cnb:default-magnify` when the engine is included, before an exported config
+`set!`s it. A plain score therefore engraves every staff at 7/4, whatever the
+config says. Only a staff that magnifies itself with `\magnifyStaff
+#cnb:default-magnify` gets the config's value. This affects every glyph, not
+only the signs, and it decides the optical size the signs come from.
+
+1. Register.
+2. **Sized signs.** A sign mark takes an optional fourth element, a
+   positive number: `(semi column sharp 0.6473)`. The glyph is scaled by it
+   about its origin, on both axes (the sharp's centre line or the flat's bowl
+   line stays at the semitone's height), before its X extent is centred on
+   its column, as today. Without the element, or with 1, a sign draws exactly
+   as today. Another value (not a positive number) is a warning naming the
+   key, and the sign draws unscaled. The format note in `cnb/config.ly`
+   gains the element.
+3. **The magnification a config sets.** A staff in a plain score engraves
+   at `cnb:default-magnify` as it stands when the score is engraved, so a
+   config included after the engine, which `set!`s it, takes effect. A
+   staff's own `\magnifyStaff` still wins, `\magnifyStaff` stays idempotent,
+   and opting out with `cnb:score-defaults #f` still works. How to get there
+   is the engine's choice, for example reading the variable when each staff
+   starts rather than when the file is included. The handoff says whether the
+   Configurator's round trips can drop the `\magnifyStaff
+   #cnb:default-magnify` they now prefix to their music.
+4. **Tests.** Unit specs: a sign with no scale, with 1 and with 0.5, whose
+   box is half as wide and tall and whose origin stays at the semitone; a
+   flat likewise; a bad scale warns. Integration specs: the default 4-8 staff
+   in D and B♭ major with scaled signs, and a plain score including a config
+   that `set!`s `cnb:default-magnify` to 1 and 5/2, each engraving at that
+   magnification. Goldens on LilyPond 2.24 and 2.26 without scaled signs stay
+   byte-identical. A golden whose config `set!`s a magnification other than
+   7/4 may change; name each one in the handoff.
+5. A `CHANGELOG.md` section and `version.json` to `1.5.0`: a minor, since
+   the mark table gains a field. Write
+   `docs/session-sets/035-sized-signs-and-magnify/configurator-handoff.md`:
+   what changed, a worked case for each item, and session 36 as the release.
+
+### Session 36: Release 1.5.0 (release: 1.5.0)
