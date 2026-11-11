@@ -64,30 +64,25 @@
 %% For C major: '()  (empty — all naturals)
 %% For G major: '((3 . 1/2))  (F is sharped)
 %%
-%% We start with the 7 natural pitch classes, then apply alterations.
+%% Each letter, C to B, takes its pitch class from its own alteration
+%% (natural when the list has none): (natural + 2 × alteration) mod 12.
+%% So the order of the entries does not matter, and double sharps and
+%% flats (D sharp major's F and C double sharps) are read correctly.
 
 #(define (cnb:get-key-pitch-classes key-alts)
-   (let* (
-           (result (list 0 2 4 5 7 9 11)))  ;; C D E F G A B
-     ;; Apply each alteration
-     (for-each
-       (lambda (entry)
-         (let* (
-                 ;; Handle both simple (step . alt) and octave-specific
-                 ;; ((octave . step) . alt) formats
-                 (step (let ((k (car entry)))
-                         (if (pair? k) (cdr k) k)))
-                 (alt  (cdr entry))
-                 (base (vector-ref cnb:step-to-semitone step))
-                 (modified (modulo (+ base (inexact->exact (round (* 2 alt)))) 12)))
-           (set! result
-                 (map (lambda (pc)
-                        (if (= pc (vector-ref cnb:step-to-semitone step))
-                            modified
-                            pc))
-                      result))))
-       key-alts)
-     result))
+   (let ((alts (map (lambda (entry)
+                      ;; Accept both simple (step . alt) and octave-specific
+                      ;; ((octave . step) . alt) formats
+                      (let ((k (car entry)))
+                        (cons (if (pair? k) (cdr k) k) (cdr entry))))
+                    key-alts)))
+     (map (lambda (step)
+            (let ((entry (assv step alts)))
+              (modulo (+ (vector-ref cnb:step-to-semitone step)
+                         (inexact->exact
+                           (round (* 2 (if entry (cdr entry) 0)))))
+                      12)))
+          (iota 7))))
 
 
 %% =========================================================================

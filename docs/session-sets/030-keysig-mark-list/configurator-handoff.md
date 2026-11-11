@@ -5,7 +5,8 @@ from a mark list").
 **To:** `chromatic-notation-configurator`. Its session 49 exports the
 table, and its engine round trip waits on this session. The design is the
 Configurator's `docs/planning/key-signature-designer-design.md` §9.
-**Date:** 2026-11-11. **Release:** ships in engine 1.4.0 (session 31).
+**Date:** 2026-11-11. **Release:** ships in engine 1.4.0 (released by
+session 32).
 
 > **Cross-repo rule of engagement (unchanged since set 005):** export-spec
 > changes are authored **Configurator-side** from this record. This
@@ -36,13 +37,14 @@ engraved, so it may be defined anywhere before the music.
 | VALUE | `((columns …) (bars …) (marks …))` | An alist; the order of its three members does not matter. |
 
 **Which keys are read correctly.** The pitch classes come from the
-engine's `cnb:get-key-pitch-classes`. It is correct for every key with at
-most seven sharps or flats: read from real `\key` events, C♯, C♭, F♯ and G♭
-major and A♯, A♭ and G♯ minor (whose E♯, B♯, F♭ and C♭ share a pitch class
-with another letter) all give their seven pitch classes. A key with
-double sharps or flats (D♯ major, say) is read wrongly: its list repeats
-pitch classes, as the warning below shows. No entry the Configurator's
-105 keys need can match it, so such a key draws no signature and warns.
+engine's `cnb:get-key-pitch-classes`, and every key's are read correctly:
+each letter takes its pitch class from its own alteration, whatever the
+order of `keyAlterations`. C♯, C♭, F♯ and G♭ major and A♯, A♭ and G♯
+minor (whose E♯, B♯, F♭ and C♭ share a pitch class with another letter)
+give their seven pitch classes, and so do keys with double sharps or
+flats: D♯ major gives `(0 2 3 5 7 8 10)` and F♭ major `(1 3 4 6 8 9 11)`
+(corrected in session 31; before, such a key's list repeated pitch
+classes).
 
 The key is matched with `equal?`, so `1/2` must be written as the exact
 rational (`1/2`, not `0.5`), and the pitch classes must be ascending. C
@@ -109,7 +111,7 @@ notehead and need nothing of their own.
 - **A key the table lacks** draws no signature, and the engine warns once
   per key, naming its tonic and its key, for `\key dis \major`:
   `cnb:keysig-marks has no entry for the key of #<Pitch dis >, ((1 . 1/2)
-  2 2 3 7 7 8 10) (tonic, pitch classes); no key signature drawn`. There
+  0 2 3 5 7 8 10) (tonic, pitch classes); no key signature drawn`. There
   is no fallback to the scale stack.
 - **An unregistered shape** warns naming it, and that mark is skipped.
 - **The signature repeated** at each system's start is the same grob type
@@ -193,9 +195,11 @@ flats' ink 0.048 before the signature's start).
 
 ## 4. Verification status
 
-- `engine-unit` and `engine-unit-2.26`: 399 assertions, all passing,
+- `engine-unit` and `engine-unit-2.26`: 408 assertions, all passing,
   including the table's keys (C major and A minor, F♯ and G♭ major, B♭
-  major), an entry found and one missing, and the stencil: heads centred on
+  major, and D♯ major since session 31), the pitch classes of D♯, F♭, C♯
+  and C♭ major in either order, an entry found and one missing, and the
+  stencil: heads centred on
   their columns, a double notehead, a bar's ends, a low head's ledger
   lines, a sharp with none, a sharp and a flat, and an unregistered shape
   skipped.
@@ -206,4 +210,4 @@ flats' ink 0.048 before the signature's start).
   and a key the table lacks; `tests/keysig-marks-columns` covers two,
   three and four columns with their bars, sharps and flats, and the
   spacing above.
-- Engine 1.4.0 is released by session 31.
+- Engine 1.4.0 is released by session 32.

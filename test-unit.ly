@@ -527,6 +527,43 @@
    (cnb:assert-false "Bb major: E (4) is NOT in key" (memv 4 pcs))
    (cnb:assert-false "Bb major: B (11) is NOT in key" (memv 11 pcs)))
 
+%% Each letter takes its pitch class from its own alteration, so the
+%% entries' order does not matter and double sharps and flats are read
+%% correctly (session 31). Before, D# major gave (2 2 3 7 7 8 10).
+#(define cnb:test-dis-major-alts
+   '((3 . 1) (0 . 1) (4 . 1/2) (1 . 1/2) (5 . 1/2) (2 . 1/2) (6 . 1/2)))
+#(define cnb:test-cis-major-alts
+   '((3 . 1/2) (0 . 1/2) (4 . 1/2) (1 . 1/2) (5 . 1/2) (2 . 1/2) (6 . 1/2)))
+#(define cnb:test-ces-major-alts
+   '((6 . -1/2) (2 . -1/2) (5 . -1/2) (1 . -1/2) (4 . -1/2) (0 . -1/2) (3 . -1/2)))
+
+#(cnb:assert-equal "D# major (F and C double sharp) pitch classes"
+   (sort (cnb:get-key-pitch-classes cnb:test-dis-major-alts) <)
+   '(0 2 3 5 7 8 10))
+#(cnb:assert-equal "D# major pitch classes, entries reversed"
+   (sort (cnb:get-key-pitch-classes (reverse cnb:test-dis-major-alts)) <)
+   '(0 2 3 5 7 8 10))
+#(cnb:assert-equal "Fb major (B double flat) pitch classes"
+   (sort (cnb:get-key-pitch-classes
+           '((6 . -1) (2 . -1/2) (5 . -1/2) (1 . -1/2) (4 . -1/2) (0 . -1/2) (3 . -1/2)))
+         <)
+   '(1 3 4 6 8 9 11))
+#(cnb:assert-equal "C# major pitch classes"
+   (sort (cnb:get-key-pitch-classes cnb:test-cis-major-alts) <)
+   '(0 1 3 5 6 8 10))
+#(cnb:assert-equal "C# major pitch classes, entries reversed"
+   (sort (cnb:get-key-pitch-classes (reverse cnb:test-cis-major-alts)) <)
+   '(0 1 3 5 6 8 10))
+#(cnb:assert-equal "Cb major pitch classes"
+   (sort (cnb:get-key-pitch-classes cnb:test-ces-major-alts) <)
+   '(1 3 4 6 8 10 11))
+#(cnb:assert-equal "Cb major pitch classes, entries reversed"
+   (sort (cnb:get-key-pitch-classes (reverse cnb:test-ces-major-alts)) <)
+   '(1 3 4 6 8 10 11))
+#(cnb:assert-equal "G major in ((octave . step) . alteration) form"
+   (sort (cnb:get-key-pitch-classes '(((0 . 3) . 1/2))) <)
+   '(0 2 4 6 7 9 11))
+
 
 %% =========================================================================
 %%  TEST: cnb/utils.ly — Path transformation functions
@@ -1801,6 +1838,9 @@
 #(cnb:assert-equal "B flat major's key is ((6 . -1/2) 0 2 3 5 7 9 10)"
    (cnb:keysig-marks-key (ly:make-pitch -1 6 -1/2) '((6 . -1/2) (2 . -1/2)))
    '((6 . -1/2) 0 2 3 5 7 9 10))
+#(cnb:assert-equal "D sharp major's key is ((1 . 1/2) 0 2 3 5 7 8 10)"
+   (cnb:keysig-marks-key (ly:make-pitch 0 1 1/2) cnb:test-dis-major-alts)
+   '((1 . 1/2) 0 2 3 5 7 8 10))
 
 #(define cnb:saved-keysig-marks cnb:keysig-marks)
 #(set! cnb:keysig-marks

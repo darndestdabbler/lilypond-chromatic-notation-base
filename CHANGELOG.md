@@ -14,6 +14,12 @@
   output are unchanged.
   `docs/session-sets/030-keysig-mark-list/configurator-handoff.md` gives
   the format and the measured spacing around the signature.
+- A key with double sharps or flats (D♯ major, F♭ major) now gives its
+  seven pitch classes. Before, its list could repeat pitch classes:
+  `\key dis \major` gave `(2 2 3 7 7 8 10)` in place of
+  `(0 2 3 5 7 8 10)`. This reaches the configuration procedure's `key`
+  argument, off-key marks, and the `'marks` table's lookup and its
+  warning. Every other key read correctly before and is unchanged.
 
 ## 1.3.1
 
