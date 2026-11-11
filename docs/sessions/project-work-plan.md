@@ -40,7 +40,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 26 | Document 1.3.0 | no | 2026-11-10 |
 | 27 | Release 1.3.0 (release: 1.3.0) | yes | 2026-11-10 |
 | 28 | The breve's tie below the noteheads | no | 2026-11-11 |
-| 29 | Release 1.3.1 (release: 1.3.1) | — | not declared |
+| 29 | Release 1.3.1 (release: 1.3.1) | yes | 2026-11-11 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -226,3 +226,9 @@ Release 1.3.0: the framework packs and publishes what is on the trunk.
 **Releasable: no.**
 
 Move the tie of a repeat-mode breve (and longa and maxima) below the noteheads. In cnb:build-duration-stencil (cnb/stencils.ly), for groups above 1, the ties in the gaps are replaced by one (make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN): xa the centre of the first head of the first group (the centre of the base stencil's X extent), xb the centre of the last head of the last group (xa moved by the composite's right edge less the base stencil's), and y0 the bottom of the group stencil's Y extent, with LilyPond's default height limit and ratio. The groups and their 1 staff space gaps are unchanged, so the X extent is too; the tie stays black because it is added after cnb:build-stencil-from-config colours the head. With repeat #f, and for whole notes and shorter, nothing changes. test-unit.ly's tied-semibreves case keeps its width assertions and gains the new Y extent (top unchanged, bottom below the group's). tests/breve-tied-semibreves asserts on 2.24 and 2.26 that the breve's and longa's widths are unchanged and gives their new lower Y extent; its comment, SVG and both harvests are updated, and tests/duration-rules' SVG and both harvests are regenerated. Then a README line beside the repeat counts, a CHANGELOG.md 1.3.1 section, version.json to 1.3.1 (a patch release), and docs/session-sets/028-breve-tie-below/configurator-handoff.md giving the measured tie for the Configurator's default notehead at 4 semitones per staff space (end points, lowest point, thickness, and the whole stencil's X and Y extents) and naming session 29 as the release.
+
+### Session 29 — Release 1.3.1 (release: 1.3.1)
+
+**Releasable: yes.**
+
+Release 1.3.1: the framework packs and publishes what is on the trunk.
