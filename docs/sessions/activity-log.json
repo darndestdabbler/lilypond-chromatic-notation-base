@@ -286,6 +286,13 @@
       "dateTime": "2026-11-11T15:06:52.752000-05:00",
       "task": "Let a mark-table sharp or flat be drawn at a given scale, and make a plain score engrave at the magnification its config sets. In cnb/keysig.ly a 'marks sign mark takes an optional fourth element, a positive number, (semi column sharp 0.6473): the Emmentaler glyph is scaled by it about its origin on both axes (ly:stencil-scale), so the sharp's centre line or the flat's bowl line stays at the semitone's height, and then its X extent is centred on its column as today. No element, or 1, draws exactly as today; any other value (not a positive number) warns naming the key and draws the sign unscaled, so cnb:keysig-marks-stencil is given the key its caller already computes. The format note in cnb/config.ly and README.md's mark-table section gain the element. In cnb/score-defaults.ly the Staff context's \\magnifyStaff #cnb:default-magnify, whose value is fixed when the engine is included, becomes an \\applyContext that applies \\magnifyStaff with cnb:default-magnify as it stands when each staff is created (ly:context-mod-apply! on (context-mod-from-music (magnifyStaff cnb:default-magnify)), prototyped on 2.24: a set! after the include takes effect), so a config included after the engine that set!s it takes effect; a staff's own \\magnifyStaff still wins, \\magnifyStaff stays idempotent through magnifyStaffValue, and cnb:score-defaults #f still opts out. Unit specs in test-unit.ly for signs with no scale, 1 and 0.5 (half as wide and tall, origin at the semitone), a flat likewise, and a bad scale; integration specs on 2.24 and 2.26 for the default 4-8 staff in D and B flat major with scaled signs, and for plain scores whose config set!s cnb:default-magnify to 1 and 5/2. Every existing golden stays byte-identical (none set!s a magnification other than 7/4). Then a CHANGELOG.md 1.5.0 section, version.json 1.5.0 (a minor: the mark table gains a field), and docs/session-sets/035-sized-signs-and-magnify/configurator-handoff.md with what changed, a worked case for each item, whether the Configurator's round trips can drop their \\magnifyStaff #cnb:default-magnify prefix, and session 36 as the release.",
       "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 36,
+      "dateTime": "2026-11-11T15:20:20.826000-05:00",
+      "task": "Release 1.5.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
     }
   ]
 }
