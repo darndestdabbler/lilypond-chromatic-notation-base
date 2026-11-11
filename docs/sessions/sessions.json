@@ -688,9 +688,9 @@
     {
       "number": 35,
       "title": "Sized sharps and flats, and the magnification a config sets",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-11T15:03:42.053000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-11T15:18:24.973000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
