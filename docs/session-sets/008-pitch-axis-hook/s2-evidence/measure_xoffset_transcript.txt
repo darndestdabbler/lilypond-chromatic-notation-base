@@ -1,0 +1,36 @@
+id                       pc  dx_head  dx_stem    incr    exp  note
+nh-1-0.000-60-0           0   +0.000   +0.000       -   0.00  
+nh-1-0.250-61-0           1   +0.850   +0.850  +0.850   0.85  offset pc
+nh-1-0.500-62-0           2   +0.849   +0.850  -0.001   0.00  
+nh-1-0.750-63-0           3   +0.850   +0.850  +0.001   0.00  
+nh-2-0.000-64-0           4   +1.600   +1.600  +0.750   0.85  offset pc [measure boundary]
+nh-2-0.250-65-0           5   +1.600   +1.600  +0.000   0.00  
+nh-2-0.500-66-0           6   +2.450   +2.450  +0.850   0.85  offset pc
+nh-2-0.750-67-0           7   +2.450   +2.450  +0.000   0.00  
+nh-3-0.000-68-0           8   +2.450   +2.450  -0.000   0.00   [measure boundary]
+nh-3-0.250-69-0           9   +3.300   +3.300  +0.850   0.85  offset pc
+nh-3-0.500-70-0          10   +3.300   +3.300  +0.000   0.00  
+nh-3-0.750-71-0          11   +4.150   +4.150  +0.850   0.85  offset pc
+nh-5-0.000-59-0          11   +5.902   +5.902       -   0.85  offset pc
+nh-5-0.250-57-0           9   +6.752   +6.752  +0.850   0.85  offset pc
+nh-5-0.500-56-0           8   +6.752   +6.752  +0.000   0.00  
+nh-5-0.750-55-0           7   +6.752   +6.752  +0.000   0.00  
+nh-6-0.000-61-0           1   +7.501   +7.501  +0.749   0.85  offset pc [measure boundary]
+nh-6-0.500-66-0           6   +8.352   +8.352  +0.851   0.85  offset pc
+nh-7-0.000-61-0           1   +9.202     none  +0.850   0.85  offset pc [measure boundary]
+single notes: every offset head+stem moved +0.85 together and pushed later columns +0.85 within the measure, 0 mismatches
+
+chord-internal separations (head-to-head dx within one chord):
+  <c' cis'>  same diatonic step        sep(offset)=+1.208 sep(control)=+0.357 effect=+0.851 expected=+0.85
+  <gis' a'>  ADJACENT diatonic steps   sep(offset)=+1.207 sep(control)=+0.357 effect=+0.850 expected=+0.85
+  <c' g'>    spanning control          sep(offset)=+0.000 sep(control)=+0.000 effect=+0.000 expected=+0.00
+  <f' fis'>  same diatonic step        sep(offset)=+1.207 sep(control)=+0.357 effect=+0.850 expected=+0.85
+
+ledger rects: offset render 5, control 5
+  rect 1: x   44.325 ->   50.227  (dx=+5.902)  y_center 10.395
+  rect 2: x   46.523 ->   53.275  (dx=+6.752)  y_center 10.395
+  rect 3: x   48.721 ->   55.473  (dx=+6.752)  y_center 10.395
+  rect 4: x   50.919 ->   57.671  (dx=+6.752)  y_center 10.395
+  rect 5: x   50.919 ->   57.671  (dx=+6.752)  y_center 11.395
+
+X-OFFSET ACCEPTANCE: PASS — single notes (head+stem+spacing), the unison-treated pair, and the diatonic-second pair all honor (x-offset . 0.85); verticals untouched

@@ -1,0 +1,291 @@
+{
+  "createdDate": "2026-10-30T06:49:23.957000-04:00",
+  "totalSessions": 0,
+  "entries": [
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 1,
+      "dateTime": "2026-10-30T06:49:24.582000-04:00",
+      "task": "Import the operator-approved wrap-up brief (docs/planning/brief.md) into the existing docs/planning/project-plan.md, amending that file rather than creating a solution-plan.md, as the brief directs. The amendment adds: the wrap-up objective (finish, clean up and document the CNB engine to 'reliable for simple exploration', release it as 1.0.0 and make the repository public under CC0) with its out-of-scope list and success criteria; the Production split the brief answers (one module, the LilyPond/Scheme source tree plus Python test tooling, no database, nothing running separately); the Handoff artifacts (a source archive produced by `git archive` plus an annotated v1.0.0 tag read from version.json); the single module's responsibility, contract and the cuts deliberately not made; the refreshed current state on 2026-10-30; and the wrap-up phases E1 (portable, honest test tooling), E2 (cruft removal and LilyPond compatibility note), E3 (guidance and README cleanup, version.json), the packaging session and the Release 1.0.0 session, each with its key deliverables, plus the constraints (session-sets kept as read-only history, golden baselines must not drift, IP posture per section 5). Stale counts and phase status in the existing sections are corrected where they contradict the brief's state.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 2,
+      "dateTime": "2026-10-30T07:02:13.558000-04:00",
+      "task": "Challenge the cuts of docs/planning/project-plan.md (this repository's plan file; there is no solution-plan.md) and record the answers as a new rationale subsection, section 7.7: whether the single module should exist and tools/ stay uncut; whether each contract clause is a promise something can prove (the golden-harvest no-drift promise is provable only by `git diff --exit-code -- tests` after the integration run, because tools/run_tests.py rewrites tests/*.harvested.json in place and compares nothing, so E1 chooses -dno-point-and-click over an ignored output folder to keep the tracked tree as the drift detector; the unit suite cannot fail today and E1 fixes that); whether the dependency direction hides the decisions most likely to change (the LilyPond version and the Configurator's export contract); and that the only deferred cut, splitting tools/, stays deferred. The challenge also records two planning corrections found in the 3.27.0 router: the release preflight refuses a release while any session since the last release closed without a VERIFIED verdict, so the brief's `Policy: fast` lines are not carried into E2/E3; and the tracked tools/__pycache__/*.pyc files are cruft E2 removes alongside the brief's list. Then append the numbered sessions to docs/sessions/session-plan.md: Session 3 (E1, portable and honest test tooling, also the skeleton-equivalent session that declares the second suite, since this repository has no solution or build files to scaffold), Session 4 (E2, cruft removal and LilyPond compatibility note), Session 5 (E3, guidance and README cleanup plus version.json 1.0.0), Session 6 (packaging: the pack-only `packaging:` block, checked with `dabbler packaging --rehearse`), and Session 7: Release 1.0.0 (release: 1.0.0), with no steps, proposed as a major version because it is the first release. Each work session has a Register step and at most three work steps, and every step that runs a suite names which one.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 3,
+      "dateTime": "2026-10-30T07:22:44.673000-04:00",
+      "task": "Make the CNB test tooling portable and make it gate honestly. tools/run_tests.py and tools/harvest_svg.py reconfigure stdout/stderr to UTF-8 (falling back to ASCII-safe replacement), open every file with encoding=\"utf-8\" while keeping the bytes harvests are written with, render with -dno-point-and-click, and warn without failing when lilypond --version is not 2.24.x. run_tests.py turns golden drift into a test failure: it compares each regenerated tests/*.harvested.json with the tracked copy, and on a difference leaves the file untouched, names the differing element ids and properties, and exits non-zero; --update-baselines writes the regenerated harvest instead, and a spec with no harvest yet writes one and passes. Tests for that comparison go in tools/test_run_tests.py (stdlib unittest, no LilyPond). The tracked tests/*.svg are re-baselined once without their textedit:// links. A new tools/run_unit.py runs lilypond test-unit.ly into an ignored out/ folder under a time limit, parses the TEST RESULTS line and exits non-zero on any failure, a missing line, a LilyPond error or the time limit; dabbler.yaml declares it as the engine-unit suite, adds an engine-tooling suite for the tooling's own unittest tests, and drops -X utf8 from engine-integration. Finally tests/example-notes.json is written from its harvest, pruned to assertions that pin what the score is for, tests/TODO.md is deleted, and the README's test counts and status banner are brought to what the two suites report.",
+      "releasable": false
+    },
+    {
+      "kind": "amendment",
+      "sessionNumber": 3,
+      "dateTime": "2026-10-30T07:25:00.377000-04:00",
+      "what": "step 'portable-runner': its files",
+      "reason": "tools/__pycache__/harvest_svg.cpython-311.pyc is still tracked (session 4 untracks it) and Python regenerates it whenever harvest_svg.py changes, so editing harvest_svg.py changes it",
+      "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 4,
+      "dateTime": "2026-10-30T16:03:38.034000-04:00",
+      "task": "Remove the repository's cruft and record how the engine fares on the newest LilyPond. Delete tools/old/ and tools/to-transition-to-python/ outright (git history keeps them), stop tracking tools/__pycache__/*.pyc (already ignored) and test-unit.pdf, and ignore /test-unit.pdf; prove nothing depended on them by running the engine-integration suite whole and the engine-unit suite. Mark docs/planning/configurator-coordination-backlog.md closed at its top, naming the session sets that resolved it (005-clef-configurability, 006-keysig-configurability, 007-vector-model-removal, 008-pitch-axis-hook; \u00a74 was never this repository's). Render tests/c-major-scale.ly once with LilyPond 2.26.0, called by its full path D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe with its output in the ignored out/ folder, and record in the README's Requirements section whether it works, fails (with the first error) or is untested and why, including any \\version or convert-ly warning it prints; 2.24.x stays the supported version.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 5,
+      "dateTime": "2026-10-30T21:08:45.935000-04:00",
+      "task": "Phase E3 of docs/planning/project-plan.md section 7.5: clean up the guidance and README for 1.0.0. The three guidance files under docs/planning (lessons-learned.md, lessons-archive.md, project-guidance.md) are untouched v1 templates whose only content is TODO placeholders and ai_router instructions, and the session-set change-logs record no lessons to harvest, so this session deletes all three (the plan's second option), which removes the v1 ai_router instructions with them; nothing outside the planning records that describe this task links to them. It then updates README.md: the status banner reads 1.0.0; a new \"Known limitations\" section states LilyPond 2.24.x only, tested on Windows, configs are generated by the Configurator, and clefs and key signatures follow the score; and the existing Testing section becomes \"Running the tests\", naming the declared suites exactly as dabbler.yaml declares them -- engine-integration (`python tools/run_tests.py`) and engine-unit (`python tools/run_unit.py`), plus the Python tooling's own engine-tooling suite. Finally it adds a root version.json reading { \"version\": \"1.0.0\" } for the release session to check against.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 6,
+      "dateTime": "2026-10-30T21:15:47.325000-04:00",
+      "task": "Declare this repository's source-archive packaging in dabbler.yaml: replace the commented example packaging block with a real `packaging:` block whose `pack` argv is [\"git\", \"archive\", \"--format=zip\", \"--output={output}/lilypond-chromatic-notation-base-{version}.zip\", \"HEAD\"] and which declares no `push`. The `{version}` placeholder is used in place of the literal 1.0.0 because a rehearsal in a scratch clone accepted it (it resolved to 1.0.0 and the pack exited 0). The step is proved by `dabbler packaging --rehearse`, which runs the pack and pushes nothing.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 7,
+      "dateTime": "2026-10-31T04:15:59.540000-04:00",
+      "task": "Release 1.0.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 8,
+      "dateTime": "2026-10-31T04:40:38.173000-04:00",
+      "task": "Give tools/run_tests.py and tools/run_unit.py a --lilypond-version X.Y option. run_tests.py gains small helpers that both runners use: the variable name for a version (CNB_LILYPOND_X_Y), the version a lilypond executable reports (X.Y from the first line of --version), resolution of the executable (the variable's value, else the lilypond on PATH if it reports X.Y, else exit non-zero with a message naming the variable to set), the render directory (out/lilypond-X.Y/ for any version other than 2.24, so tracked tests/*.svg are never rewritten by such a run) and the harvest baseline directory (beside the spec for 2.24, tests/lilypond-2.26/ for 2.26, none for a version outside the supported set {2.24, 2.26}). The LilyPond executable is passed to run_lilypond instead of the hard-coded name. For an unsupported version run_tests.py warns once and skips the drift comparison while every assertion still runs; this replaces the old 'baselined on 2.24' warning, which is removed. Without the option both runners behave as today: lilypond from PATH, renders beside the spec (run_unit.py into out/), drift compared with tests/*.harvested.json. Tests in tools/test_run_tests.py cover resolution from the variable, from PATH, and the failure message; the baseline path for 2.24 and 2.26; and the unsupported-version skip. Then dabbler.yaml's engine-integration and engine-unit suite commands gain --lilypond-version 2.24 so the run of record names the version it proves.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 9,
+      "dateTime": "2026-10-31T04:59:23.436000-04:00",
+      "task": "Make the CNB engine and its SVG harvester work on LilyPond 2.26 without changing anything on 2.24. In cnb/utils.ly, cnb:duration-category picks ly:duration->number (2.26) or duration-length (2.24) once at load time. In tools/harvest_svg.py, extract_color_deep rewrites an opaque rgba(...) colour to the 2.24 rgb(R%, G%, B%) form with every component at four decimals, while a colour that is not opaque keeps its alpha. A new tools/test_harvest_svg.py tests this. The clef-custom gutter assertion is restated as the operator decided on 2026-10-31. Measured from a no-gutter twin, the 2-staff-space gutter moves the first notehead +1.5 on 2.24 but the full +2.0 on 2.26, so no assertion that ignores the version can keep the 0.1 tolerance. tools/run_tests.py therefore exposes the LilyPond version under test to spec expressions as `lilypond` (2.24 when no version is given), tested in tools/test_run_tests.py. tests/clef-custom.json then asserts the first notehead's distance from the clef's right edge per version (9.117 on 2.24, 9.704 on 2.26), with the tolerance unchanged. 2.24 is proved unchanged: all three suites pass and the tracked tests/*.harvested.json do not drift. Then the 2.26 baselines tests/lilypond-2.26/*.harvested.json are written with --update-baselines after every assertion passes. Their coordinate shifts against 2.24 are spot-checked and recorded in section 7.7 of docs/planning/project-plan.md. Finally, engine-integration-2.26 and engine-unit-2.26 are declared in dabbler.yaml with the same fields and covers as their 2.24 counterparts.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 10,
+      "dateTime": "2026-10-31T05:24:22.592000-04:00",
+      "task": "Document the LilyPond 2.26 support that session 9 delivered and bump the release version to 1.1.0. In README.md, Requirements names LilyPond 2.24.x or 2.26.x (tested with 2.24.2 and 2.26.0), and the \"2.26 is not supported yet\" paragraph and the Known limitations bullet are replaced with what was measured: all suites pass on both versions, each version has its own harvest baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/*.harvested.json for 2.26), and 2.26 lays scores out slightly differently (uniform vertical staff offset, small horizontal spacing shifts after the clef and key signature, the clef gutter's full width), as recorded in section 7.7 of docs/planning/project-plan.md. \"Running the tests\" lists all five suites exactly as dabbler.yaml declares them, explains --lilypond-version X.Y and the CNB_LILYPOND_X_Y variable (else the lilypond on PATH that reports X.Y), and says that a contributor with only one version installed runs that version's suites. version.json becomes { \"version\": \"1.1.0\" }, the README status line says 1.1.0, and a short CHANGELOG.md records 1.0.0 (first release) and 1.1.0 (LilyPond 2.26 support; harvest baselines per version).",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 11,
+      "dateTime": "2026-10-31T05:34:51.955000-04:00",
+      "task": "Release 1.1.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 12,
+      "dateTime": "2026-11-02T06:34:28.293000-05:00",
+      "task": "Fix three engraving errors from the 2026-11-02 audit (H2, H3, M1) that every suite passed. H2: cnb:duration-category (cnb/utils.ly) is recomputed from the duration log alone as clamp(log + 1, 0, 3), so breve -> 0, whole -> 1, half -> 2 and quarter or shorter -> 3, the scale cnb/procedure.ly and the export spec already document; dots and the tuplet factor no longer change it. The consumers follow that scale: the repeat rule in cnb/stencils.ly (still 4 heads for whole and breve, 2 for a half, 1 for a quarter or shorter) and the cache-key comments; noteheads.ly, off-key.ly and stems.ly pass the category straight to the lookup and are confirmed. test-unit.ly gains unit tests for every duration log from -1 to 4, with and without dots, triplets and the cache key, and a new integration spec tests/duration-rules.ly/.json engraves breve, whole, half, quarter, eighth, dotted notes and triplets under a config that colours each category differently, asserting each note's colour and head count. H3: cnb/dots.ly stops counting the notehead's offset twice when it moves a dot off a ledger line, proved by a spec with dotted notes on and off ledger lines above and below the staff asserting each dot's distance from its notehead. M1: the notehead acknowledger captures the attachment record from the config current at acknowledge time onto the grob (as it already does for x-offset) and cnb:stem-attachment reads it from there, so a later \\key change no longer rewrites earlier stems, proved by a spec with a key-dependent attachment and a mid-score key change. Finally all five suites run; any existing harvest that drifts is re-baselined on both versions only after every difference is checked to be one of these three fixes, and each re-baselined file (or that none drifted) is recorded in section 7.7 of docs/planning/project-plan.md.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 13,
+      "dateTime": "2026-11-02T19:25:42.935000-05:00",
+      "task": "Close the audit's holes in the integration test runner so it cannot pass a broken render. In tools/run_tests.py: run_lilypond deletes every earlier render of the spec ({base}.svg and {base}-N.svg, including the tracked tests/{base}.svg) before LilyPond runs, so it can only harvest what this run wrote, and a multi-page render ({base}-1.svg, {base}-2.svg, ...) fails with a message instead of falling back to a stale file (H1); the default spec path is PROJECT_ROOT/tests, and a named path that does not exist or an empty spec list exits non-zero (M5); without --lilypond-version the runner detects the version of the lilypond on PATH and uses that version's render folder and baselines, so anything but 2.24 renders into out/lilypond-X.Y/ (L3); harvest_differences keys elements by id plus occurrence index, so an edit to a repeated id's later occurrence, or a newly duplicated id, shows as drift (M3);an element counts as absent-as-expected only when its assertion declares \"absent\": true, never because an expression contains `is None`, and an assertion with nothing to check fails (L6), with the two specs that use absence (clef-none, keysig-none) and the documented convention moved to the marker; resolve_lilypond checks that the executable CNB_LILYPOND_X_Y names reports X.Y and exits naming the variable otherwise (M4). dabbler.yaml adds tools/run_tests.py and tools/harvest_svg.py to both engine-unit suites' covers (L4). Each fix gets a test in tools/test_run_tests.py, and the audit's probes (key-signature regression plus \\pageBreak, edited duplicate ids, CNB_LILYPOND_2_26 pointed at 2.24) are re-run outside the tracked tree and must each fail.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 14,
+      "dateTime": "2026-11-03T01:26:31.156000-05:00",
+      "task": "Make the harvester see what LilyPond draws, and make the README claim only what works and is tested. M2: tools/harvest_svg.py adds the extents of circle (cx\u00b1r, cy\u00b1r), ellipse (cx\u00b1rx, cy\u00b1ry), polygon and polyline (their points) to an element's bbox, so beams get a real bounding box, and records a new visual.shape_hash over the geometry of an element's non-path primitives (circle r, ellipse rx/ry, polygon and polyline points, text string, font family, weight, size and anchor, each with its accumulated scale), so an added or removed off-key ring, a changed beam or a changed text clef drifts; path_hash, representative positions and text's anchor-only bbox contribution are unchanged. Tests go in tools/test_harvest_svg.py. Both versions' baselines are re-baselined, and a check proves against b1c8fa0 that only bbox and shape_hash changed, and bbox only on elements that now carry a shape_hash. M6: the articulation Y-offset correction (cnb/articulations.ly) and the beam and stem compressed-staff compensation (cnb/beams.ly, the compensation half of cnb/stems.ly) are deleted rather than repaired, since the engine never sets staff-space and the proximity rule never yields an articulation adjustment, so they do nothing on the engine's own staff; their overrides, includes and README claims go with them, and every render is unchanged. M7, L1, L2: the runner counts only assertions that have an id and reports harvest drift separately from assertion failures; --generate refuses to overwrite an existing baseline without --update-baselines; the never-read --keep-svg goes. The README states the real assertion counts for 2.24 and 2.26 and the real project tree, docs/INTEGRATION-TESTING.md describes per-version baselines, --lilypond-version, CNB_LILYPOND_X_Y, drift and --update-baselines, the --generate refusal and shape_hash, and the dabbler.yaml comment's counts are corrected.",
+      "releasable": false
+    },
+    {
+      "kind": "amendment",
+      "sessionNumber": 14,
+      "dateTime": "2026-11-03T01:59:36.450000-05:00",
+      "what": "step 'docs-tell-the-truth': its checks",
+      "reason": "The check's bare 'scores/' substring test matched the external URL github.com/scaleshift-scores/... in the README acknowledgments, not a scores/ folder; it now looks for a scores/ entry in the project tree ('\u2500\u2500 scores/'). Every other assertion of the check is unchanged.",
+      "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 15,
+      "dateTime": "2026-11-03T03:57:08.823000-05:00",
+      "task": "Make the public source zip clean (audit L5) and set the version to 1.1.1. The findings file docs/session-sets/004-end-to-end-pipeline-verification/findings.md stops naming this machine's paths: its `c:\\Users\\denmi\\source\\repos\\` path, and the `d:\\Projects\\chromatic-notation-configurator` paths in the same sentence and in its export command, become the sibling-relative `../chromatic-notation-configurator`. The five tracked evidence SVGs under docs/session-sets/008-pitch-axis-hook/s*-evidence/ that carry `textedit://D:/Projects/...` links are re-rendered from their own .ly files with LilyPond 2.24 and `-dno-point-and-click`; a trial render showed each comes out identical to the tracked file once links are removed, and a check proves that against fe23380. The literal strings the plan's grep looks for also occur in two tooling files that would ship: the `textedit://` in a tools/run_tests.py comment is reworded, and the `D:\\ly\\lilypond.exe` fixture in tools/test_run_tests.py becomes a path with no drive letter. A new .gitattributes marks `.vscode/`, `AGENTS.md`, `CLAUDE.md`, `docs/sessions/`, `docs/transcripts/` and `docs/planning/` export-ignore. The proof is `dabbler packaging --rehearse` (the pack runs) and, because that pack archives HEAD and the session's work is committed only at the land, a check that archives the working tree the same way (`git archive --format=zip` of a tree written from a temporary index) and asserts that none of those paths is in the zip and that no entry contains `textedit://`, `D:\\` or `Users\\`. Finally version.json becomes 1.1.1 and CHANGELOG.md gains a 1.1.1 entry summarising sessions 12 to 15, stating that duration categories now follow the documented scale (breve 0, whole 1, half 2, quarter or shorter 3), so a hand-written config that relied on the old off-by-one numbering must change.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 16,
+      "dateTime": "2026-11-03T04:23:42.816000-05:00",
+      "task": "Release 1.1.1: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 17,
+      "dateTime": "2026-11-04T06:45:35.006000-05:00",
+      "task": "Prove that a stem anchored at the notehead centre, '(0 . 0), engraves well, and fix what does not. A new integration spec, tests/stem-centre.ly with tests/stem-centre.json, is baselined on LilyPond 2.24 and 2.26. Its small config registers one solid and one true-hollow 45-degree-tilted ellipse, each 4 semitones tall like Kite, with (0 . 0) for all four attachment points. It engraves stems up and down, a minim, a beamed pair and a chord. Per stem it asserts four things. The stem's x is the head's centre x. Its near end is at the head's centre y. Its far end is at LilyPond's standard stem length from the head's centre. The stem is drawn after (over) its head, so neither a true hole nor a false-hollow white overlay can hide it. The operator decided the length rule on 2026-11-04. LilyPond measures the far end from the head's centre whatever the anchor, and Kite's (0 . 0.9) anchors and the existing key-change test's (0 . 0) anchors already rely on that. So the engine keeps that length instead of lengthening inside-head anchors, and no existing harvest drifts. A 4-semitone centre-anchored stem therefore shows exactly as far past its head as a Kite stem does. The known defect is draw order: cnb/layout.ly puts NoteHead on layer 999 above stems. The fix draws stems above noteheads, and the only effect on existing tests is the element order inside their tracked SVGs. To assert draw order, the integration runner gains an order(id) helper: an element's index in the harvest, which is SVG document order. The README, under the attachment-registration row, says an anchor may be anywhere including the centre, what the engine does with length and draw order, and the toolkit rule a designer places an anchor by. Its headline test counts are refreshed.",
+      "releasable": false
+    },
+    {
+      "kind": "amendment",
+      "sessionNumber": 17,
+      "dateTime": "2026-11-04T06:48:48.598000-05:00",
+      "what": "step 'stem-centre': its files",
+      "reason": "The runner rewrites a harvest whose content matches its baseline, so drawing stems above noteheads reorders the elements of every existing tests/*.harvested.json and tests/lilypond-2.26/*.harvested.json. Element content is unchanged (verified against HEAD: same element set, same top-level keys); drift detection is order-insensitive and reports 0 drifted on 2.24 and 2.26.",
+      "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "amendment",
+      "sessionNumber": 17,
+      "dateTime": "2026-11-04T06:56:09.022000-05:00",
+      "what": "the non-goal 'No existing harvest baseline (tests/*.harvested.json, tests/lilypond-2.26/*.harvested.json) is re-baselined; existing tracked SVGs change only in element order', dropped",
+      "reason": "Operator decision 2026-11-04: Stem.layer moves every stem later in the SVG, and the harvest records SVG document order, so every harvest baseline and tracked SVG reorders with no value changed (element sets and all other fields verified identical to HEAD in all 28 harvests; all 14 SVGs have the same lines). The non-goal's intent, no drift in harvested values, still holds (0 drifted on 2.24 and 2.26); the reviewer is asked to judge it on that.",
+      "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 18,
+      "dateTime": "2026-11-04T19:36:14.097000-05:00",
+      "task": "Make one include line enough for a converted score. Add cnb/score-defaults.ly, included by ChromaticNotationBase.ly, which applies \\magnifyStaff #cnb:default-magnify to every Staff through a top-level \\layout, and gives instrument names room through a top-level \\paper with a fixed indent (25 mm) and short-indent (12 mm). The plan said `indent = #cnb:indent`, but cnb/layout.ly already sets that, and its 0 is what clips the names, so the operator chose fixed room in score-defaults (decided 2026-11-04 while planning). cnb:indent and layout.ly stay unchanged. The file applies both blocks unless the score defines `cnb:score-defaults` as #f before the include. A score's own \\paper and \\layout still win. Prototyping showed \\magnifyStaff is idempotent (a hand-magnified score is not magnified twice), but every existing spec drifts: the plain ones change size, and the joy/example-notes ones pick up the short-indent. So each of the 16 tests/*.ly opts out with the flag, and no baseline moves. Add the spec tests/from-musicxml.ly: the musicxml2ly output (--nd --nrp --npl --no-beaming, LilyPond 2.24.2) of the Kainhofer file 21d-Chords-SchubertStabatMater.xml, verbatim except for the include lines after \\version (ChromaticNotationBase.ly, plus cnb/test-ids.ly, which the harvest needs). It asserts the magnified staff height (7/4 of the base staff) and that the system's left edge sits at least the margin plus the 25 mm indent from the page edge, which leaves room for an instrument name. The file itself has none, because musicxml2ly drops Finale's placeholder 'MusicXML Part'. Commit its baselines for 2.24 and 2.26. Finally, add a README section, \"Starting from MusicXML\", before the walkthrough: the Frescobaldi import and its default boxes, the one include line, the engine's defaults and the opt-out flag, the three musicxml2ly failures with their fixes, and MusicFormats xml2ly as the fallback.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 19,
+      "dateTime": "2026-11-05T02:28:49.695000-05:00",
+      "task": "Add a MusicXML smoke tier and a pre-release corpus gate. Vendor into tests/musicxml/, beside the suite's MIT LICENSE, the 71 files of the cuthbertLab fork of the Kainhofer Unofficial MusicXML test suite (D:\\musicxmlTestSuite-main) that fall in the plan's ranges: 01a-01e (with 01ea), 02a-02c, 03a-03d (the fork splits 03a into 03aa/03ab), 12a/12b (12aa-12ad, 12b), 13a-13e (with 13aa-13ac), 21a-21h (21a-21g; 21g is .musicxml), 22a-22d, 23a-23f, 24a-24h (the fork has 24a-24f), 33b/33c/33g/33i (the fork has no 33k), 41a-41d, 42a/42b and 61a-61k. Add tools/run_musicxml.py --lilypond-version X.Y: it resolves lilypond as run_tests.py does, finds musicxml2ly beside it (on Windows bin\\python.exe bin\\musicxml2ly.py in the lilypond executable's folder, elsewhere musicxml2ly on PATH, else exits non-zero naming what is missing), converts each file with --nd --nrp --npl --no-beaming, inserts \\include \"kite-4-369-from-configurator.ly\" after \\version, engraves (SVG, from the project root) into the ignored out/musicxml/lilypond-X.Y/, and passes a file when both exit 0 and the LilyPond log has no 'error:' or 'programming error' line other than those tests/musicxml/expect.json allows for that file. A file listed there as a known musicxml2ly defect must still fail, and its passing is reported as an error. An entry may name the LilyPond versions it applies to, since 2.24's and 2.26's musicxml2ly differ. musicxml2ly's warnings never fail a file. Declare the suites engine-musicxml and engine-musicxml-2.26 in dabbler.yaml (expensive, whole_at_close, runs_whole), covering cnb/, tests/musicxml/ and tools/run_musicxml.py, plus ChromaticNotationBase.ly and kite-4-369-from-configurator.ly, which every converted file includes. Add tools/run_corpus.py DIR [--max-bytes N] [--lilypond-version X.Y], which runs the same convert and engrave over DIR's .xml/.musicxml/.mxl files (larger than --max-bytes, default 5 MB: a 'skipped' row), writes docs/runs/corpus-<today>.md with file, convert exit, engrave exit, seconds, musicxml2ly warning count, -inf count and pages, compares with the newest earlier docs/runs/corpus-*.md by file name, and exits non-zero when a file that passed there (both exits 0) fails now. Commit plan section 1.3 (D:\\Projects\\chromatic-notation-musicxml-and-45deg-plan.md) as docs/runs/corpus-2026-11-04.md in that format, one row per corpus file by file name, as the first baseline. docs/INTEGRATION-TESTING.md gets a short section naming the corpus gate the step before every release session, run on D:\\MusicXML, and saying why the corpus is not in the repository. Tests: tools/test_run_musicxml.py (converter resolution, the allowlist, the stale-defect error, a missing converter) and tools/test_run_corpus.py (reading a table, the regression comparison), neither needing LilyPond.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 20,
+      "dateTime": "2026-11-05T03:05:57.176000-05:00",
+      "task": "Fix the two engine defects the corpus found. (1) The '-inf staff space' stencil offset: the key-signature engraver builds its notehead-chord display from the procedure config cache, which only the notehead engraver fills (cnb:handle-key-change, on its first note). When the first key signature of a score is engraved before any notehead -- the top staff opens on a rest or a spacer, or a staff has no notes at all (Ave Maria's spacer-only second voice) -- every lookup misses, cnb:get-keysig-note-stencil returns empty-stencil, its width is -inf, and the translate of each keysig notehead and of the separator bar is improbable (8 lines for a two-accidental key); the display renders as the bar alone, and on rest-only staves (smoke files 02a-02c) LilyPond aborts. The key-signature engraver will call cnb:handle-key-change before building its stencil, so the cache always matches the key being drawn. The minimal spec tests/keysig-before-first-note (one staff, \\key bes \\major, opening on a rest) asserts the display has width; the four 'engine, session 20' defect entries in tests/musicxml/expect.json (02a, 02b, 02c, 41b), which now engrave cleanly, are removed so the smoke tier does not report them stale; the trigger goes in a CHANGELOG 'Unreleased' entry and in the step notes. (2) cnb/layout.ly blanks AccidentalCautionary.stencil and AccidentalSuggestion.stencil beside Accidental.stencil; a new accidentals spec (tests/accidentals) renders a plain sharp, a cautionary d? and a forced es! and asserts none is drawn, with one Accidental re-enabled by a \\once override as a control proving the harvester sees accidentals. (3) Re-run tools/run_corpus.py D:\\MusicXML and commit its table docs/runs/corpus-2026-11-05.md, whose -inf column is zero for every engraved file.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 21,
+      "dateTime": "2026-11-05T03:51:00.216000-05:00",
+      "task": "Document release 1.2.0. README: confirm the \"Starting from MusicXML\" section is final against session 18's list (Frescobaldi import defaults, the one include line, the engine's score defaults and the cnb:score-defaults opt-out, the three musicxml2ly failures with their fixes, MusicFormats xml2ly as fallback); bring the status line to 1.2.0 with the unit and integration counts the suites print on 2.24 and 2.26; add engine-musicxml and engine-musicxml-2.26 to the suites table and a short MusicXML smoke tier subsection with its real file counts on both versions and its known-failure allowlist, naming the corpus gate (tools/run_corpus.py, before every release session); list the new tools, tests/musicxml/ and docs/runs/ in the project tree and cnb/score-defaults.ly in the module order; and confirm the session 17 stem-attachment paragraph under the Registration API. dabbler.yaml's header comment gains a paragraph describing engine-musicxml and its 2.26 twin as it describes the other suites. docs/INTEGRATION-TESTING.md gains a MusicXML smoke tier section covering tools/run_musicxml.py (converter resolution, flags, the include, out/musicxml/, the pass rule, the expect.json allow/defect/lilypond format and the stale-defect error) and completes its corpus gate section on tools/run_corpus.py (DIR, --max-bytes, --lilypond-version, the table, the comparison with the newest earlier table). CHANGELOG.md turns its Unreleased entry into 1.2.0 and adds: score defaults applied by the engine and the opt-out, with the honest caveat that a staff sized by \\magnifyStaff is not magnified twice but a score sized any other way (set-global-staff-size, fontSize or staff-space overrides) is now magnified on top of that; AccidentalCautionary and AccidentalSuggestion suppressed; centre-anchored stems; the MusicXML smoke tier and the corpus gate; the -inf stencil fix and its trigger stays as written. version.json goes to 1.2.0.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 22,
+      "dateTime": "2026-11-05T04:18:28.081000-05:00",
+      "task": "Settle the three grace-note smoke allowances (24c, 24d, 24e: 'No viable beam quanting found') as LilyPond issue 2383, not an engine defect. Before this plan, a trial in a scratch copy of the repository applied the session plan's workaround, Beam.details.region-size = #4 in cnb/layout.ly. It cleared the error in all three files on 2.24 and 2.26, with no integration drift. But measured against the staff's top line, it placed every affected grace beam about 3.4 global units (about two staff spaces at 7/4) farther from the heads than LilyPond's unquanted fallback. The fallback is within 0.3 units of where a LilyPond master build carrying the upstream fix puts the same beam. The workaround fails the plan's third condition, so this session adds nothing to the engine. It re-labels the three expect.json entries as LilyPond issue 2383 with the trigger, keeping their allow lists so the smoke tier still passes. It adds a README Known Issues entry linking the issue: why there is no workaround, what the fallback looks like, and that the allowance can go once a LilyPond release carries the fix. It adds a CHANGELOG 1.2.0 line.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 23,
+      "dateTime": "2026-11-05T04:50:04.721000-05:00",
+      "task": "Release 1.2.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 24,
+      "dateTime": "2026-11-10T12:23:57.232000-05:00",
+      "task": "Close the three engraving gaps the Configurator's LY export spec 1.3.8 records as engine-only (\u00a75.4d, \u00a75.5), each behind a new setting whose default is today's behaviour, so every tracked golden and harvest stays byte-identical. (1) cnb:clef-anchor-semitones (#f = today's fixed placement): a number puts a 'text clef's top edge at that semitone, through cnb:clef-anchor-y-offset, the path a 'custom clef's anchor-semitones already takes (the pitch-axis hook when set, with fractional anchors interpolated; the linear middleCPosition formula otherwise); the text stencil is then built with its top edge at y = 0, as a custom one is, and the setting joins the clef stencil-cache key. (2) cnb:clef-gutter-left-semitones (#f = none): blank space before the clef's ink, in the same units as cnb:clef-gutter-semitones, for every rendered style, also in the cache key. (3) A 'centred value for cnb:keysig-tonic-octave: for each key, the tonic octave whose span [t, t+12] is centred on the staff's centre semitone M, ties going up \u2014 the Configurator's CNBKeySignature.tonicSemi rule, k = floor((M - 6 - pc)/12 + 1/2) \u2014 where M is the lowest semitone the hook sends nearest staff position 0, or -2 x middleCPosition on a linear staff (12 under the treble clef, the Configurator's default midpoint). New pure helpers get unit tests in test-unit.ly on 2.24 and 2.26. Integration specs (tests/*.ly + .json, with their tracked SVG and 2.24/2.26 harvest baselines) assert: a text clef's top edge at a fractional anchor on a linear staff and under the Twinline hook (the label is a path markup, because a plain string harvests as a 0x0 text anchor); the gap before and after a custom path clef with both gutters set, measured per LilyPond version; and, on the Twinline geometry (sps 2, lines -6 -3 -1 1 4 6, the Configurator fixture's hook, middle G), all twelve tonics' signature marks against the Configurator's choice, with a short separator bar so the harvested key-signature bbox is the marks'. Then README rows for the three settings, a CHANGELOG line under a new 1.3.0 heading (the release the plan already schedules as session 26), and docs/session-sets/024-configurator-gaps/configurator-handoff.md giving each setting's name, default, units and measured behaviour for the Configurator's export.",
+      "releasable": false
+    },
+    {
+      "kind": "amendment",
+      "sessionNumber": 24,
+      "dateTime": "2026-11-10T12:59:16.248000-05:00",
+      "what": "step 'keysig-centred': its files",
+      "reason": "Fixing a pre-existing bug the twelve-tonic spec exposed, approved by the operator: the key-signature stencil cache was keyed on the context property keySignature, which LilyPond 2.24/2.26 never set, so every signature after the first in a file drew the first one's marks (tracked golden stem-attachment-key-change showed G major as C major). The cache now keys on the grob's alteration-alist and the tonic; that golden's SVG and both harvests change, correctly, despite the non-goal that no existing golden changes.",
+      "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 25,
+      "dateTime": "2026-11-10T16:37:31.812000-05:00",
+      "task": "In repeat mode (the config's repeat is not #f), engrave a note of duration log L <= -1 (breve -1, longa -2, maxima -3) as 2^(-L) of today's semibreve stencil (the 4-copy whole-note stencil), left to right, 1 staff space apart, each gap holding (make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN) from the left group's right edge to the right group's left edge, with LilyPond's default height limit and ratio. A pure helper in cnb/utils.ly gives the group count by duration log (1 for a whole or shorter); cnb:build-duration-stencil builds the composite from it; the stencil cache key gains the group count (an optional argument of cnb:make-cache-key whose default leaves every existing key unchanged) so the longa and the maxima are cached apart from the breve. The procedure still gets duration category 0 for all three; dots, spacing, the per-pitch repeat field and repeat #f are untouched, and whole notes and shorter engrave as before. test-unit.ly tests the group count by duration log, the new cache keys, and the composite's width for 2 and 4 groups. tests/duration-rules (the one tracked golden with a breve) gets its breve assertion updated and its SVG and 2.24/2.26 harvests regenerated. A new integration spec, tests/breve-tied-semibreves, drawn with the Configurator's default notehead (its exported crotchet-minim path) at 4 semitones per staff space with repeat on, asserts on 2.24 and 2.26 the width of a breve (2 groups and 1 gap) and a longa (4 groups and 3 gaps) against the whole note, and that the whole note keeps its width. Then a README line beside the repeat counts, a CHANGELOG line under 1.3.0, and docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md giving the composite's measured geometry for that notehead: each group's width, the gap, the tie's end points, its bow height and thickness, and the whole stencil's X and Y extents.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 26,
+      "dateTime": "2026-11-10T16:52:54.126000-05:00",
+      "task": "Prepare the 1.3.0 release: set version.json to 1.3.0 so the release session 27 can start, confirm the existing CHANGELOG.md 1.3.0 section already covers sessions 24 (the three clef/key-signature settings and the key-change fix) and 25 (the breve as tied semibreves), and correct the two Configurator handoffs (docs/session-sets/024-configurator-gaps/ and docs/session-sets/025-breve-tied-semibreves/) so they name session 27, not session 26, as the release.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 27,
+      "dateTime": "2026-11-10T16:56:10.734000-05:00",
+      "task": "Release 1.3.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 28,
+      "dateTime": "2026-11-11T01:38:54.995000-05:00",
+      "task": "Move the tie of a repeat-mode breve (and longa and maxima) below the noteheads. In cnb:build-duration-stencil (cnb/stencils.ly), for groups above 1, the ties in the gaps are replaced by one (make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN): xa the centre of the first head of the first group (the centre of the base stencil's X extent), xb the centre of the last head of the last group (xa moved by the composite's right edge less the base stencil's), and y0 the bottom of the group stencil's Y extent, with LilyPond's default height limit and ratio. The groups and their 1 staff space gaps are unchanged, so the X extent is too; the tie stays black because it is added after cnb:build-stencil-from-config colours the head. With repeat #f, and for whole notes and shorter, nothing changes. test-unit.ly's tied-semibreves case keeps its width assertions and gains the new Y extent (top unchanged, bottom below the group's). tests/breve-tied-semibreves asserts on 2.24 and 2.26 that the breve's and longa's widths are unchanged and gives their new lower Y extent; its comment, SVG and both harvests are updated, and tests/duration-rules' SVG and both harvests are regenerated. Then a README line beside the repeat counts, a CHANGELOG.md 1.3.1 section, version.json to 1.3.1 (a patch release), and docs/session-sets/028-breve-tie-below/configurator-handoff.md giving the measured tie for the Configurator's default notehead at 4 semitones per staff space (end points, lowest point, thickness, and the whole stencil's X and Y extents) and naming session 29 as the release.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 29,
+      "dateTime": "2026-11-11T01:47:31.245000-05:00",
+      "task": "Release 1.3.1: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 30,
+      "dateTime": "2026-11-11T07:19:59.334000-05:00",
+      "task": "Add the mark-list key-signature style the Configurator's designer needs (its session 47 design, section 9). cnb/config.ly gains cnb:keysig-marks, default '(), and cnb:keysig-style accepts 'marks. The table is an alist with one entry per key: the entry's key is ((notename . alteration) . sorted-pitch-classes), the tonic's note name and alteration as \\key gives them (ly:pitch-notename, ly:pitch-alteration of the context's tonic) and the key's seven pitch classes from keyAlterations (cnb:get-key-pitch-classes), sorted, so C major and A minor differ by tonic and F sharp and G flat major by spelling. The entry's value is an alist: (columns x ...) each column's centre in staff spaces from the signature's start; (bars (x bottom top color thickness) ...) with x in staff spaces, bottom and top in engine semitones (middle C = 0), color a registered colour name or a hex string, and thickness in staff spaces; (marks (semi column head shape hollow color) | (semi column sharp) | (semi column flat) ...) with shape a registered path name (a sized variant is its own registered name), hollow a registered hollow name or #f, and color a registered colour name. Under 'marks the key-signature engraver looks up the entry for the score's key and draws it with no layout of its own: the bars beneath everything, each head built from its registered path, hollow and colour by cnb:build-stencil-from-config and scaled by the font magnification, centred on its column's x at the semitone's height (cnb:keysig-note-y-offset, so the pitch-axis hook applies as for 'chord), with its ledger lines beneath it (cnb:notehead-ledgers and cnb:add-keysig-ledgers), and sharps and flats as Emmentaler's accidentals.sharp and accidentals.flat from the grob's own font, centred on their column, with no ledgers. Two marks at one semitone in neighbouring columns are simply two heads. A KeyCancellation grob draws nothing under 'marks, so a key change shows the new key's marks and no naturals; the signature repeated at a system start is the same grob type and draws the same entry. A key with no entry draws no signature and warns once naming the key, with no fallback to the scale stack. 'chord and 'none are untouched. Unit tests in test-unit.ly and two integration specs on LilyPond 2.24 and 2.26: tests/keysig-marks (a key change with no naturals, a \\transpose'd passage, the F sharp / G flat major pair, the signature repeated after a \\break, a double notehead, a hollow head, and a key the table lacks) and tests/keysig-marks-columns (three scores of two, three and four columns with their bars, sharps in one and flats in another), the latter also measuring the space before the signature and from its last column to the first note. Every existing golden stays byte-identical. Then a README section, CHANGELOG.md 1.4.0, version.json 1.4.0 (a minor release: a setting added, no existing output changed), and docs/session-sets/030-keysig-mark-list/configurator-handoff.md giving the format as landed, a worked entry, the measured spacing for two, three and four columns, and session 31 as the release.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 31,
+      "dateTime": "2026-11-11T07:49:14.570000-05:00",
+      "task": "Correct cnb:get-key-pitch-classes (cnb/procedure.ly) for keys with double sharps or flats. Today it starts from the seven natural pitch classes and, for each keyAlterations entry, replaces every pitch class equal to that letter's natural one, so an alteration landing on another letter's natural pitch class (E sharp on F, F double sharp on G) can be overwritten by a later entry: \\key dis \\major gives (2 2 3 7 7 8 10). The fix gives each of the seven letters, C to B in that order, its pitch class from its own alteration, (natural + 2 x alteration) mod 12, natural when keyAlterations has no entry for it, still accepting both the (step . alteration) and ((octave . step) . alteration) forms; no other function changes. test-unit.ly's cnb:get-key-pitch-classes group keeps its cases and adds D sharp major and its order-reversed alist, F flat major (a double-flat key), C sharp and C flat major in LilyPond's order and reversed, and cnb:keysig-marks-key for D sharp major giving ((1 . 1/2) 0 2 3 5 7 8 10). Every existing golden stays byte-identical on LilyPond 2.24 and 2.26. Then a line in CHANGELOG.md's unreleased 1.4.0 section, and docs/session-sets/030-keysig-mark-list/configurator-handoff.md corrected: every key's pitch classes are read correctly, D sharp major's missing-key warning gives (0 2 3 5 7 8 10), and session 32 is the release.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 32,
+      "dateTime": "2026-11-11T07:54:49.963000-05:00",
+      "task": "Release 1.4.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 33,
+      "dateTime": "2026-11-11T09:22:03.123000-05:00",
+      "task": "Make the key signature's noteheads take their ledger lines from the notation's ledger rules, cnb:ledgers-by-semitone (engine semitone, middle C = 0, -> ledger staff positions), which every Configurator export since LY spec 1.3.9 section 5.7 defines and its notes already follow through NoteHead.ledger-positions. cnb/config.ly gains #(define cnb:ledgers-by-semitone '()) with a comment giving the format, so the engine can read it in a score with no table and an export's later define replaces it (a top-level define of a bound name rebinds it, as cnb:keysig-marks's does since session 30, so the export keeps define and need not set!). In cnb/keysig.ly cnb:notehead-ledgers takes the head's engine semitone: a semitone with an entry gets exactly that entry's positions as ledgers (none for an empty entry), each half a staff space from the middle line scaled by the magnification as today; a semitone with no entry, or a score with no table, keeps today's rule (cnb:proximity-rule on the rounded staff position, or the advanced-mode lookup). Both callers pass it: 'chord its heads' semitones from cnb:keysig-pitches, 'marks each mark's semi. Ledger length (4/3 of the head's width), thickness, caps and layering are unchanged, and the table joins both key-signature stencil cache keys, since the stencil now depends on it. Unit tests in test-unit.ly and two integration specs on LilyPond 2.24 and 2.26 for the default 4-8 staff's C major under 'chord and 'marks (C and D with their in-gap ledgers, B with none); every existing golden, none of which defines the table, stays byte-identical. Then a CHANGELOG.md 1.4.1 section, version.json 1.4.1 (a patch: the signature follows ledger rules every export already carries), and docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md with what changed, a worked case and session 34 as the release.",
+      "releasable": false
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 34,
+      "dateTime": "2026-11-11T09:33:43.256000-05:00",
+      "task": "Release 1.4.1: the framework packs and publishes what is on the trunk.",
+      "releasable": true
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 35,
+      "dateTime": "2026-11-11T15:06:52.752000-05:00",
+      "task": "Let a mark-table sharp or flat be drawn at a given scale, and make a plain score engrave at the magnification its config sets. In cnb/keysig.ly a 'marks sign mark takes an optional fourth element, a positive number, (semi column sharp 0.6473): the Emmentaler glyph is scaled by it about its origin on both axes (ly:stencil-scale), so the sharp's centre line or the flat's bowl line stays at the semitone's height, and then its X extent is centred on its column as today. No element, or 1, draws exactly as today; any other value (not a positive number) warns naming the key and draws the sign unscaled, so cnb:keysig-marks-stencil is given the key its caller already computes. The format note in cnb/config.ly and README.md's mark-table section gain the element. In cnb/score-defaults.ly the Staff context's \\magnifyStaff #cnb:default-magnify, whose value is fixed when the engine is included, becomes an \\applyContext that applies \\magnifyStaff with cnb:default-magnify as it stands when each staff is created (ly:context-mod-apply! on (context-mod-from-music (magnifyStaff cnb:default-magnify)), prototyped on 2.24: a set! after the include takes effect), so a config included after the engine that set!s it takes effect; a staff's own \\magnifyStaff still wins, \\magnifyStaff stays idempotent through magnifyStaffValue, and cnb:score-defaults #f still opts out. Unit specs in test-unit.ly for signs with no scale, 1 and 0.5 (half as wide and tall, origin at the semitone), a flat likewise, and a bad scale; integration specs on 2.24 and 2.26 for the default 4-8 staff in D and B flat major with scaled signs, and for plain scores whose config set!s cnb:default-magnify to 1 and 5/2. Every existing golden stays byte-identical (none set!s a magnification other than 7/4). Then a CHANGELOG.md 1.5.0 section, version.json 1.5.0 (a minor: the mark table gains a field), and docs/session-sets/035-sized-signs-and-magnify/configurator-handoff.md with what changed, a worked case for each item, whether the Configurator's round trips can drop their \\magnifyStaff #cnb:default-magnify prefix, and session 36 as the release.",
+      "releasable": false
+    }
+  ]
+}
