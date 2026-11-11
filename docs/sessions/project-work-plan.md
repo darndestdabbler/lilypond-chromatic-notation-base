@@ -43,7 +43,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 29 | Release 1.3.1 (release: 1.3.1) | yes | 2026-11-11 |
 | 30 | Key signatures from a mark list | no | 2026-11-11 |
 | 31 | A key's pitch classes with double sharps and flats | no | 2026-11-11 |
-| 32 | Release 1.4.0 (release: 1.4.0) | — | not declared |
+| 32 | Release 1.4.0 (release: 1.4.0) | yes | 2026-11-11 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -247,3 +247,9 @@ Add the mark-list key-signature style the Configurator's designer needs (its ses
 **Releasable: no.**
 
 Correct cnb:get-key-pitch-classes (cnb/procedure.ly) for keys with double sharps or flats. Today it starts from the seven natural pitch classes and, for each keyAlterations entry, replaces every pitch class equal to that letter's natural one, so an alteration landing on another letter's natural pitch class (E sharp on F, F double sharp on G) can be overwritten by a later entry: \key dis \major gives (2 2 3 7 7 8 10). The fix gives each of the seven letters, C to B in that order, its pitch class from its own alteration, (natural + 2 x alteration) mod 12, natural when keyAlterations has no entry for it, still accepting both the (step . alteration) and ((octave . step) . alteration) forms; no other function changes. test-unit.ly's cnb:get-key-pitch-classes group keeps its cases and adds D sharp major and its order-reversed alist, F flat major (a double-flat key), C sharp and C flat major in LilyPond's order and reversed, and cnb:keysig-marks-key for D sharp major giving ((1 . 1/2) 0 2 3 5 7 8 10). Every existing golden stays byte-identical on LilyPond 2.24 and 2.26. Then a line in CHANGELOG.md's unreleased 1.4.0 section, and docs/session-sets/030-keysig-mark-list/configurator-handoff.md corrected: every key's pitch classes are read correctly, D sharp major's missing-key warning gives (0 2 3 5 7 8 10), and session 32 is the release.
+
+### Session 32 — Release 1.4.0 (release: 1.4.0)
+
+**Releasable: yes.**
+
+Release 1.4.0: the framework packs and publishes what is on the trunk.
