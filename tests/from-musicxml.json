@@ -1,0 +1,39 @@
+{
+  "test_name": "From MusicXML — one include line applies the score defaults",
+  "input_file": "from-musicxml.ly",
+  "description": "The music is musicxml2ly 2.24.2 output (--nd --nrp --npl --no-beaming, Frescobaldi's Import MusicXML defaults) of 21d-Chords-SchubertStabatMater.xml from Reinhold Kainhofer's Unofficial MusicXML test suite (MIT licence), unchanged except for the include lines after \\version. It sets neither a magnification nor an indent, so what it gets comes from cnb/score-defaults.ly: every staff magnified by cnb:default-magnify, and a 25 mm first-system indent that leaves room for an instrument name beside the 5 mm left margin of cnb/layout.ly.",
+
+  "assertions": [
+
+    {"_comment": "=== MAGNIFIED STAFF ==="},
+
+    {
+      "id": "staff-symbol",
+      "description": "The staff is magnified by cnb:default-magnify (7/4): the base engine's staff is 4.0 units tall unmagnified (c-major-scale), so this one is 7.0",
+      "expect": {
+        "type": ["== 'staff-symbol'"],
+        "visual.bbox.h": ["abs(v - 4.0 * 7 / 4) < 0.01"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-65-0",
+      "description": "The converted score engraves all of its noteheads: f1, then the dyads <f as>4. <f as>8 <g bes>4 <g bes>4",
+      "expect": {
+        "type": ["count('notehead') == 9"]
+      }
+    },
+
+    {"_comment": "=== ROOM FOR THE INSTRUMENT NAME ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The system's left edge (the staff symbol's) sits at least the 5 mm margin plus the 25 mm indent from the page edge: SVG units are 210 mm / 119.5016 on A4, so 30 mm is 17.07 units. With cnb/layout.ly's indent of 0 it would sit at 2.85 units, and a name would be clipped at the page edge",
+      "expect": {
+        "type": ["== 'clef'"],
+        "data.measure": ["== '1'"],
+        "absolute.x": ["prop('staff-symbol', 'visual.bbox.x') >= (5 + 25) / (210 / 119.5016)"]
+      }
+    }
+  ]
+}

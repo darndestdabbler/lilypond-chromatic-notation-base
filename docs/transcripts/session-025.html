@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 025 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 025 transcript</h1>
+<p class="stamp">Rendered 2026-11-10T21:47:18.727Z by dabbler-ai-router 3.29.1 at 9b91c8ff6e78ec44094d754d82477892aa2e950a.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-10T16:35:12.650-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 25: The breve as tied semibreves</h3>
+<p><strong>Why.</strong> In repeat mode the semibreve and the breve both engrave as 4 heads (<code>cnb:build-duration-stencil</code>, <code>cnb/stencils.ly</code>), so the two cannot be told apart. Doubling to 8 heads for the breve strings too many heads together. The Configurator's operator prefers a breve written as tied semibreves (Configurator session 42), and chose (Configurator session 44, 2026-11-10) to keep the breve as one note whose stencil is the composite, not to split the music into real tied notes. Dots, spacing, the per-pitch <code>repeat</code> field and the duration category the procedure gets all stay as they are. Configurator session 44 draws the same composite in its preview, and its engine round trip waits on this session.</p>
+<p>This deliberately changes what a breve engraves in repeat mode, so the goldens and harvests that contain one change.</p>
+<ol><li>Register.</li><li><strong>The composite.</strong> In repeat mode (the config's <code>repeat</code> is not <code>#f</code>), a note of duration log L ≤ −1 (breve −1, longa −2, maxima −3) engraves as 2^(−L) of today's semibreve stencils (the 4-copy whole-note stencil), left to right, 1 staff space apart. Each gap holds <code>(make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN)</code>, from the left group's right edge x1 to the right group's left edge x2, at the head's centre line, bowing down, with LilyPond's default height limit (1.0) and ratio (0.33). The procedure still gets duration category 0 for all three. The stencil cache keeps the longa and the maxima apart from the breve. With <code>repeat</code> <code>#f</code> nothing changes, and whole notes and shorter values are unchanged.</li><li><strong>Specs.</strong> Add an integration spec on 2.24 and 2.26 asserting the engraved width of a breve (2 groups and 1 gap) and a longa (4 groups and 3 gaps), and that a whole note keeps its width. Regenerate the harvests and goldens that contain breves (<code>tests/duration-rules.ly</code> among them) on both versions. Add a <code>test-unit.ly</code> case for the composite's group count by duration log.</li><li>A README line beside the repeat counts, and a CHANGELOG line. Write <code>docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md</code>, in the form of the earlier handoffs. It gives the composite's measured geometry for the default Configurator notehead at 4 semitones per staff space: each group's width, the gap, the tie's end points, its bow height and thickness, and the whole stencil's X and Y extents.</li></ol>
+<h2>Work Plan</h2>
+<p>In repeat mode (the config's repeat is not #f), engrave a note of duration log L &lt;= -1 (breve -1, longa -2, maxima -3) as 2^(-L) of today's semibreve stencil (the 4-copy whole-note stencil), left to right, 1 staff space apart, each gap holding (make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN) from the left group's right edge to the right group's left edge, with LilyPond's default height limit and ratio. A pure helper in cnb/utils.ly gives the group count by duration log (1 for a whole or shorter); cnb:build-duration-stencil builds the composite from it; the stencil cache key gains the group count (an optional argument of cnb:make-cache-key whose default leaves every existing key unchanged) so the longa and the maxima are cached apart from the breve. The procedure still gets duration category 0 for all three; dots, spacing, the per-pitch repeat field and repeat #f are untouched, and whole notes and shorter engrave as before. test-unit.ly tests the group count by duration log, the new cache keys, and the composite's width for 2 and 4 groups. tests/duration-rules (the one tracked golden with a breve) gets its breve assertion updated and its SVG and 2.24/2.26 harvests regenerated. A new integration spec, tests/breve-tied-semibreves, drawn with the Configurator's default notehead (its exported crotchet-minim path) at 4 semitones per staff space with repeat on, asserts on 2.24 and 2.26 the width of a breve (2 groups and 1 gap) and a longa (4 groups and 3 gaps) against the whole note, and that the whole note keeps its width. Then a README line beside the repeat counts, a CHANGELOG line under 1.3.0, and docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md giving the composite's measured geometry for that notehead: each group's width, the gap, the tie's end points, its bow height and thickness, and the whole stencil's X and Y extents.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/f448b91fac90de8f5acd4fc4dcee6c0cd4edaa69"><code>f448b91fac90de8f5acd4fc4dcee6c0cd4edaa69</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Composite</td><td><p>In cnb/utils.ly add cnb:semibreve-groups (duration log -&gt; 2^(-L) for L &lt;= -1, else 1) beside cnb:duration-category, and give cnb:make-cache-key an optional group count (default 1, adding 10 x (groups - 1), so every existing key is unchanged and breve, longa and maxima keys differ). In cnb/stencils.ly make cnb:build-duration-stencil take the group count and, when it is above 1, lay that many semibreve stencils left to right 1 staff space apart with (make-tie-stencil (cons x1 0) (cons x2 0) 0.12 DOWN) in each gap, x1 the left group's right edge and x2 the right group's left edge; cnb:get-note-stencil passes the note's group count and keys the cache on it. Update the module headers. In test-unit.ly test cnb:semibreve-groups for logs -3..2, the cache keys of breve/longa/maxima, and the composite's X extent for 2 and 4 groups of a known base stencil. Update tests/duration-rules.ly's comment and its breve assertion in tests/duration-rules.json (2 whole-note widths plus 1 staff space), and regenerate its SVG and 2.24/2.26 harvest baselines.</p></td><td><span class="mono">cnb/utils.ly</span><br><span class="mono">cnb/stencils.ly</span><br><span class="mono">test-unit.ly</span><br><span class="mono">tests/duration-rules.ly</span><br><span class="mono">tests/duration-rules.json</span><br><span class="mono">tests/duration-rules.svg</span><br><span class="mono">tests/duration-rules.harvested.json</span><br><span class="mono">tests/lilypond-2.26/duration-rules.harvested.json</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; specs = ['tests/duration-rules.json']; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v] + specs) for v in vs] + [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Breve spec</td><td><p>Add tests/breve-tied-semibreves.ly: the Configurator's default notehead (its exported crotchet-minim path, solid) at 4 semitones per staff space with staff lines -4 -2 2 4 and repeat on, engraving a whole note, a breve and a longa on one pitch. Add tests/breve-tied-semibreves.json asserting on both LilyPond versions that the breve's width is 2 whole-note widths plus 1 staff space, the longa's 4 whole-note widths plus 3 staff spaces, that all three share their vertical centre, and that the whole note's width is the 4-copy semibreve's. Generate its SVG and 2.24/2.26 harvest baselines.</p></td><td><span class="mono">tests/breve-tied-semibreves.ly</span><br><span class="mono">tests/breve-tied-semibreves.json</span><br><span class="mono">tests/breve-tied-semibreves.svg</span><br><span class="mono">tests/breve-tied-semibreves.harvested.json</span><br><span class="mono">tests/lilypond-2.26/breve-tied-semibreves.harvested.json</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; specs = ['tests/breve-tied-semibreves.json']; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v] + specs) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>Add a README.md line beside the repeat counts (the feature list and the repeat field's description) saying a breve or longer engraves in repeat mode as tied semibreves. Add a CHANGELOG.md line under the existing '## 1.3.0' heading. Write docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md in the form of the earlier handoffs: the rule (group count, 1 staff space gap, the make-tie-stencil call, the cache and what is unchanged), and the composite's geometry for the Configurator's default notehead at 4 semitones per staff space, measured on 2.24 and 2.26 (from the new spec's harvest and a probe outside the tree): each group's width, the gap, the tie's end points, its bow height and thickness, and the whole stencil's X and Y extents for the breve and the longa.</p></td><td><span class="mono">README.md</span><br><span class="mono">CHANGELOG.md</span><br><span class="mono">docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md</span></td><td><code>python -c import sys; r = open('README.md', encoding='utf-8').read(); c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md', encoding='utf-8').read(); top = c[c.index('## 1.3.0'):c.index('## 1.2.0')]; checks = [('README', r, 'tied semibreves'), ('CHANGELOG', top, 'breve'), ('handoff', h, 'make-tie-stencil'), ('handoff', h, 'longa'), ('handoff', h, 'extent')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No splitting of the music into real tied notes: the breve, longa and maxima stay one note each, and only their repeat-mode stencil changes.</li><li>No change to dots, note spacing, the per-pitch repeat field, the duration category the procedure gets, or anything engraved with repeat #f; whole notes and shorter values engrave byte-identically, so no golden without a breve changes.</li><li>No Configurator-side change: its preview, export baselines, LY spec and engine round trip are Configurator session 44's; this session only writes the handoff it reads.</li><li>No release: packing and publishing 1.3.0 is session 26's; version.json is not changed.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[21:35:12]</span> <span class="muted">run-started</span> session=025 mode=pull</div>
+<div class="line"><span class="at">[21:35:12]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[21:37:31]</span> <span class="muted">run-resumed</span> session=025 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[21:37:31]</span> <span class="muted">plan-accepted</span> steps=[&quot;composite&quot;,&quot;breve-spec&quot;,&quot;document&quot;] non_goals=4</div>
+<div class="line"><span class="at">[21:37:32]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[21:37:32]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=composite</div>
+<div class="line"><span class="at">[21:39:56]</span> <span class="muted">run-resumed</span> session=025 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[21:40:00]</span> <span class="muted">check-passed</span> step=composite argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; specs = ['tests/duration-rules.json']; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v] + specs) for v in vs] + [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[21:40:00]</span> <span class="muted">report-accepted</span> seq=2 step=composite files=[&quot;cnb/utils.ly&quot;,&quot;cnb/stencils.ly&quot;,&quot;test-unit.ly&quot;,&quot;tests/duration-rules.ly&quot;,&quot;tests/duration-rules.json&quot;,&quot;tests/duration-rules.svg&quot;,&quot;tests/duration-rules.harvested.json&quot;,&quot;tests/lilypond-2.26/duration-rules.harvested.json&quot;] notes=Breve and longer engrave in repeat mode as 2^(-log) tied semibreve groups 1 staff space apart; cache key gains the group count; unit 370/370 and integration 351/351 on 2.24 and 2.26, only duration-rules' baselines changed.</div>
+<div class="line"><span class="at">[21:40:00]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=breve-spec</div>
+<div class="line"><span class="at">[21:41:47]</span> <span class="muted">run-resumed</span> session=025 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[21:41:49]</span> <span class="muted">check-passed</span> step=breve-spec argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; specs = ['tests/breve-tied-semibreves.json']; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v] + specs) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[21:41:49]</span> <span class="muted">report-accepted</span> seq=3 step=breve-spec files=[&quot;tests/breve-tied-semibreves.ly&quot;,&quot;tests/breve-tied-semibreves.json&quot;,&quot;tests/breve-tied-semibreves.svg&quot;,&quot;tests/breve-tied-semibreves.harvested.json&quot;,&quot;tests/lilypond-2.26/breve-tied-semibreves.harvested.json&quot;] notes=New spec on the Configurator default notehead (4 sps, repeat on): whole keeps its 4-copy width, breve = 2 groups + 1 gap, longa = 4 groups + 3 gaps (harvest control-hull excess taken out per join), shared line; 8/8 on 2.24 and 2.26.</div>
+<div class="line"><span class="at">[21:41:49]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=document</div>
+<div class="line"><span class="at">[21:43:44]</span> <span class="muted">run-resumed</span> session=025 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[21:43:45]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; r = open('README.md', encoding='utf-8').read(); c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md', encoding='utf-8').read(); top = c[c.index('## 1.3.0'):c.index('## 1.2.0')]; checks = [('README', r, 'tied semibreves'), ('CHANGELOG', top, 'breve'), ('handoff', h, 'make-tie-stencil'), ('handoff', h, 'longa'), ('handoff', h, 'extent')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[21:43:45]</span> <span class="muted">report-accepted</span> seq=4 step=document files=[&quot;README.md&quot;,&quot;CHANGELOG.md&quot;,&quot;docs/session-sets/025-breve-tied-semibreves/configurator-handoff.md&quot;] notes=README feature line and repeat-field note, CHANGELOG line under 1.3.0, and the Configurator handoff with the composite's geometry for the default notehead, probed identical on 2.24 and 2.26.</div>
+<div class="line"><span class="at">[21:43:45]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[21:43:45]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[21:43:45]</span> <span class="muted">job-started</span> name=verification pid=45440 log=.dabbler/runs/s25/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[21:45:09]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[21:45:09]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[21:45:09]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[21:45:09]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[21:45:09]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=46612 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[21:45:22]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[21:45:22]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[21:45:22]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=42728 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[21:45:23]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[21:45:23]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[21:45:23]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=41556 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[21:45:35]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[21:45:35]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[21:45:35]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=14136 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[21:45:36]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[21:45:36]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[21:45:36]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=46800 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[21:46:24]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[21:46:25]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[21:46:25]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=46804 log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[21:47:09]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[21:47:09]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[21:47:13]</span> <span class="muted">landed</span> commit=f448b91fac90de8f5acd4fc4dcee6c0cd4edaa69</div>
+<div class="line"><span class="at">[21:47:13]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[21:47:13]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[21:47:13]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[21:47:13]</span> <span class="muted">job-started</span> name=close pid=46972 log=.dabbler/runs/s25/driver/jobs/close.log</div>
+<div class="line"><span class="at">[21:47:18]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s25/driver/jobs/close.log</div>
+<div class="line"><span class="at">[21:47:18]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>2 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** Cache keys collide for sufficiently negative duration logs despite `cnb:semibreve-groups` accepting every log below zero. In `cnb/utils.ly`, log `-5` yields 32 groups, making `(cnb:make-cache-key 0 0 32)` and `(cnb:make-cache-key 3 0 2)` both evaluate to `310`; a C duration-log `-5` stencil and an E♭ breve can therefore reuse the wrong cached stencil depending on encounter order. This is low-probability because standard written durations stop at maxima, but it contradicts the stated `L ≤ −1` rule. Add a unit case with inputs `(cnb:make-cache-key 0 0 (cnb:semibreve-groups -5))` and `(cnb:make-cache-key 3 0 (cnb:semibreve-groups -1))`, asserting they differ; it fails today.</td><td>not answered</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>**Nit:** The new integration assertions do not prove that a tie exists or bows down. In `tests/breve-tied-semibreves.json`, the breve and longa width equations pass if the ties are omitted, and the vertical-center assertions also pass with no tie. With the existing repeat-on fixture and a breve input, assert `visual.bbox.h` is measurably greater than the whole note’s height while `visual.bbox.y` remains equal to the whole note’s top edge; omission of the tie would fail that assertion, while the current rendered output passes it.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>12s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>11s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>47s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>44s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
