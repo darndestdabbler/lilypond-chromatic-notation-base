@@ -734,23 +734,29 @@
         "identityProvenance": "direct"
       },
       "verificationVerdict": "VERIFIED",
-      "startCommit": "d611190117546a759905e85fd6f7d8ec8b82f8cc",
-      "frameworkVersion": "3.32.4",
       "verification": {
         "rounds": 1,
         "verifierModel": "gpt-5.6-terra",
         "verifierProvider": "openai",
         "transport": "api"
-      }
+      },
+      "frameworkVersion": "3.32.4",
+      "startCommit": "d611190117546a759905e85fd6f7d8ec8b82f8cc"
     },
     {
       "number": 38,
       "title": "Release 1.6.0 (release: 1.6.0)",
-      "status": "not-started",
-      "startedAt": null,
-      "completedAt": null,
-      "orchestrator": null,
-      "verificationVerdict": null
+      "status": "complete",
+      "startedAt": "2026-11-12T04:12:41.293000-05:00",
+      "completedAt": "2026-11-12T04:12:48.860000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": null,
+      "startCommit": "3677792c076feaed9128ec48ad6767282d79b269",
+      "frameworkVersion": "3.32.4",
+      "noChange": true
     }
   ]
 }

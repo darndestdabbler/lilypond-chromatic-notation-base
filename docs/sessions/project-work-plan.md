@@ -49,7 +49,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 35 | Sized sharps and flats, and the magnification a config sets | no | 2026-11-11 |
 | 36 | Release 1.5.0 (release: 1.5.0) | yes | 2026-11-11 |
 | 37 | Placed, coloured and layered key-signature marks | no | 2026-11-12 |
-| 38 | Release 1.6.0 (release: 1.6.0) | — | not declared |
+| 38 | Release 1.6.0 (release: 1.6.0) | yes | 2026-11-12 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -289,3 +289,9 @@ Release 1.5.0: the framework packs and publishes what is on the trunk.
 **Releasable: no.**
 
 Extend the 'marks key signature's mark table (cnb/keysig.ly, format note in cnb/config.ly, README.md's mark-table section) with the fields of the Configurator's key-signature design §13.10, so placed, coloured and layered marks engrave, and release them as engine 1.6.0 in session 38. A head, symbol, sharp or flat mark takes an optional last element (at dx . dy), in staff spaces: with it the stencil's origin goes to the column plus dx and the semitone's height plus dy (both scaled by the font magnification as the columns are) and its box is not centred; without it the mark is centred on its column as today. A head's ledger lines stay at the staff positions its semitone takes (cnb:notehead-ledgers on the semitone) and span the placed head's X extent, so they follow it along the staff; dy moves only the stencil, because dx and dy are the Configurator's offset less the symbol's reference point and are not a change of pitch. A sharp or flat may carry a colour symbol after its scale, resolved by cnb:keysig-marks-color as a head's is; a sign without one draws black exactly as today. A new kind, (semi column symbol shape cutout color [at]), builds its stencil as a head does (solid for #f, hollow by its registered cutout) but takes no ledgers. The marks draw in one order: the bars, then every head's ledgers, then each mark once, in the table's order, so a dot and its tail at one semitone layer as written and no ledger covers a mark; the layers come from a small helper cnb:keysig-marks-layers that cnb:keysig-marks-stencil adds together, so the order is testable. A table exported today has no new field and engraves the same ink as before: its tracked harvests stay byte-identical, and the SVGs of the specs with heads change only in element order, because each head is now drawn once instead of twice. Unit specs in test-unit.ly cover each field; a new integration spec on the default 4-8 staff in D and B flat major engraves placed, coloured and layered marks on LilyPond 2.24 and 2.26; CHANGELOG.md gains a 1.6.0 section, version.json goes to 1.6.0, and a Configurator handoff records the contract with a worked case for each item.
+
+### Session 38 — Release 1.6.0 (release: 1.6.0)
+
+**Releasable: yes.**
+
+Release 1.6.0: the framework packs and publishes what is on the trunk.
