@@ -366,14 +366,34 @@
 %%  cnb:keysig-note-y-offset's (so the pitch-axis hook applies as for
 %%  'chord), and both scale with the font magnification MAG.
 %%
-%%  Layers, bottom up: the bars; each head with its ledger lines; the
-%%  heads again, over the ledgers of a neighbouring column (as 'chord
-%%  draws them); the sharps and flats, Emmentaler's, with no ledgers.
+%%  Layers, bottom up (cnb:keysig-marks-layers): the bars; every head's
+%%  ledger lines; then each mark once, in the table's order, so marks
+%%  layered at one semitone and column draw as written and no ledger
+%%  covers a mark. The sharps and flats, Emmentaler's, take no ledgers.
+%%
+%%  A symbol mark (session 37) is drawn as a head is, solid or hollow by
+%%  its cutout, but takes no ledgers: it serves a head's added symbols (a
+%%  dot's tail) and any symbol drawn without ledger lines.
+%%
+%%  A mark's optional last element (at dx . dy), in staff spaces (session
+%%  37), places it by its origin: the stencil's origin goes to the
+%%  column's x plus dx and the semitone's height plus dy, and its box is
+%%  not centred. Without it the mark's X extent is centred on its column
+%%  and its origin is at the semitone's height, as before. A head's
+%%  ledgers stay at the staff positions its semitone takes and span the
+%%  placed head's X extent, so they follow it along the staff: dx and dy
+%%  are the Configurator's offset less the symbol's reference point, not
+%%  a change of pitch.
 %%
 %%  A sign's optional scale (session 35) scales its glyph about its
 %%  origin, so the sharp's centre or the flat's bowl stays at the
 %%  semitone, before it is centred on its column. A scale that is not a
 %%  positive number warns naming KEY, and the sign draws unscaled.
+%%
+%%  A sign's optional colour (session 37), after its scale, is a
+%%  registered colour name or a hex string, resolved as a head's is (an
+%%  unregistered name warns and draws black). A sign without one draws
+%%  black, as Emmentaler's glyph is.
 %% ---------------------------------------------------------------------------
 
 %% A colour name registered with cnb:register-color!, or a hex string.
@@ -386,19 +406,32 @@
              "#000000"))
        color))
 
-#(define (cnb:keysig-marks-stencil entry middleCPosition mag grob key)
+%% The (dx . dy) of MARK's optional last element (at dx . dy), or #f.
+#(define (cnb:keysig-mark-at mark)
+   (let ((end (last mark)))
+     (and (pair? end) (eq? (car end) 'at) (cdr end))))
+
+%% MARK without its (at dx . dy), so its other fields keep their indexes.
+#(define (cnb:keysig-mark-fields mark)
+   (if (cnb:keysig-mark-at mark) (drop-right mark 1) mark))
+
+#(define (cnb:keysig-marks-layers entry middleCPosition mag grob key)
    (let* ((columns   (or (assq-ref entry 'columns) '()))
           (custom-ledger-cnt (cnb:custom-ledger-count))
           (y-of      (lambda (semi)
                        (cnb:keysig-note-y-offset semi middleCPosition mag)))
-          ;; STENCIL with its X extent centred on COLUMN, its origin at SEMI.
-          (place     (lambda (stencil column semi)
-                       (let ((ext (ly:stencil-extent stencil X)))
-                         (ly:stencil-translate
-                           stencil
-                           (cons (- (* mag (list-ref columns column))
-                                    (/ (+ (car ext) (cdr ext)) 2))
-                                 (y-of semi))))))
+          ;; STENCIL with its origin at AT from COLUMN and SEMI, or, with
+          ;; no AT, its X extent centred on COLUMN and its origin at SEMI.
+          (place     (lambda (stencil column semi at)
+                       (ly:stencil-translate
+                         stencil
+                         (if at
+                             (cons (* mag (+ (list-ref columns column) (car at)))
+                                   (+ (y-of semi) (* mag (cdr at))))
+                             (let ((ext (ly:stencil-extent stencil X)))
+                               (cons (- (* mag (list-ref columns column))
+                                        (/ (+ (car ext) (cdr ext)) 2))
+                                     (y-of semi)))))))
           (bars
             (map (lambda (bar)
                    (let ((x (* mag (list-ref bar 0))))
@@ -408,64 +441,84 @@
                                           x (y-of (list-ref bar 2)))
                        (cnb:keysig-marks-color (list-ref bar 3)))))
                  (or (assq-ref entry 'bars) '())))
-          ;; (semi stencil) for each head whose shape is registered.
-          (heads
+          ;; A head's or symbol's stencil, or #f (with a warning) when its
+          ;; shape is not registered.
+          (head-stencil
+            (lambda (mark)
+              (let* ((shape  (list-ref mark 3))
+                     (hollow (list-ref mark 4))
+                     (path   (hashq-ref cnb:path-defs shape)))
+                (if (not path)
+                    (begin
+                      (ly:warning "cnb:keysig-marks: unregistered shape '~a' — mark skipped"
+                                  shape)
+                      #f)
+                    (ly:stencil-scale
+                      (cnb:build-stencil-from-config
+                        `((shape  . ,path)
+                          (hollow . ,(and hollow
+                                          (hashq-ref cnb:hollow-defs hollow)))
+                          (color  . ,(cnb:keysig-marks-color (list-ref mark 5)))))
+                      mag mag)))))
+          ;; A sharp's or flat's glyph at its scale, in its colour if it
+          ;; has one (none: black, the glyph as Emmentaler draws it).
+          (sign-stencil
+            (lambda (mark)
+              (let* ((glyph  (ly:font-get-glyph
+                               (ly:grob-default-font grob)
+                               (if (eq? (list-ref mark 2) 'sharp)
+                                   "accidentals.sharp"
+                                   "accidentals.flat")))
+                     (scale  (if (> (length mark) 3) (list-ref mark 3) 1))
+                     (color  (and (> (length mark) 4) (list-ref mark 4)))
+                     (scaled (cond
+                               ((and (number? scale) (positive? scale))
+                                (if (= scale 1)
+                                    glyph
+                                    (ly:stencil-scale glyph scale scale)))
+                               (else
+                                (ly:warning "cnb:keysig-marks: the key of ~a has mark ~a whose scale ~a is not a positive number — drawn unscaled"
+                                            key mark scale)
+                                glyph))))
+                (if color
+                    (cnb:colorize-stencil scaled (cnb:keysig-marks-color color))
+                    scaled))))
+          ;; (fields . placed stencil) for each mark drawn, in table order.
+          (drawn
             (filter-map
               (lambda (mark)
-                (and (eq? (list-ref mark 2) 'head)
-                     (let* ((shape  (list-ref mark 3))
-                            (hollow (list-ref mark 4))
-                            (path   (hashq-ref cnb:path-defs shape)))
-                       (if (not path)
-                           (begin
-                             (ly:warning "cnb:keysig-marks: unregistered shape '~a' — mark skipped"
-                                         shape)
-                             #f)
-                           (list (car mark)
-                                 (place
-                                   (ly:stencil-scale
-                                     (cnb:build-stencil-from-config
-                                       `((shape  . ,path)
-                                         (hollow . ,(and hollow
-                                                         (hashq-ref cnb:hollow-defs hollow)))
-                                         (color  . ,(cnb:keysig-marks-color
-                                                      (list-ref mark 5)))))
-                                     mag mag)
-                                   (cadr mark) (car mark)))))))
+                (let* ((fields  (cnb:keysig-mark-fields mark))
+                       (stencil (case (list-ref fields 2)
+                                  ((head symbol) (head-stencil fields))
+                                  ((sharp flat) (sign-stencil fields))
+                                  (else #f))))
+                  (and stencil
+                       (cons fields
+                             (place stencil (cadr fields) (car fields)
+                                    (cnb:keysig-mark-at mark))))))
               (or (assq-ref entry 'marks) '())))
-          (with-ledgers
-            (map (lambda (head)
-                   (let* ((stencil (cadr head))
-                          (y       (y-of (car head))))
-                     (cnb:add-keysig-ledgers
-                       stencil
-                       (cnb:notehead-ledgers (car head) y (ly:stencil-extent stencil Y)
-                                             mag custom-ledger-cnt)
-                       0 grob mag custom-ledger-cnt)))
-                 heads))
-          (signs
+          ;; Each head's ledgers alone, drawn on a blank stencil with the
+          ;; placed head's X extent (which sets their span) and no Y
+          ;; extent: at its semitone's staff positions, across the head.
+          (ledgers
             (filter-map
-              (lambda (mark)
-                (and (memq (list-ref mark 2) '(sharp flat))
-                     (let* ((glyph (ly:font-get-glyph
-                                     (ly:grob-default-font grob)
-                                     (if (eq? (list-ref mark 2) 'sharp)
-                                         "accidentals.sharp"
-                                         "accidentals.flat")))
-                            (scale (if (> (length mark) 3) (list-ref mark 3) 1)))
-                       (place (cond
-                                ((and (number? scale) (positive? scale))
-                                 (if (= scale 1)
-                                     glyph
-                                     (ly:stencil-scale glyph scale scale)))
-                                (else
-                                 (ly:warning "cnb:keysig-marks: the key of ~a has mark ~a whose scale ~a is not a positive number — drawn unscaled"
-                                             key mark scale)
-                                 glyph))
-                              (cadr mark) (car mark)))))
-              (or (assq-ref entry 'marks) '()))))
-     (apply ly:stencil-add
-            (append bars with-ledgers (map cadr heads) signs))))
+              (lambda (d)
+                (and (eq? (list-ref (car d) 2) 'head)
+                     (let* ((semi    (car (car d)))
+                            (x-ext   (ly:stencil-extent (cdr d) X))
+                            (y-ext   (ly:stencil-extent (cdr d) Y)))
+                       (cnb:add-keysig-ledgers
+                         (ly:make-stencil "" x-ext empty-interval)
+                         (cnb:notehead-ledgers semi (y-of semi) y-ext
+                                               mag custom-ledger-cnt)
+                         0 grob mag custom-ledger-cnt))))
+              drawn)))
+     (append bars ledgers (map cdr drawn))))
+
+%% The 'marks key signature for ENTRY: its layers, added together.
+#(define (cnb:keysig-marks-stencil entry middleCPosition mag grob key)
+   (apply ly:stencil-add
+          (cnb:keysig-marks-layers entry middleCPosition mag grob key)))
 
 
 %% ---------------------------------------------------------------------------

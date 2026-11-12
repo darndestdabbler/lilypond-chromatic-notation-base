@@ -326,18 +326,38 @@
 %%                      shape a registered path name (a sized variant is
 %%                      its own name), hollow a registered hollow name or
 %%                      #f, color a registered colour name;
-%%                    (semi column sharp [scale]) or
-%%                    (semi column flat [scale]): an Emmentaler
+%%                    (semi column symbol shape cutout color): drawn as
+%%                      a head is, solid for cutout #f or hollow by a
+%%                      registered hollow name, but with no ledger
+%%                      lines (a head's added symbols, such as a tail);
+%%                    (semi column sharp [scale [color]]) or
+%%                    (semi column flat [scale [color]]): an Emmentaler
 %%                      accidental, with no ledger lines. scale, a
 %%                      positive number, scales the glyph about its
 %%                      origin (the sharp's centre or the flat's bowl
 %%                      stays at the semitone); absent or 1, the glyph
 %%                      is as Emmentaler draws it at the staff's size.
 %%                      Any other scale warns naming the key, and the
-%%                      sign draws unscaled.
+%%                      sign draws unscaled. color, a registered colour
+%%                      name or a hex string, colours the sign; a black
+%%                      sign writes none and draws as Emmentaler's
+%%                      glyph. A sign with a colour or an at writes its
+%%                      scale even when it is 1, so the elements keep
+%%                      their positions.
 %%                    semi is the engine semitone, middle C = 0; column
 %%                    indexes columns. Two marks at one semitone in
 %%                    neighbouring columns are a double notehead.
+%%                    Any of these marks takes an optional last
+%%                    element, (at dx . dy), in staff spaces: the
+%%                    stencil's origin goes to the column's x plus dx
+%%                    and the semitone's height plus dy, and its box is
+%%                    not centred. Without it the mark is centred on
+%%                    its column, its origin at the semitone's height.
+%%                    A head's ledger lines stay at the staff positions
+%%                    its semitone takes and span the placed head, so
+%%                    they follow it along the staff.
+%%                    The bars draw first, then every head's ledgers,
+%%                    then the marks in the table's order.
 %%
 %% A key with no entry draws no signature, and the engine warns naming it.
 #(define cnb:keysig-marks '())

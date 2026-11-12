@@ -1918,7 +1918,214 @@
      (cnb:assert-true "an unregistered shape is skipped"
        (ly:stencil-empty? bogus))
      (cnb:test-keysig-sign-scale st y grob 'sharp "accidentals.sharp")
-     (cnb:test-keysig-sign-scale st y grob 'flat "accidentals.flat")))
+     (cnb:test-keysig-sign-scale st y grob 'flat "accidentals.flat")
+     (cnb:test-keysig-sign-color st y grob 'sharp "accidentals.sharp")
+     (cnb:test-keysig-sign-color st y grob 'flat "accidentals.flat")
+     (cnb:test-keysig-mark-at st y grob alone sharp)
+     (cnb:test-keysig-symbol st grob alone)
+     (cnb:test-keysig-marks-layers grob alone)))
+
+%% The rgb of the first colour in a stencil expression, or #f when it
+%% has none (LilyPond writes (color (r g b …) expr)).
+#(define (cnb:test-expr-rgb expr)
+   (cond
+     ((and (pair? expr) (eq? (car expr) 'color) (pair? (cdr expr)))
+      (let ((c (cadr expr)))
+        (if (pair? c)
+            (list-head c 3)
+            (list-head (cdr expr) 3))))
+     ((pair? expr)
+      (or (cnb:test-expr-rgb (car expr)) (cnb:test-expr-rgb (cdr expr))))
+     (else #f)))
+
+%% A sign's optional colour (session 37): drawn in it with the extents of
+%% the sign without it; a sign without one carries no colour (black, as
+%% Emmentaler draws it).
+#(define (cnb:test-keysig-sign-color st y grob sign glyph-name)
+   (let* ((sign-at (lambda (rest)
+                     (st `((columns 1.0) (bars) (marks (12 0 ,sign ,@rest))))))
+          (glyph   (ly:font-get-glyph (ly:grob-default-font grob) glyph-name))
+          (plain   (sign-at '()))
+          (red     (sign-at '(1 cnb-test-red)))
+          (hex     (sign-at '(0.5 "#ff0000")))
+          (half    (sign-at '(0.5)))
+          (moved   (sign-at '(1 cnb-test-red (at 0.3 . 0.5))))
+          (rgb     (cnb:test-expr-rgb (ly:stencil-expr red))))
+     (cnb:assert-true (format #f "a ~a with a registered red draws in red" sign)
+       (and rgb (< (abs (- (car rgb) 1)) 0.0001)
+                (< (abs (cadr rgb)) 0.0001)
+                (< (abs (caddr rgb)) 0.0001)))
+     (cnb:assert-true (format #f "a red ~a has the uncoloured sign's extents" sign)
+       (and (cnb:test-interval-near? (ly:stencil-extent red X) (ly:stencil-extent plain X))
+            (cnb:test-interval-near? (ly:stencil-extent red Y) (ly:stencil-extent plain Y))))
+     (cnb:assert-equal (format #f "a ~a coloured by a hex string draws in it" sign)
+       (map (lambda (v) (inexact->exact (round v)))
+            (or (cnb:test-expr-rgb (ly:stencil-expr hex)) '(0 0 0)))
+       '(1 0 0))
+     (cnb:assert-true (format #f "a ~a coloured at scale 0.5 keeps the scaled extents" sign)
+       (and (cnb:test-interval-near? (ly:stencil-extent hex X) (ly:stencil-extent half X))
+            (cnb:test-interval-near? (ly:stencil-extent hex Y) (ly:stencil-extent half Y))))
+     (cnb:assert-false (format #f "a ~a with no colour carries none (black)" sign)
+       (cnb:test-expr-rgb (ly:stencil-expr plain)))
+     (cnb:assert-true (format #f "a red ~a at scale 1 with an at is placed by the at, at its glyph's size" sign)
+       (and (cnb:test-interval-near? (ly:stencil-extent moved X)
+                                     (cnb:test-interval-shift (ly:stencil-extent glyph X) 1.3))
+            (cnb:test-interval-near? (ly:stencil-extent moved Y)
+                                     (cnb:test-interval-shift (ly:stencil-extent glyph Y) (+ (y 12) 0.5)))))
+     (cnb:assert-true (format #f "a red ~a with an at still draws in red" sign)
+       (cnb:test-expr-rgb (ly:stencil-expr moved)))))
+
+%% Two intervals equal within 0.0001.
+#(define (cnb:test-interval-near? a b)
+   (and (< (abs (- (car a) (car b))) 0.0001)
+        (< (abs (- (cdr a) (cdr b))) 0.0001)))
+
+#(define (cnb:test-interval-shift i d)
+   (cons (+ (car i) d) (+ (cdr i) d)))
+
+%% A mark's optional (at dx . dy) (session 37): the stencil's origin at
+%% the column's x plus dx and the semitone's height plus dy, its box not
+%% centred; a head's ledgers stay at its semitone's staff positions and
+%% follow it along the staff.
+#(define (cnb:test-keysig-mark-at st y grob alone sharp)
+   (let* ((head    (lambda (semi at)
+                     `(,semi 0 head default-oval #f cnb-test-red ,@at)))
+          (one     (lambda (mark) (st `((columns 1.0) (bars) (marks ,mark)))))
+          (layers  (lambda (mark)
+                     (cnb:keysig-marks-layers `((columns 1.0) (bars) (marks ,mark))
+                                              -6 1 grob 'test-key)))
+          (hx      (ly:stencil-extent alone X))
+          (hy      (ly:stencil-extent alone Y))
+          (sx      (ly:stencil-extent sharp X))
+          (sy      (ly:stencil-extent sharp Y)))
+     (cnb:assert-equal "cnb:keysig-mark-at reads (at dx . dy)"
+       (cnb:keysig-mark-at '(12 0 sharp 1 (at 0.1 . 0.25))) '(0.1 . 0.25))
+     (cnb:assert-false "cnb:keysig-mark-at is #f for a mark without at"
+       (cnb:keysig-mark-at '(12 0 head default-oval #f cnb-test-red)))
+     (cnb:assert-equal "cnb:keysig-mark-fields drops the at element"
+       (cnb:keysig-mark-fields '(12 0 sharp 1 (at 0.1 . 0.25))) '(12 0 sharp 1))
+     (cnb:assert-equal "cnb:keysig-mark-fields keeps a mark without at"
+       (cnb:keysig-mark-fields '(12 0 flat)) '(12 0 flat))
+     (let ((st-x (one (head 12 '((at 0.3 . 0)))))
+           (st-y (one (head 12 '((at 0 . 0.5))))))
+       (cnb:assert-true "a head at (at 0.3 . 0): its origin at the column plus 0.3, not centred"
+         (cnb:test-interval-near? (ly:stencil-extent st-x X) (cnb:test-interval-shift hx 1.3)))
+       (cnb:assert-true "a head at (at 0.3 . 0): its origin at the semitone's height"
+         (cnb:test-interval-near? (ly:stencil-extent st-x Y) (cnb:test-interval-shift hy (y 12))))
+       (cnb:assert-true "a head at (at 0 . 0.5): its origin at the column"
+         (cnb:test-interval-near? (ly:stencil-extent st-y X) (cnb:test-interval-shift hx 1.0)))
+       (cnb:assert-true "a head at (at 0 . 0.5): its origin half a staff space above the semitone"
+         (cnb:test-interval-near? (ly:stencil-extent st-y Y) (cnb:test-interval-shift hy (+ (y 12) 0.5)))))
+     (let ((st-x (one '(12 0 sharp (at 0.3 . 0))))
+           (st-y (one '(12 0 sharp 1 (at 0 . 0.5)))))
+       (cnb:assert-true "a sharp at (at 0.3 . 0): its origin at the column plus 0.3, not centred"
+         (cnb:test-interval-near? (ly:stencil-extent st-x X) (cnb:test-interval-shift sx 1.3)))
+       (cnb:assert-true "a sharp at (at 0.3 . 0): its origin at the semitone's height"
+         (cnb:test-interval-near? (ly:stencil-extent st-x Y) (cnb:test-interval-shift sy (y 12))))
+       (cnb:assert-true "a sharp at scale 1 and (at 0 . 0.5): its origin at the column"
+         (cnb:test-interval-near? (ly:stencil-extent st-y X) (cnb:test-interval-shift sx 1.0)))
+       (cnb:assert-true "a sharp at scale 1 and (at 0 . 0.5): its origin half a staff space above the semitone"
+         (cnb:test-interval-near? (ly:stencil-extent st-y Y) (cnb:test-interval-shift sy (+ (y 12) 0.5)))))
+     ;; A head below the staff, without at and at (at 0.4 . 0.5): the
+     ;; second's ledgers are the first's moved along the staff by the
+     ;; head's own move, at the same heights.
+     (let* ((plain   (layers (head -24 '())))
+            (placed  (layers (head -24 '((at 0.4 . 0.5)))))
+            (shift   (- 1.4 (- 1.0 (/ (+ (car hx) (cdr hx)) 2)))))
+       (cnb:assert-true "a placed head's ledgers stay at its semitone's staff positions"
+         (cnb:test-interval-near? (ly:stencil-extent (car placed) Y)
+                                  (ly:stencil-extent (car plain) Y)))
+       (cnb:assert-true "a placed head's ledgers follow it along the staff"
+         (cnb:test-interval-near? (ly:stencil-extent (car placed) X)
+                                  (cnb:test-interval-shift (ly:stencil-extent (car plain) X) shift)))
+       (cnb:assert-true "a placed head is drawn half a staff space above its semitone"
+         (cnb:test-interval-near? (ly:stencil-extent (cadr placed) Y)
+                                  (cnb:test-interval-shift hy (+ (y -24) 0.5)))))))
+
+%% The symbol kind (session 37): drawn as a head is, solid or hollow, but
+%% with no ledger lines; layered on a head, it adds none.
+#(define (cnb:test-keysig-symbol st grob alone)
+   (let* ((layers  (lambda (marks)
+                     (cnb:keysig-marks-layers `((columns 1.0) (bars) (marks ,@marks))
+                                              -6 1 grob 'test-key)))
+          (w       (interval-length (ly:stencil-extent alone X)))
+          (head    '(-24 0 head default-oval #f cnb-test-red))
+          (solid   (st '((columns 1.0) (bars) (marks (-24 0 symbol default-oval #f cnb-test-red)))))
+          (hollow  (st '((columns 1.0) (bars)
+                         (marks (-24 0 symbol default-oval default-oval-cutout cnb-test-red)))))
+          (alone-h (layers (list head)))
+          (dot     (layers (list '(-24 0 head default-oval #f cnb-test-red (at 0 . 0))
+                                 '(-24 0 symbol default-oval #f cnb-test-red (at 0.3 . 0.2)))))
+          (alone-d (layers (list '(-24 0 head default-oval #f cnb-test-red (at 0 . 0)))))
+          (hx      (ly:stencil-extent alone X))
+          (hy      (ly:stencil-extent alone Y)))
+     (cnb:assert-near "a solid symbol below the staff is its shape's width (no ledgers)"
+       (interval-length (ly:stencil-extent solid X)) w 0.0001)
+     (cnb:assert-near "a hollow symbol below the staff is its shape's width (no ledgers)"
+       (interval-length (ly:stencil-extent hollow X)) w 0.0001)
+     (cnb:assert-true "a solid symbol is where a head's stencil is, in X and Y"
+       (and (cnb:test-interval-near? (ly:stencil-extent solid X)
+                                     (ly:stencil-extent (cadr alone-h) X))
+            (cnb:test-interval-near? (ly:stencil-extent solid Y)
+                                     (ly:stencil-extent (cadr alone-h) Y))))
+     (cnb:assert-true "a hollow symbol is where a head's stencil is, in Y"
+       (cnb:test-interval-near? (ly:stencil-extent hollow Y)
+                                (ly:stencil-extent (cadr alone-h) Y)))
+     (cnb:assert-false "a hollow symbol is not empty"
+       (ly:stencil-empty? hollow))
+     (cnb:assert-equal "a symbol alone gives one layer, no ledgers"
+       (length (layers '((-24 0 symbol default-oval #f cnb-test-red)))) 1)
+     (cnb:assert-equal "a dot and its tail: the head's ledgers, the head, the symbol"
+       (length dot) 3)
+     (cnb:assert-true "the ledgers are the head's alone"
+       (and (cnb:test-interval-near? (ly:stencil-extent (car dot) X)
+                                     (ly:stencil-extent (car alone-d) X))
+            (cnb:test-interval-near? (ly:stencil-extent (car dot) Y)
+                                     (ly:stencil-extent (car alone-d) Y))))
+     (cnb:assert-true "the tail follows the dot, placed by its at"
+       (and (cnb:test-interval-near? (ly:stencil-extent (caddr dot) X)
+                                     (cnb:test-interval-shift hx 1.3))
+            (cnb:test-interval-near? (ly:stencil-extent (caddr dot) Y)
+                                     (cnb:test-interval-shift
+                                       hy (+ (cnb:keysig-note-y-offset -24 -6 1) 0.2)))))))
+
+%% cnb:keysig-marks-layers (session 37): the bars, then every head's
+%% ledgers, then each mark once, in the table's order.
+#(define (cnb:test-keysig-marks-layers grob alone)
+   (cnb:test-group "keysig.ly — cnb:keysig-marks-layers")
+   (let* ((hx     (ly:stencil-extent alone X))
+          (entry  '((columns 1.0)
+                    (bars (2.0 0 24 "#ffd42a" 0.2))
+                    (marks (-24 0 head default-oval #f cnb-test-red (at 0 . 0))
+                           (-24 0 sharp)
+                           (-24 0 head default-oval #f cnb-test-red (at 0.2 . 0)))))
+          (layers (cnb:keysig-marks-layers entry -6 1 grob 'test-key))
+          (all    (cnb:keysig-marks-stencil entry -6 1 grob 'test-key))
+          (union  (lambda (axis)
+                    (reduce interval-union empty-interval
+                            (map (lambda (s) (ly:stencil-extent s axis)) layers)))))
+     (cnb:assert-equal "one bar, two heads' ledgers and three marks: six layers"
+       (length layers) 6)
+     (cnb:assert-near "the bar comes first"
+       (interval-center (ly:stencil-extent (list-ref layers 0) X)) 2.0 0.0001)
+     (cnb:assert-true "then the first head's ledgers, wider than the head"
+       (> (interval-length (ly:stencil-extent (list-ref layers 1) X))
+          (+ (interval-length hx) 0.0001)))
+     (cnb:assert-true "then the second head's ledgers, moved with it"
+       (cnb:test-interval-near? (ly:stencil-extent (list-ref layers 2) X)
+                                (cnb:test-interval-shift (ly:stencil-extent (list-ref layers 1) X) 0.2)))
+     (cnb:assert-true "then the first head, as written"
+       (cnb:test-interval-near? (ly:stencil-extent (list-ref layers 3) X)
+                                (cnb:test-interval-shift hx 1.0)))
+     (cnb:assert-near "then the sharp, centred on its column"
+       (interval-center (ly:stencil-extent (list-ref layers 4) X)) 1.0 0.0001)
+     (cnb:assert-true "then the second head, last as written"
+       (cnb:test-interval-near? (ly:stencil-extent (list-ref layers 5) X)
+                                (cnb:test-interval-shift hx 1.2)))
+     (cnb:assert-true "the signature's X extent is its layers'"
+       (cnb:test-interval-near? (ly:stencil-extent all X) (union X)))
+     (cnb:assert-true "the signature's Y extent is its layers'"
+       (cnb:test-interval-near? (ly:stencil-extent all Y) (union Y)))))
 
 %% A sign's optional scale (session 35): absent or 1 as today; 0.5 half as
 %% wide and tall, about its origin at the semitone, still centred on its

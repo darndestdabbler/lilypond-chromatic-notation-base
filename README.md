@@ -352,11 +352,13 @@ An entry's key is the tonic's note name and alteration, as `\key` gives them (`0
 
 - `(columns x …)`: each column's centre, in staff spaces from the signature's start.
 - `(bars (x bottom top color thickness) …)`: a stem at `x` from semitone `bottom` to semitone `top`. `color` is a registered colour name or a hex string, and `thickness` is in staff spaces.
-- `(marks …)`: each mark is either `(semi column head shape hollow color)` or `(semi column sharp [scale])` / `(semi column flat [scale])`.
+- `(marks …)`: each mark is either `(semi column head shape hollow color)`, `(semi column symbol shape cutout color)` or `(semi column sharp [scale [color]])` / `(semi column flat [scale [color]])`.
   - For a `head`, `shape` is a registered path name (a sized variant is its own name), `hollow` is a registered hollow name or `#f`, and `color` is a registered colour name.
-  - `sharp` and `flat` are Emmentaler's accidentals and get no ledger lines. The optional `scale`, a positive number such as `(semi column sharp 0.6473)`, scales the glyph about its origin, so the sharp's centre or the flat's bowl stays at the semitone. Without it, or with `1`, the glyph is drawn as Emmentaler draws it at the staff's size. Any other value warns, naming the key, and the sign is drawn unscaled.
+  - A `symbol` is drawn as a `head` is, solid for a `cutout` of `#f` or hollow by a registered hollow name, but gets no ledger lines. It serves a head's added symbols, such as a dot's tail, and any symbol drawn without ledgers.
+  - `sharp` and `flat` are Emmentaler's accidentals and get no ledger lines. The optional `scale`, a positive number such as `(semi column sharp 0.6473)`, scales the glyph about its origin, so the sharp's centre or the flat's bowl stays at the semitone. Without it, or with `1`, the glyph is drawn as Emmentaler draws it at the staff's size. Any other value warns, naming the key, and the sign is drawn unscaled. The optional `color` after the scale, a registered colour name or a hex string such as `(semi column sharp 0.6473 red-cc0000)`, colours the sign; a black sign writes none and is drawn as Emmentaler's glyph. A sign with a colour or an `at` writes its scale even when it is `1`, so the elements keep their positions.
   - `semi` is the engine semitone (middle C = 0), placed as notes are, through the pitch-axis hook when it is set.
   - Two marks at one semitone in neighbouring columns make a double notehead.
+  - Any mark takes an optional last element, `(at dx . dy)`, in staff spaces, such as `(13 1 sharp 1 (at 0.1 . 0.25))`. With it, the stencil's origin goes to the column's x plus `dx` and the semitone's height plus `dy`, and its box is not centred. Without it, the mark is centred on its column with its origin at the semitone's height. A head's ledger lines stay at the staff positions its semitone takes and span the placed head, so they follow it along the staff.
 
 ```lilypond
 #(set! cnb:keysig-style 'marks)
@@ -368,7 +370,7 @@ An entry's key is the tonic's note name and alteration, as `\key` gives them (`0
                 (14 1 head crotchet-minim crotchet-minim-cutout black-000000))))))
 ```
 
-Each head is drawn with its ledger lines beneath it. A key change draws the new key's marks and no cancelling naturals. A key the table lacks draws no signature at all, and the engine warns, naming the key; it does not fall back to `'chord`. `docs/session-sets/030-keysig-mark-list/configurator-handoff.md` gives the format and the measured spacing.
+The bars are drawn first, then every head's ledger lines, then the marks in the table's order, so marks layered at one semitone and column draw as written and no ledger covers a mark. A key change draws the new key's marks and no cancelling naturals. A key the table lacks draws no signature at all, and the engine warns, naming the key; it does not fall back to `'chord`. `docs/session-sets/030-keysig-mark-list/configurator-handoff.md` gives the format and the measured spacing.
 
 
 ## Project Structure
