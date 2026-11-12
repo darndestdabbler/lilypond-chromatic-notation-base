@@ -951,3 +951,53 @@ only the signs, and it decides the optical size the signs come from.
    what changed, a worked case for each item, and session 36 as the release.
 
 ### Session 36: Release 1.5.0 (release: 1.5.0)
+
+### Session 37: Placed, coloured and layered key-signature marks
+
+**Why.** The Configurator's session 53 designed one model for every key
+signature (its `docs/planning/key-signature-designer-design.md` §13), and
+its session 54 draws it on the canvas. A mark is a base symbol (a notehead,
+Emmentaler's sharp or flat, or an imported shape) and up to two added
+symbols, such as a dot with a tail. Each symbol is placed by a reference
+point plus an offset, so a one-sided symbol needs no hidden geometry to keep
+its dot on its stack. Signs can take a colour. Clairnote's signatures need
+all of it: a dot solid on a line and hollow in a space, a tail up for flats
+and down for sharps. The mark table's format (engine 1.4.0, sessions 30 and
+33; the scale of engine 1.5.0, session 35) keeps its shape and gains fields
+(the design's §13.10). The Configurator's session 55 writes them.
+
+1. Register.
+2. **Placed marks.** `head`, `symbol`, `sharp` and `flat` marks take an
+   optional last element, `(at dx . dy)`, in staff spaces. With it, the
+   stencil's origin goes to the column plus `dx` and the semitone's height
+   plus `dy`, and its box is not centred on the column. A mark without it is
+   placed exactly as today, so every table exported today engraves as
+   before. A head's ledgers move with it.
+3. **Coloured signs.** A `sharp` or `flat` mark may carry a colour symbol
+   after its scale, registered as a head's colour is:
+   `(13 1 sharp 0.6473 red-cc0000 (at 0.1 . 0.25))`. A black sign writes no
+   colour, and a sign with a colour or `at` writes its scale even when it is
+   1, so the elements keep their positions. A sign without a colour draws
+   black, as today.
+4. **The `symbol` kind.** `(semi column symbol <shape> <cutout> <color>
+   [at])` is drawn as `head` is, through the registered stencils, solid or
+   hollow by its cutout (`#f` for solid), but takes no ledgers. It serves
+   added symbols and any symbol that takes no ledger lines.
+5. **Drawing order.** The bars, then every ledger, then the marks in the
+   table's order, so the marks layered at one semitone and column (a dot
+   and its tail) draw in order and no ledger covers a mark. A mark's ledgers
+   come from its `head` only, so a `symbol` beside it adds none.
+6. **Tests.** Unit specs for each item: a mark with and without `at`, in x
+   and y; a coloured sharp and flat, a black one, and a sign with `at` at
+   scale 1; a solid and a hollow `symbol` with no ledgers; a dot and tail
+   layered at one semitone; the drawing order. Integration specs on the
+   default 4-8 staff in D and B♭ major with placed, coloured and layered
+   marks. Goldens and integration specs on LilyPond 2.24 and 2.26; the
+   key-change, transposition and system-start tests stay, and every golden
+   without the new fields stays byte-identical.
+7. A `CHANGELOG.md` section and `version.json` to `1.6.0`: a minor, since
+   the mark table gains fields and no existing output changes. Write
+   `docs/session-sets/037-placed-keysig-marks/configurator-handoff.md`: what
+   changed, a worked case for each item, and session 38 as the release.
+
+### Session 38: Release 1.6.0 (release: 1.6.0)
