@@ -1001,3 +1001,54 @@ and down for sharps. The mark table's format (engine 1.4.0, sessions 30 and
    changed, a worked case for each item, and session 38 as the release.
 
 ### Session 38: Release 1.6.0 (release: 1.6.0)
+
+### Session 39: The repeated noteheads' overlap and the breve's tie
+
+**Why.** In the Configurator's session-57 try-out the operator found the
+repeated heads overlap a little too much and the breve's tie, under all
+eight heads, a little odd. In its session 58 (2026-11-12) the operator
+picked, from mock-ups, an overlap set as a share of each head's own width,
+1/3 by default, one fraction for every shape, and a tie from the middle of
+the first semibreve group to the middle of the second, as a tie joins two
+notes. Today `cnb:multinote-padding` (−0.5 staff spaces) overlaps 58% of the
+default Configurator notehead but 37–38% of the Kite and 45deg heads, which
+sit on a staff of 3 semitones per staff space. Configurator session 58
+draws both in its preview and writes `cnb:multinote-overlap` in repeat
+mode; its engine round trip waits on this session.
+
+This changes what a breve (and a longa or maxima) engraves in repeat mode,
+so the goldens and harvests that contain one change. The overlap changes
+nothing unless it is set.
+
+1. Register.
+2. **The overlap.** A new `cnb:multinote-overlap` (`cnb/config.ly`),
+   default `#f`, so every export written today engraves as before. When it
+   is a number, `cnb:build-duration-stencil` (`cnb/stencils.ly`) puts each
+   copy (1 − overlap) times the base stencil's X width after the last, in
+   place of `cnb:multinote-padding`, which it then does not read: at 1/3
+   each copy starts 2/3 of a head's width after the last. The repeat counts
+   (minim 2, semibreve 4, and a breve as two semibreve groups, a longa 4, a
+   maxima 8) and the 1 staff space between groups are unchanged.
+3. **The tie.** For `groups` above 1, the one
+   `(make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN)` runs from the
+   centre of the first group's X extent to the centre of the last group's,
+   still at `y0`, the bottom of the group stencil's Y extent, with
+   LilyPond's default height limit (1.0) and ratio (0.33), and still black.
+   With `repeat` `#f`, and for whole notes and shorter values, nothing
+   changes.
+4. **Specs.** Unit specs: with the overlap `#f` the stencil is as today;
+   at 1/3 the minim's and semibreve's widths are (1 + 2/3) and (1 + 3 × 2/3)
+   head widths; the breve's tie ends at the two groups' centres and its
+   lowest point. Integration specs on 2.24 and 2.26 for an overlap of 1/3
+   and for the tie (breve and longa). Regenerate the harvests and goldens
+   that change on both versions, and update the `test-unit.ly` case.
+5. A README line beside the repeat counts, a `CHANGELOG.md` 1.7.0 section,
+   and `version.json` to `1.7.0`: a minor release, since a setting is
+   added. Write `docs/session-sets/039-repeat-overlap/configurator-handoff.md`,
+   in the form of the earlier handoffs. It gives, for the default
+   Configurator notehead at 4 semitones per staff space at an overlap of
+   1/3, the measured minim, semibreve and breve widths, and the breve's tie
+   (its end points, lowest point and thickness, and the whole stencil's X
+   and Y extents), and names session 40 as the release.
+
+### Session 40: Release 1.7.0 (release: 1.7.0)
