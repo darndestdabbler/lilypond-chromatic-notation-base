@@ -1,0 +1,80 @@
+{
+  "test_name": "Repeated noteheads at cnb:multinote-overlap 1/3: each copy 2/3 of a head after the last",
+  "input_file": "multinote-overlap.ly",
+  "description": "Session 39. With cnb:multinote-overlap 1/3 each repeated copy starts (1 - 1/3) of the head's X width after the last, in place of cnb:multinote-padding: a half is 1 + 2/3 heads and a whole 1 + 3 x 2/3; the breve and the longa are 2 and 4 of those semibreve groups, 1 staff space apart, with one tie below them from the first group's centre to the last's. The head is the Configurator's default (crotchet-minim, solid) at 4 semitones per staff space; the staff space is 1 SVG unit. The harvest measures a head by its path's control-point hull (q = 0.929), wider than the stencil extent w = 0.8625 that the copies are placed by; so each added copy adds d = h - q = 2/3 w = 0.575 to the width, a whole is q + 3d, and a group's stencil is w + 3d = 4.5d, so a breve is the whole + 4.5d + 1 and a longa the whole + 3 x (4.5d + 1). Measured on 2.24 and 2.26 alike: q 0.929, half 1.504, whole 2.653, breve 6.240, longa 13.413.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE NOTES ==="},
+
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "Six noteheads: two quarters, a half, a whole, a breve and a longa",
+      "expect": {
+        "type": ["count('notehead') == 6"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-1-0.250-72-0",
+      "description": "The second quarter is one head, the first's width",
+      "expect": {
+        "visual.bbox.w": ["abs(v - prop('nh-1-0.000-72-0', 'visual.bbox.w')) < 0.001"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: WIDTHS AT AN OVERLAP OF 1/3 ==="},
+
+    {
+      "id": "nh-1-0.500-72-0",
+      "description": "The half's second head starts 2/3 of a head (2/3 x 0.8625 = 0.575) after the first: h - q = 0.575",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.bbox.w": ["abs(v - prop('nh-1-0.000-72-0', 'visual.bbox.w') - 0.575) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-1.000-72-0",
+      "description": "The whole's four heads each start 2/3 of a head after the last: q + 3d, with d = h - q",
+      "expect": {
+        "data.duration": ["== '0'"],
+        "visual.bbox.w": ["abs(v - (prop('nh-1-0.000-72-0', 'visual.bbox.w') + 3 * (prop('nh-1-0.500-72-0', 'visual.bbox.w') - prop('nh-1-0.000-72-0', 'visual.bbox.w')))) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-2.000-72-0",
+      "description": "The breve is 2 semibreve groups and 1 gap of 1 staff space: the whole + 4.5d + 1",
+      "expect": {
+        "data.duration": ["== '-1'"],
+        "visual.bbox.w": ["abs(v - (prop('nh-1-1.000-72-0', 'visual.bbox.w') + 4.5 * (prop('nh-1-0.500-72-0', 'visual.bbox.w') - prop('nh-1-0.000-72-0', 'visual.bbox.w')) + 1.0)) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-72-0",
+      "description": "The longa is 4 semibreve groups and 3 gaps of 1 staff space: the whole + 3 x (4.5d + 1)",
+      "expect": {
+        "data.duration": ["== '-2'"],
+        "visual.bbox.w": ["abs(v - (prop('nh-1-1.000-72-0', 'visual.bbox.w') + 3 * (4.5 * (prop('nh-1-0.500-72-0', 'visual.bbox.w') - prop('nh-1-0.000-72-0', 'visual.bbox.w')) + 1.0))) < 0.01"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE TIE BETWEEN THE GROUPS' CENTRES ==="},
+
+    {
+      "id": "nh-1-2.000-72-0",
+      "description": "The breve's groups sit on the whole note's line (same top edge), and its tie, from the first group's centre to the second's, takes its lower edge (y + h) 0.870 staff spaces below the whole note's (on the tie path's control-point hull)",
+      "expect": {
+        "visual.bbox.y": ["abs(v - prop('nh-1-1.000-72-0', 'visual.bbox.y')) < 0.001"],
+        "visual.bbox.h": ["abs((prop('nh-1-2.000-72-0', 'visual.bbox.y') + v) - (prop('nh-1-1.000-72-0', 'visual.bbox.y') + prop('nh-1-1.000-72-0', 'visual.bbox.h')) - 0.870) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-72-0",
+      "description": "The longa's groups sit on the whole note's line, and its longer tie, from the first group's centre to the fourth's, takes its lower edge 1.138 staff spaces below the whole note's",
+      "expect": {
+        "visual.bbox.y": ["abs(v - prop('nh-1-1.000-72-0', 'visual.bbox.y')) < 0.001"],
+        "visual.bbox.h": ["abs((prop('nh-2-0.000-72-0', 'visual.bbox.y') + v) - (prop('nh-1-1.000-72-0', 'visual.bbox.y') + prop('nh-1-1.000-72-0', 'visual.bbox.h')) - 1.138) < 0.01"]
+      }
+    }
+  ]
+}

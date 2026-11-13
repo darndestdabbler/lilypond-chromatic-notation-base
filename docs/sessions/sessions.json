@@ -1,0 +1,786 @@
+{
+  "schemaVersion": 5,
+  "sessions": [
+    {
+      "number": 1,
+      "title": "Author or import the solution plan",
+      "status": "complete",
+      "startedAt": "2026-10-30T06:45:09.579000-04:00",
+      "completedAt": "2026-10-30T06:51:23.860000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "27e56e05a21275158c8d280259fda0a7069bc5d2"
+    },
+    {
+      "number": 2,
+      "title": "Challenge the plan, then break it into numbered sessions",
+      "status": "complete",
+      "startedAt": "2026-10-30T06:58:56.989000-04:00",
+      "completedAt": "2026-10-30T07:04:35.125000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "e65b9456874c9f600f79e6ea35ab482a7f5e6189"
+    },
+    {
+      "number": 3,
+      "title": "Make the test tooling portable and gate honestly",
+      "status": "complete",
+      "startedAt": "2026-10-30T07:20:33.738000-04:00",
+      "completedAt": "2026-10-30T07:30:10.252000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "481884eac47695fe4883eaf48ebb9e23b2e8a5c9"
+    },
+    {
+      "number": 4,
+      "title": "Remove cruft and record LilyPond compatibility",
+      "status": "complete",
+      "startedAt": "2026-10-30T16:02:18.769000-04:00",
+      "completedAt": "2026-10-30T16:06:51.117000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "2ff63feb30dd1fcc4282981472071c9d307acdc5"
+    },
+    {
+      "number": 5,
+      "title": "Clean up the guidance and README for 1.0.0",
+      "status": "complete",
+      "startedAt": "2026-10-30T21:07:04.269000-04:00",
+      "completedAt": "2026-10-30T21:11:44.631000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "e0dd89890b0494a30026aa3be7b43ae6f1cd4c86"
+    },
+    {
+      "number": 6,
+      "title": "Declare the source-archive packaging",
+      "status": "complete",
+      "startedAt": "2026-10-30T21:14:42.651000-04:00",
+      "completedAt": "2026-10-30T21:17:22.514000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "4ff3555a3d3f4629032c1988e6884ae2d9c8cec0"
+    },
+    {
+      "number": 7,
+      "title": "Release 1.0.0 (release: 1.0.0)",
+      "status": "complete",
+      "startedAt": "2026-10-31T04:15:55.465000-04:00",
+      "completedAt": "2026-10-31T04:16:27.869000-04:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "94c65b4720ba51a4eec59c4cbfcae870f7eec98f",
+      "verificationVerdict": null
+    },
+    {
+      "number": 8,
+      "title": "Let the test runners choose a LilyPond version",
+      "status": "complete",
+      "startedAt": "2026-10-31T04:38:34.270000-04:00",
+      "completedAt": "2026-10-31T04:51:48.945000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 3,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "55f9414296c2518f6961ab9edd7f3aae3a67ca1f"
+    },
+    {
+      "number": 9,
+      "title": "Make the engine and the harvester work on LilyPond 2.26",
+      "status": "complete",
+      "startedAt": "2026-10-31T04:53:11.564000-04:00",
+      "completedAt": "2026-10-31T05:12:05.595000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "5df48ad9f6a8569a8168567e866f084e87d96f41"
+    },
+    {
+      "number": 10,
+      "title": "Document LilyPond 2.26 support and bump to 1.1.0",
+      "status": "complete",
+      "startedAt": "2026-10-31T05:22:38.140000-04:00",
+      "completedAt": "2026-10-31T05:29:26.954000-04:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "14ab37ebb5371e4b6d9bc0221042851e7f59f616"
+    },
+    {
+      "number": 11,
+      "title": "Release 1.1.0 (release: 1.1.0)",
+      "status": "complete",
+      "startedAt": "2026-10-31T05:34:41.662000-04:00",
+      "completedAt": "2026-10-31T05:35:42.104000-04:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "6a36eb02116d723e6125247f7a29e40c42d9e33d",
+      "verificationVerdict": null
+    },
+    {
+      "number": 12,
+      "title": "Engrave durations and dots correctly",
+      "status": "complete",
+      "startedAt": "2026-11-02T06:24:01.491000-05:00",
+      "completedAt": "2026-11-02T07:13:35.550000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "5b9ae4a166ba170a9042c1151b32cfb35ae6bfa7"
+    },
+    {
+      "number": 13,
+      "title": "The test runner cannot pass a broken render",
+      "status": "complete",
+      "startedAt": "2026-11-02T19:19:17.618000-05:00",
+      "completedAt": "2026-11-02T19:53:09.373000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 2,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "0c599fbe786ef0511bbf2a991a34fb9f3026bb2f"
+    },
+    {
+      "number": 14,
+      "title": "Harvest what is drawn, and claim only what works",
+      "status": "complete",
+      "startedAt": "2026-11-03T01:12:38.208000-05:00",
+      "completedAt": "2026-11-03T02:12:14.522000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "b1c8fa06ef0cf6860c4721759ba2415c9f26a907"
+    },
+    {
+      "number": 15,
+      "title": "A clean public archive, and 1.1.1",
+      "status": "complete",
+      "startedAt": "2026-11-03T03:53:53.148000-05:00",
+      "completedAt": "2026-11-03T03:59:44.049000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "fe23380c63a0866feb7ce78657d2c5f0bb96fe4b"
+    },
+    {
+      "number": 16,
+      "title": "Release 1.1.1 (release: 1.1.1)",
+      "status": "complete",
+      "startedAt": "2026-11-03T04:23:42.358000-05:00",
+      "completedAt": "2026-11-03T04:23:52.090000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.27.0",
+      "startCommit": "87069555d3be922b0e6a1523275fb6246ad6535d",
+      "verificationVerdict": null
+    },
+    {
+      "number": 17,
+      "title": "Stems attached at the notehead centre",
+      "status": "complete",
+      "startedAt": "2026-11-04T06:37:41.544000-05:00",
+      "completedAt": "2026-11-04T16:44:46.710000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 3,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "7d25316292a7ee93485174de6dfacbb9770dd737"
+    },
+    {
+      "number": 18,
+      "title": "One include makes any LilyPond score chromatic",
+      "status": "complete",
+      "startedAt": "2026-11-04T16:59:11.040000-05:00",
+      "completedAt": "2026-11-04T19:40:53.317000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "7dfd87deb0e268a0101c31cc9ecd6a9689731058"
+    },
+    {
+      "number": 19,
+      "title": "MusicXML smoke tier and the corpus gate",
+      "status": "complete",
+      "startedAt": "2026-11-05T02:25:28.160000-05:00",
+      "completedAt": "2026-11-05T02:44:25.810000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 2,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "5d275fff122608cfcf4465a4b3898d7462c5fa4f"
+    },
+    {
+      "number": 20,
+      "title": "Fix what the corpus found",
+      "status": "complete",
+      "startedAt": "2026-11-05T02:56:52.160000-05:00",
+      "completedAt": "2026-11-05T03:15:31.227000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "a23fe705742d37f75ff8034f78093a59f2083522"
+    },
+    {
+      "number": 21,
+      "title": "Document 1.2.0",
+      "status": "complete",
+      "startedAt": "2026-11-05T03:48:13.482000-05:00",
+      "completedAt": "2026-11-05T03:56:26.955000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "f5f1cde12ee9d89856560a103452c0de07fe7418"
+    },
+    {
+      "number": 22,
+      "title": "Work around LilyPond issue 2383 (beam quanting on magnified staves)",
+      "status": "complete",
+      "startedAt": "2026-11-05T04:12:54.669000-05:00",
+      "completedAt": "2026-11-05T04:21:47.025000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "9946b2384f1d27004108b79886b12d88512f5848"
+    },
+    {
+      "number": 23,
+      "title": "Release 1.2.0 (release: 1.2.0)",
+      "status": "complete",
+      "startedAt": "2026-11-05T04:50:04.325000-05:00",
+      "completedAt": "2026-11-05T04:50:10.638000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.29.0",
+      "startCommit": "3cf35a8cd95dfa80e56a16ab4fe2d5ef62767b5c",
+      "verificationVerdict": null
+    },
+    {
+      "number": 24,
+      "title": "Clefs and key signatures engrave where the Configurator draws them",
+      "status": "complete",
+      "startedAt": "2026-11-10T12:20:18.684000-05:00",
+      "completedAt": "2026-11-10T13:06:17.040000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 2,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "7974b02187aef6892d6dbfae81f767c3392ebca1"
+    },
+    {
+      "number": 25,
+      "title": "The breve as tied semibreves",
+      "status": "complete",
+      "startedAt": "2026-11-10T16:35:05.786000-05:00",
+      "completedAt": "2026-11-10T16:47:15.735000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "4e3b5dabc395d7c31da44526876dbbda19b3095d"
+    },
+    {
+      "number": 26,
+      "title": "Document 1.3.0",
+      "status": "complete",
+      "startedAt": "2026-11-10T16:52:12.687000-05:00",
+      "completedAt": "2026-11-10T16:55:29.814000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "8d9554e4d655344e0fb5a9dfd7d042365720e6bc"
+    },
+    {
+      "number": 27,
+      "title": "Release 1.3.0 (release: 1.3.0)",
+      "status": "complete",
+      "startedAt": "2026-11-10T16:56:10.406000-05:00",
+      "completedAt": "2026-11-10T16:56:15.837000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "ea2ba746b1c36bb2b1fc25ea4ae6d401f165049d",
+      "verificationVerdict": null
+    },
+    {
+      "number": 28,
+      "title": "The breve's tie below the noteheads",
+      "status": "complete",
+      "startedAt": "2026-11-11T01:37:19.023000-05:00",
+      "completedAt": "2026-11-11T01:45:00.358000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "8f5b884c759eb7bcfcda2b2f79e3bb0f846c7434"
+    },
+    {
+      "number": 29,
+      "title": "Release 1.3.1 (release: 1.3.1)",
+      "status": "complete",
+      "startedAt": "2026-11-11T01:47:30.928000-05:00",
+      "completedAt": "2026-11-11T01:55:59.339000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.29.1",
+      "startCommit": "69c6c8f71010ee2581c57d4354b55e52e90143a9",
+      "verificationVerdict": null
+    },
+    {
+      "number": 30,
+      "title": "Key signatures from a mark list",
+      "status": "complete",
+      "startedAt": "2026-11-11T07:15:54.388000-05:00",
+      "completedAt": "2026-11-11T07:37:53.740000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 2,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "b2fb1e7810ee6af070bf1907f2e0b63f00ea6693"
+    },
+    {
+      "number": 31,
+      "title": "A key's pitch classes with double sharps and flats",
+      "status": "complete",
+      "startedAt": "2026-11-11T07:47:50.386000-05:00",
+      "completedAt": "2026-11-11T07:54:05.452000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "c8ae13bcec11825d1888d65aa28072499f63afe1"
+    },
+    {
+      "number": 32,
+      "title": "Release 1.4.0 (release: 1.4.0)",
+      "status": "complete",
+      "startedAt": "2026-11-11T07:54:49.656000-05:00",
+      "completedAt": "2026-11-11T07:54:55.605000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "02ecce1aa25e24f74d80520cf3cd018447ebf2c2",
+      "verificationVerdict": null
+    },
+    {
+      "number": 33,
+      "title": "Key-signature ledgers from the notation's ledger rules",
+      "status": "complete",
+      "startedAt": "2026-11-11T09:19:28.828000-05:00",
+      "completedAt": "2026-11-11T09:32:24.082000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "4d5df3fce0d24a19f312aba3e32cca7d68d9e193"
+    },
+    {
+      "number": 34,
+      "title": "Release 1.4.1 (release: 1.4.1)",
+      "status": "complete",
+      "startedAt": "2026-11-11T09:33:42.961000-05:00",
+      "completedAt": "2026-11-11T09:33:48.534000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "d71b6f4c72b86919bd82b72b699fc7a3251327a0",
+      "verificationVerdict": null
+    },
+    {
+      "number": 35,
+      "title": "Sized sharps and flats, and the magnification a config sets",
+      "status": "complete",
+      "startedAt": "2026-11-11T15:03:42.053000-05:00",
+      "completedAt": "2026-11-11T15:18:24.973000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "60cda7aa4754f47b142a0dc62bf10ecc8f409f06"
+    },
+    {
+      "number": 36,
+      "title": "Release 1.5.0 (release: 1.5.0)",
+      "status": "complete",
+      "startedAt": "2026-11-11T15:20:20.441000-05:00",
+      "completedAt": "2026-11-11T15:20:26.744000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.32.1",
+      "startCommit": "b0084594086853bfdda2c9d3ddce2b25277c5c31",
+      "verificationVerdict": null
+    },
+    {
+      "number": 37,
+      "title": "Placed, coloured and layered key-signature marks",
+      "status": "complete",
+      "startedAt": "2026-11-12T03:50:20.316000-05:00",
+      "completedAt": "2026-11-12T04:09:02.907000-05:00",
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      },
+      "frameworkVersion": "3.32.4",
+      "startCommit": "d611190117546a759905e85fd6f7d8ec8b82f8cc"
+    },
+    {
+      "number": 38,
+      "title": "Release 1.6.0 (release: 1.6.0)",
+      "status": "complete",
+      "startedAt": "2026-11-12T04:12:41.293000-05:00",
+      "completedAt": "2026-11-12T04:12:48.860000-05:00",
+      "orchestrator": {
+        "engine": "framework",
+        "identityProvenance": "direct"
+      },
+      "frameworkVersion": "3.32.4",
+      "startCommit": "3677792c076feaed9128ec48ad6767282d79b269",
+      "verificationVerdict": null
+    },
+    {
+      "number": 39,
+      "title": "The repeated noteheads' overlap and the breve's tie",
+      "status": "in-progress",
+      "startedAt": "2026-11-12T19:41:57.062000-05:00",
+      "completedAt": null,
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": null,
+      "startCommit": "b8e119c28d925a40814c3479ed41d213d3e6498d",
+      "frameworkVersion": "3.32.4"
+    },
+    {
+      "number": 40,
+      "title": "Release 1.7.0 (release: 1.7.0)",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
+    }
+  ]
+}
