@@ -760,9 +760,9 @@
     {
       "number": 39,
       "title": "The repeated noteheads' overlap and the breve's tie",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-12T19:41:57.062000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-12T19:54:52.345000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
