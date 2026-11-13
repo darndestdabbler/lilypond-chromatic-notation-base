@@ -53,7 +53,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 39 | The repeated noteheads' overlap and the breve's tie | no | 2026-11-12 |
 | 40 | Release 1.7.0 (release: 1.7.0) | yes | 2026-11-13 |
 | 41 | The dozenal clef sized about the middle line | no | 2026-11-13 |
-| 42 | Release 1.8.0 (release: 1.8.0) | — | not declared |
+| 42 | Release 1.8.0 (release: 1.8.0) | yes | 2026-11-13 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -317,3 +317,9 @@ Release 1.7.0: the framework packs and publishes what is on the trunk.
 **Releasable: no.**
 
 Scale the dozenal clef's numeral about the staff's middle line when cnb:clef-size-semitones is set, and prepare engine 1.8.0, which session 42 releases. In cnb/clefs.ly a small helper gives the dozenal clef's offset scale: 1 when cnb:clef-size-semitones is #f, else the target height divided by 3 staff spaces (cnb:clef-size-semitones / cnb:semitones-per-staff-space / 3). cnb:build-dozenal-clef-stencil multiplies its -0.5 x mag translate of the left digit by it, and the engraver multiplies the -1 x mag Y-offset by it for the 'dozenal style only, so at a height of H staff spaces the numeral's top is 1.4418 x H/3 and its bottom -1.5582 x H/3 staff spaces from the middle line; with #f, or at exactly 3 staff spaces, it engraves as today, and the 'text and 'custom styles are unchanged. So the numeral can be measured without a grob, the builder's numeral assembly (the two digit stencils in, the placed numeral out) is split into its own procedure that the builder calls. Unit specs in test-unit.ly cover #f (stencil and offset as today) and 8.172 semitones on a staff of 4 semitones per staff space (2.043 staff spaces: top and bottom as above); tests/clef-size-dozenal, the one tracked spec that sets the size with the dozenal clef, gets its SVG and 2.24 and 2.26 harvests regenerated and its description corrected; a new integration spec engraves the dozenal clef at 8.172 semitones on the Configurator's default staff on 2.24 and 2.26. A README line beside the clef settings, a CHANGELOG.md 1.8.0 section, version.json 1.8.0 and docs/session-sets/041-dozenal-clef-size/configurator-handoff.md (the numeral's measured top, bottom and width at 3 and 2.043 staff spaces; session 42 as the release) finish the session.
+
+### Session 42 — Release 1.8.0 (release: 1.8.0)
+
+**Releasable: yes.**
+
+Release 1.8.0: the framework packs and publishes what is on the trunk.
