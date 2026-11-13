@@ -311,7 +311,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
 | `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), `'none` (no clef stencil), or `'custom` (registered glyph named by `cnb:clef-name`) |
 | `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |
-| `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces for `'dozenal`/`'text`, or the registered definition's own height for `'custom`) |
+| `cnb:clef-size-semitones` | `#f` | Clef display height in semitones (`#f` = legacy 3 staff-spaces for `'dozenal`/`'text`, or the registered definition's own height for `'custom`). A sized `'dozenal` numeral is scaled about the staff's middle line: at H staff-spaces, the treble 50 spans 1.4418 × H/3 above it to 1.5582 × H/3 below |
 | `cnb:clef-name` | `#f` | Which registered custom clef to display in `'custom` style (see `cnb:register-clef!`) |
 | `cnb:clef-gutter-semitones` | `#f` | Extra blank space after the clef, in semitones (`#f` = legacy spacing); applies to every rendered clef style |
 | `cnb:clef-gutter-left-semitones` | `#f` | Extra blank space before the clef, in semitones (`#f` = none); applies to every rendered clef style |

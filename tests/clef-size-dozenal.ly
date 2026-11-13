@@ -9,8 +9,9 @@
 %%
 %% The dozenal display is two text stencils whose horizontal separation
 %% is the scaled left-digit width, so the harvested clef bbox WIDTH is
-%% proportional to the size setting (the bbox height is only the fixed
-%% digit-anchor offset — see the paired JSON spec's description). The
+%% proportional to the size setting (the bbox height is only the
+%% digit-anchor offset, which since session 41 scales with the size too,
+%% about the middle line — see the paired JSON spec's description). The
 %% paired spec asserts the width grew by exactly 4/3 over the
 %% default-render width measured from tests/c-major-scale.json's
 %% harvest (1.102).

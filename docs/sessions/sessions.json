@@ -789,10 +789,40 @@
         "engine": "framework",
         "identityProvenance": "direct"
       },
-      "verificationVerdict": null,
-      "startCommit": "3656ec6b9efe2750b15cd24b10627bd4356fe6f3",
       "frameworkVersion": "3.32.4",
-      "noChange": true
+      "startCommit": "3656ec6b9efe2750b15cd24b10627bd4356fe6f3",
+      "verificationVerdict": null
+    },
+    {
+      "number": 41,
+      "title": "The dozenal clef sized about the middle line",
+      "status": "in-progress",
+      "startedAt": "2026-11-13T01:38:01.576000-05:00",
+      "completedAt": null,
+      "orchestrator": {
+        "engine": "claude-code",
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "identityProvenance": "direct"
+      },
+      "verificationVerdict": "VERIFIED",
+      "startCommit": "0fefa588c608aa728e23a5b944aff74b0d498a85",
+      "frameworkVersion": "3.32.4",
+      "verification": {
+        "rounds": 1,
+        "verifierModel": "gpt-5.6-terra",
+        "verifierProvider": "openai",
+        "transport": "api"
+      }
+    },
+    {
+      "number": 42,
+      "title": "Release 1.8.0 (release: 1.8.0)",
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "orchestrator": null,
+      "verificationVerdict": null
     }
   ]
 }

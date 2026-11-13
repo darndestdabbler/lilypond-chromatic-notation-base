@@ -48,8 +48,10 @@
 %%                                (default) means the legacy 3
 %%                                staff-spaces ('dozenal/'text) or the
 %%                                registered definition's own height
-%%                                ('custom).
-%%    cnb:clef-name             — which registered custom clef to show
+%%                                ('custom). A sized 'dozenal numeral
+%%                                is scaled about the staff's middle
+%%                                line.
+%%    cnb:clef-name            — which registered custom clef to show
 %%                                in 'custom style.
 %%    cnb:clef-gutter-semitones — extra blank space after the clef, in
 %%                                semitones; #f (default) = none.
@@ -183,6 +185,15 @@
    (if (number? cnb:clef-size-semitones)
        (* mag (/ cnb:clef-size-semitones cnb:semitones-per-staff-space))
        (* 3 mag)))
+
+%% Scale of the 'dozenal numeral's vertical offsets (the left digit's
+%% -.5 translate and the engraver's -1 Y-offset): its target height over
+%% the legacy 3 staff-spaces, so a sized numeral is scaled about the
+%% staff's middle line. 1 when cnb:clef-size-semitones is #f.
+#(define (cnb:dozenal-clef-offset-scale)
+   (if (number? cnb:clef-size-semitones)
+       (/ cnb:clef-size-semitones cnb:semitones-per-staff-space 3)
+       1))
 
 %% Gutter padding after the clef, in staff-space units, for a given
 %% font magnification. 0 when cnb:clef-gutter-semitones is #f (legacy).
@@ -328,7 +339,12 @@
 %%
 %%  'dozenal: Build a clef stencil showing the dozenal number.
 %%  The left digit is larger, the right digit is smaller and sits
-%%  slightly higher, creating a clear two-digit display.
+%%  slightly higher, creating a clear two-digit display. With
+%%  cnb:clef-size-semitones set, the left digit's -.5 translate is
+%%  multiplied by cnb:dozenal-clef-offset-scale, as the engraver's
+%%  Y-offset is, so the numeral is scaled about the middle line.
+%%  cnb:dozenal-clef-numeral assembles it from the two digit stencils,
+%%  so it can be measured without a grob.
 %%
 %%  'text: Build a stencil from the configured cnb:clef-text label,
 %%  scaled to the same target height. Plain strings render bold
@@ -347,9 +363,16 @@
            (left-digit        (floor (/ clef-num 10)))
            (right-digit       (modulo clef-num 10))
            (left-markup       (markup (#:bold (number->string left-digit))))
-           (right-markup      (markup (#:bold (number->string right-digit))))
-           (stencil-left      (grob-interpret-markup grob left-markup))
-           (stencil-right     (grob-interpret-markup grob right-markup))
+           (right-markup      (markup (#:bold (number->string right-digit)))))
+     (cnb:dozenal-clef-numeral
+       (grob-interpret-markup grob left-markup)
+       (grob-interpret-markup grob right-markup)
+       mag)))
+
+%% The numeral from its two unscaled digit stencils: the left digit at
+%% the target height (half width), the right at 2/3 of it beside it.
+#(define (cnb:dozenal-clef-numeral stencil-left stencil-right mag)
+   (let* (
            (y-extent          (ly:stencil-extent stencil-left 1))
            (height            (- (cdr y-extent) (car y-extent)))
            (scale-factor      (/ (cnb:clef-target-height mag) height))
@@ -361,7 +384,8 @@
                                (* scale-factor 1/2) (* scale-factor 2/3))))
      (ly:stencil-combine-at-edge
        (ly:stencil-translate stencil-left-scaled
-                             (cons 0 (* -.5 mag)))
+                             (cons 0 (* -.5 mag
+                                        (cnb:dozenal-clef-offset-scale))))
        0 1
        (ly:stencil-translate stencil-right-scaled (cons 0 0))
        0)))
@@ -500,7 +524,9 @@
 %%    center (Y-offset -1 staff-space × mag, plus the -.5 translate
 %%    baked into the builders). These are register displays centered on
 %%    the staff, not pitch-anchored — the pitch-axis hook does not move
-%%    them. Exception: a 'text clef with cnb:clef-anchor-semitones set is
+%%    them. A 'dozenal numeral sized by cnb:clef-size-semitones has both
+%%    offsets multiplied by cnb:dozenal-clef-offset-scale, so it is
+%%    scaled about the middle line. Exception: a 'text clef with cnb:clef-anchor-semitones set is
 %%    anchored like 'custom, at that semitone.
 %%    'custom — the anchor contract: the stencil's top edge (y = 0 by
 %%    construction) is offset to the anchor semitone with the notehead
@@ -545,5 +571,8 @@
                            (ly:grob-set-property! grob 'Y-offset
                              (* (cnb:clef-anchor-y-offset anchor middleCPosition)
                                 staff-space)))
-                         (ly:grob-set-property! grob 'Y-offset (* mag -1))))
+                         (ly:grob-set-property! grob 'Y-offset
+                           (if (eq? style 'dozenal)
+                               (* mag -1 (cnb:dozenal-clef-offset-scale))
+                               (* mag -1)))))
                    (ly:grob-set-property! grob 'stencil stencil)))))))))

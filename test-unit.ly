@@ -1414,6 +1414,85 @@
 
 
 %% =========================================================================
+%%  TEST: cnb/clefs.ly — The dozenal numeral sized about the middle line
+%%  (session 41)
+%%
+%%  A sized numeral's vertical offsets (the left digit's -.5 translate
+%%  and the engraver's -1 Y-offset) scale with its height over 3
+%%  staff-spaces. The digits come from interpret-markup on the default
+%%  paper, so no grob is needed; the treble numeral 50 is measured.
+%% =========================================================================
+
+#(cnb:test-group "clefs.ly — cnb:dozenal-clef-offset-scale")
+
+#(set! cnb:clef-size-semitones #f)
+#(set! cnb:semitones-per-staff-space 2)
+#(cnb:assert-equal "#f: offset scale 1"
+   (cnb:dozenal-clef-offset-scale) 1)
+#(set! cnb:clef-size-semitones 6)
+#(cnb:assert-equal "6 semitones at sps-2 (3 staff-spaces): offset scale 1"
+   (cnb:dozenal-clef-offset-scale) 1)
+#(set! cnb:clef-size-semitones 8.172)
+#(set! cnb:semitones-per-staff-space 4)
+#(cnb:assert-near "8.172 semitones at sps-4: offset scale 2.043/3"
+   (cnb:dozenal-clef-offset-scale) (/ 2.043 3) 1e-9)
+
+#(cnb:test-group "clefs.ly — cnb:dozenal-clef-numeral")
+
+#(define (cnb:test-digit d)
+   (interpret-markup $defaultpaper
+     (list (ly:output-def-lookup $defaultpaper 'text-font-defaults))
+     (markup (#:bold (number->string d)))))
+
+%% The numeral's Y extent on the staff: its stencil's plus the
+%% engraver's Y-offset (mag 1).
+#(define (cnb:test-numeral-y)
+   (let ((y (ly:stencil-extent
+              (cnb:dozenal-clef-numeral (cnb:test-digit 5) (cnb:test-digit 0) 1)
+              Y))
+         (off (* -1 (cnb:dozenal-clef-offset-scale))))
+     (cons (+ (car y) off) (+ (cdr y) off))))
+
+%% The numeral as built before session 41: the -.5 translate and the
+%% -1 Y-offset fixed.
+#(define (cnb:test-legacy-numeral-y)
+   (let* ((left   (cnb:test-digit 5))
+          (right  (cnb:test-digit 0))
+          (height (interval-length (ly:stencil-extent left Y)))
+          (k      (/ (cnb:clef-target-height 1) height))
+          (y      (ly:stencil-extent
+                    (ly:stencil-combine-at-edge
+                      (ly:stencil-translate
+                        (ly:stencil-scale left (* k 1/2) k) (cons 0 -.5))
+                      X RIGHT
+                      (ly:stencil-scale right (* k 1/2) (* k 2/3))
+                      0)
+                    Y)))
+     (cons (- (car y) 1) (- (cdr y) 1))))
+
+#(set! cnb:clef-size-semitones #f)
+#(set! cnb:semitones-per-staff-space 4)
+#(cnb:assert-equal "#f: the numeral and its Y-offset are as before"
+   (cnb:test-numeral-y) (cnb:test-legacy-numeral-y))
+#(cnb:assert-near "#f: top 1.4418 above the middle line"
+   (cdr (cnb:test-numeral-y)) 1.4418 0.001)
+#(cnb:assert-near "#f: bottom 1.5582 below the middle line"
+   (car (cnb:test-numeral-y)) -1.5582 0.001)
+
+#(set! cnb:clef-size-semitones 8.172)
+#(cnb:assert-near "8.172 semitones at sps-4: top 1.4418 x 2.043/3"
+   (cdr (cnb:test-numeral-y)) (* 1.4418 (/ 2.043 3)) 0.001)
+#(cnb:assert-near "8.172 semitones at sps-4: bottom -1.5582 x 2.043/3"
+   (car (cnb:test-numeral-y)) (* -1.5582 (/ 2.043 3)) 0.001)
+#(cnb:assert-near "8.172 semitones at sps-4: height 2.043 staff-spaces"
+   (interval-length (cnb:test-numeral-y)) 2.043 0.001)
+
+%% Restore config state
+#(set! cnb:clef-size-semitones cnb:saved-clef-size)
+#(set! cnb:semitones-per-staff-space cnb:saved-sps)
+
+
+%% =========================================================================
 %%  TEST: cnb/config.ly — Custom clef setting defaults (set 005 s2)
 %% =========================================================================
 

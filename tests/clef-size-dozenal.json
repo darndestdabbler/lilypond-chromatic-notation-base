@@ -1,7 +1,7 @@
 {
   "test_name": "Dozenal clef obeys cnb:clef-size-semitones (set 005)",
   "input_file": "clef-size-dozenal.ly",
-  "description": "cnb:clef-size-semitones 8 on the default sps-2 staff = 4 staff-spaces = 4/3 of the legacy 3-staff-space height. The dozenal display's two text anchors are separated horizontally by the scaled left-digit width, so the harvested bbox width scales linearly with the size setting: default renders w = 1.102 (tests/c-major-scale.json harvest, identical staff/config), so 8 semitones must render w = 1.102 * 4/3 = 1.469. The bbox HEIGHT is just the fixed 0.5 digit-anchor offset (text elements harvest as anchors, not glyph outlines) and is deliberately not asserted.",
+  "description": "cnb:clef-size-semitones 8 on the default sps-2 staff = 4 staff-spaces = 4/3 of the legacy 3-staff-space height. The dozenal display's two text anchors are separated horizontally by the scaled left-digit width, so the harvested bbox width scales linearly with the size setting: default renders w = 1.102 (tests/c-major-scale.json harvest, identical staff/config), so 8 semitones must render w = 1.102 * 4/3 = 1.469. The bbox HEIGHT is just the digit-anchor offset (text elements harvest as anchors, not glyph outlines): since session 41 the numeral is scaled about the staff's middle line, so it is 0.5 x 4/3 = 0.667 here, and it is not asserted (tests/clef-size-dozenal-middle.json asserts the placement).",
 
   "assertions": [
 

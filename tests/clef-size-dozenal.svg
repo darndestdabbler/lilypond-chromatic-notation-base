@@ -185,14 +185,14 @@ c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -63 175 -149c
 </g>
 <g id="cl-1" data-type="clef" data-measure="1">
 <g transform="scale(1.3452, 1.7936)">
-<g transform="translate(3.8024, 6.1582)">
+<g transform="translate(3.8024, 6.3440)">
 <text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
 <tspan>0</tspan>
 </text>
 </g>
 </g>
 <g transform="scale(1.3452, 2.6904)">
-<g transform="translate(2.7098, 4.2913)">
+<g transform="translate(2.7098, 4.4771)">
 <text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
 <tspan>5</tspan>
 </text>

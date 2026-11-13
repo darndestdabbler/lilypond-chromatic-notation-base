@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.8.0
+
+- A dozenal clef sized by `cnb:clef-size-semitones` is now scaled about
+  the staff's middle line. Its vertical offsets (the left digit's −0.5
+  translate and the engraver's −1 staff-space Y-offset) are multiplied by
+  its height H in staff spaces over 3, so the treble numeral 50 runs from
+  1.4418 × H/3 above the middle line to 1.5582 × H/3 below it; before,
+  the offsets stayed fixed and a numeral of another height left its
+  place. With the size `#f`, or at exactly 3 staff spaces, it engraves as
+  before, and the `'text` and `'custom` clefs are unchanged, so a file
+  that does not set the size with the dozenal clef engraves as before.
+- New spec `tests/clef-size-dozenal-middle`: the dozenal clef at 8.172
+  semitones on the Configurator's staff of 4 semitones per staff space.
+- The golden and harvests of `clef-size-dozenal`, which sets the size
+  with the dozenal clef, changed on 2.24 and 2.26: its numeral now sits
+  4/3 as far from the middle line.
+  `docs/session-sets/041-dozenal-clef-size/configurator-handoff.md` gives
+  the numeral's measured top, bottom and width.
+
 ## 1.7.0
 
 - New setting `cnb:multinote-overlap`, default `#f`. When it is a number,
