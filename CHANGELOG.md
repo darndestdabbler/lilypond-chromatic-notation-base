@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.7.0
+
+- New setting `cnb:multinote-overlap`, default `#f`. When it is a number,
+  each repeated notehead starts (1 − overlap) times the head's own X width
+  after the last, in place of `cnb:multinote-padding`, which is then not
+  read. At 1/3 a minim is 1 + 2/3 heads wide and a semibreve 3, whatever
+  the shape. With `#f` the copies join at the padding, as before, so a
+  file that does not set it engraves its notes as before.
+- The tie of a breve, longa or maxima in repeat mode now runs from the
+  centre of the first semibreve group to the centre of the last, as a tie
+  joins two notes; before, it ran from the first head's centre to the last
+  head's. It keeps its height limit, ratio, thickness and black colour,
+  and every width is unchanged.
+- New spec `tests/multinote-overlap`: the Configurator's default notehead
+  at an overlap of 1/3, from a quarter to a longa.
+- The goldens and harvests with a breve or longer changed, on 2.24 and
+  2.26: `breve-tied-semibreves` (its tie depths re-measured) and
+  `duration-rules`.
+  `docs/session-sets/039-repeat-overlap/configurator-handoff.md` gives the
+  default notehead's widths and tie at 1/3.
+
 ## 1.6.0
 
 - A mark-table mark can be placed by its origin. A `head`, `symbol`,

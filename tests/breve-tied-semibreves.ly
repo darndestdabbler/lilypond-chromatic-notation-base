@@ -1,12 +1,12 @@
 \version "2.24.2"
 
-%% The breve and the longa as tied semibreves (sessions 25 and 28).
+%% The breve and the longa as tied semibreves (sessions 25, 28 and 39).
 %%
 %% In repeat mode a note of duration log L <= -1 engraves as 2^(-L)
 %% semibreve groups (the whole note's 4-copy stencil), left to right,
 %% 1 staff space apart, with one tie below the heads bowing down from
-%% the centre of the first head to the centre of the last
-%% (cnb:build-duration-stencil, cnb/stencils.ly).
+%% the centre of the first group to the centre of the last, as a tie
+%% joins two notes (session 39; cnb:build-duration-stencil, cnb/stencils.ly).
 %%
 %% The notehead is the Configurator's default (its exported
 %% crotchet-minim path, solid, from its Default 4-8 System export) on its

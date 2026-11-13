@@ -155,28 +155,38 @@
 %%    category  = 2 -> half note: 2 copies side by side
 %%    category <= 1 -> whole or longer: 4 copies (the semibreve group)
 %%
-%%  The copies overlap by cnb:multinote-padding (usually negative = overlap).
+%%  The copies overlap by cnb:multinote-padding (usually negative = overlap),
+%%  or, when cnb:multinote-overlap is a number, by that share of the base
+%%  stencil's X width: each copy starts (1 - overlap) head widths after
+%%  the last, and the padding is not read.
 %%
 %%  TIED SEMIBREVES: a breve or longer passes GROUPS above 1
 %%  (cnb:semibreve-groups: breve 2, longa 4, maxima 8). That many
 %%  semibreve groups are laid left to right, 1 staff space apart, and
 %%  one tie runs below them, bowing down from the bottom of the group's
-%%  Y extent: from the centre of the first head of the first group to
-%%  the centre of the last head of the last group, with LilyPond's
-%%  default height limit and ratio. The tie is added after the head is
-%%  coloured, so it stays black.
+%%  Y extent: from the centre of the first group's X extent to the
+%%  centre of the last group's, as a tie joins two notes, with
+%%  LilyPond's default height limit and ratio. The tie is added after
+%%  the head is coloured, so it stays black.
 %% ---------------------------------------------------------------------------
 
 #(define* (cnb:build-duration-stencil base-stencil duration-category
                                       #:optional (groups 1))
-   (let* ((stencil base-stencil))
+   (let* ((stencil base-stencil)
+          (padding (if (number? cnb:multinote-overlap)
+                       (- (* cnb:multinote-overlap
+                             (interval-length
+                               (ly:stencil-extent base-stencil X))))
+                       cnb:multinote-padding)))
 
       ;; Double once for a half or longer, and again for a whole or longer.
+      ;; The second doubling joins at the same padding, so every copy
+      ;; starts the same distance after the last.
       (for-each (lambda (threshold)
           (if (<= duration-category threshold)
               (set! stencil
                     (ly:stencil-combine-at-edge
-                      stencil 0 1 stencil cnb:multinote-padding))))
+                      stencil 0 1 stencil padding))))
         '(2 1))
 
       (if (> groups 1)
@@ -184,8 +194,8 @@
                  (step  (+ (interval-length ext) 1))
                  (group stencil)
                  (y0    (car (ly:stencil-extent group Y)))
-                 (base  (ly:stencil-extent base-stencil X))
-                 (xa    (interval-center base)))
+                 (xa    (interval-center ext))
+                 (xb    (+ xa (* (- groups 1) step))))
             (do ((k 1 (1+ k))) ((= k groups))
               (set! stencil
                     (ly:stencil-add
@@ -194,12 +204,8 @@
             (set! stencil
                   (ly:stencil-add
                     stencil
-                    (make-tie-stencil
-                      (cons xa y0)
-                      (cons (+ xa (- (cdr (ly:stencil-extent stencil X))
-                                     (cdr base)))
-                            y0)
-                      0.12 DOWN)))))
+                    (make-tie-stencil (cons xa y0) (cons xb y0)
+                                      0.12 DOWN)))))
 
       stencil))
 

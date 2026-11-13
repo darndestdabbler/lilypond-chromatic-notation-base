@@ -545,6 +545,13 @@
 %% Negative values cause overlap. Default -0.5 gives slight overlap.
 #(define cnb:multinote-padding -.5)
 
+%% Overlap between repeated noteheads, as a share of each head's own
+%% X width. #f (the default) uses cnb:multinote-padding. A number puts
+%% each copy (1 - overlap) head widths after the last, and the padding
+%% is then not read: at 1/3 each copy starts 2/3 of a head's width after
+%% the last, whatever the shape.
+#(define cnb:multinote-overlap #f)
+
 %% Threshold for LilyPond's collision detection between note columns.
 %% Higher values allow closer notes before LilyPond shifts them apart.
 #(define cnb:collision-threshold 2)

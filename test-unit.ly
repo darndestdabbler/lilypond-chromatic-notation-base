@@ -220,7 +220,10 @@
 %% a breve is 2 groups 1 staff space apart, a longa 4 groups and 3 gaps,
 %% and one tie below them all. The composite starts where its first group
 %% does, keeps the head's top edge, and the tie takes its bottom below
-%% the head's.
+%% the head's. The tie runs from the centre of the first group to the
+%% centre of the last (session 39), at the group's bottom: the
+%% composite's lowest point is that tie's, and its ends are symmetric
+%% about the composite's centre.
 #(let* ((box   (make-filled-box-stencil '(-0.5 . 0.5) '(-0.5 . 0.5)))
         (whole (ly:stencil-extent (cnb:build-duration-stencil box 1) X))
         (gw    (interval-length whole)))
@@ -230,7 +233,14 @@
      (lambda (groups)
        (let* ((st  (cnb:build-duration-stencil box 0 groups))
               (ext (ly:stencil-extent st X))
-              (yx  (ly:stencil-extent st Y)))
+              (yx  (ly:stencil-extent st Y))
+              (xa  (interval-center whole))
+              (xb  (+ xa (* (- groups 1) (+ gw 1))))
+              (tie (make-tie-stencil (cons xa -0.5) (cons xb -0.5) 0.12 DOWN)))
+         (cnb:assert-near (format #f "~a groups: the tie's lowest point = that of the tie between the first and last groups' centres" groups)
+           (car yx) (car (ly:stencil-extent tie Y)) 0.001)
+         (cnb:assert-near (format #f "~a groups: the tie's ends are symmetric about the composite's centre" groups)
+           (- (interval-center ext) xa) (- xb (interval-center ext)) 0.001)
          (cnb:assert-near (format #f "~a groups: width = ~a group widths + ~a gaps"
                                   groups groups (- groups 1))
            (interval-length ext) (+ (* groups gw) (- groups 1)) 0.001)
@@ -241,6 +251,37 @@
          (cnb:assert-true (format #f "~a groups: the tie takes the bottom below the head's" groups)
            (< (car yx) -0.5))))
      '(2 4)))
+
+#(cnb:test-group "stencils.ly — cnb:build-duration-stencil cnb:multinote-overlap")
+%% A 1 x 1 box as the head. With the overlap #f the copies join at
+%% cnb:multinote-padding (-0.5), as before: a minim is 2 - 0.5 and a
+%% semibreve 4 - 1.5 head widths. At 1/3 each copy starts 2/3 of a head
+%% after the last, so a minim is 1 + 2/3 and a semibreve 1 + 3 x 2/3,
+%% and the padding is not read.
+#(let* ((box   (make-filled-box-stencil '(-0.5 . 0.5) '(-0.5 . 0.5)))
+        (width (lambda (cat)
+                 (interval-length
+                   (ly:stencil-extent (cnb:build-duration-stencil box cat) X))))
+        (saved cnb:multinote-padding))
+   (cnb:assert-equal "the overlap defaults to #f" cnb:multinote-overlap #f)
+   (cnb:assert-near "overlap #f: minim = 2 - 0.5 heads" (width 2) 1.5 0.001)
+   (cnb:assert-near "overlap #f: semibreve = 4 - 1.5 heads" (width 1) 2.5 0.001)
+   (set! cnb:multinote-overlap 1/3)
+   (cnb:assert-near "overlap 1/3: quarter = 1 head" (width 3) 1.0 0.001)
+   (cnb:assert-near "overlap 1/3: minim = 1 + 2/3 heads" (width 2) (+ 1 2/3) 0.001)
+   (cnb:assert-near "overlap 1/3: semibreve = 1 + 3 x 2/3 heads" (width 1) (+ 1 (* 3 2/3)) 0.001)
+   (cnb:assert-near "overlap 1/3: the semibreve starts where its first head does"
+     (car (ly:stencil-extent (cnb:build-duration-stencil box 1) X)) -0.5 0.001)
+   (let ((wide (make-filled-box-stencil '(-1 . 1) '(-0.5 . 0.5))))
+     (cnb:assert-near "overlap 1/3: a 2-wide head's minim = 2 x (1 + 2/3)"
+       (interval-length
+         (ly:stencil-extent (cnb:build-duration-stencil wide 2) X))
+       (* 2 (+ 1 2/3)) 0.001))
+   (set! cnb:multinote-padding 3)
+   (cnb:assert-near "overlap 1/3: the padding is not read (semibreve with padding 3)"
+     (width 1) (+ 1 (* 3 2/3)) 0.001)
+   (set! cnb:multinote-padding saved)
+   (set! cnb:multinote-overlap #f))
 
 #(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")
 %% The composer is pure: it takes the property's current value and a new
