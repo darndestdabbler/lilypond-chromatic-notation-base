@@ -1,0 +1,120 @@
+{
+  "test_name": "Mark-list key signatures of two, three and four columns, and the space around them (session 30)",
+  "input_file": "keysig-marks-columns.ly",
+  "description": "One measure per system: m1/m4 C major, two columns of 1.0-wide noteheads (end 2.0); m2/m5 D major, three columns of sharps 1.1 wide (end 3.3); m3/m6 B flat major, four columns of flats 0.92 wide (end 3.68). Systems 1-3 show the engine's default clef, systems 4-6 hide it. The signature's start is its stencil's x = 0, the left edge of its first column; its end is columns x width. The harvest measures each path by its control-point hull: the sharps' hull starts at the start, the flats' 0.048 before it, the heads' at it. Measured on 2.24 and 2.26: the signature starts 0.75 after the staff's start with no clef, and 2.5 (2.24) or 3.025 (2.26) after the clef's left edge; the first note's centre is 2.5 after the signature's end, for two, three and four columns, on both versions.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: SIX SIGNATURES, THREE CLEFS ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Each of the six systems opens with its signature",
+      "expect": {
+        "type": ["== 'key-signature'", "count('key-signature') == 6"]
+      }
+    },
+    {"id": "cl-4", "description": "System 4 hides its clef", "absent": true},
+    {"id": "cl-5", "description": "System 5 hides its clef", "absent": true},
+    {"id": "cl-6", "description": "System 6 hides its clef", "absent": true},
+
+    {"_comment": "=== SECTION 2: THE WIDTH GROWS WITH THE COLUMNS ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Two columns of heads: 2.0 wide",
+      "expect": {"visual.bbox.w": ["abs(v - 2.0) < 0.005"]}
+    },
+    {
+      "id": "ks-2",
+      "description": "Three columns of sharps (with two bars): wider than two",
+      "expect": {"visual.bbox.w": ["abs(v - 3.152) < 0.005", "v > prop('ks-1', 'visual.bbox.w')"]}
+    },
+    {
+      "id": "ks-3",
+      "description": "Four columns of flats (with three bars): wider than three",
+      "expect": {"visual.bbox.w": ["abs(v - 3.62) < 0.005", "v > prop('ks-2', 'visual.bbox.w')"]}
+    },
+    {
+      "id": "ks-4",
+      "description": "Without a clef the signature is drawn the same",
+      "expect": {"visual.bbox.w": ["abs(v - prop('ks-1', 'visual.bbox.w')) < 0.005"]}
+    },
+    {
+      "id": "ks-5",
+      "description": "Without a clef the signature is drawn the same",
+      "expect": {"visual.bbox.w": ["abs(v - prop('ks-2', 'visual.bbox.w')) < 0.005"]}
+    },
+    {
+      "id": "ks-6",
+      "description": "Without a clef the signature is drawn the same",
+      "expect": {"visual.bbox.w": ["abs(v - prop('ks-3', 'visual.bbox.w')) < 0.005"]}
+    },
+
+    {"_comment": "=== SECTION 3: THE SPACE BEFORE THE SIGNATURE ==="},
+
+    {
+      "id": "ks-4",
+      "description": "No clef, two columns: the signature starts 0.75 after the staff's start",
+      "expect": {"visual.bbox.x": ["abs(v - prop('staff-symbol', 'visual.bbox.x') - 0.75) < 0.005"]}
+    },
+    {
+      "id": "ks-5",
+      "description": "No clef, three columns: the signature starts 0.75 after the staff's start",
+      "expect": {"visual.bbox.x": ["abs(v - prop('staff-symbol', 'visual.bbox.x') - 0.75) < 0.005"]}
+    },
+    {
+      "id": "ks-6",
+      "description": "No clef, four columns: the signature starts 0.75 after the staff's start (the flats' hull 0.048 before it)",
+      "expect": {"visual.bbox.x": ["abs(v + 0.048 - prop('staff-symbol', 'visual.bbox.x') - 0.75) < 0.005"]}
+    },
+    {
+      "id": "ks-1",
+      "description": "With the clef, two columns: the signature starts 2.5 (2.24) or 3.025 (2.26) after the clef's left edge",
+      "expect": {"visual.bbox.x": ["abs(v - prop('cl-1', 'visual.bbox.x') - (2.5 if lilypond == '2.24' else 3.025)) < 0.005"]}
+    },
+    {
+      "id": "ks-2",
+      "description": "With the clef, three columns: the same space as two",
+      "expect": {"visual.bbox.x": ["abs(v - prop('cl-2', 'visual.bbox.x') - (2.5 if lilypond == '2.24' else 3.025)) < 0.005"]}
+    },
+    {
+      "id": "ks-3",
+      "description": "With the clef, four columns: the same space as two",
+      "expect": {"visual.bbox.x": ["abs(v + 0.048 - prop('cl-3', 'visual.bbox.x') - (2.5 if lilypond == '2.24' else 3.025)) < 0.005"]}
+    },
+
+    {"_comment": "=== SECTION 4: THE SPACE FROM THE LAST COLUMN TO THE FIRST NOTE ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Two columns: the first note's centre is 2.5 after the signature's end (start + 2.0)",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-1-0.000-72-0', 'visual.bbox.x') + prop('nh-1-0.000-72-0', 'visual.bbox.w') / 2 - (v + 2.0) - 2.5) < 0.005"]}
+    },
+    {
+      "id": "ks-2",
+      "description": "Three columns: the first note's centre is 2.5 after the signature's end (start + 3.3)",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-2-0.000-72-0', 'visual.bbox.x') + prop('nh-2-0.000-72-0', 'visual.bbox.w') / 2 - (v + 3.3) - 2.5) < 0.005"]}
+    },
+    {
+      "id": "ks-3",
+      "description": "Four columns: the first note's centre is 2.5 after the signature's end (start + 3.68)",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-3-0.000-72-0', 'visual.bbox.x') + prop('nh-3-0.000-72-0', 'visual.bbox.w') / 2 - (v + 0.048 + 3.68) - 2.5) < 0.005"]}
+    },
+    {
+      "id": "ks-4",
+      "description": "No clef, two columns: the same 2.5",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-4-0.000-72-0', 'visual.bbox.x') + prop('nh-4-0.000-72-0', 'visual.bbox.w') / 2 - (v + 2.0) - 2.5) < 0.005"]}
+    },
+    {
+      "id": "ks-5",
+      "description": "No clef, three columns: the same 2.5",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-5-0.000-72-0', 'visual.bbox.x') + prop('nh-5-0.000-72-0', 'visual.bbox.w') / 2 - (v + 3.3) - 2.5) < 0.005"]}
+    },
+    {
+      "id": "ks-6",
+      "description": "No clef, four columns: the same 2.5",
+      "expect": {"visual.bbox.x": ["abs(prop('nh-6-0.000-72-0', 'visual.bbox.x') + prop('nh-6-0.000-72-0', 'visual.bbox.w') / 2 - (v + 0.048 + 3.68) - 2.5) < 0.005"]}
+    }
+  ]
+}

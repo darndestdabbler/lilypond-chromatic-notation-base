@@ -1,0 +1,80 @@
+{
+  "test_name": "The breve and the longa as tied semibreves: 2 and 4 semibreve groups, 1 staff space apart",
+  "input_file": "breve-tied-semibreves.ly",
+  "description": "Sessions 25, 28 and 39. In repeat mode a breve engraves as 2 semibreve groups (the whole note's 4-copy stencil) and a longa as 4, left to right, 1 staff space apart, with one tie below the heads bowing down from the centre of the first group to the centre of the last (session 39; before it ran from the first head's centre to the last head's); the whole note is unchanged, and the tie leaves every width as it was. The head is the Configurator's default (crotchet-minim, solid) at 4 semitones per staff space; the staff space is 1 SVG unit (staff height 4 over lines at positions -4..4). The harvest measures a head by its path's control-point hull, which is wider than the stencil extent LilyPond spaces by; that excess x is read from the quarter q and the half h (two heads overlapping by cnb:multinote-padding -0.5, so h = 2q - 0.5 - x) and taken out once per join: a whole is 4q - 1.5 - 3x, a breve 2 wholes + 1 - x, a longa 4 wholes + 3 - 3x.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE NOTES ==="},
+
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "Six noteheads: two quarters, a half, a whole, a breve and a longa",
+      "expect": {
+        "type": ["count('notehead') == 6"],
+        "data.duration": ["== '2'"]
+      }
+    },
+    {
+      "id": "nh-1-0.250-72-0",
+      "description": "The second quarter is one head, the first's width",
+      "expect": {
+        "visual.bbox.w": ["abs(v - prop('nh-1-0.000-72-0', 'visual.bbox.w')) < 0.001"]
+      }
+    },
+    {
+      "id": "nh-1-0.500-72-0",
+      "description": "The half is two overlapping heads, narrower than two quarters",
+      "expect": {
+        "data.duration": ["== '1'"],
+        "visual.bbox.w": ["v < 2 * prop('nh-1-0.000-72-0', 'visual.bbox.w') - 0.5"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: WIDTHS ==="},
+
+    {
+      "id": "nh-1-1.000-72-0",
+      "description": "The whole note keeps its width: the 4-copy semibreve, 4q - 1.5 - 3x",
+      "expect": {
+        "data.duration": ["== '0'"],
+        "visual.bbox.w": ["abs(v - (4 * prop('nh-1-0.000-72-0', 'visual.bbox.w') - 1.5 - 3 * (2 * prop('nh-1-0.000-72-0', 'visual.bbox.w') - 0.5 - prop('nh-1-0.500-72-0', 'visual.bbox.w')))) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-2.000-72-0",
+      "description": "The breve is 2 semibreve groups and 1 gap of 1 staff space: 2 wholes + 1 - x",
+      "expect": {
+        "data.duration": ["== '-1'"],
+        "visual.bbox.w": ["abs(v - (2 * prop('nh-1-1.000-72-0', 'visual.bbox.w') + 1.0 - (2 * prop('nh-1-0.000-72-0', 'visual.bbox.w') - 0.5 - prop('nh-1-0.500-72-0', 'visual.bbox.w')))) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-72-0",
+      "description": "The longa is 4 semibreve groups and 3 gaps of 1 staff space: 4 wholes + 3 - 3x",
+      "expect": {
+        "data.duration": ["== '-2'"],
+        "visual.bbox.w": ["abs(v - (4 * prop('nh-1-1.000-72-0', 'visual.bbox.w') + 3.0 - 3 * (2 * prop('nh-1-0.000-72-0', 'visual.bbox.w') - 0.5 - prop('nh-1-0.500-72-0', 'visual.bbox.w')))) < 0.01"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE TIE BELOW THE HEADS (sessions 28 and 39): from the first group's centre to the last group's ==="},
+
+    {
+      "id": "nh-1-2.000-72-0",
+      "description": "The breve's groups sit on the whole note's line (same top edge), and its one tie, bowing down from the bottom of the heads between the two groups' centres, takes its lower edge (y + h) 0.797 staff spaces below the whole note's (measured on the tie path's control-point hull, deeper than its curve; 0.910 when it ran head centre to head centre)",
+      "expect": {
+        "visual.bbox.y": ["abs(v - prop('nh-1-1.000-72-0', 'visual.bbox.y')) < 0.001"],
+        "visual.bbox.h": ["abs((prop('nh-1-2.000-72-0', 'visual.bbox.y') + v) - (prop('nh-1-1.000-72-0', 'visual.bbox.y') + prop('nh-1-1.000-72-0', 'visual.bbox.h')) - 0.797) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-2-0.000-72-0",
+      "description": "The longa's groups sit on the whole note's line (same top edge), and its one longer tie, from the first group's centre to the fourth's, takes its lower edge (y + h) 1.106 staff spaces below the whole note's (1.126 when it ran head centre to head centre)",
+      "expect": {
+        "visual.bbox.y": ["abs(v - prop('nh-1-1.000-72-0', 'visual.bbox.y')) < 0.001"],
+        "visual.bbox.h": ["abs((prop('nh-2-0.000-72-0', 'visual.bbox.y') + v) - (prop('nh-1-1.000-72-0', 'visual.bbox.y') + prop('nh-1-1.000-72-0', 'visual.bbox.h')) - 1.106) < 0.01"]
+      }
+    }
+  ]
+}
