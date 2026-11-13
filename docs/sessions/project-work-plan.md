@@ -51,7 +51,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 37 | Placed, coloured and layered key-signature marks | no | 2026-11-12 |
 | 38 | Release 1.6.0 (release: 1.6.0) | yes | 2026-11-12 |
 | 39 | The repeated noteheads' overlap and the breve's tie | no | 2026-11-12 |
-| 40 | Release 1.7.0 (release: 1.7.0) | — | not declared |
+| 40 | Release 1.7.0 (release: 1.7.0) | yes | 2026-11-13 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -303,3 +303,9 @@ Release 1.6.0: the framework packs and publishes what is on the trunk.
 **Releasable: no.**
 
 Add cnb:multinote-overlap (cnb/config.ly), default #f, and move the breve's tie to the group centres, releasing both as engine 1.7.0 in session 40. When cnb:multinote-overlap is a number, cnb:build-duration-stencil (cnb/stencils.ly) places each repeated copy (1 - overlap) times the base stencil's X width after the last, in place of cnb:multinote-padding, which it then does not read (the doubling joins at a padding of -overlap x the head's width, so at 1/3 a minim is 1 + 2/3 and a semibreve 1 + 3 x 2/3 head widths); with #f it engraves exactly as today. The repeat counts and the 1 staff space between semibreve groups are unchanged. For groups above 1 the one tie, (make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN), now runs from the centre of the first group's X extent to the centre of the last group's, still at y0, the bottom of the group stencil's Y extent, with LilyPond's default height limit and ratio, and still black; repeat #f and whole notes and shorter are unchanged. Unit specs in test-unit.ly cover the overlap (#f as today, 1/3 widths) and the tie's ends and lowest point; tests/breve-tied-semibreves and tests/duration-rules (the specs with a breve) get their SVG and 2.24 and 2.26 harvests regenerated and the breve spec's tie depths re-measured; a new integration spec engraves an overlap of 1/3 on 2.24 and 2.26. README.md, a CHANGELOG.md 1.7.0 section, version.json 1.7.0 and a Configurator handoff with the default notehead's measured widths and tie at 1/3 finish the session.
+
+### Session 40 — Release 1.7.0 (release: 1.7.0)
+
+**Releasable: yes.**
+
+Release 1.7.0: the framework packs and publishes what is on the trunk.
