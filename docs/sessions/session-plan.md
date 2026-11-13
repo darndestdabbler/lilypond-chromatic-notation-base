@@ -1052,3 +1052,51 @@ nothing unless it is set.
    and Y extents), and names session 40 as the release.
 
 ### Session 40: Release 1.7.0 (release: 1.7.0)
+
+### Session 41: The dozenal clef sized about the middle line
+
+**Why.** In the Configurator's session-57 try-out the operator found the
+clefs too big, as the sharps and flats were, and asked that a clef's height
+be adjustable without the clef leaving its pitch. In its session 59
+(2026-11-13) the operator picked, from mock-ups, an automatic size that
+follows the staff as the signs' does (LilyPond's size with each staff space
+drawn as the least of the noteheads' mean height, one staff space and 3
+semitones: 68% of LilyPond's size on the default Configurator staff of 4
+semitones per staff space), each clef scaled about an anchor point; the
+dozenal clef's is its middle, on the staff's middle line. A glyph clef needs
+nothing new: the Configurator registers its top and height. The dozenal
+clef does: `cnb:clef-size-semitones` already sets its height, but its
+vertical offsets stay fixed, so a numeral of another height leaves its
+place. Configurator session 59 writes `cnb:clef-size-semitones` for the
+dozenal clef; its engine round trip waits on this session.
+
+Nothing changes unless `cnb:clef-size-semitones` is set with the dozenal
+clef, so every export written today engraves as before.
+
+1. Register.
+2. **The size about the middle line.** In `cnb/clefs.ly`, when
+   `cnb:clef-size-semitones` is a number, the dozenal numeral's vertical
+   offsets (`cnb:build-dozenal-clef-stencil`'s −0.5 translate of the left
+   digit, and the engraver's −1 staff-space `Y-offset` for the
+   `'dozenal` style) are multiplied by its target height divided by 3
+   staff spaces, so the numeral is scaled about the middle line: at a
+   height of H staff spaces its top is 1.4418 × H/3 and its bottom
+   −1.5582 × H/3 staff spaces from the middle line. With `#f`, or at
+   exactly 3 staff spaces, it engraves as today. The `'text` style is
+   unchanged.
+3. **Specs.** Unit specs: with the size `#f` the stencil and offset are as
+   today; at a size of 8.172 semitones on a staff of 4 semitones per staff
+   space (2.043 staff spaces) the numeral's top and bottom are the values
+   above. Integration specs on LilyPond 2.24 and 2.26 for a dozenal clef at
+   a set size. Regenerate the harvests and goldens that change on both
+   versions (none is expected).
+4. A README line beside the clef settings, a `CHANGELOG.md` 1.8.0 section,
+   and `version.json` to `1.8.0`: a minor release, since a setting gains a
+   behaviour. Write
+   `docs/session-sets/041-dozenal-clef-size/configurator-handoff.md`, in the
+   form of the earlier handoffs. It gives the dozenal numeral's measured top,
+   bottom and width at 3 staff spaces and at the Configurator's automatic
+   size on its default staff (8.172 semitones, 2.043 staff spaces), and
+   names session 42 as the release.
+
+### Session 42: Release 1.8.0 (release: 1.8.0)
