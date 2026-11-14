@@ -832,9 +832,9 @@
     {
       "number": 43,
       "title": "A repeated minim's stem on one of its noteheads",
-      "status": "in-progress",
+      "status": "complete",
       "startedAt": "2026-11-14T14:19:28.637000-05:00",
-      "completedAt": null,
+      "completedAt": "2026-11-14T14:44:12.403000-05:00",
       "orchestrator": {
         "engine": "claude-code",
         "provider": "anthropic",
