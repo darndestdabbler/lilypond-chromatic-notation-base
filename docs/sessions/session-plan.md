@@ -1100,3 +1100,55 @@ clef, so every export written today engraves as before.
    names session 42 as the release.
 
 ### Session 42: Release 1.8.0 (release: 1.8.0)
+
+### Session 43: A repeated minim's stem on one of its noteheads
+
+**Why.** In the Configurator's session-69 try-out (2026-11-14) the operator
+found that a repeated minim's stem misses its noteheads. With a centred
+stem, as on the Configurator tutorial's diamonds, it stops in the notch
+where the two heads meet, in the air. `cnb:stem-attachment`
+(`cnb/stems.ly`) hands LilyPond the head's attachment point, and LilyPond
+reads it across the whole stencil, which in repeat mode is the group of
+heads, so the point lands at the same share of the group as of one head.
+The operator's engravings show what reads right
+(`JoyToTheWorld-denici.svg`, Kite 4-369: the last note's up stem stands on
+the first of its two heads; `JoyToTheWorld.svg`, Oval 2-3579: on the right
+edge of the last), and from their study of stem placements they proposed
+the rule: the stem attaches to one head of the group, as a single head's
+stem does, the last head when the stem is up and the first when it is
+down. Configurator session 72 settles, from mock-ups, where a centred stem
+goes (by the same rule, or a side chosen once) and writes a brief for this
+session in its `docs/planning/`; its preview draws the rule and its export
+writes the setting below. Its engine round trip, in its session 73, waits
+on this session's release.
+
+Nothing changes unless the setting is set, so every export written today
+engraves as before.
+
+1. Register.
+2. **The setting.** A new variable in `cnb/config.ly`, named and valued as
+   the Configurator's brief says, default `#f` (today's placement). When
+   it is set, `cnb:stem-attachment` maps the head's attachment point onto
+   one head of a repeated group rather than across the group: for a group
+   of n copies, each (1 − overlap) head widths after the last
+   (`cnb:build-duration-stencil`, `cnb/stencils.ly`; or
+   `cnb:multinote-padding` when the overlap is `#f`), the point's x is the
+   head's own relative x placed on the chosen head and rewritten relative
+   to the group's X extent; its y is unchanged. A single head (`repeat`
+   `#f`, or a crotchet) is unchanged. Semibreves and longer have no stem.
+3. **Specs.** Unit specs: with the setting `#f` the attachment is as today;
+   set, a minim group's up and down points, for a side stem and a centred
+   one, at overlaps 1/3 and `#f`, are the values the rule gives. Integration
+   specs on LilyPond 2.24 and 2.26: the stem of a repeated minim, up and
+   down, on its chosen head. Regenerate the harvests and goldens that
+   change on both versions (none is expected, since the default is `#f`).
+4. A README line beside the stem attachment, a `CHANGELOG.md` 1.9.0
+   section, and `version.json` to `1.9.0`: a minor release, since a
+   setting is added. Write
+   `docs/session-sets/043-repeat-minim-stem/configurator-handoff.md`, in
+   the form of the earlier handoffs. It gives, for the default Configurator
+   notehead at 4 semitones per staff space, Kite 4-369 and the tutorial's
+   diamonds, at an overlap of 1/3, each repeated minim's measured stem
+   x and ends, up and down, and names session 44 as the release.
+
+### Session 44: Release 1.9.0 (release: 1.9.0)
