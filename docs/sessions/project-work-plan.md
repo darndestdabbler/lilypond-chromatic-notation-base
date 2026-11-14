@@ -54,6 +54,8 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 40 | Release 1.7.0 (release: 1.7.0) | yes | 2026-11-13 |
 | 41 | The dozenal clef sized about the middle line | no | 2026-11-13 |
 | 42 | Release 1.8.0 (release: 1.8.0) | yes | 2026-11-13 |
+| 43 | A repeated minim's stem on one of its noteheads | no | 2026-11-14 |
+| 44 | Release 1.9.0 (release: 1.9.0) | — | not declared |
 
 ### Session 1 — Author or import the solution plan
 
@@ -323,3 +325,13 @@ Scale the dozenal clef's numeral about the staff's middle line when cnb:clef-siz
 **Releasable: yes.**
 
 Release 1.8.0: the framework packs and publishes what is on the trunk.
+
+### Session 43 — A repeated minim's stem on one of its noteheads
+
+**Releasable: no.**
+
+Add cnb:multinote-stem-on-head (cnb/config.ly), default #f (today's placement), and release it as engine 1.9.0 in session 44. Configurator session 72 has not yet written its brief, so by the operator's decision (2026-11-14) the engine names the setting: a boolean, and Configurator 72 writes this name and value. When it is #t and a note's resolved config repeats its head (repeat not #f) and the note is a minim, cnb:stem-attachment (cnb/stems.ly) maps the captured attachment point onto one head of the group rather than across it: the last head when the stem is up, the first when it is down, and a centred stem follows the same rule. For a group of two copies, the second starting s = (1 - overlap) head widths after the first (cnb:build-duration-stencil, cnb/stencils.ly; s = w + cnb:multinote-padding when the overlap is #f), the point's x is the head's own relative x placed on the chosen head and rewritten relative to the group's X extent, x' = (2ks + w(1 + x)) / (s + w) - 1 with k = 1 for the last head and 0 for the first; y is unchanged. The repeat flag is captured on the grob at acknowledge time beside the attachment record, since the config cache is not current at layout time. A crotchet, a single head (repeat #f) and the setting #f are unchanged, so every existing file engraves as before. Unit specs in test-unit.ly, an integration spec on 2.24 and 2.26, a README line beside the stem attachment, a CHANGELOG.md 1.9.0 section, version.json 1.9.0 and a Configurator handoff with measured stems for the default notehead, Kite 4-369 and the tutorial's diamonds at an overlap of 1/3 finish the session.
+
+**Amended after acceptance:**
+
+- 2026-11-14 — step 'spec': its files: Measured: LilyPond's Stem offset adds -dir x thickness/2 whenever the attachment x is non-zero, so a centred (x 0) point mapped onto a minim's chosen head (x non-zero) sits half a stem thickness (0.065 ss) off the head's centre while the crotchet's stem is centred; cnb:stem-attachment must cancel that shift for x 0 so the stem stands where the crotchet's does. (claude-code (anthropic, claude-opus-5-5))

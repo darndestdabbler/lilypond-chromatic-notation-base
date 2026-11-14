@@ -156,6 +156,13 @@ staff-space units (already scaled by the staff's staff-space).")
    "Stem-attachment record (crotchet-up, crotchet-down, minim-up,
 minim-down) of this notehead's config, captured at acknowledge time.")
 
+%% Whether the note's config repeats its head, captured beside
+%% cnb-attachment for the same reason. Set only when repeat is not #f.
+%% Read by cnb:stem-attachment (cnb/stems.ly).
+#(cnb:define-grob-property 'cnb-repeat boolean?
+   "#t when this notehead's config repeats the head (repeat not #f),
+captured at acknowledge time.")
+
 %% The offset applier, run from Stem.before-line-breaking (cnb/layout.ly).
 %%
 %% TIMING IS THE POINT: grobs must NOT be mutated while a property is
@@ -315,6 +322,9 @@ minim-down) of this notehead's config, captured at acknowledge time.")
                  (let ((att (and config (cnb:config-field config 'attachment))))
                    (if (pair? att)
                        (ly:grob-set-property! grob 'cnb-attachment att)))
+                 (if (and config
+                          (not (eq? (cnb:config-field config 'repeat) #f)))
+                     (ly:grob-set-property! grob 'cnb-repeat #t))
                  (if (not (zero? x-off))
                      (ly:grob-set-property! grob 'cnb-x-offset
                                             (* x-off staff-space))))))))))

@@ -1,0 +1,117 @@
+{
+  "test_name": "A repeated minim's stem on one of its heads: cnb:multinote-stem-on-head #t",
+  "input_file": "stem-repeat-minim.ly",
+  "description": "Session 43. With cnb:multinote-stem-on-head #t a repeated minim's stem attaches to one head of its group as a crotchet's stem attaches to its one head: the last head when the stem is up, the first when it is down. On 4 semitones per staff space at an overlap of 1/3, C5 is the Configurator's default head with its side attachment ((1 . 0.3157) up, (-1 . -0.3157) down) and C#5 the tutorial's diamond (1.5 wide) attached at its centre, (0 . 0). Measure 1 has stems up, measure 2 down. The harvest measures a head by its path's control-point hull, so the group's right edge is its last head's right edge and its left edge its first head's left edge, and a diamond's hull is its stencil: the last diamond's centre is the group's right edge less 0.75, the first's its left edge plus 0.75. A side stem keeps the crotchet's distance from the head's outer edge (0.053 up, 0.014 down, in the hull's terms); a centred stem stands on the centre of its head, 0.5 (half the 1.0 step between the copies) from the group's centre, where it stood without the setting. Each minim's stem has its crotchet's ends: y is unchanged. Measured on 2.24 and 2.26 alike.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE NOTES ==="},
+
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "Eight noteheads: a crotchet and a minim of each head, stems up then down",
+      "expect": {
+        "type": ["count('notehead') == 8", "count('stem') == 8"],
+        "data.duration": ["== '2'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE SIDE STEM (THE DEFAULT HEAD) ==="},
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "C5 crotchet, stem up: its right edge 0.053 inside the head's hull, as without the setting",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(prop('nh-1-0.000-72-0', 'visual.bbox.x') + prop('nh-1-0.000-72-0', 'visual.bbox.w') - (v + prop('st-1-0.000-0', 'visual.bbox.w')) - 0.053) < 0.005"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.250-0",
+      "description": "C5 minim, stem up: on its last head, as far inside that head's right edge as the crotchet's, with the crotchet's ends",
+      "expect": {
+        "visual.bbox.x": [
+          "abs((prop('nh-1-0.250-72-0', 'visual.bbox.x') + prop('nh-1-0.250-72-0', 'visual.bbox.w') - (v + prop('st-1-0.250-0', 'visual.bbox.w'))) - (prop('nh-1-0.000-72-0', 'visual.bbox.x') + prop('nh-1-0.000-72-0', 'visual.bbox.w') - (prop('st-1-0.000-0', 'visual.bbox.x') + prop('st-1-0.000-0', 'visual.bbox.w')))) < 0.005"
+        ],
+        "visual.bbox.y": ["abs(v - prop('st-1-0.000-0', 'visual.bbox.y')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('st-1-0.000-0', 'visual.bbox.h')) < 0.005"]
+      }
+    },
+    {
+      "id": "st-2-0.000-0",
+      "description": "C5 crotchet, stem down: its left edge 0.014 inside the head's hull, as without the setting",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v - prop('nh-2-0.000-72-0', 'visual.bbox.x') - 0.014) < 0.005"
+        ]
+      }
+    },
+    {
+      "id": "st-2-0.250-0",
+      "description": "C5 minim, stem down: on its first head, as far inside that head's left edge as the crotchet's, with the crotchet's ends",
+      "expect": {
+        "visual.bbox.x": [
+          "abs((v - prop('nh-2-0.250-72-0', 'visual.bbox.x')) - (prop('st-2-0.000-0', 'visual.bbox.x') - prop('nh-2-0.000-72-0', 'visual.bbox.x'))) < 0.005"
+        ],
+        "visual.bbox.y": ["abs(v - prop('st-2-0.000-0', 'visual.bbox.y')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('st-2-0.000-0', 'visual.bbox.h')) < 0.005"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE CENTRED STEM (THE DIAMOND) ==="},
+
+    {
+      "id": "nh-1-1.000-73-0",
+      "description": "The diamond minim is 1 + 2/3 diamonds wide (2.5), so its copies are 1.0 apart",
+      "expect": {
+        "visual.bbox.w": [
+          "abs(v - prop('nh-1-0.750-73-0', 'visual.bbox.w') * (1 + 2/3)) < 0.005",
+          "abs(prop('nh-1-0.750-73-0', 'visual.bbox.w') - 1.5) < 0.005"
+        ]
+      }
+    },
+    {
+      "id": "st-1-0.750-0",
+      "description": "C#5 crotchet, stem up: centred on the head, as without the setting",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-0.750-0', 'visual.bbox.w') / 2 - prop('nh-1-0.750-73-0', 'visual.bbox.x') - prop('nh-1-0.750-73-0', 'visual.bbox.w') / 2) < 0.005"
+        ]
+      }
+    },
+    {
+      "id": "st-1-1.000-0",
+      "description": "C#5 minim, stem up: centred on its last head (the group's right edge less 0.75), 0.5 right of the group's centre, with the crotchet's ends",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-1-1.000-0', 'visual.bbox.w') / 2 - (prop('nh-1-1.000-73-0', 'visual.bbox.x') + prop('nh-1-1.000-73-0', 'visual.bbox.w') - prop('nh-1-0.750-73-0', 'visual.bbox.w') / 2)) < 0.005",
+          "abs(v + prop('st-1-1.000-0', 'visual.bbox.w') / 2 - (prop('nh-1-1.000-73-0', 'visual.bbox.x') + prop('nh-1-1.000-73-0', 'visual.bbox.w') / 2) - 0.5) < 0.005"
+        ],
+        "visual.bbox.y": ["abs(v - prop('st-1-0.750-0', 'visual.bbox.y')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('st-1-0.750-0', 'visual.bbox.h')) < 0.005"]
+      }
+    },
+    {
+      "id": "st-2-0.750-0",
+      "description": "C#5 crotchet, stem down: centred on the head, as without the setting",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-0.750-0', 'visual.bbox.w') / 2 - prop('nh-2-0.750-73-0', 'visual.bbox.x') - prop('nh-2-0.750-73-0', 'visual.bbox.w') / 2) < 0.005"
+        ]
+      }
+    },
+    {
+      "id": "st-2-1.000-0",
+      "description": "C#5 minim, stem down: centred on its first head (the group's left edge plus 0.75), 0.5 left of the group's centre, with the crotchet's ends",
+      "expect": {
+        "visual.bbox.x": [
+          "abs(v + prop('st-2-1.000-0', 'visual.bbox.w') / 2 - (prop('nh-2-1.000-73-0', 'visual.bbox.x') + prop('nh-2-0.750-73-0', 'visual.bbox.w') / 2)) < 0.005",
+          "abs((prop('nh-2-1.000-73-0', 'visual.bbox.x') + prop('nh-2-1.000-73-0', 'visual.bbox.w') / 2) - (v + prop('st-2-1.000-0', 'visual.bbox.w') / 2) - 0.5) < 0.005"
+        ],
+        "visual.bbox.y": ["abs(v - prop('st-2-0.750-0', 'visual.bbox.y')) < 0.005"],
+        "visual.bbox.h": ["abs(v - prop('st-2-0.750-0', 'visual.bbox.h')) < 0.005"]
+      }
+    }
+  ]
+}

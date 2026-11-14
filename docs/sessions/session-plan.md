@@ -1125,9 +1125,16 @@ on this session's release.
 Nothing changes unless the setting is set, so every export written today
 engraves as before.
 
+**The name (2026-11-14).** Configurator session 72 had not yet run, so no
+brief was written; by the operator's decision of 2026-11-14 the engine
+named the setting `cnb:multinote-stem-on-head`, a boolean, with a centred
+stem following the same rule (no side chosen once). Configurator session
+72 writes this name and value.
+
 1. Register.
-2. **The setting.** A new variable in `cnb/config.ly`, named and valued as
-   the Configurator's brief says, default `#f` (today's placement). When
+2. **The setting.** A new variable in `cnb/config.ly`,
+   `cnb:multinote-stem-on-head` (see above), default `#f` (today's
+   placement). When
    it is set, `cnb:stem-attachment` maps the head's attachment point onto
    one head of a repeated group rather than across the group: for a group
    of n copies, each (1 − overlap) head widths after the last

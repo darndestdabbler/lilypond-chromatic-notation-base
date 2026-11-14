@@ -294,6 +294,8 @@ Before the procedure, the config file registers named definitions that the proce
 
 A stem attachment point may be anywhere, including the head's centre, `'(0 . 0)`. Each point is an `(x . y)` pair in LilyPond's normalised notehead coordinates (±1 = the head's edges), and the engine hands it to LilyPond unchanged. The stem's far end stays LilyPond's standard length (3.5 staff spaces unbeamed) from the head's **centre**, whatever the anchor. A centre anchor on a 4-semitone head therefore shows as much stem past the head as Kite's `(0 . 0.9)` anchor does. Stems are drawn over noteheads, so a stem anchored inside its head stays visible across a hollow head, whether the hollow is true or false (white overlay). `tests/stem-centre.ly` (true hollow) and `tests/stem-centre-false-hollow.ly` prove this. To place an anchor with the Inkscape Music Glyph Toolkit: its export reads the **bottom-centre of the `stem-up` rect** and the **top-centre of the `stem-down` rect**. For a centre anchor, centre both rects on x = 0, put the `stem-up` rect's bottom edge on y = 0 and the `stem-down` rect's top edge on y = 0.
 
+In repeat mode a minim's head is two heads, and LilyPond reads its point across the pair, so a centred stem stops between them. With `cnb:multinote-stem-on-head` set to `#t`, the engine places the minim's point on one head instead, as a single head's stem is placed: the **last** head when the stem is up, the **first** when it is down. The y stays the same, and a centred stem stands on that head's centre. `tests/stem-repeat-minim.ly` proves this.
+
 A custom clef definition is an alist: required `(path . <command list>)` (same format as notehead paths) and `(anchor-semitones . <number>)` — the semitone position of the glyph's **top edge**, a float per the Configurator's anchor contract — plus optional `(height-semitones . <positive number>)` (design height; the explicit `cnb:clef-size-semitones` override wins) and `(color . "#RRGGBB")`. Select it with `cnb:clef-style 'custom` + `cnb:clef-name`.
 
 ### Engine Settings
@@ -308,6 +310,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:false-hollow` | `#f` | Use white-overlay hollows for angular shapes |
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
 | `cnb:multinote-overlap` | `#f` | Overlap of each repeated notehead with the last, as a share of the head's own width (1/3 recommended: each starts 2/3 of a head after the last); when set it replaces `cnb:multinote-padding`, which is then not read; `#f` = use the padding |
+| `cnb:multinote-stem-on-head` | `#f` | `#t` puts a repeated minim's stem on its last head when up and its first when down, as a single head's stem is attached; `#f` = across the whole group of heads |
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
 | `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), `'none` (no clef stencil), or `'custom` (registered glyph named by `cnb:clef-name`) |
 | `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |

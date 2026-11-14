@@ -33,6 +33,7 @@
 \include "cnb/procedure.ly"
 \include "cnb/path-geometry.ly"
 \include "cnb/stencils.ly"
+\include "cnb/stems.ly"
 \include "cnb/ledgers.ly"
 \include "cnb/off-key.ly"
 \include "cnb/clefs.ly"
@@ -281,6 +282,69 @@
    (cnb:assert-near "overlap 1/3: the padding is not read (semibreve with padding 3)"
      (width 1) (+ 1 (* 3 2/3)) 0.001)
    (set! cnb:multinote-padding saved)
+   (set! cnb:multinote-overlap #f))
+
+#(cnb:test-group "stems.ly — cnb:stem-on-head")
+%% A repeated minim's stem on one head of its group: the last when up,
+%% the first when down. With a head width of 1 the second copy starts
+%% s after the first (2/3 at an overlap of 1/3; 1 - 0.5 with the overlap
+%% #f and the padding -0.5), the group is s + 1 wide, and a point at x on
+%% head k (1 last, 0 first) is x' = (2ks + 1 + x) / (s + 1) - 1 of the
+%% group; y is unchanged. A side point at the group's outer edge stays
+%% there; a centred point moves onto its head's centre.
+#(let ((on (lambda (pt dir) (cnb:stem-on-head pt dir 1))))
+   (cnb:assert-equal "the setting defaults to #f" cnb:multinote-stem-on-head #f)
+   (cnb:assert-equal "padding is -0.5 for these cases" cnb:multinote-padding -.5)
+   ;; overlap #f, padding -0.5: s = 0.5, group 1.5
+   (cnb:assert-near "overlap #f: side up (1 . 0.3) on the last head: x 1"
+     (car (on '(1 . 0.3) UP)) 1 0.0001)
+   (cnb:assert-near "overlap #f: side up keeps y 0.3"
+     (cdr (on '(1 . 0.3) UP)) 0.3 0.0001)
+   (cnb:assert-near "overlap #f: side down (-1 . -0.3) on the first head: x -1"
+     (car (on '(-1 . -0.3) DOWN)) -1 0.0001)
+   (cnb:assert-near "overlap #f: side down keeps y -0.3"
+     (cdr (on '(-1 . -0.3) DOWN)) -0.3 0.0001)
+   (cnb:assert-near "overlap #f: centred up on the last head's centre: x 1/3"
+     (car (on '(0 . 0) UP)) 1/3 0.0001)
+   (cnb:assert-near "overlap #f: centred down on the first head's centre: x -1/3"
+     (car (on '(0 . 0) DOWN)) -1/3 0.0001)
+   (cnb:assert-near "overlap #f: centred keeps y 0"
+     (cdr (on '(0 . 0) UP)) 0 0.0001)
+   (cnb:assert-near "overlap #f: (0.5 . 0.2) up: x 2/3"
+     (car (on '(0.5 . 0.2) UP)) 2/3 0.0001)
+   ;; overlap 1/3: s = 2/3, group 5/3
+   (set! cnb:multinote-overlap 1/3)
+   (cnb:assert-near "overlap 1/3: side up (1 . 0.3) on the last head: x 1"
+     (car (on '(1 . 0.3) UP)) 1 0.0001)
+   (cnb:assert-near "overlap 1/3: side up keeps y 0.3"
+     (cdr (on '(1 . 0.3) UP)) 0.3 0.0001)
+   (cnb:assert-near "overlap 1/3: side down (-1 . -0.3) on the first head: x -1"
+     (car (on '(-1 . -0.3) DOWN)) -1 0.0001)
+   (cnb:assert-near "overlap 1/3: side down keeps y -0.3"
+     (cdr (on '(-1 . -0.3) DOWN)) -0.3 0.0001)
+   (cnb:assert-near "overlap 1/3: centred up on the last head's centre: x 0.4"
+     (car (on '(0 . 0) UP)) 0.4 0.0001)
+   (cnb:assert-near "overlap 1/3: centred down on the first head's centre: x -0.4"
+     (car (on '(0 . 0) DOWN)) -0.4 0.0001)
+   (cnb:assert-near "overlap 1/3: centred keeps y 0"
+     (cdr (on '(0 . 0) DOWN)) 0 0.0001)
+   (cnb:assert-near "overlap 1/3: (0.5 . 0.2) up: x 0.7"
+     (car (on '(0.5 . 0.2) UP)) 0.7 0.0001)
+   (cnb:assert-near "overlap 1/3: the head width cancels (width 2, centred up: x 0.4)"
+     (car (cnb:stem-on-head '(0 . 0) UP 2)) 0.4 0.0001)
+   (set! cnb:multinote-overlap #f))
+
+#(cnb:test-group "stems.ly — cnb:repeated-minim-head-width")
+%% The head width back from a two-copy group's width: (2 - overlap) heads,
+%% or 2 heads + the padding.
+#(begin
+   (cnb:assert-near "overlap #f, padding -0.5: a 1.5-wide group has 1-wide heads"
+     (cnb:repeated-minim-head-width 1.5) 1 0.0001)
+   (set! cnb:multinote-overlap 1/3)
+   (cnb:assert-near "overlap 1/3: a 5/3-wide group has 1-wide heads"
+     (cnb:repeated-minim-head-width 5/3) 1 0.0001)
+   (cnb:assert-near "overlap 1/3: a 1.4370-wide group has 0.8622-wide heads"
+     (cnb:repeated-minim-head-width 1.4370) 0.8622 0.0001)
    (set! cnb:multinote-overlap #f))
 
 #(cnb:test-group "utils.ly — cnb:compose-after-line-breaking")

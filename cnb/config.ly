@@ -552,6 +552,14 @@
 %% the last, whatever the shape.
 #(define cnb:multinote-overlap #f)
 
+%% Where a repeated minim's stem attaches. #f (the default) reads the
+%% head's attachment point across the whole group of heads, as LilyPond
+%% does for any stencil. #t attaches it to one head of the group as a
+%% single head's stem is attached: the last head when the stem is up,
+%% the first when it is down, a centred stem too (cnb:stem-on-head,
+%% cnb/stems.ly).
+#(define cnb:multinote-stem-on-head #f)
+
 %% Threshold for LilyPond's collision detection between note columns.
 %% Higher values allow closer notes before LilyPond shifts them apart.
 #(define cnb:collision-threshold 2)

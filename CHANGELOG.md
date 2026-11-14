@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.9.0
+
+- New setting `cnb:multinote-stem-on-head`, default `#f`. When it is `#t`,
+  a repeated minim's stem attaches to one head of its group as a single
+  head's stem does: the last head when the stem is up, the first when it
+  is down, a centred stem too. The minim's attachment point is placed on
+  that head and rewritten relative to the group's X extent; its y is
+  unchanged. Before, LilyPond read the point across the whole group, so a
+  centred stem stopped between the two heads. Crotchets, single heads
+  (`repeat` `#f`) and every note with the setting `#f` are unchanged, so
+  a file that does not set it engraves as before.
+- New spec `tests/stem-repeat-minim`: the Configurator's default notehead
+  (a side stem) and the tutorial's diamond (a centred stem) at an overlap
+  of 1/3, as crotchets and minims, stems up and down.
+- No golden or harvest changed.
+  `docs/session-sets/043-repeat-minim-stem/configurator-handoff.md` gives
+  the measured stems of the default notehead, Kite 4-369 and the
+  tutorial's diamonds.
+
 ## 1.8.0
 
 - A dozenal clef sized by `cnb:clef-size-semitones` is now scaled about
