@@ -350,6 +350,13 @@
       "what": "step 'spec': its files",
       "reason": "Measured: LilyPond's Stem offset adds -dir x thickness/2 whenever the attachment x is non-zero, so a centred (x 0) point mapped onto a minim's chosen head (x non-zero) sits half a stem thickness (0.065 ss) off the head's centre while the crotchet's stem is centred; cnb:stem-attachment must cancel that shift for x 0 so the stem stands where the crotchet's does.",
       "by": "claude-code (anthropic, claude-opus-5-5)"
+    },
+    {
+      "kind": "task-declaration",
+      "sessionNumber": 44,
+      "dateTime": "2026-11-14T14:47:14.060000-05:00",
+      "task": "Release 1.9.0: the framework packs and publishes what is on the trunk.",
+      "releasable": true
     }
   ]
 }

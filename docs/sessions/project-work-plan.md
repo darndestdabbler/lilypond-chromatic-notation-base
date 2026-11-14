@@ -55,7 +55,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 41 | The dozenal clef sized about the middle line | no | 2026-11-13 |
 | 42 | Release 1.8.0 (release: 1.8.0) | yes | 2026-11-13 |
 | 43 | A repeated minim's stem on one of its noteheads | no | 2026-11-14 |
-| 44 | Release 1.9.0 (release: 1.9.0) | — | not declared |
+| 44 | Release 1.9.0 (release: 1.9.0) | yes | 2026-11-14 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -335,3 +335,9 @@ Add cnb:multinote-stem-on-head (cnb/config.ly), default #f (today's placement), 
 **Amended after acceptance:**
 
 - 2026-11-14 — step 'spec': its files: Measured: LilyPond's Stem offset adds -dir x thickness/2 whenever the attachment x is non-zero, so a centred (x 0) point mapped onto a minim's chosen head (x non-zero) sits half a stem thickness (0.065 ss) off the head's centre while the crotchet's stem is centred; cnb:stem-attachment must cancel that shift for x 0 so the stem stands where the crotchet's does. (claude-code (anthropic, claude-opus-5-5))
+
+### Session 44 — Release 1.9.0 (release: 1.9.0)
+
+**Releasable: yes.**
+
+Release 1.9.0: the framework packs and publishes what is on the trunk.
