@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 033 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 033 transcript</h1>
+<p class="stamp">Rendered 2026-11-11T14:32:26.987Z by dabbler-ai-router 3.32.1 at 254b08fa4c87a2ddc853f7213ebf45f04290e8f7.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-11T09:19:35.174-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 33: Key-signature ledgers from the notation's ledger rules</h3>
+<p><strong>Why.</strong> The Configurator's session 49 engine round trip (<code>cnb/tests/cnb-lilypond-tests.js</code>, &quot;mark table (engine)&quot;) found that a key signature's noteheads take their ledger lines from the engine's own rule, <code>cnb:notehead-ledgers</code> (<code>cnb/keysig.ly</code>): <code>cnb:proximity-rule</code> on the head's staff position rounded to a whole number. Since the Configurator's LY spec 1.3.9 §5.7 every export carries the notation's ledgers by pitch, <code>cnb:ledgers-by-semitone</code> (engine semitone, middle C = 0, → ledger staff positions), and every note's head takes its entry through <code>NoteHead.ledger-positions</code>. The signature does not, so it disagrees with the notes and with the Configurator's canvas: on the default 4-8 staff the engraved C-major signature gives B a ledger above the staff and C and D none, where the notes, and the canvas's signature, give C and D their in-gap ledgers and B none. This holds for <code>'chord</code> and <code>'marks</code> alike, and a ledger past the marks also moves the signature's ink and so the first note. The operator chose to fix it here rather than copy the engine's rule into the canvas (Configurator session 49).</p>
+<ol><li>Register.</li><li><strong>The fix.</strong> A key-signature head whose engine semitone has an entry in <code>cnb:ledgers-by-semitone</code>, when the export defines it, takes exactly that entry's ledgers (half staff spaces from the middle line, scaled by the magnification as today), none for an empty entry. A head with no entry, or a score with no table, keeps today's rule. This covers <code>'chord</code>'s heads (their semitones from <code>cnb:keysig-pitches</code>) and <code>'marks</code>'s (each mark's <code>semi</code>). Lengths, thickness, caps and layering are unchanged: 4/3 of the head's width, 0.2 staff spaces, round caps. <code>cnb:ledgers-by-semitone</code> keeps its format; if the engine needs to read it before the export defines it, give it a default of <code>'()</code> in <code>cnb/config.ly</code> and say in the handoff whether the export should <code>set!</code> rather than <code>define</code> it.</li><li><strong>Tests.</strong> Unit specs for a signature head with an entry, one with an empty entry, one with none (today's rule), and no table at all; integration specs for the default 4-8 staff's C major under <code>'chord</code> and <code>'marks</code> (C and D with their in-gap ledgers, B with none). Goldens on LilyPond 2.24 and 2.26 without a table stay byte-identical; any golden whose score defines the table and whose signature ledgers change is named in the handoff.</li><li>A <code>CHANGELOG.md</code> section and <code>version.json</code> to <code>1.4.1</code>: a patch, the signature following the notation's ledger rules that every export already carries. Write <code>docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md</code>: what changed, a worked case, and session 34 as the release.</li></ol>
+<h2>Work Plan</h2>
+<p>Make the key signature's noteheads take their ledger lines from the notation's ledger rules, cnb:ledgers-by-semitone (engine semitone, middle C = 0, -&gt; ledger staff positions), which every Configurator export since LY spec 1.3.9 section 5.7 defines and its notes already follow through NoteHead.ledger-positions. cnb/config.ly gains #(define cnb:ledgers-by-semitone '()) with a comment giving the format, so the engine can read it in a score with no table and an export's later define replaces it (a top-level define of a bound name rebinds it, as cnb:keysig-marks's does since session 30, so the export keeps define and need not set!). In cnb/keysig.ly cnb:notehead-ledgers takes the head's engine semitone: a semitone with an entry gets exactly that entry's positions as ledgers (none for an empty entry), each half a staff space from the middle line scaled by the magnification as today; a semitone with no entry, or a score with no table, keeps today's rule (cnb:proximity-rule on the rounded staff position, or the advanced-mode lookup). Both callers pass it: 'chord its heads' semitones from cnb:keysig-pitches, 'marks each mark's semi. Ledger length (4/3 of the head's width), thickness, caps and layering are unchanged, and the table joins both key-signature stencil cache keys, since the stencil now depends on it. Unit tests in test-unit.ly and two integration specs on LilyPond 2.24 and 2.26 for the default 4-8 staff's C major under 'chord and 'marks (C and D with their in-gap ledgers, B with none); every existing golden, none of which defines the table, stays byte-identical. Then a CHANGELOG.md 1.4.1 section, version.json 1.4.1 (a patch: the signature follows ledger rules every export already carries), and docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md with what changed, a worked case and session 34 as the release.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/2460272c904962f69aa6a2078b12db92329355a5"><code>2460272c904962f69aa6a2078b12db92329355a5</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Fix</td><td><p>In cnb/config.ly add #(define cnb:ledgers-by-semitone '()) beside the ledger settings, with a comment: the format (an alist, engine semitone with middle C = 0 -&gt; list of ledger staff positions in half staff spaces from the middle line), that a Configurator export defines it (LY spec 1.3.9 section 5.7) and its notes take their entries through NoteHead.ledger-positions, and that the key signature's heads take theirs from it, a semitone with no entry keeping the engine's rule. In cnb/keysig.ly give cnb:notehead-ledgers a first parameter SEMI, the head's engine semitone: when (assv semi cnb:ledgers-by-semitone) finds an entry, the ledgers are its positions, (* y mag 1/2) as today, '() for an empty entry; otherwise today's code unchanged. Pass it from cnb:keysig-markup-list (the head's semi, already computed there) and from cnb:keysig-marks-stencil (the mark's semi, the car of each head). Update the section comment above cnb:notehead-ledgers. Add cnb:ledgers-by-semitone to the cache key of cnb:get-key-signature-stencil and of cnb:get-keysig-marks-stencil, and name it in the cache-key comment. In test-unit.ly add a group 'keysig.ly - cnb:notehead-ledgers by semitone' on the default 4-8 staff (cnb:semitones-per-staff-space 4, cnb:staff-line-positions '(-4 -2 2 4), restored after): cnb:ledgers-by-semitone defaults to '(); with the default export's table (semitones 0-24) a head with an entry, D at 14, gets exactly (0 1) as offsets scaled by mag 1/2, and at mag 2 they scale; one with an empty entry, B at 23, gets none where today's rule gives one; one with no entry, semitone 30, gets what the rule gives (equal to the result with the table '()); and with no table at all the C, D and B heads get today's rule. Restore cnb:ledgers-by-semitone to '() after the group.</p></td><td><span class="mono">cnb/config.ly</span><br><span class="mono">cnb/keysig.ly</span><br><span class="mono">test-unit.ly</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Specs</td><td><p>Write tests/keysig-ledgers-chord.ly: the default 4-8 staff (cnb:semitones-per-staff-space 4, cnb:staff-line-positions '(-4 -2 2 4)), the default Configurator export's cnb:ledgers-by-semitone (semitones 0-24) and its NoteHead.ledger-positions / no-ledgers \layout block, cnb:keysig-style 'chord with the tonic octave putting C major's signature on semitones 12-24, and a short C major passage. Write tests/keysig-ledgers-marks.ly: the same staff and table, cnb:keysig-style 'marks with a hand-written C major entry whose heads include C (12), D (14) and B (23), and the same passage. Each .json spec asserts the signature as harvested, with the values measured on 2.24 and 2.26: its extent, which a ledger on B above the staff, or C and D without their in-gap ledgers, would change (the description records the extent the same file gives with the table removed, i.e. today's rule), and the first note's position. Generate both SVGs and their 2.24 and 2.26 harvests. Run the whole integration suite on both versions, so every existing golden is confirmed byte-identical.</p></td><td><span class="mono">tests/keysig-ledgers-chord.ly</span><br><span class="mono">tests/keysig-ledgers-chord.json</span><br><span class="mono">tests/keysig-ledgers-chord.svg</span><br><span class="mono">tests/keysig-ledgers-chord.harvested.json</span><br><span class="mono">tests/lilypond-2.26/keysig-ledgers-chord.harvested.json</span><br><span class="mono">tests/keysig-ledgers-marks.ly</span><br><span class="mono">tests/keysig-ledgers-marks.json</span><br><span class="mono">tests/keysig-ledgers-marks.svg</span><br><span class="mono">tests/keysig-ledgers-marks.harvested.json</span><br><span class="mono">tests/lilypond-2.26/keysig-ledgers-marks.harvested.json</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>Add a '## 1.4.1' section to CHANGELOG.md above '## 1.4.0': key-signature heads take their ledgers from cnb:ledgers-by-semitone, a head with no entry or a score with no table keeps the engine's rule, the new default '() in cnb/config.ly, the new specs, and no existing golden changed. Set version.json to 1.4.1. Write docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md in the form of the earlier handoffs: what changed and what did not (lengths, thickness, caps, layering, the table's format); that the export keeps define (no set! needed, and why); a worked case, the default 4-8 staff's C major under 'chord and 'marks, giving each of B, C and D's ledgers before and after and the measured extents; that no existing golden defines the table, so none changed; that a table needs engine 1.4.1 for the signature to follow it; and session 34 as the release of 1.4.1.</p></td><td><span class="mono">CHANGELOG.md</span><br><span class="mono">version.json</span><br><span class="mono">docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md</span></td><td><code>python -c import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.4.1'):c.index('## 1.4.0')]; checks = [('CHANGELOG', top, 'cnb:ledgers-by-semitone'), ('handoff', h, 'cnb:ledgers-by-semitone'), ('handoff', h, 'define'), ('handoff', h, &quot;'marks&quot;), ('handoff', h, &quot;'chord&quot;), ('handoff', h, 'session 34'), ('version', v, '1.4.1')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No change to cnb:ledgers-by-semitone's format, to how the notes' ledgers are drawn, or to the engine's own ledger rule for a head with no entry or a score with no table.</li><li>No change to the signature's ledger lengths, thickness, caps or layering, to its heads, bars, sharps, flats or spacing, or to 'none.</li><li>No change to any existing golden: every existing tests/*.svg and both harvests of every existing spec stay byte-identical.</li><li>No Configurator-side change: the canvas, the exporter and its engine round trip are the Configurator's; this session writes only the handoff it reads.</li><li>No release: packing and publishing 1.4.1 is session 34's, and dabbler.yaml is not touched.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[14:19:35]</span> <span class="muted">run-started</span> session=033 mode=pull</div>
+<div class="line"><span class="at">[14:19:35]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[14:22:03]</span> <span class="muted">run-resumed</span> session=033 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[14:22:03]</span> <span class="muted">plan-accepted</span> steps=[&quot;fix&quot;,&quot;specs&quot;,&quot;document&quot;] non_goals=5</div>
+<div class="line"><span class="at">[14:22:03]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[14:22:03]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=fix</div>
+<div class="line"><span class="at">[14:23:49]</span> <span class="muted">run-resumed</span> session=033 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[14:23:51]</span> <span class="muted">check-passed</span> step=fix argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[14:23:51]</span> <span class="muted">report-accepted</span> seq=2 step=fix files=[&quot;cnb/config.ly&quot;,&quot;cnb/keysig.ly&quot;,&quot;test-unit.ly&quot;] notes=cnb:ledgers-by-semitone default '() in config.ly; cnb:notehead-ledgers takes SEMI and uses the table's entry when present; both callers pass it; table in both cache keys; unit group on the 4-8 staff (resets the cached ledger candidates)</div>
+<div class="line"><span class="at">[14:23:51]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=specs</div>
+<div class="line"><span class="at">[14:27:40]</span> <span class="muted">run-resumed</span> session=033 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[14:28:05]</span> <span class="muted">check-passed</span> step=specs argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[14:28:05]</span> <span class="muted">report-accepted</span> seq=3 step=specs files=[&quot;tests/keysig-ledgers-chord.ly&quot;,&quot;tests/keysig-ledgers-chord.json&quot;,&quot;tests/keysig-ledgers-chord.svg&quot;,&quot;tests/keysig-ledgers-chord.harvested.json&quot;,&quot;tests/lilypond-2.26/keysig-ledgers-chord.harvested.json&quot;,&quot;tests/keysig-ledgers-marks.ly&quot;,&quot;tests/keysig-ledgers-marks.json&quot;,&quot;tests/keysig-ledgers-marks.svg&quot;,&quot;tests/keysig-ledgers-marks.harvested.json&quot;,&quot;tests/lilypond-2.26/keysig-ledgers-marks.harvested.json&quot;] notes=Two specs on the default 4-8 staff with the export's table. C major's chord extent is unchanged by the table (its in-gap ledgers lie inside the heads), so the chord spec adds a G major bar where C and D's ledgers widen it 2.0-&gt;2.334; marks C major widens 2.167-&gt;2.334. No-table values recorded in each description. 399/399 on 2.24 and 2.26, no harvest drift</div>
+<div class="line"><span class="at">[14:28:05]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=document</div>
+<div class="line"><span class="at">[14:29:04]</span> <span class="muted">run-resumed</span> session=033 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[14:29:04]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.4.1'):c.index('## 1.4.0')]; checks = [('CHANGELOG', top, 'cnb:ledgers-by-semitone'), ('handoff', h, 'cnb:ledgers-by-semitone'), ('handoff', h, 'define'), ('handoff', h, \&quot;'marks\&quot;), ('handoff', h, \&quot;'chord\&quot;), ('handoff', h, 'session 34'), ('version', v, '1.4.1')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[14:29:04]</span> <span class="muted">report-accepted</span> seq=4 step=document files=[&quot;CHANGELOG.md&quot;,&quot;version.json&quot;,&quot;docs/session-sets/033-keysig-ledgers-by-semitone/configurator-handoff.md&quot;] notes=CHANGELOG 1.4.1 section; version.json 1.4.1; handoff: what changed and not, define not set! (export defines the table after the include), worked 4-8 C major case with before/after ledgers and measured extents, compatibility, session 34 as the release</div>
+<div class="line"><span class="at">[14:29:04]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[14:29:04]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[14:29:05]</span> <span class="muted">job-started</span> name=verification pid=58956 log=.dabbler/runs/s33/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[14:30:20]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[14:30:20]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[14:30:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[14:30:20]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[14:30:20]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=63308 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[14:30:34]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[14:30:34]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[14:30:34]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=44356 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[14:30:36]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[14:30:36]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[14:30:36]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=60548 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[14:30:49]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[14:30:49]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[14:30:49]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=35756 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[14:30:50]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[14:30:50]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[14:30:50]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=61752 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[14:31:36]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[14:31:36]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[14:31:36]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=2556 log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[14:32:18]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[14:32:18]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[14:32:21]</span> <span class="muted">landed</span> commit=2460272c904962f69aa6a2078b12db92329355a5</div>
+<div class="line"><span class="at">[14:32:21]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[14:32:21]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[14:32:21]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[14:32:21]</span> <span class="muted">job-started</span> name=close pid=39780 log=.dabbler/runs/s33/driver/jobs/close.log</div>
+<div class="line"><span class="at">[14:32:26]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s33/driver/jobs/close.log</div>
+<div class="line"><span class="at">[14:32:26]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>13s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>12s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>45s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>42s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

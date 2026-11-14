@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 018 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 018 transcript</h1>
+<p class="stamp">Rendered 2026-11-05T00:40:55.885Z by dabbler-ai-router 3.29.0 at 4afea6f986a68bd60d24e26850743790623d5a9b.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-04T16:59:17.005-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 18: One include makes any LilyPond score chromatic</h3>
+<p><strong>Why.</strong> On 2026-11-04 musicxml2ly output (Frescobaldi's *Import MusicXML* defaults, <code>--nd --nrp --npl --no-beaming</code>) engraved in Kite on 2.24.2 and 2.26.0 with one <code>\include</code> added after <code>\version</code>: 20 of 20 real scores that musicxml2ly turned into valid LilyPond, and 9 of 9 LilyPond regression files (plan §1.2–1.3). But a plain score renders the heads at default staff size, small, and clips the instrument names at the left margin, because <code>\magnifyStaff #cnb:default-magnify</code> and <code>indent = #cnb:indent</code> are set by hand in every example score and not by the engine.</p>
+<ol><li>Register.</li><li>Add <code>cnb/score-defaults.ly</code>, included by <code>ChromaticNotationBase.ly</code> unless <code>cnb:score-defaults</code> is <code>#f</code> before the include: a <code>\layout</code> that applies <code>\magnifyStaff #cnb:default-magnify</code> to every <code>Staff</code>, and a <code>\paper</code> with <code>indent = #cnb:indent</code> and whatever else every example score sets that a converted score lacks (compare <code>joy-to-the-world.ly</code>). A score's own <code>\paper</code> and <code>\layout</code> still win. Run both integration suites: a spec that drifts set a different value by hand, so that spec opts out with the flag rather than the baseline moving. Add a spec <code>tests/from-musicxml.ly</code> whose music is the committed musicxml2ly output of the Kainhofer file <code>21d-Chords-SchubertStabatMater.xml</code> with only the include line added; assert the magnified staff height and that the system's left edge leaves room for the instrument name.</li><li>README, new section &quot;Starting from MusicXML&quot; before the walkthrough: Frescobaldi *File → Import/Export → Import MusicXML* with its default boxes (page layout, beaming, rest positions and articulation directions all unchecked), the one include line, the engine's defaults and the opt-out flag; the three musicxml2ly failures seen on real scores (<code>cresc. = #(make-dynamic-script …)</code>, note names like <code>fisisisisisis</code>, the nested-tuplet crash) with the fix for each; and MusicFormats <code>xml2ly</code> as the fallback converter.</li></ol>
+<h2>Work Plan</h2>
+<p>Make one include line enough for a converted score. Add cnb/score-defaults.ly, included by ChromaticNotationBase.ly, which applies \magnifyStaff #cnb:default-magnify to every Staff through a top-level \layout, and gives instrument names room through a top-level \paper with a fixed indent (25 mm) and short-indent (12 mm). The plan said <code>indent = #cnb:indent</code>, but cnb/layout.ly already sets that, and its 0 is what clips the names, so the operator chose fixed room in score-defaults (decided 2026-11-04 while planning). cnb:indent and layout.ly stay unchanged. The file applies both blocks unless the score defines <code>cnb:score-defaults</code> as #f before the include. A score's own \paper and \layout still win. Prototyping showed \magnifyStaff is idempotent (a hand-magnified score is not magnified twice), but every existing spec drifts: the plain ones change size, and the joy/example-notes ones pick up the short-indent. So each of the 16 tests/*.ly opts out with the flag, and no baseline moves. Add the spec tests/from-musicxml.ly: the musicxml2ly output (--nd --nrp --npl --no-beaming, LilyPond 2.24.2) of the Kainhofer file 21d-Chords-SchubertStabatMater.xml, verbatim except for the include lines after \version (ChromaticNotationBase.ly, plus cnb/test-ids.ly, which the harvest needs). It asserts the magnified staff height (7/4 of the base staff) and that the system's left edge sits at least the margin plus the 25 mm indent from the page edge, which leaves room for an instrument name. The file itself has none, because musicxml2ly drops Finale's placeholder 'MusicXML Part'. Commit its baselines for 2.24 and 2.26. Finally, add a README section, &quot;Starting from MusicXML&quot;, before the walkthrough: the Frescobaldi import and its default boxes, the one include line, the engine's defaults and the opt-out flag, the three musicxml2ly failures with their fixes, and MusicFormats xml2ly as the fallback.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/5f361c00de7820cd06338f3d1b82ae6586d03a64"><code>5f361c00de7820cd06338f3d1b82ae6586d03a64</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Score defaults</td><td><p>Create cnb/score-defaults.ly. It sets cnb:score-defaults to #t unless the score already defined it, then, guarded by that flag with $(if cnb:score-defaults #{ ... #}), adds a top-level \layout { \context { \Staff \magnifyStaff #cnb:default-magnify } } and a top-level \paper { indent = 25\mm short-indent = 12\mm }. Comment why: cnb/layout.ly's indent of #cnb:indent (0) and its 5 mm margin clip instrument names; a score's own \paper and \layout still win. Include it last from ChromaticNotationBase.ly, after cnb/layout.ly, and add it to that file's module list and its HOW TO USE notes (the opt-out). In each of the 16 tests/*.ly, add <code>#(define cnb:score-defaults #f)</code> before its first \include, with a one-line comment, so every existing harvest stays byte-identical on 2.24 and 2.26. Run both integration suites (load CNB_LILYPOND_2_26 from User scope for 2.26): there must be no drift and no failure.</p></td><td><span class="mono">cnb/score-defaults.ly</span><br><span class="mono">ChromaticNotationBase.ly</span><br><span class="mono">tests/clef-custom.ly</span><br><span class="mono">tests/clef-none.ly</span><br><span class="mono">tests/clef-size-dozenal.ly</span><br><span class="mono">tests/clef-text-size.ly</span><br><span class="mono">tests/c-major-scale.ly</span><br><span class="mono">tests/dots-ledger-lines.ly</span><br><span class="mono">tests/duration-rules.ly</span><br><span class="mono">tests/example-notes.ly</span><br><span class="mono">tests/joy-to-the-world.ly</span><br><span class="mono">tests/joy-to-the-world-configurator.ly</span><br><span class="mono">tests/keysig-bar-style.ly</span><br><span class="mono">tests/keysig-none.ly</span><br><span class="mono">tests/off-key-coexistence.ly</span><br><span class="mono">tests/stem-attachment-key-change.ly</span><br><span class="mono">tests/stem-centre.ly</span><br><span class="mono">tests/stem-centre-false-hollow.ly</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24</code></td><td>yes</td></tr>
+<tr><td>From musicxml spec</td><td><p>Convert D:/musicxmlTestSuite-main/musicxmlTestSuite-main/xmlFiles/21d-Chords-SchubertStabatMater.xml with LilyPond 2.24.2's musicxml2ly (bin/python.exe bin/musicxml2ly.py --nd --nrp --npl --no-beaming), run from the xmlFiles folder with the bare file name, so the generated comment carries no local path. Save the result as tests/from-musicxml.ly, adding only <code>\include &quot;ChromaticNotationBase.ly&quot;</code> and <code>\include &quot;cnb/test-ids.ly&quot;</code> after \version. Write tests/from-musicxml.json: credit the source file (Kainhofer Unofficial MusicXML test suite, MIT), then assert the staff height is 7/4 of the base staff's 4.0 (staff.staff_height == 7.0), that the staff symbol's left edge is at least (5 mm margin + 25 mm indent) / the SVG unit from the page edge, which is room for an instrument name, and the notehead count. Generate the 2.24 baseline (tests/from-musicxml.svg and tests/from-musicxml.harvested.json) and the 2.26 baseline (tests/lilypond-2.26/from-musicxml.harvested.json) with the runner, and check that the spec passes on both versions.</p></td><td><span class="mono">tests/from-musicxml.ly</span><br><span class="mono">tests/from-musicxml.json</span><br><span class="mono">tests/from-musicxml.svg</span><br><span class="mono">tests/from-musicxml.harvested.json</span><br><span class="mono">tests/lilypond-2.26/from-musicxml.harvested.json</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24 tests/from-musicxml.json</code></td><td>yes</td></tr>
+<tr><td>Readme musicxml</td><td><p>README.md: add a section '## Starting from MusicXML' immediately before '## End-to-End Walkthrough: Rendering an Exported Config'. It covers: Frescobaldi File -&gt; Import/Export -&gt; Import MusicXML with its default boxes (page layout, beaming, rest positions and articulation directions all unchecked, i.e. musicxml2ly --nd --nrp --npl --no-beaming); the one include line after \version; what the engine then applies by itself (\magnifyStaff #cnb:default-magnify on every staff, a 25 mm indent and 12 mm short-indent so instrument names are not clipped; a score's own \paper/\layout win); the opt-out <code>#(define cnb:score-defaults #f)</code> before the include; the three musicxml2ly failures seen on real scores with a fix for each: <code>cresc. = #(make-dynamic-script &quot;cresc.&quot;)</code> (rename the identifier without the dot and its uses), note names like <code>fisisisisisis</code> from a bad &lt;alter&gt; (correct the pitch by hand or in the MusicXML), and the nested-tuplet TypeError crash (flatten the tuplets in the source editor or use the fallback converter); and MusicFormats xml2ly as the fallback converter. Add cnb/score-defaults.ly to the Project Structure listing and a cnb:score-defaults row to the Engine Settings table.</p></td><td><span class="mono">README.md</span></td><td><code>python -c import sys; t = open('README.md', encoding='utf-8').read(); a = t.find('## Starting from MusicXML'); b = t.find('## End-to-End Walkthrough'); need = ['cnb:score-defaults', 'make-dynamic-script', 'fisisisisisis', 'xml2ly', 'Import MusicXML', 'score-defaults.ly']; missing = [n for n in need if n not in t]; sys.exit(0 if 0 &lt;= a &lt; b and not missing else 'README: section order %d&lt;%d, missing %s' % (a, b, missing))</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No change to cnb:indent's default, to the \paper block in cnb/layout.ly, or to the Configurator export spec; the instrument-name room is a fixed value in cnb/score-defaults.ly.</li><li>No re-baselining of any existing spec: a spec that drifts opts out with cnb:score-defaults #f.</li><li>No MusicXML smoke tier, vendored Kainhofer subset, run_musicxml.py or corpus gate: session 19.</li><li>No fix for the -inf stencil offset or for AccidentalCautionary/AccidentalSuggestion: session 20.</li><li>No CHANGELOG entry, version.json bump or final README test counts: session 21.</li><li>No edits to the root example scores (joy-to-the-world.ly, the Kite configs) or to musicxml2ly output beyond the include lines.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[21:59:17]</span> <span class="muted">run-started</span> session=018 mode=pull</div>
+<div class="line"><span class="at">[21:59:17]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[00:36:13]</span> <span class="muted">run-resumed</span> session=018 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[00:36:13]</span> <span class="muted">plan-accepted</span> steps=[&quot;score-defaults&quot;,&quot;from-musicxml-spec&quot;,&quot;readme-musicxml&quot;] non_goals=6</div>
+<div class="line"><span class="at">[00:36:14]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[00:36:14]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=score-defaults</div>
+<div class="line"><span class="at">[00:37:42]</span> <span class="muted">run-resumed</span> session=018 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:37:50]</span> <span class="muted">check-passed</span> step=score-defaults argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[00:37:50]</span> <span class="muted">report-accepted</span> seq=2 step=score-defaults files=[&quot;cnb/score-defaults.ly&quot;,&quot;ChromaticNotationBase.ly&quot;,&quot;tests/clef-custom.ly&quot;,&quot;tests/clef-none.ly&quot;,&quot;tests/clef-size-dozenal.ly&quot;,&quot;tests/clef-text-size.ly&quot;,&quot;tests/c-major-scale.ly&quot;,&quot;tests/dots-ledger-lines.ly&quot;,&quot;tests/duration-rules.ly&quot;,&quot;tests/example-notes.ly&quot;,&quot;tests/joy-to-the-world.ly&quot;,&quot;tests/joy-to-the-world-configurator.ly&quot;,&quot;tests/keysig-bar-style.ly&quot;,&quot;tests/keysig-none.ly&quot;,&quot;tests/off-key-coexistence.ly&quot;,&quot;tests/stem-attachment-key-change.ly&quot;,&quot;tests/stem-centre.ly&quot;,&quot;tests/stem-centre-false-hollow.ly&quot;] notes=cnb/score-defaults.ly (magnifyStaff + 25mm/12mm indent, guarded by cnb:score-defaults) included last by ChromaticNotationBase.ly; all 16 specs opt out; 2.24 and 2.26 integration 314/314, 0 drift; unit 325/325. cnb:default-magnify is read at include time (documented in the module).</div>
+<div class="line"><span class="at">[00:37:50]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=from-musicxml-spec</div>
+<div class="line"><span class="at">[00:38:44]</span> <span class="muted">run-resumed</span> session=018 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:38:45]</span> <span class="muted">check-passed</span> step=from-musicxml-spec argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;,&quot;tests/from-musicxml.json&quot;]</div>
+<div class="line"><span class="at">[00:38:45]</span> <span class="muted">report-accepted</span> seq=3 step=from-musicxml-spec files=[&quot;tests/from-musicxml.ly&quot;,&quot;tests/from-musicxml.json&quot;,&quot;tests/from-musicxml.svg&quot;,&quot;tests/from-musicxml.harvested.json&quot;,&quot;tests/lilypond-2.26/from-musicxml.harvested.json&quot;] notes=tests/from-musicxml.ly is musicxml2ly 2.24.2 output of Kainhofer 21d (run from xmlFiles, so no local path) plus the two include lines; spec asserts staff height 7.0 (4.0 x 7/4), 9 noteheads, staff left edge &gt;= 30 mm (17.07 units; measured 17.16); passes on 2.24 and 2.26, baselines generated by the runner.</div>
+<div class="line"><span class="at">[00:38:45]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=readme-musicxml</div>
+<div class="line"><span class="at">[00:39:42]</span> <span class="muted">run-resumed</span> session=018 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[00:39:42]</span> <span class="muted">check-passed</span> step=readme-musicxml argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; t = open('README.md', encoding='utf-8').read(); a = t.find('## Starting from MusicXML'); b = t.find('## End-to-End Walkthrough'); need = ['cnb:score-defaults', 'make-dynamic-script', 'fisisisisisis', 'xml2ly', 'Import MusicXML', 'score-defaults.ly']; missing = [n for n in need if n not in t]; sys.exit(0 if 0 &lt;= a &lt; b and not missing else 'README: section order %d&lt;%d, missing %s' % (a, b, missing))&quot;]</div>
+<div class="line"><span class="at">[00:39:43]</span> <span class="muted">report-accepted</span> seq=4 step=readme-musicxml files=[&quot;README.md&quot;] notes=README: 'Starting from MusicXML' before the walkthrough (Frescobaldi import + default boxes, one include line, engine defaults, opt-out flag, three musicxml2ly failures with fixes, MusicFormats xml2ly fallback); cnb:score-defaults row in Engine Settings; score-defaults.ly in Project Structure. Verified a staff's own \magnifyStaff in \with replaces the default.</div>
+<div class="line"><span class="at">[00:39:43]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[00:39:43]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[00:39:43]</span> <span class="muted">job-started</span> name=verification pid=39912 log=.dabbler/runs/s18/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:40:28]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[00:40:28]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[00:40:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[00:40:28]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[00:40:28]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=38976 log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[00:40:37]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[00:40:37]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[00:40:37]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=32524 log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[00:40:39]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[00:40:39]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:40:39]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=41612 log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:40:47]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[00:40:47]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[00:40:47]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=27220 log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[00:40:48]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[00:40:48]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[00:40:51]</span> <span class="muted">landed</span> commit=5f361c00de7820cd06338f3d1b82ae6586d03a64</div>
+<div class="line"><span class="at">[00:40:51]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[00:40:51]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[00:40:51]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[00:40:51]</span> <span class="muted">job-started</span> name=close pid=11328 log=.dabbler/runs/s18/driver/jobs/close.log</div>
+<div class="line"><span class="at">[00:40:55]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s18/driver/jobs/close.log</div>
+<div class="line"><span class="at">[00:40:55]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>8s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>7s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

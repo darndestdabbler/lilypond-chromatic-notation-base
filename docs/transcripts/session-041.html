@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 041 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 041 transcript</h1>
+<p class="stamp">Rendered 2026-11-13T06:52:38.271Z by dabbler-ai-router 3.32.4 at 09ee41b6dc15ff5691b398a77ea44876266bdb4d.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-13T01:38:11.434-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 41: The dozenal clef sized about the middle line</h3>
+<p><strong>Why.</strong> In the Configurator's session-57 try-out the operator found the clefs too big, as the sharps and flats were, and asked that a clef's height be adjustable without the clef leaving its pitch. In its session 59 (2026-11-13) the operator picked, from mock-ups, an automatic size that follows the staff as the signs' does (LilyPond's size with each staff space drawn as the least of the noteheads' mean height, one staff space and 3 semitones: 68% of LilyPond's size on the default Configurator staff of 4 semitones per staff space), each clef scaled about an anchor point; the dozenal clef's is its middle, on the staff's middle line. A glyph clef needs nothing new: the Configurator registers its top and height. The dozenal clef does: <code>cnb:clef-size-semitones</code> already sets its height, but its vertical offsets stay fixed, so a numeral of another height leaves its place. Configurator session 59 writes <code>cnb:clef-size-semitones</code> for the dozenal clef; its engine round trip waits on this session.</p>
+<p>Nothing changes unless <code>cnb:clef-size-semitones</code> is set with the dozenal clef, so every export written today engraves as before.</p>
+<ol><li>Register.</li><li><strong>The size about the middle line.</strong> In <code>cnb/clefs.ly</code>, when <code>cnb:clef-size-semitones</code> is a number, the dozenal numeral's vertical offsets (<code>cnb:build-dozenal-clef-stencil</code>'s −0.5 translate of the left digit, and the engraver's −1 staff-space <code>Y-offset</code> for the <code>'dozenal</code> style) are multiplied by its target height divided by 3 staff spaces, so the numeral is scaled about the middle line: at a height of H staff spaces its top is 1.4418 × H/3 and its bottom −1.5582 × H/3 staff spaces from the middle line. With <code>#f</code>, or at exactly 3 staff spaces, it engraves as today. The <code>'text</code> style is unchanged.</li><li><strong>Specs.</strong> Unit specs: with the size <code>#f</code> the stencil and offset are as today; at a size of 8.172 semitones on a staff of 4 semitones per staff space (2.043 staff spaces) the numeral's top and bottom are the values above. Integration specs on LilyPond 2.24 and 2.26 for a dozenal clef at a set size. Regenerate the harvests and goldens that change on both versions (none is expected).</li><li>A README line beside the clef settings, a <code>CHANGELOG.md</code> 1.8.0 section, and <code>version.json</code> to <code>1.8.0</code>: a minor release, since a setting gains a behaviour. Write <code>docs/session-sets/041-dozenal-clef-size/configurator-handoff.md</code>, in the form of the earlier handoffs. It gives the dozenal numeral's measured top, bottom and width at 3 staff spaces and at the Configurator's automatic size on its default staff (8.172 semitones, 2.043 staff spaces), and names session 42 as the release.</li></ol>
+<h2>Work Plan</h2>
+<p>Scale the dozenal clef's numeral about the staff's middle line when cnb:clef-size-semitones is set, and prepare engine 1.8.0, which session 42 releases. In cnb/clefs.ly a small helper gives the dozenal clef's offset scale: 1 when cnb:clef-size-semitones is #f, else the target height divided by 3 staff spaces (cnb:clef-size-semitones / cnb:semitones-per-staff-space / 3). cnb:build-dozenal-clef-stencil multiplies its -0.5 x mag translate of the left digit by it, and the engraver multiplies the -1 x mag Y-offset by it for the 'dozenal style only, so at a height of H staff spaces the numeral's top is 1.4418 x H/3 and its bottom -1.5582 x H/3 staff spaces from the middle line; with #f, or at exactly 3 staff spaces, it engraves as today, and the 'text and 'custom styles are unchanged. So the numeral can be measured without a grob, the builder's numeral assembly (the two digit stencils in, the placed numeral out) is split into its own procedure that the builder calls. Unit specs in test-unit.ly cover #f (stencil and offset as today) and 8.172 semitones on a staff of 4 semitones per staff space (2.043 staff spaces: top and bottom as above); tests/clef-size-dozenal, the one tracked spec that sets the size with the dozenal clef, gets its SVG and 2.24 and 2.26 harvests regenerated and its description corrected; a new integration spec engraves the dozenal clef at 8.172 semitones on the Configurator's default staff on 2.24 and 2.26. A README line beside the clef settings, a CHANGELOG.md 1.8.0 section, version.json 1.8.0 and docs/session-sets/041-dozenal-clef-size/configurator-handoff.md (the numeral's measured top, bottom and width at 3 and 2.043 staff spaces; session 42 as the release) finish the session.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/868164053fc6ed34ee650086d4128afebff669a9"><code>868164053fc6ed34ee650086d4128afebff669a9</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Size about middle</td><td><p>In cnb/clefs.ly add cnb:dozenal-clef-offset-scale (no arguments): 1 when cnb:clef-size-semitones is not a number, else cnb:clef-size-semitones / cnb:semitones-per-staff-space / 3. Split the numeral's assembly out of cnb:build-dozenal-clef-stencil into a procedure taking the two unscaled digit stencils and mag that scales them as today and translates the left digit by -0.5 x mag x the offset scale; the builder interprets the markups and calls it. In the engraver set Y-offset to -1 x mag x the offset scale for the 'dozenal style, keeping -1 x mag for 'text without an anchor. Update the CLEF STENCIL CONSTRUCTION and CLEF ENGRAVER comments and the cnb:clef-size-semitones line of the file's header to say the dozenal numeral is scaled about the middle line. In test-unit.ly add groups for cnb:dozenal-clef-offset-scale (#f is 1, 6 semitones on 2 per staff space is 1, 8.172 on 4 is 2.043/3) and for the numeral (digit stencils from interpret-markup on the default layout, so no grob is needed): with the size #f its Y extent and the Y-offset are as today's builder gives (-0.5 translate, -1 offset); at 8.172 semitones on 4 per staff space its top plus the offset is 1.4418 x 2.043/3 and its bottom plus the offset -1.5582 x 2.043/3, within 0.001; restore the settings afterwards. Run the integration suites on both versions with --update-baselines and keep the regenerated tests/clef-size-dozenal SVG and 2.24 and 2.26 harvests (it sets 8 semitones on 2 per staff space, so its numeral now moves); correct its JSON description and .ly comment where they call the numeral's vertical offset fixed. Run the whole unit and integration suites on both versions: no other harvest changes.</p></td><td><span class="mono">cnb/clefs.ly</span><br><span class="mono">test-unit.ly</span><br><span class="mono">tests/clef-size-dozenal.ly</span><br><span class="mono">tests/clef-size-dozenal.json</span><br><span class="mono">tests/clef-size-dozenal.svg</span><br><span class="mono">tests/clef-size-dozenal.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-size-dozenal.harvested.json</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs] + [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Middle line spec</td><td><p>Write tests/clef-size-dozenal-middle.ly: the Configurator's default staff (4 semitones per staff space, lines -4 -2 2 4, as the other Configurator-staff specs set it) with the dozenal clef at #(set! cnb:clef-size-semitones 8.172), engraving a few notes. tests/clef-size-dozenal-middle.json asserts, with values measured on 2.24 and 2.26, that the clef is engraved, its harvested width is the default width x 2.043/3 and its digit anchors' vertical positions sit about the staff's middle line at 2.043/3 of their 3-staff-space positions. Generate its SVG and its 2.24 and 2.26 harvests. Run the whole integration suites on both versions: every other harvest stays as it is.</p></td><td><span class="mono">tests/clef-size-dozenal-middle.ly</span><br><span class="mono">tests/clef-size-dozenal-middle.json</span><br><span class="mono">tests/clef-size-dozenal-middle.svg</span><br><span class="mono">tests/clef-size-dozenal-middle.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-size-dozenal-middle.harvested.json</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>In README.md, in the cnb:clef-size-semitones row of the clef settings, say that the dozenal numeral is scaled about the staff's middle line. Add a '## 1.8.0' section to CHANGELOG.md above '## 1.7.0': the dozenal numeral scaled about the middle line when cnb:clef-size-semitones is set (top 1.4418 x H/3, bottom -1.5582 x H/3), that nothing changes unless it is set with the dozenal clef, the new spec, and the golden and harvests that changed (clef-size-dozenal). Set version.json to 1.8.0. Write docs/session-sets/041-dozenal-clef-size/configurator-handoff.md in the form of the earlier handoffs: the rule and what did not change; the dozenal numeral's top, bottom and width at 3 staff spaces and at 8.172 semitones on 4 per staff space (2.043 staff spaces), measured with a probe outside the tree on 2.24 and 2.26, in staff spaces and semitones; that a file sizing the dozenal clef needs engine 1.8.0 to keep it on the middle line; and session 42 as the release of 1.8.0.</p></td><td><span class="mono">README.md</span><br><span class="mono">CHANGELOG.md</span><br><span class="mono">version.json</span><br><span class="mono">docs/session-sets/041-dozenal-clef-size/configurator-handoff.md</span></td><td><code>python -c import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); h = open('docs/session-sets/041-dozenal-clef-size/configurator-handoff.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.8.0'):c.index('## 1.7.0')]; checks = [('CHANGELOG', top, 'cnb:clef-size-semitones'), ('CHANGELOG', top, 'middle line'), ('CHANGELOG', top, 'clef-size-dozenal'), ('README', r, 'middle line'), ('handoff', h, 'cnb:clef-size-semitones'), ('handoff', h, '8.172'), ('handoff', h, '2.043'), ('handoff', h, 'middle line'), ('handoff', h, '1.8.0'), ('handoff', h, 'session 42'), ('version', v, '1.8.0')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No release or publish: session 42 releases 1.8.0; no packaging change.</li><li>No Configurator change: its session 59 writes cnb:clef-size-semitones for the dozenal clef, and its engine round trip is authored Configurator-side from the handoff.</li><li>The 'text and 'custom clefs, their anchors and the glyph clef contract are unchanged; no new setting, and no automatic size computed by the engine (the Configurator writes the size).</li><li>No change to the numeral's digits, their relative scales (1/2 and 2/3), its width rule, the gutters or the clef's X-offset.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[06:38:11]</span> <span class="muted">run-started</span> session=041 mode=pull</div>
+<div class="line"><span class="at">[06:38:11]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[06:39:46]</span> <span class="muted">run-resumed</span> session=041 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[06:39:47]</span> <span class="muted">plan-accepted</span> steps=[&quot;size-about-middle&quot;,&quot;middle-line-spec&quot;,&quot;document&quot;] non_goals=4</div>
+<div class="line"><span class="at">[06:39:48]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[06:39:48]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=size-about-middle</div>
+<div class="line"><span class="at">[06:44:53]</span> <span class="muted">run-resumed</span> session=041 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:45:29]</span> <span class="muted">check-passed</span> step=size-about-middle argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs] + [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[06:45:30]</span> <span class="muted">report-accepted</span> seq=2 step=size-about-middle files=[&quot;cnb/clefs.ly&quot;,&quot;test-unit.ly&quot;,&quot;tests/clef-size-dozenal.ly&quot;,&quot;tests/clef-size-dozenal.json&quot;,&quot;tests/clef-size-dozenal.svg&quot;,&quot;tests/clef-size-dozenal.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-size-dozenal.harvested.json&quot;] notes=Dozenal numeral offsets scale by cnb:dozenal-clef-offset-scale (height/3 ss); numeral assembly split into cnb:dozenal-clef-numeral; unit specs measure 50 at #f (1.4418/-1.5582) and 8.172 on sps 4; clef-size-dozenal baselines regenerated (anchor 0.5 -&gt; 0.667); --update-baselines reorder churn on other harvests reverted, plain runs 0 drift on 2.24 and 2.26.</div>
+<div class="line"><span class="at">[06:45:30]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=middle-line-spec</div>
+<div class="line"><span class="at">[06:47:15]</span> <span class="muted">run-resumed</span> session=041 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:47:52]</span> <span class="muted">check-passed</span> step=middle-line-spec argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[06:47:52]</span> <span class="muted">report-accepted</span> seq=3 step=middle-line-spec files=[&quot;tests/clef-size-dozenal-middle.ly&quot;,&quot;tests/clef-size-dozenal-middle.json&quot;,&quot;tests/clef-size-dozenal-middle.svg&quot;,&quot;tests/clef-size-dozenal-middle.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-size-dozenal-middle.harvested.json&quot;] notes=New spec: dozenal clef at 8.172 semitones on the sps-4 staff; asserts width 0.7505, anchor separation 0.3405 and lower anchor 0.678 ss below the middle line (vertical 0.3305), each 2.043/3 of c-major-scale's 3-ss numeral, measured on 2.24 and 2.26; full suites 431 passed, 0 drift on both.</div>
+<div class="line"><span class="at">[06:47:52]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=document</div>
+<div class="line"><span class="at">[06:49:05]</span> <span class="muted">run-resumed</span> session=041 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:49:06]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); h = open('docs/session-sets/041-dozenal-clef-size/configurator-handoff.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.8.0'):c.index('## 1.7.0')]; checks = [('CHANGELOG', top, 'cnb:clef-size-semitones'), ('CHANGELOG', top, 'middle line'), ('CHANGELOG', top, 'clef-size-dozenal'), ('README', r, 'middle line'), ('handoff', h, 'cnb:clef-size-semitones'), ('handoff', h, '8.172'), ('handoff', h, '2.043'), ('handoff', h, 'middle line'), ('handoff', h, '1.8.0'), ('handoff', h, 'session 42'), ('version', v, '1.8.0')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[06:49:07]</span> <span class="muted">report-accepted</span> seq=4 step=document files=[&quot;README.md&quot;,&quot;CHANGELOG.md&quot;,&quot;version.json&quot;,&quot;docs/session-sets/041-dozenal-clef-size/configurator-handoff.md&quot;] notes=README clef-size row, CHANGELOG 1.8.0, version.json 1.8.0, and the session-41 Configurator handoff with the numeral's top, bottom and width at 3 and 2.043 staff spaces (probe identical on 2.24 and 2.26); session 42 named as the release.</div>
+<div class="line"><span class="at">[06:49:07]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[06:49:07]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[06:49:07]</span> <span class="muted">job-started</span> name=verification pid=25776 log=.dabbler/runs/s41/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[06:49:50]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[06:49:50]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[06:49:50]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[06:49:50]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[06:49:50]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=27548 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[06:50:10]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[06:50:10]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[06:50:10]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=25276 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[06:50:12]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[06:50:13]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[06:50:13]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=61848 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[06:50:30]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[06:50:31]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[06:50:31]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=43680 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[06:50:33]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[06:50:33]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[06:50:33]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=57688 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[06:51:32]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[06:51:32]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[06:51:32]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=60712 log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[06:52:21]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[06:52:21]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[06:52:27]</span> <span class="muted">landed</span> commit=868164053fc6ed34ee650086d4128afebff669a9</div>
+<div class="line"><span class="at">[06:52:27]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[06:52:27]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[06:52:27]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[06:52:27]</span> <span class="muted">job-started</span> name=close pid=36516 log=.dabbler/runs/s41/driver/jobs/close.log</div>
+<div class="line"><span class="at">[06:52:38]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s41/driver/jobs/close.log</div>
+<div class="line"><span class="at">[06:52:38]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>18s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>17s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>57s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>47s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

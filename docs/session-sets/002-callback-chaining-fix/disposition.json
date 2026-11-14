@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "summary": "Resolved Known Issue #1: all five direct after-line-breaking overwrites (cnb/off-key.ly NoteHead x2, cnb/test-ids.ly Beam/Tie/Slur) now register through a new chaining helper in cnb/utils.ly (cnb:compose-after-line-breaking + cnb:chain-after-line-breaking!, reading via ly:grob-property-data to avoid premature callback evaluation). Confirmed en route that test-ids.ly never hooked NoteHead after-line-breaking (it tags at acknowledger time), so the NoteHead collision was latent rather than active; chaining closes it in both directions. Added 5 unit assertions for the pure composer and two integration regression tests (vector model and procedure model) proving the off-key mark and test-id tag coexist on the same F#4 NoteHead and that the Beam/Tie/Slur chained hooks fire. Suites green: unit 179/0 (baseline 174/0), integration 83/0 (baseline 72/0). Set-003's uncommitted attribution edits left untouched in the working tree.",
+  "verification_method": "skipped",
+  "files_changed": [
+    "cnb/utils.ly",
+    "cnb/off-key.ly",
+    "cnb/test-ids.ly",
+    "test-unit.ly",
+    "tests/off-key-coexistence.ly",
+    "tests/off-key-coexistence.json",
+    "tests/off-key-coexistence.svg",
+    "tests/off-key-coexistence.harvested.json",
+    "tests/off-key-coexistence-procedure.ly",
+    "tests/off-key-coexistence-procedure.json",
+    "tests/off-key-coexistence-procedure.svg",
+    "tests/off-key-coexistence-procedure.harvested.json",
+    "docs/session-sets/002-callback-chaining-fix/change-log.md",
+    "docs/session-sets/002-callback-chaining-fix/disposition.json"
+  ],
+  "verification_message_ids": [],
+  "blockers": []
+}

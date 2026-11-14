@@ -1,0 +1,68 @@
+{
+  "test_name": "Mark-list sharps and flats drawn at a scale (session 35)",
+  "input_file": "keysig-marks-scaled.ly",
+  "description": "The default 4-8 staff (4 semitones a staff space), cnb:keysig-style 'marks, no bars. m1 D major: sharps at semitones 18 and 13; m2 B flat major: flats at 10 and 15; every sign at scale 0.6473, the columns laid out for the scaled widths. The signs are scaled about their origins, so the sharp's centre and the flat's bowl stay at their semitones and only the parts above and below them shrink. Measured on 2.24 and 2.26 (the same on both): D major 1.328 wide and 3.192 tall, B flat major 1.152 wide and 2.855 tall. The same file with the scale removed (and the columns laid out for Emmentaler's 1.1 and 0.92 widths) gives D major 2.052 x 4.25 and B flat major 1.78 x 3.73: each width is 0.6473 of the unscaled one, and each height less the 1.25 staff spaces between its two signs' semitones is 0.6473 of the unscaled (1.942 of 3.0 for the sharps, 1.605 of 2.48 for the flats). The semitones are found from the first notes: d'' (semitone 14) in m1 and b flat' (semitone 10, the first flat's) in m2, each centre half a staff space below its bbox top.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: TWO SIGNATURES ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Each system opens with its signature",
+      "expect": {
+        "type": ["== 'key-signature'", "count('key-signature') == 2"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE SCALED SIZES ==="},
+
+    {
+      "id": "ks-1",
+      "description": "D major's two scaled sharps: 1.328 wide (unscaled 2.052), 3.192 tall (unscaled 4.25)",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 1.328) < 0.005", "abs(v - 0.6473 * 2.052) < 0.005"],
+        "visual.bbox.h": ["abs(v - 3.192) < 0.005", "abs(v - (1.25 + 0.6473 * 3.0)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "B flat major's two scaled flats: 1.152 wide (unscaled 1.78), 2.855 tall (unscaled 3.73)",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 1.152) < 0.005", "abs(v - 0.6473 * 1.78) < 0.005"],
+        "visual.bbox.h": ["abs(v - 2.855) < 0.005", "abs(v - (1.25 + 0.6473 * 2.48)) < 0.005"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE SIGNS STAY AT THEIR SEMITONES ==="},
+
+    {
+      "id": "ks-1",
+      "description": "The top sharp (semitone 18, a staff space above d'') reaches 0.6473 of the unscaled 1.576 above its centre",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (prop('nh-1-0.000-74-0', 'visual.bbox.y') + 0.5 - 1.0 - 0.6473 * 1.576)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-1",
+      "description": "The bottom sharp (semitone 13, a quarter staff space below d'') reaches 0.6473 of the unscaled 1.424 below its centre",
+      "expect": {
+        "visual.bbox.h": ["abs(prop('ks-1', 'visual.bbox.y') + v - (prop('nh-1-0.000-74-0', 'visual.bbox.y') + 0.5 + 0.25 + 0.6473 * 1.424)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "The top flat (semitone 15, 1.25 staff spaces above b flat') reaches 0.6473 of the unscaled 1.86 above its bowl",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (prop('nh-2-0.000-70-0', 'visual.bbox.y') + 0.5 - 1.25 - 0.6473 * 1.86)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "The bottom flat (semitone 10, b flat's) reaches 0.6473 of the unscaled 0.62 below its bowl",
+      "expect": {
+        "visual.bbox.h": ["abs(prop('ks-2', 'visual.bbox.y') + v - (prop('nh-2-0.000-70-0', 'visual.bbox.y') + 0.5 + 0.6473 * 0.62)) < 0.005"]
+      }
+    }
+  ]
+}

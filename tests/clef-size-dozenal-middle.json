@@ -1,0 +1,56 @@
+{
+  "test_name": "Dozenal clef sized about the middle line (session 41)",
+  "input_file": "clef-size-dozenal-middle.ly",
+  "description": "cnb:clef-size-semitones 8.172 on the Configurator's default staff (4 semitones per staff space, lines -4 -2 2 4) = 2.043 staff spaces = 2.043/3 of the legacy 3-staff-space numeral. The numeral is scaled about the staff's middle line, so every harvested measure of its two digit anchors is 2.043/3 of the 3-staff-space numeral's in tests/c-major-scale.json (w 1.102, h 0.5, the lower anchor 0.995 staff spaces below the middle line on 2.24 and 1.001 on 2.26). The anchors' height on the staff is asserted as 'vertical', 0.5 at the middle line in units of the staff's height (4 staff spaces on both staves): 0.5 + 0.995 x 2.043/3 / 4 = 0.669 measured from the top, harvested as 1 - that = 0.331 (2.24) and 0.330 (2.26). staff_spaces_from_center is not asserted: on a 4-line staff the harvest counts the gap between lines, 4/3 staff spaces, as its unit.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE SIZED CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The dozenal clef is engraved in measure 1",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: SCALED ABOUT THE MIDDLE LINE ==="},
+
+    {
+      "id": "cl-1",
+      "description": "Width 1.102 x 2.043/3 = 0.7505",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 0.7505) < 0.005"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The digit anchors' vertical separation 0.5 x 2.043/3 = 0.3405",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 0.3405) < 0.005"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The lower anchor 0.995 x 2.043/3 = 0.678 staff spaces below the middle line (vertical 0.5 - 0.678/4 = 0.3305), not the 0.995 of a fixed offset",
+      "expect": {
+        "staff_relative.vertical": ["abs(v - 0.3305) < 0.003"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the sized clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}

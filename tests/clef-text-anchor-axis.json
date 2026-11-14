@@ -1,0 +1,47 @@
+{
+  "test_name": "Text clef anchored by cnb:clef-anchor-semitones under the pitch-axis hook (session 24)",
+  "input_file": "clef-text-anchor-axis.ly",
+  "description": "The Twinline geometry of the Configurator's fixture (12 pitch classes on 7 axis positions, octave stride 7, sps 2, lines -6 -3 -1 1 4 6, middle G at position 0) with a 'text clef whose label is a filled 1x2 path markup at cnb:clef-size-semitones 4 (2 staff-spaces), anchored at cnb:clef-anchor-semitones 16.5. The anchor goes through the hook as a 'custom anchor does: 16.5 lies between E (16, position 5) and F (17, position 6), so it interpolates to position 5.5 half-staff-spaces, and the label's TOP edge must sit 2.75 staff-spaces above center_y (the linear formula would give 2.25). Measured 2026-11-10 on 2.24: top edge y = 7.296 against center_y 10.05 (expected 7.30).",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE TEXT CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The text clef is engraved in measure 1",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE LABEL'S TOP EDGE AT THE HOOK'S POSITION FOR THE ANCHOR ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The label's TOP edge lands at hook position 5.5 (anchor 16.5 interpolated between E and F) = 2.75 staff-spaces above the staff center, not the linear 2.25",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (staff['center_y'] - 2.75)) < 0.05"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The label keeps its size: 4 semitones at sps 2 = 2 staff-spaces tall (a length, not mapped through the hook)",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 2.0) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE TWINLINE STAFF ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The staff is the six-line Twinline staff, 6 staff-spaces tall",
+      "expect": {
+        "type": ["staff['line_count'] == 6", "abs(staff['staff_height'] - 6.0) < 0.05"]
+      }
+    }
+  ]
+}

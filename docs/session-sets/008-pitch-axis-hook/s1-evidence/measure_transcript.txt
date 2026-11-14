@@ -1,0 +1,92 @@
+staff: top_y=5.35 bottom_y=10.85 height=5.5 lines=6 half_space=0.5000
+noteheads=35 stems=30
+
+id                         semi pc  exp     meas   delta        x
+nh-1-0.000-60-0               0  0   -4   -3.990  +0.010    4.845
+nh-1-0.250-61-0               1  1   -4   -3.990  +0.010    7.043
+nh-1-0.500-62-0               2  2   -3   -2.990  +0.010    9.242
+nh-1-0.750-63-0               3  3   -2   -1.990  +0.010   11.440
+nh-2-0.000-64-0               4  4   -2   -1.990  +0.010   15.078
+nh-2-0.250-65-0               5  5   -1   -0.990  +0.010   17.276
+nh-2-0.500-66-0               6  6   -1   -0.990  +0.010   19.474
+nh-2-0.750-67-0               7  7    0    0.010  +0.010   21.743
+nh-3-0.000-68-0               8  8    1    1.010  +0.010   25.039
+nh-3-0.250-69-0               9  9    1    1.010  +0.010   27.237
+nh-3-0.500-70-0              10 10    2    2.010  +0.010   29.435
+nh-3-0.750-71-0              11 11    2    2.010  +0.010   31.633
+nh-4-0.000-72-0              12  0    3    3.010  +0.010   34.914
+nh-4-0.250-74-0              14  2    4    4.010  +0.010   37.112
+nh-4-0.500-76-0              16  4    5    5.010  +0.010   39.310
+nh-4-0.750-79-0              19  7    7    7.010  +0.010   41.758
+nh-5-0.000-82-0              22 10    9    9.010  +0.010   44.968
+nh-5-0.250-83-0              23 11    9    9.010  +0.010   47.166
+nh-5-0.500-84-0              24  0   10   10.010  +0.010   49.364
+nh-5-0.750-84-0              24  0   10   10.010  +0.010   51.562
+nh-6-0.000-59-0              -1 11   -5   -4.990  +0.010   54.772
+nh-6-0.250-57-0              -3  9   -6   -5.990  +0.010   56.970
+nh-6-0.500-56-0              -4  8   -6   -5.990  +0.010   59.168
+nh-6-0.750-55-0              -5  7   -7   -6.990  +0.010   61.366
+nh-7-0.000-60-0               0  0   -4   -3.990  +0.010   64.861
+nh-7-0.000-61-0               1  1   -4   -3.990  +0.010   65.218
+nh-7-0.250-68-0               8  8    1    1.010  +0.010   67.059
+nh-7-0.250-69-0               9  9    1    1.010  +0.010   67.416
+nh-7-0.500-60-0               0  0   -4   -3.990  +0.010   69.257
+nh-7-0.500-67-0               7  7    0    0.010  +0.010   69.257
+nh-7-0.750-65-0               5  5   -1   -0.990  +0.010   71.455
+nh-7-0.750-66-0               6  6   -1   -0.990  +0.010   71.812
+nh-8-0.000-72-0              12  0    3    3.010  +0.010   75.665
+nh-8-0.500-76-0              16  4    5    5.010  +0.010   79.813
+nh-9-0.000-72-0              12  0    3    3.010  +0.010   86.552
+
+notehead placement: 35/35 at expected mapped position, 0 mismatches
+
+--- shared-position chord pairs (dpos must be 0; no x-offset this session) ---
+  nh-7-0.000-60-0 vs nh-7-0.000-61-0: dx=+0.357 dpos=+0.000
+  nh-7-0.250-68-0 vs nh-7-0.250-69-0: dx=+0.357 dpos=+0.000
+  nh-7-0.750-65-0 vs nh-7-0.750-66-0: dx=+0.357 dpos=+0.000
+
+--- ledger rects (from the tagged LedgerLineSpanner subtree) ---
+  ledger rect 1: x=60.616 y_center=11.845 staff_position=-4.991
+  ledger rect 2: x=60.616 y_center=12.845 staff_position=-6.991
+  ledger rect 3: x=58.418 y_center=11.845 staff_position=-4.991
+  ledger rect 4: x=56.220 y_center=11.845 staff_position=-4.991
+  ledger rect 5: x=54.022 y_center=11.845 staff_position=-4.991
+  ledger rect 6: x=50.812 y_center=4.345 staff_position=+10.009
+  ledger rect 7: x=48.614 y_center=4.345 staff_position=+10.009
+  total ledger rects: 7  multiset: {-5: 4, -7: 1, 10: 2}
+
+--- stems (direction = side with more extension beyond its heads) ---
+  st-1-0.000: head pos -3.99 span=[-3.99..+3.01] dir=up expected=up
+  st-1-0.250: head pos -3.99 span=[-3.99..+3.01] dir=up expected=up
+  st-1-0.500: head pos -2.99 span=[-2.99..+4.01] dir=up expected=up
+  st-1-0.750: head pos -1.99 span=[-1.99..+5.01] dir=up expected=up
+  st-2-0.000: head pos -1.99 span=[-1.99..+5.01] dir=up expected=up
+  st-2-0.250: head pos -0.99 span=[-0.99..+6.01] dir=up expected=up
+  st-2-0.500: head pos -0.99 span=[-0.99..+6.01] dir=up expected=up
+  st-2-0.750: head pos +0.01 span=[-6.99..+0.01] dir=down expected=down
+  st-3-0.000: head pos +1.01 span=[-5.99..+1.01] dir=down expected=down
+  st-3-0.250: head pos +1.01 span=[-5.99..+1.01] dir=down expected=down
+  st-3-0.500: head pos +2.01 span=[-4.99..+2.01] dir=down expected=down
+  st-3-0.750: head pos +2.01 span=[-4.99..+2.01] dir=down expected=down
+  st-4-0.000: head pos +3.01 span=[-3.99..+3.01] dir=down expected=down
+  st-4-0.250: head pos +4.01 span=[-2.99..+4.01] dir=down expected=down
+  st-4-0.500: head pos +5.01 span=[-1.99..+5.01] dir=down expected=down
+  st-4-0.750: head pos +7.01 span=[+0.01..+7.01] dir=down expected=down
+  st-5-0.000: head pos +9.01 span=[+2.01..+9.01] dir=down expected=down
+  st-5-0.250: head pos +9.01 span=[+2.01..+9.01] dir=down expected=down
+  st-5-0.500: head pos +10.01 span=[+3.01..+10.01] dir=down expected=down
+  st-5-0.750: head pos +10.01 span=[+3.01..+10.01] dir=down expected=down
+  st-6-0.000: head pos -4.99 span=[-4.99..+2.01] dir=up expected=up
+  st-6-0.250: head pos -5.99 span=[-5.99..+1.01] dir=up expected=up
+  st-6-0.500: head pos -5.99 span=[-5.99..+1.01] dir=up expected=up
+  st-6-0.750: head pos -6.99 span=[-6.99..+0.01] dir=up expected=up
+  st-7-0.000: chord heads ['-4.0', '-4.0'] span=[-3.99..+3.01] dir=up
+  st-7-0.250: chord heads ['+1.0', '+1.0'] span=[-5.99..+1.01] dir=down
+  st-7-0.500: chord heads ['-4.0', '+0.0'] span=[-3.99..+7.01] dir=up
+  st-7-0.750: chord heads ['-1.0', '-1.0'] span=[-0.99..+6.01] dir=up
+  st-8-0.000: head pos +3.01 span=[-3.99..+3.01] dir=down expected=down
+  st-8-0.500: head pos +5.01 span=[-1.99..+5.01] dir=down expected=down
+  single-note stem directions: all flip at position 0 as the 013 record measured
+
+PARITY: PASS — the real hook reproduces the 013 spike's measured placement (noteheads, ledgers, stem directions)
+exit: 0

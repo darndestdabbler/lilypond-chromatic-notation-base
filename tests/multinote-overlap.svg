@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="210.00mm" height="297.00mm" viewBox="0.0000 -0.0000 119.5016 169.0094">
+<style type="text/css">
+<![CDATA[
+tspan { white-space: pre; }
+]]>
+</style>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 3.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="54.7038" y2="0"/>
+</g>
+<g transform="translate(2.8453, 4.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="54.7038" y2="0"/>
+</g>
+<g transform="translate(2.8453, 6.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="54.7038" y2="0"/>
+</g>
+<g transform="translate(2.8453, 7.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="54.7038" y2="0"/>
+</g>
+</g>
+<g id="bl-3" data-type="barline" data-measure="3">
+<g transform="translate(57.4091, 5.8953)">
+<rect x="0.0000" y="-2.0000" width="0.1900" height="4.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-2" data-type="barline" data-measure="2">
+<g transform="translate(35.9058, 5.8953)">
+<rect x="0.0000" y="-2.0000" width="0.1900" height="4.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="ts-1" data-type="time-signature" data-measure="1">
+<g transform="translate(6.8453, 5.8953)">
+<path transform="scale(0.0040, -0.0040)" d="M196 117h117c0 -48 27 -94 72 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11c45 0 73 46 73 94zM204 307c22 14 44 29 60 50c11 15 19 33 27 50c2 4 5 6 9 6c6 0 13 -5 13 -14v-245h72c10 0 15 -7 15 -14
+s-5 -15 -15 -15h-72v-8h-117v8h-167c-23 0 -31 14 -31 23c0 3 1 5 2 6c80 93 138 207 138 330c0 10 7 19 16 16c23 -7 47 -13 71 -13s48 6 71 13c14 4 23 -9 17 -16l-284 -330h167v131c0 8 1 17 8 22z" fill="currentColor"/>
+</g>
+<g transform="translate(7.0160, 7.9673)">
+<path transform="scale(0.0040, -0.0040)" d="M175 487c18 0 58 31 58 -3v-367c0 -48 28 -94 73 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11c45 0 73 46 73 94v245c0 12 -9 19 -17 19c-4 0 -8 -3 -10 -7l-64 -136c-3 -6 -7 -9 -12 -9
+c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c3 6 10 3 16 0c13 -6 27 -13 42 -13z" fill="currentColor"/>
+</g>
+</g>
+<g id="cl-1" data-type="clef" data-measure="1">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(4.7057, 5.1258)">
+<text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0178)">
+<g transform="translate(3.6131, 3.6650)">
+<text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g id="nh-1-0.250-72-0" data-type="notehead" data-measure="1" data-beat="0.250" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(12.5791, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-2-0.000-72-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="-2">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(39.7202, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(39.1454, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(38.5706, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(37.9958, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(43.3068, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(42.7320, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(42.1572, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(41.5824, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(46.8934, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(46.3186, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(45.7438, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(45.1690, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(50.4800, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(49.9052, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(49.3304, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(48.7556, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g transform="translate(37.9958, 5.8953)">
+<path stroke-width="0.1000" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.8622 0.3406C3.5521 1.5233 8.9320 1.5233 11.6219 0.3406C8.9320 1.4033 3.5521 1.4033 0.8622 0.3406z"/>
+</g>
+</g>
+</g>
+<g id="nh-1-0.000-72-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="2">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(10.4500, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-1-0.500-72-0" data-type="notehead" data-measure="1" data-beat="0.500" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(15.2831, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(14.7083, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-1-2.000-72-0" data-type="notehead" data-measure="1" data-beat="2.000" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="-1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(26.5901, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(26.0153, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(25.4405, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(24.8657, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(30.1767, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(29.6019, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(29.0271, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(28.4523, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g transform="translate(24.8657, 5.8953)">
+<path stroke-width="0.1000" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.8622 0.3406C1.7588 1.2550 3.5521 1.2550 4.4488 0.3406C3.5521 1.1350 1.7588 1.1350 0.8622 0.3406z"/>
+</g>
+</g>
+</g>
+<g id="nh-1-1.000-72-0" data-type="notehead" data-measure="1" data-beat="1.000" data-midi="72" data-pitch-class="0" data-voice="0" data-duration="0">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(20.3366, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(19.7618, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(19.1870, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(18.6122, 5.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0.4089 -0.2039C0.4840 -0.0533 0.3618 0.1600 0.1359 0.2727C-0.0900 0.3853 -0.3340 0.3545 -0.4091 0.2039C-0.4451 0.1316 -0.4366 0.0408 -0.3854 -0.0486C-0.3342 -0.1380 -0.2445 -0.2186 -0.1360 -0.2727C-0.0275 -0.3268 0.0908 -0.3499 0.1930 -0.3370C0.2952 -0.3241 0.3729 -0.2762 0.4089 -0.2039z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="st-1-0.000-0" data-type="stem" data-measure="1" data-beat="0.000" data-voice="0">
+<g transform="translate(10.0839, 5.8953)">
+<rect x="-0.0650" y="0.1075" width="0.1300" height="3.2258" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-1-0.250-0" data-type="stem" data-measure="1" data-beat="0.250" data-voice="0">
+<g transform="translate(12.2130, 5.8953)">
+<rect x="-0.0650" y="0.1075" width="0.1300" height="3.2258" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g id="st-1-0.500-0" data-type="stem" data-measure="1" data-beat="0.500" data-voice="0">
+<g transform="translate(14.3422, 5.8953)">
+<rect x="-0.0650" y="0.1075" width="0.1300" height="3.2258" ry="0.0400" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<a xlink:href="https://lilypond.org/">
+<rect x="0.0000" y="-0.4748" width="50.3614" height="2.0024" fill="none" stroke="none" stroke-width="0.0"/>
+</a>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>Music engraving by LilyPond 2.24.2—www.lilypond.org</tspan>
+</text>
+</g>
+</svg>

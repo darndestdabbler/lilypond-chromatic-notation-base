@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 031 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 031 transcript</h1>
+<p class="stamp">Rendered 2026-11-11T12:54:08.182Z by dabbler-ai-router 3.32.1 at f7579dabe057a2944a96d1771483ca097b01ab3b.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-11T07:47:59.451-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 31: A key's pitch classes with double sharps and flats</h3>
+<p><strong>Why.</strong> Session 30 found that <code>cnb:get-key-pitch-classes</code> (<code>cnb/procedure.ly</code>) misreads a key with double sharps or flats: <code>\key dis \major</code> gives <code>(2 2 3 7 7 8 10)</code>, with repeated pitch classes, in place of <code>(0 2 3 5 7 8 10)</code>. It changes the list in place, replacing every pitch class equal to a letter's natural one, so an alteration that lands on another letter's natural pitch class (E♯ on F, F𝄪 on G) can be overwritten by a later one, depending on the order of <code>keyAlterations</code>. Every key with at most seven sharps or flats happens to read correctly in the order LilyPond gives (session 30 checked C♯, C♭, F♯ and G♭ major and A♯, A♭ and G♯ minor from real <code>\key</code> events). A key with double sharps or flats is read wrongly. That reaches the configuration procedure's <code>key</code> argument (and so off-key marks), and a missing key's warning under <code>'marks</code>. The operator asked for the fix before the release.</p>
+<ol><li>Register.</li><li><strong>The fix.</strong> <code>cnb:get-key-pitch-classes</code> gives each of the seven letters its pitch class from its own alteration (natural when the alist has none), <code>(natural + 2 × alteration) mod 12</code>, in letter order C to B as today, accepting the <code>((octave . step) . alteration)</code> form it accepts now. No other function changes.</li><li><strong>Tests.</strong> <code>test-unit.ly</code>'s <code>cnb:get-key-pitch-classes</code> group keeps its cases and adds D♯ major and its order-reversed alist, a double-flat key (F♭ major), C♯ and C♭ major in LilyPond's order and reversed, and <code>cnb:keysig-marks-key</code> for D♯ major. Every existing golden stays byte-identical on LilyPond 2.24 and 2.26 (no existing spec has a double-sharp or double-flat key).</li><li>A line in <code>CHANGELOG.md</code>'s unreleased 1.4.0 section. Correct <code>docs/session-sets/030-keysig-mark-list/configurator-handoff.md</code>: every key's pitch classes are now read correctly (D♯ major's warning gives <code>(0 2 3 5 7 8 10)</code>), and session 32 is the release.</li></ol>
+<h2>Work Plan</h2>
+<p>Correct cnb:get-key-pitch-classes (cnb/procedure.ly) for keys with double sharps or flats. Today it starts from the seven natural pitch classes and, for each keyAlterations entry, replaces every pitch class equal to that letter's natural one, so an alteration landing on another letter's natural pitch class (E sharp on F, F double sharp on G) can be overwritten by a later entry: \key dis \major gives (2 2 3 7 7 8 10). The fix gives each of the seven letters, C to B in that order, its pitch class from its own alteration, (natural + 2 x alteration) mod 12, natural when keyAlterations has no entry for it, still accepting both the (step . alteration) and ((octave . step) . alteration) forms; no other function changes. test-unit.ly's cnb:get-key-pitch-classes group keeps its cases and adds D sharp major and its order-reversed alist, F flat major (a double-flat key), C sharp and C flat major in LilyPond's order and reversed, and cnb:keysig-marks-key for D sharp major giving ((1 . 1/2) 0 2 3 5 7 8 10). Every existing golden stays byte-identical on LilyPond 2.24 and 2.26. Then a line in CHANGELOG.md's unreleased 1.4.0 section, and docs/session-sets/030-keysig-mark-list/configurator-handoff.md corrected: every key's pitch classes are read correctly, D sharp major's missing-key warning gives (0 2 3 5 7 8 10), and session 32 is the release.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/122afee762c7a5cdf9d7c2ca750dab97bbef5af3"><code>122afee762c7a5cdf9d7c2ca750dab97bbef5af3</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Fix</td><td><p>In cnb/procedure.ly rewrite cnb:get-key-pitch-classes so it maps over the seven steps 0 to 6 (C to B): for each, find the keyAlterations entry whose step (the key itself, or its cdr when the key is an (octave . step) pair) is that step, take its alteration or 0 when there is none, and give (modulo (+ natural (inexact-&gt;exact (round (* 2 alteration)))) 12). Update its comment to say each letter takes its pitch class from its own alteration, so entry order does not matter and double sharps and flats are read correctly. Run the unit and integration suites on LilyPond 2.24 and 2.26: every existing assertion passes and no harvest drifts.</p></td><td><span class="mono">cnb/procedure.ly</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; rc = [subprocess.call([sys.executable, t, '--lilypond-version', v]) for t in ('tools/run_unit.py', 'tools/run_tests.py') for v in ('2.24', '2.26')]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Tests</td><td><p>In test-unit.ly's 'procedure.ly — cnb:get-key-pitch-classes' group keep the existing cases and add, each asserting the sorted pitch classes: D sharp major in LilyPond's order ((3 . 1) (0 . 1) (4 . 1/2) (1 . 1/2) (5 . 1/2) (2 . 1/2) (6 . 1/2)) and reversed, both (0 2 3 5 7 8 10); F flat major ((6 . -1) (2 . -1/2) (5 . -1/2) (1 . -1/2) (4 . -1/2) (0 . -1/2) (3 . -1/2)), (1 3 4 6 8 9 11); C sharp major (all seven letters at 1/2, F C G D A E B) and reversed, (0 1 3 5 6 8 10); C flat major (all seven at -1/2, B E A D G C F) and reversed, (1 3 4 6 8 10 11); and one ((octave . step) . alteration) case. In the 'keysig.ly — cnb:keysig-marks-key and cnb:keysig-marks-entry' group add that cnb:keysig-marks-key for D sharp major (tonic (ly:make-pitch 0 1 1/2)) is ((1 . 1/2) 0 2 3 5 7 8 10). Run the unit suite on LilyPond 2.24 and 2.26.</p></td><td><span class="mono">test-unit.ly</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in ('2.24', '2.26')]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>Add a bullet to CHANGELOG.md's '## 1.4.0' section: a key with double sharps or flats (D sharp major, F flat major) now gives its seven pitch classes, where before its list could repeat pitch classes; this reaches the configuration procedure's key argument, off-key marks and the 'marks lookup and its warning. In docs/session-sets/030-keysig-mark-list/configurator-handoff.md rewrite 'Which keys are read correctly' to say every key's pitch classes are read correctly, including keys with double sharps or flats (session 31), replace the warning's example pitch classes with (0 2 3 5 7 8 10), and name session 32 as the release of 1.4.0 in the header and the verification status.</p></td><td><span class="mono">CHANGELOG.md</span><br><span class="mono">docs/session-sets/030-keysig-mark-list/configurator-handoff.md</span></td><td><code>python -c import sys; c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/030-keysig-mark-list/configurator-handoff.md', encoding='utf-8').read(); top = c[c.index('## 1.4.0'):c.index('## 1.3.1')]; bad = [n for t, n in ((top, 'double'), (h, '(0 2 3 5 7 8 10)'), (h, 'session 32')) if n not in t] + [n for n in ('2 2 3 7 7 8 10', 'read wrongly', 'released by session 31', '1.4.0 (session 31)') if n in h]; print('bad:', bad) if bad else None; sys.exit(1 if bad else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No change to any function other than cnb:get-key-pitch-classes: cnb:keysig-marks-key, the off-key engraver, the notehead engraver and the configuration procedure's callers are untouched.</li><li>No change to any existing golden: every tests/*.svg and both harvests of every existing spec stay byte-identical, and no integration spec is added.</li><li>No release and no version change: packing and publishing 1.4.0 is session 32's, and version.json and dabbler.yaml are not touched.</li><li>No Configurator-side change: this session only corrects the handoff the Configurator reads.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[12:47:59]</span> <span class="muted">run-started</span> session=031 mode=pull</div>
+<div class="line"><span class="at">[12:47:59]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[12:49:14]</span> <span class="muted">run-resumed</span> session=031 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[12:49:14]</span> <span class="muted">plan-accepted</span> steps=[&quot;fix&quot;,&quot;tests&quot;,&quot;document&quot;] non_goals=4</div>
+<div class="line"><span class="at">[12:49:14]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[12:49:14]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=fix</div>
+<div class="line"><span class="at">[12:50:11]</span> <span class="muted">run-resumed</span> session=031 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[12:50:36]</span> <span class="muted">check-passed</span> step=fix argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; rc = [subprocess.call([sys.executable, t, '--lilypond-version', v]) for t in ('tools/run_unit.py', 'tools/run_tests.py') for v in ('2.24', '2.26')]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[12:50:36]</span> <span class="muted">report-accepted</span> seq=2 step=fix files=[&quot;cnb/procedure.ly&quot;] notes=cnb:get-key-pitch-classes maps over steps 0-6, each from its own alteration via assv on a step-normalised alist; unit 399/0 and integration 391/0 with 0 drift on 2.24 and 2.26</div>
+<div class="line"><span class="at">[12:50:36]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=tests</div>
+<div class="line"><span class="at">[12:50:59]</span> <span class="muted">run-resumed</span> session=031 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[12:51:01]</span> <span class="muted">check-passed</span> step=tests argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in ('2.24', '2.26')]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[12:51:01]</span> <span class="muted">report-accepted</span> seq=3 step=tests files=[&quot;test-unit.ly&quot;] notes=Added D# major (and reversed), Fb major, C# and Cb major (and reversed), an (octave . step) case, and keysig-marks-key for D# major; unit 408/0 on 2.24 and 2.26</div>
+<div class="line"><span class="at">[12:51:01]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=document</div>
+<div class="line"><span class="at">[12:51:33]</span> <span class="muted">run-resumed</span> session=031 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[12:51:34]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; c = open('CHANGELOG.md', encoding='utf-8').read(); h = open('docs/session-sets/030-keysig-mark-list/configurator-handoff.md', encoding='utf-8').read(); top = c[c.index('## 1.4.0'):c.index('## 1.3.1')]; bad = [n for t, n in ((top, 'double'), (h, '(0 2 3 5 7 8 10)'), (h, 'session 32')) if n not in t] + [n for n in ('2 2 3 7 7 8 10', 'read wrongly', 'released by session 31', '1.4.0 (session 31)') if n in h]; print('bad:', bad) if bad else None; sys.exit(1 if bad else 0)&quot;]</div>
+<div class="line"><span class="at">[12:51:34]</span> <span class="muted">report-accepted</span> seq=4 step=document files=[&quot;CHANGELOG.md&quot;,&quot;docs/session-sets/030-keysig-mark-list/configurator-handoff.md&quot;] notes=CHANGELOG 1.4.0 bullet for double sharps/flats; handoff says every key reads correctly, warning example (0 2 3 5 7 8 10), 408 unit assertions, session 32 releases 1.4.0</div>
+<div class="line"><span class="at">[12:51:34]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[12:51:34]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[12:51:34]</span> <span class="muted">job-started</span> name=verification pid=55280 log=.dabbler/runs/s31/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[12:52:05]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[12:52:05]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[12:52:05]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[12:52:05]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[12:52:05]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=15648 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[12:52:19]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[12:52:19]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[12:52:19]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=55876 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[12:52:20]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[12:52:20]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[12:52:20]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=4568 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[12:52:32]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[12:52:32]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[12:52:32]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=42968 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[12:52:33]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[12:52:33]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[12:52:33]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=52804 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[12:53:18]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[12:53:18]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[12:53:18]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=42244 log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[12:53:59]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[12:53:59]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[12:54:03]</span> <span class="muted">landed</span> commit=122afee762c7a5cdf9d7c2ca750dab97bbef5af3</div>
+<div class="line"><span class="at">[12:54:03]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[12:54:03]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[12:54:03]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[12:54:03]</span> <span class="muted">job-started</span> name=close pid=33764 log=.dabbler/runs/s31/driver/jobs/close.log</div>
+<div class="line"><span class="at">[12:54:08]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s31/driver/jobs/close.log</div>
+<div class="line"><span class="at">[12:54:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>1 finding</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** The direct D♯ major pitch-class tests sort the function result before comparing it. Add a raw-order assertion with `cnb:test-dis-major-alts` expecting `(2 3 5 7 8 10 0)` to pin the required C-to-B output order; the current implementation would pass it, while an implementation returning merely an ascending set would not.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>12s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>11s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>44s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>41s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>
