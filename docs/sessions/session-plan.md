@@ -1159,3 +1159,85 @@ stem following the same rule (no side chosen once). Configurator session
    x and ends, up and down, and names session 44 as the release.
 
 ### Session 44: Release 1.9.0 (release: 1.9.0)
+
+### Session 45: The breve in shape mode, a double notehead or two tied semibreves
+
+**Why.** The Configurator's Noteheads step gains three designs
+(Configurator session 74, 2026-11-17; its
+`docs/planning/notehead-duration-design.md`, B.i, sections 1 and 6.3). In
+one, B.i (*hollows*), the designer's own notehead shows duration by fill,
+in shape mode (`(repeat . #f)`, one head a note): a crotchet solid with a
+stem, a minim hollow with a stem, a semibreve hollow without one. For the
+breve the designer chooses a double notehead (two copies of the hollow
+head, overlapping as a repeated minim's two heads do) or two tied
+semibreves (two hollow heads 1 staff space apart, tied below from the
+middle of the first to the middle of the second, as engine 1.7.0 ties a
+repeat-mode breve's two groups). Today a shape-mode breve engraves as one
+head, so neither reaches the engraving. The brief is the Configurator's
+`docs/planning/shape-mode-breve-brief.md`; this session follows it.
+Configurator session 76 draws and exports the setting, and its engine round
+trip waits on this session's release: on engine 1.9.0 the variable is
+unbound and LilyPond stops.
+
+Nothing changes unless the setting is set, so every export written today
+engraves as before.
+
+1. Register.
+2. **The setting.** A new `cnb:breve-style` (`cnb/config.ly`), a symbol,
+   `'single` by default (one head, as today), `'double` or `'tied`. It is
+   read only for a breve itself (duration log -1) whose resolved notehead
+   has `(repeat . #f)`. In repeat mode a breve stays two tied groups of
+   four whatever the setting, and a shape-mode longa or maxima stays one
+   head. Any other value draws as `'single` with a warning naming
+   `cnb:breve-style` and the value. (The brief asks for an error, "as the
+   engine's other style settings do"; the engine's settings warn and fall
+   back, and none stops LilyPond, so this follows the engine. The operator
+   may choose an error instead before the session starts.)
+3. **`'double`.** In `cnb/stencils.ly`, two copies of the notehead's
+   stencil, its cutout and colour included, the second starting
+   (1 - overlap) x w after the first, w one head's X width and the overlap
+   `cnb:multinote-overlap`; when that is `#f`, the copies are
+   w + `cnb:multinote-padding` apart, as repeat mode spaces them. No tie.
+4. **`'tied`.** Two copies of the stencil, the second's left edge 1 staff
+   space after the first's right edge, and one
+   `(make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN)`, xa and xb the
+   two heads' centres and y0 the bottom of the head's Y extent, added
+   after the head is coloured, so it stays black, as the repeat-mode
+   breve's tie is.
+5. **One note.** The breve stays one NoteHead grob, and only its stencil
+   changes, as in repeat mode: dots, spacing, ledgers (each head's
+   `cnb:ledgers-by-semitone` entry, 1.5 times the whole stencil's width, as
+   LilyPond sizes them) and the per-pitch fields behave as for any
+   notehead. A shape's reference point (the `-ref` registrations) moves
+   both heads, and the tie runs below the moved heads. The stencil cache
+   keeps the three styles apart from each other and from repeat mode.
+   Stems are untouched (a breve has none).
+6. **Specs.** Unit specs (`test-unit.ly`): `'single` is the base stencil;
+   `'double` and `'tied` have the widths, head positions and tie ends the
+   rules give, at overlaps 1/3, 0.25 and `#f`; repeat mode, a shape-mode
+   semibreve and a shape-mode longa are as today under each style; an
+   unknown symbol draws as `'single`. Integration specs on LilyPond 2.24
+   and 2.26, both styles, on the default notehead (`crotchet-minim`,
+   4 semitones a staff space, the 4-8 staff) and the tutorial's diamond
+   (2 semitones a staff space, the 3-5-7-9 staff; the diamond path is in
+   `tests/stem-repeat-minim.ly`): each head's box, fill and colour, with
+   the tutorial's red on C sharp and black elsewhere; the tie black; a
+   breve on a ledger (C and D on the 4-8 staff, B and C sharp on the
+   3-5-7-9) with its ledgers where `cnb:ledgers-by-semitone` puts them
+   and 1.5 times the whole width long; a dotted breve's dot after the
+   whole stencil. Every existing golden and harvest stays byte-identical
+   on both versions.
+7. A README line beside the breve and a row in the settings table, a
+   `CHANGELOG.md` 1.10.0 section, and `version.json` to `1.10.0`: a minor
+   release, since a setting is added. Write
+   `docs/session-sets/045-shape-mode-breve/configurator-handoff.md`, in the
+   form of the earlier handoffs. It gives, measured on 2.24.2 and 2.26.0
+   at an overlap of 1/3, for each of the two notations and each style, the
+   figures of the brief's table (the head's width and height; the
+   `'double` width and heads' centres; the `'tied` width, the tie's ends,
+   its bow and lowest ink, and the height from the top of the heads to the
+   tie's ink) beside the preview's figures from the brief, says where the
+   two differ, gives the ledgers and the dot as measured, and names
+   session 46 as the release.
+
+### Session 46: Release 1.10.0 (release: 1.10.0)
