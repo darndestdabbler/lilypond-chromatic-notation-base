@@ -57,7 +57,7 @@ The numbered sessions are declared from `session-plan.md`; each one's task is wh
 | 43 | A repeated minim's stem on one of its noteheads | no | 2026-11-14 |
 | 44 | Release 1.9.0 (release: 1.9.0) | yes | 2026-11-14 |
 | 45 | The breve in shape mode, a double notehead or two tied semibreves | no | 2026-11-18 |
-| 46 | Release 1.10.0 (release: 1.10.0) | — | not declared |
+| 46 | Release 1.10.0 (release: 1.10.0) | yes | 2026-11-18 |
 
 ### Session 1 — Author or import the solution plan
 
@@ -349,3 +349,9 @@ Release 1.9.0: the framework packs and publishes what is on the trunk.
 **Releasable: no.**
 
 Add cnb:breve-style (cnb/config.ly), a symbol, 'single by default, 'double or 'tied, read only for a breve (duration log -1) whose resolved notehead has (repeat . #f), and prepare it as engine 1.10.0 for session 46 to release. 'single is one head, as today. 'double is two copies of the notehead's stencil (cutout and colour included), the second starting (1 - overlap) x w after the first, w one head's X width and the overlap cnb:multinote-overlap, or w + cnb:multinote-padding apart when that is #f, with no tie: one doubling as cnb:build-duration-stencil (cnb/stencils.ly) already joins a minim's two heads. 'tied is two copies, the second's left edge 1 staff space after the first's right edge, and one (make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN) from the first head's centre to the second's below the bottom of the head's Y extent, added after colouring so it stays black: the same join and tie cnb:build-duration-stencil already gives a repeat-mode breve's two groups, factored out so both use it. The breve stays one NoteHead grob and only its stencil changes, so dots, spacing, ledgers and per-pitch fields follow as for any head, and a shape's reference point moves both heads and the tie. The stencil cache key carries the breve's style so the three styles stay apart from each other and from repeat mode, while every other key is as today. Any other value draws as 'single with a warning naming cnb:breve-style and the value (following the engine's other style settings, by the operator's decision of 2026-11-18). A shape-mode longa or maxima, under any style, draws one head as today and gives one warning a run that it reads shorter than it is (backlog section 7); repeat mode is unchanged whatever the setting. Nothing changes unless the setting is set, so every golden and harvest stays byte-identical on 2.24 and 2.26. Unit specs in test-unit.ly, integration specs on both versions for both styles on the default crotchet-minim notehead (4 semitones a staff space, the 4-8 staff) and the tutorial's hollow diamond (2 semitones a staff space, the 3-5-7-9 staff, red on C sharp), a README line and settings-table row, a CHANGELOG.md 1.10.0 section, version.json 1.10.0 and a Configurator handoff with the brief's figures measured beside the preview's finish the session.
+
+### Session 46 — Release 1.10.0 (release: 1.10.0)
+
+**Releasable: yes.**
+
+Release 1.10.0: the framework packs and publishes what is on the trunk.
