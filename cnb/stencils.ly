@@ -124,7 +124,9 @@
 %%  quadrupled for whole, tied semibreve groups for breve and longer) are
 %%  cached by (pitch-class, duration-category, semibreve groups) since the
 %%  combine-at-edge has some cost; the group count keeps the longa and
-%%  the maxima apart from the breve, which share category 0.
+%%  the maxima apart from the breve, which share category 0, and a
+%%  breve's key carries its cnb:breve-style index, so 'double and 'tied
+%%  stay apart from 'single, from each other and from repeat mode.
 %%
 %%  Uses integer keys with hashq-ref (correctly matched by eq?).
 %%
@@ -190,24 +192,76 @@
         '(2 1))
 
       (if (> groups 1)
-          (let* ((ext   (ly:stencil-extent stencil X))
-                 (step  (+ (interval-length ext) 1))
-                 (group stencil)
-                 (y0    (car (ly:stencil-extent group Y)))
-                 (xa    (interval-center ext))
-                 (xb    (+ xa (* (- groups 1) step))))
-            (do ((k 1 (1+ k))) ((= k groups))
-              (set! stencil
-                    (ly:stencil-add
-                      stencil
-                      (ly:stencil-translate-axis group (* k step) X))))
-            (set! stencil
-                  (ly:stencil-add
-                    stencil
-                    (make-tie-stencil (cons xa y0) (cons xb y0)
-                                      0.12 DOWN)))))
+          (cnb:tie-groups stencil groups)
+          stencil)))
 
-      stencil))
+
+%% ---------------------------------------------------------------------------
+%%  TIED GROUPS
+%%
+%%  GROUPS copies of STENCIL laid left to right, each copy's left edge
+%%  1 staff space after the last one's right edge, and one tie below
+%%  them, bowing down from the bottom of STENCIL's Y extent: from the
+%%  centre of the first copy's X extent to the centre of the last's,
+%%  with LilyPond's default height limit and ratio. The tie is added
+%%  after the head is coloured, so it stays black. A repeat-mode breve
+%%  or longer ties its semibreve groups this way, and a shape-mode
+%%  breve its two heads under cnb:breve-style 'tied.
+%% ---------------------------------------------------------------------------
+
+#(define (cnb:tie-groups group groups)
+   (let* ((ext     (ly:stencil-extent group X))
+          (step    (+ (interval-length ext) 1))
+          (y0      (car (ly:stencil-extent group Y)))
+          (xa      (interval-center ext))
+          (xb      (+ xa (* (- groups 1) step)))
+          (stencil group))
+     (do ((k 1 (1+ k))) ((= k groups))
+       (set! stencil
+             (ly:stencil-add
+               stencil
+               (ly:stencil-translate-axis group (* k step) X))))
+     (ly:stencil-add
+       stencil
+       (make-tie-stencil (cons xa y0) (cons xb y0) 0.12 DOWN))))
+
+
+%% ---------------------------------------------------------------------------
+%%  SHAPE-MODE STENCIL
+%%
+%%  The stencil of a note whose resolved notehead has (repeat . #f),
+%%  one head a note, from its BASE stencil, its duration LOG and
+%%  STYLE (cnb:breve-style):
+%%    a breve (log -1): 'double is two copies spaced as a repeated
+%%      minim's heads (cnb:build-duration-stencil, category 2); 'tied
+%%      is two copies tied (cnb:tie-groups); 'single is the base, and
+%%      so is any other value, with a warning naming it;
+%%    a longa or maxima (log below -1): the base, as the breve's one
+%%      head, so it reads shorter than it is; the first one a run
+%%      warns, and sets cnb:shape-longa-warned so no other does;
+%%    any other duration: the base.
+%% ---------------------------------------------------------------------------
+
+#(define cnb:shape-longa-warned #f)
+
+#(define (cnb:shape-mode-stencil base duration-log style)
+   (cond
+     ((= duration-log -1)
+      (case style
+        ((double) (cnb:build-duration-stencil base 2))
+        ((tied)   (cnb:tie-groups base 2))
+        ((single) base)
+        (else
+         (ly:warning "cnb:breve-style is '~a, not 'single, 'double or 'tied -- drawn as 'single"
+                     style)
+         base)))
+     ((< duration-log -1)
+      (if (not cnb:shape-longa-warned)
+          (begin
+            (set! cnb:shape-longa-warned #t)
+            (ly:warning "cnb: a longa or maxima in shape mode (repeat #f) draws as one head, like a breve, so it reads shorter than it is")))
+      base)
+     (else base)))
 
 
 %% ---------------------------------------------------------------------------
@@ -235,10 +289,16 @@
            (pitch-class     (modulo note-semis 12))
            (note-dur-prop   (ly:event-property note-event 'duration))
            (dur-cat         (cnb:duration-category note-dur-prop))
-           (groups          (cnb:semibreve-groups
-                              (ly:duration-log note-dur-prop)))
+           (dur-log         (ly:duration-log note-dur-prop))
+           (groups          (cnb:semibreve-groups dur-log))
            (mag             (magstep (ly:grob-property grob 'font-size 0.0)))
-           (cache-key       (cnb:make-cache-key pitch-class dur-cat groups))
+           ;; A breve's key carries its style, so the three stay apart
+           ;; (every other key, and a 'single breve's, is as before).
+           (cache-key       (cnb:make-cache-key
+                              pitch-class dur-cat groups
+                              (if (= dur-log -1)
+                                  (cnb:breve-style-index cnb:breve-style)
+                                  0)))
            (cached          (hashq-ref cnb:note-stencil-cache cache-key)))
 
       (if cached
@@ -272,7 +332,8 @@
                  (repeat (cdr base-and-repeat))
                  (result (if (not (eq? repeat #f))
                              (cnb:build-duration-stencil base dur-cat groups)
-                             base)))
+                             (cnb:shape-mode-stencil base dur-log
+                                                     cnb:breve-style))))
 
             (hashq-set! cnb:note-stencil-cache cache-key result)
             (ly:stencil-scale result mag mag)))))

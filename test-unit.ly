@@ -171,6 +171,25 @@
 #(cnb:assert-equal "cache key of a triplet half = cache key of a half"
    (cnb:make-cache-key 7 (cnb:duration-category (ly:make-duration 1 0 2 3)))
    (cnb:make-cache-key 7 (cnb:duration-category (ly:make-duration 1 0))))
+%% The optional breve style index (cnb:breve-style-index) keeps a
+%% shape-mode breve's three styles apart; index 0 leaves every key as it was.
+#(cnb:assert-equal "cache key with style 0 = key without it" (cnb:make-cache-key 5 0 2 0) 510)
+#(cnb:assert-equal "cache key for a C 'double breve" (cnb:make-cache-key 0 0 2 1) 10010)
+#(cnb:assert-equal "cache key for a B 'tied breve"   (cnb:make-cache-key 11 0 2 2) 21110)
+#(cnb:assert-true "all cache keys unique over pitch classes, categories, groups and styles"
+   (let* ((keys (map (lambda (p)
+                       (append (map (lambda (d) (cnb:make-cache-key p d)) '(1 2 3))
+                               (map (lambda (g) (cnb:make-cache-key p 0 g)) '(1 2 4 8))
+                               (map (lambda (s) (cnb:make-cache-key p 0 2 s)) '(1 2))))
+                     (iota 12)))
+          (flat (apply append keys)))
+     (= (length flat) (length (delete-duplicates flat)))))
+
+#(cnb:test-group "utils.ly — cnb:breve-style-index")
+#(cnb:assert-equal "'single -> 0" (cnb:breve-style-index 'single) 0)
+#(cnb:assert-equal "'double -> 1" (cnb:breve-style-index 'double) 1)
+#(cnb:assert-equal "'tied -> 2"   (cnb:breve-style-index 'tied) 2)
+#(cnb:assert-equal "an unknown value -> 0, as 'single" (cnb:breve-style-index 'quadruple) 0)
 
 #(cnb:test-group "utils.ly — cnb:duration-category")
 %% Scale (cnb/procedure.ly): 0 = breve or longer, 1 = whole, 2 = half,
@@ -281,6 +300,102 @@
    (set! cnb:multinote-padding 3)
    (cnb:assert-near "overlap 1/3: the padding is not read (semibreve with padding 3)"
      (width 1) (+ 1 (* 3 2/3)) 0.001)
+   (set! cnb:multinote-padding saved)
+   (set! cnb:multinote-overlap #f))
+
+#(cnb:test-group "stencils.ly — cnb:shape-mode-stencil (cnb:breve-style)")
+%% A 1 x 1 box as the head (w = 1). In shape mode a breve (log -1) is the
+%% base under 'single; under 'double two copies, the second starting
+%% (1 - overlap) w after the first (w + padding apart with the overlap
+%% #f); under 'tied two copies, the second's left edge 1 staff space
+%% after the first's right edge, and a tie below from the first head's
+%% centre to the second's at the head's bottom. An unknown style is the
+%% base (with a warning, expected in the log). A semibreve and a longa are
+%% the base under every style.
+#(let* ((box    (make-filled-box-stencil '(-0.5 . 0.5) '(-0.5 . 0.5)))
+        (xext   (lambda (st) (ly:stencil-extent st X)))
+        (breve  (lambda (style) (cnb:shape-mode-stencil box -1 style)))
+        (saved  cnb:multinote-padding))
+   (cnb:assert-equal "cnb:breve-style defaults to 'single" cnb:breve-style 'single)
+   (cnb:assert-true "'single: the base stencil" (eq? (breve 'single) box))
+   (cnb:assert-true "an unknown style: the base stencil" (eq? (breve 'quadruple) box))
+   ;; 'double, at overlaps 1/3 and 0.25: width (2 - overlap) w, the first
+   ;; head at the base's place (centre 0) and the second's centre at
+   ;; (1 - overlap) w.
+   (for-each
+     (lambda (ov)
+       (set! cnb:multinote-overlap ov)
+       (let ((ext (xext (breve 'double))))
+         (cnb:assert-near (format #f "'double, overlap ~a: width = (2 - overlap) w" ov)
+           (interval-length ext) (- 2 ov) 0.001)
+         (cnb:assert-near (format #f "'double, overlap ~a: the first head's centre = the base's" ov)
+           (+ (car ext) 0.5) 0 0.001)
+         (cnb:assert-near (format #f "'double, overlap ~a: the second head's centre = (1 - overlap) w" ov)
+           (- (cdr ext) 0.5) (- 1 ov) 0.001)))
+     '(1/3 0.25))
+   (set! cnb:multinote-overlap #f)
+   (let ((ext (xext (breve 'double))))
+     (cnb:assert-near "'double, overlap #f: width = 2w + padding (-0.5)"
+       (interval-length ext) 1.5 0.001)
+     (cnb:assert-near "'double, overlap #f: the second head's centre = w + padding"
+       (- (cdr ext) 0.5) 0.5 0.001))
+   (cnb:assert-equal "'double has no tie: its Y extent is the head's"
+     (ly:stencil-extent (breve 'double) Y) '(-0.5 . 0.5))
+   ;; 'tied: width 2w + 1 whatever the overlap, the tie inside it, its
+   ;; lowest ink that of the tie from (0, -0.5) to (2, -0.5).
+   (for-each
+     (lambda (ov)
+       (set! cnb:multinote-overlap ov)
+       (let* ((st  (breve 'tied))
+              (ext (xext st))
+              (yx  (ly:stencil-extent st Y))
+              (tie (make-tie-stencil '(0 . -0.5) '(2 . -0.5) 0.12 DOWN)))
+         (cnb:assert-near (format #f "'tied, overlap ~a: width = 2w + 1" ov)
+           (interval-length ext) 3 0.001)
+         (cnb:assert-near (format #f "'tied, overlap ~a: the first head's left edge = the base's" ov)
+           (car ext) -0.5 0.001)
+         (cnb:assert-near (format #f "'tied, overlap ~a: top edge = the head's" ov)
+           (cdr yx) 0.5 0.001)
+         (cnb:assert-near (format #f "'tied, overlap ~a: lowest ink = the tie's between the heads' centres" ov)
+           (car yx) (car (ly:stencil-extent tie Y)) 0.001)
+         (cnb:assert-true (format #f "'tied, overlap ~a: the tie bows below the heads" ov)
+           (< (car yx) -0.5))))
+     '(1/3 #f))
+   ;; A head off its reference point (a box from 0.2 to 1.2): both heads
+   ;; move with it and the tie runs below the moved heads.
+   (let* ((off (make-filled-box-stencil '(0.2 . 1.2) '(-0.5 . 0.5)))
+          (st  (cnb:shape-mode-stencil off -1 'tied))
+          (tie (make-tie-stencil '(0.7 . -0.5) '(2.7 . -0.5) 0.12 DOWN)))
+     (cnb:assert-near "'tied, a moved head: the left edge moves with it"
+       (car (xext st)) 0.2 0.001)
+     (cnb:assert-near "'tied, a moved head: the tie's lowest ink is under the moved heads"
+       (car (ly:stencil-extent st Y)) (car (ly:stencil-extent tie Y)) 0.001))
+   ;; Repeat mode reads no style: a breve and a longa are as before, and
+   ;; build no warning.
+   (cnb:assert-false "the longa warning is not yet given" cnb:shape-longa-warned)
+   (for-each
+     (lambda (groups)
+       (let ((before (xext (cnb:build-duration-stencil box 0 groups))))
+         (for-each
+           (lambda (style)
+             (set! cnb:breve-style style)
+             (cnb:assert-equal (format #f "repeat mode, ~a groups, style ~a: as before" groups style)
+               (xext (cnb:build-duration-stencil box 0 groups)) before))
+           '(single double tied))
+         (set! cnb:breve-style 'single)))
+     '(2 4))
+   (cnb:assert-false "repeat mode: a breve and a longa give no longa warning" cnb:shape-longa-warned)
+   ;; Shape mode: a semibreve and a longa are the base under every style;
+   ;; the first longa warns (expected in the log) and sets the flag.
+   (for-each
+     (lambda (style)
+       (cnb:assert-true (format #f "shape mode, semibreve, style ~a: the base" style)
+         (eq? (cnb:shape-mode-stencil box 0 style) box))
+       (cnb:assert-true (format #f "shape mode, longa, style ~a: the base" style)
+         (eq? (cnb:shape-mode-stencil box -2 style) box)))
+     '(single double tied))
+   (cnb:assert-true "shape mode: the longas set the once-a-run flag" cnb:shape-longa-warned)
+   (set! cnb:shape-longa-warned #f)
    (set! cnb:multinote-padding saved)
    (set! cnb:multinote-overlap #f))
 

@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.10.0
+
+- New setting `cnb:breve-style`, default `'single`, read only for a breve
+  whose resolved notehead has `(repeat . #f)` (shape mode). `'single` is
+  one head, as before. `'double` is two copies of the head, its cutout and
+  colour included, the second starting (1 − overlap) head widths after the
+  first (`cnb:multinote-overlap`, or the head width plus
+  `cnb:multinote-padding` when that is `#f`), with no tie. `'tied` is two
+  copies, the second's left edge 1 staff space after the first's right
+  edge, and one black tie below them from the first head's centre to the
+  second's, as a repeat-mode breve ties its two groups. The breve stays
+  one notehead, so its dots, spacing and ledgers follow its whole width.
+  Any other value warns, naming the setting and the value, and draws as
+  `'single`. Repeat mode ignores the setting, so a file that does not set
+  it engraves as before.
+- A longa or maxima in shape mode still draws as one head, like a breve,
+  and so reads shorter than it is; the first one of a run now gives one
+  warning saying so. It changes no output.
+- New specs `tests/breve-shape-double`, `tests/breve-shape-tied`,
+  `tests/breve-shape-double-diamond` and `tests/breve-shape-tied-diamond`:
+  the Configurator's default notehead and the tutorial's diamond, each
+  style, at an overlap of 1/3, with breves on the staff, on ledgers and
+  dotted.
+- No golden or harvest changed.
+  `docs/session-sets/045-shape-mode-breve/configurator-handoff.md` gives
+  the measured breves of the default notehead and the tutorial's diamond.
+
 ## 1.9.0
 
 - New setting `cnb:multinote-stem-on-head`, default `#f`. When it is `#t`,

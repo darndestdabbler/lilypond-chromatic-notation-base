@@ -291,23 +291,33 @@
 
 %% Create a numeric cache key from a pitch class (0-11), a duration
 %% category and, optionally, a semibreve group count
-%% (cnb:semibreve-groups, default 1).
+%% (cnb:semibreve-groups, default 1) and a breve style index
+%% (cnb:breve-style-index, default 0).
 %%
 %% ENCODING SCHEME:
-%%   key = (pitch-class * 100) + 10 * (groups - 1) + duration-category
+%%   key = 10000 * style + (pitch-class * 100) + 10 * (groups - 1)
+%%         + duration-category
 %%   This works because pitch-class is 0-11, duration-category is 0-3
-%%   (see cnb:duration-category) and groups is 1, 2, 4 or 8, so keys
-%%   never collide. With the default group count of 1 the key is the
-%%   pitch-class and category alone.
+%%   (see cnb:duration-category), groups is 1, 2, 4 or 8 and the style
+%%   is 0, 1 or 2, so keys never collide. With the default group count
+%%   and style the key is the pitch-class and category alone.
 %%
 %% EXAMPLES:
 %%   C quarter note:  (cnb:make-cache-key 0 3) => 3
 %%   F# half note:    (cnb:make-cache-key 6 2) => 602
 %%   B whole note:    (cnb:make-cache-key 11 1) => 1101
 %%   C longa:         (cnb:make-cache-key 0 0 4) => 30
+%%   C 'tied breve:   (cnb:make-cache-key 0 0 2 2) => 20010
 #(define* (cnb:make-cache-key pitch-class duration-category
-                              #:optional (groups 1))
-   (+ (* pitch-class 100) (* 10 (- groups 1)) duration-category))
+                              #:optional (groups 1) (style 0))
+   (+ (* 10000 style) (* pitch-class 100) (* 10 (- groups 1))
+      duration-category))
+
+
+%% The cache-key index of a breve style (cnb:breve-style): 1 'double,
+%% 2 'tied, 0 'single and any other value, which draws as 'single.
+#(define (cnb:breve-style-index style)
+   (case style ((double) 1) ((tied) 2) (else 0)))
 
 
 %% Compute the duration category for a note event, on the scale the

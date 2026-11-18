@@ -54,6 +54,7 @@ CNB is one part of a three-tool workflow. Each tool has a focused responsibility
 - **Custom notehead stencils** — shape, color, and hollow cycling by pitch class, duration, and key
 - **Double/quadruple noteheads** — half notes render as 2 noteheads, whole notes as 4 (configurable)
 - **Breves as tied semibreves** — in repeat mode a breve renders as 2 of the whole note's 4-head groups, 1 staff space apart with one tie below the heads from the first group's centre to the last's, and a longa as 4 (a maxima as 8): one note, drawn as tied semibreves. `cnb:multinote-overlap` sets how much each repeated head overlaps the last, as a share of its own width (1/3: each starts 2/3 of a head after the last)
+- **The breve in shape mode** — with `(repeat . #f)` a breve is one head, unless `cnb:breve-style` is `'double` (two copies of the head, spaced as a repeated minim's heads) or `'tied` (two copies 1 staff space apart with a black tie below them from centre to centre); it stays one note, so dots, spacing and ledgers follow its whole width. `tests/breve-shape-*.ly` prove both
 - **Proximity-based ledger lines** — ledger visibility determined by notehead proximity to staff
 - **Per-line staff/ledger styling** — individual thickness, color, and dash patterns per line
 - **Dozenal clef symbols** — base-12 clef notation
@@ -311,6 +312,7 @@ A custom clef definition is an alist: required `(path . <command list>)` (same f
 | `cnb:multinote-padding` | `-0.5` | Spacing between multi-noteheads |
 | `cnb:multinote-overlap` | `#f` | Overlap of each repeated notehead with the last, as a share of the head's own width (1/3 recommended: each starts 2/3 of a head after the last); when set it replaces `cnb:multinote-padding`, which is then not read; `#f` = use the padding |
 | `cnb:multinote-stem-on-head` | `#f` | `#t` puts a repeated minim's stem on its last head when up and its first when down, as a single head's stem is attached; `#f` = across the whole group of heads |
+| `cnb:breve-style` | `'single` | How a shape-mode breve (`(repeat . #f)`) draws: `'single` one head; `'double` two copies spaced as a repeated minim's heads (by `cnb:multinote-overlap`, else `cnb:multinote-padding`); `'tied` two copies 1 staff space apart, tied below from centre to centre; repeat mode ignores it; another value warns and draws as `'single` |
 | `cnb:collision-threshold` | `2` | Note collision detection threshold |
 | `cnb:clef-style` | `'dozenal` | Clef display: `'dozenal` (computed register numeral), `'text` (render `cnb:clef-text`), `'none` (no clef stencil), or `'custom` (registered glyph named by `cnb:clef-name`) |
 | `cnb:clef-text` | `""` | Label for `'text` clef mode (a string renders bold; a markup is used as-is) |

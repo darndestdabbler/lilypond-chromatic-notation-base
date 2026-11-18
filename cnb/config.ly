@@ -560,6 +560,15 @@
 %% cnb/stems.ly).
 #(define cnb:multinote-stem-on-head #f)
 
+%% How a breve draws in shape mode, read only for a breve whose resolved
+%% notehead has (repeat . #f) (cnb:shape-mode-stencil, cnb/stencils.ly).
+%% 'single (the default) is one head. 'double is two copies spaced as a
+%% repeated minim's heads (cnb:multinote-overlap, else
+%% cnb:multinote-padding). 'tied is two copies 1 staff space apart with
+%% a black tie below them from centre to centre. Repeat mode ignores it.
+%% Any other value warns and draws as 'single.
+#(define cnb:breve-style 'single)
+
 %% Threshold for LilyPond's collision detection between note columns.
 %% Higher values allow closer notes before LilyPond shifts them apart.
 #(define cnb:collision-threshold 2)

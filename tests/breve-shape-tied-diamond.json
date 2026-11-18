@@ -1,0 +1,164 @@
+{
+  "test_name": "A shape-mode breve under cnb:breve-style 'tied, on the Configurator tutorial's diamond (its cutout)",
+  "input_file": "breve-shape-tied-diamond.ly",
+  "description": "Session 45. With cnb:breve-style 'tied and (repeat . #f), a breve engraves as two tied semibreves: two copies of the head, the second's left edge 1 staff space after the first's right edge, and one tie below from the first head's centre to the second's, on the Configurator tutorial's diamond (its cutout), red on C sharp and black elsewhere, 2 semitones per staff space, the 3-5-7-9 staff, at cnb:multinote-overlap 1/3. The diamond's hull is its stencil extent, 1.5 x 1. Positions are SVG units, 1 staff space each. The harvest gives one box, colour and path per notehead, so the tie's ends and its colour (drawn outside the head's colour group, so black on the red C sharp too) are read from the SVG in the handoff (docs/session-sets/045-shape-mode-breve/configurator-handoff.md).",
+  "assertions": [
+    {
+      "_comment": "=== SECTION 1: THE NOTES ==="
+    },
+    {
+      "id": "nh-1-0.000-76-0",
+      "description": "Six noteheads: two semibreves (the single head, the reference) and four breves",
+      "expect": {
+        "type": [
+          "count('notehead') == 6"
+        ],
+        "data.duration": [
+          "== '0'"
+        ],
+        "visual.color": [
+          "== 'rgb(0.0000%, 0.0000%, 0.0000%)'"
+        ]
+      }
+    },
+    {
+      "id": "nh-1-1.000-76-0",
+      "description": "The second semibreve is the same single head",
+      "expect": {
+        "visual.bbox.w": [
+          "abs(v - prop('nh-1-0.000-76-0', 'visual.bbox.w')) < 0.001"
+        ],
+        "visual.path_hash": [
+          "v == prop('nh-1-0.000-76-0', 'visual.path_hash')"
+        ]
+      }
+    },
+    {
+      "_comment": "=== SECTION 2: EACH BREVE IS ONE NOTEHEAD, TIED ==="
+    },
+    {
+      "id": "nh-2-0.000-76-0",
+      "description": "The breve, E5 on the staff: one notehead, its first head the single head's path (outline and cutout) in black, the second's left edge 1 staff space after the first's right edge, so its hull is the single head's plus 1.5 + 1; the tie below takes its height to 1.776 (the tie's control-point hull, measured on 2.24 and 2.26); its top is the single head's at the same pitch",
+      "expect": {
+        "data.duration": [
+          "== '-1'"
+        ],
+        "visual.path_hash": [
+          "v == prop('nh-1-0.000-76-0', 'visual.path_hash')"
+        ],
+        "visual.color": [
+          "== 'rgb(0.0000%, 0.0000%, 0.0000%)'"
+        ],
+        "visual.bbox.w": [
+          "abs(v - (prop('nh-1-0.000-76-0', 'visual.bbox.w') + 1.5 + 1)) < 0.002"
+        ],
+        "visual.bbox.h": [
+          "abs(v - 1.776) < 0.002",
+          "v > prop('nh-1-0.000-76-0', 'visual.bbox.h') + 0.5"
+        ],
+        "visual.bbox.y": [
+          "abs(v - prop('nh-1-0.000-76-0', 'visual.bbox.y')) < 0.001"
+        ]
+      }
+    },
+    {
+      "id": "nh-3-0.000-71-0",
+      "description": "The breve, B4 on its ledgers: one notehead, its first head the single head's path (outline and cutout) in black, the second's left edge 1 staff space after the first's right edge, so its hull is the single head's plus 1.5 + 1; the tie below takes its height to 1.776 (the tie's control-point hull, measured on 2.24 and 2.26)",
+      "expect": {
+        "data.duration": [
+          "== '-1'"
+        ],
+        "visual.path_hash": [
+          "v == prop('nh-1-0.000-76-0', 'visual.path_hash')"
+        ],
+        "visual.color": [
+          "== 'rgb(0.0000%, 0.0000%, 0.0000%)'"
+        ],
+        "visual.bbox.w": [
+          "abs(v - (prop('nh-1-0.000-76-0', 'visual.bbox.w') + 1.5 + 1)) < 0.002"
+        ],
+        "visual.bbox.h": [
+          "abs(v - 1.776) < 0.002",
+          "v > prop('nh-1-0.000-76-0', 'visual.bbox.h') + 0.5"
+        ]
+      }
+    },
+    {
+      "id": "nh-4-0.000-73-0",
+      "description": "The breve, C sharp 5 on its ledgers: one notehead, its first head the single head's path (outline and cutout) in red (#cc0000), the second's left edge 1 staff space after the first's right edge, so its hull is the single head's plus 1.5 + 1; the tie below takes its height to 1.776 (the tie's control-point hull, measured on 2.24 and 2.26)",
+      "expect": {
+        "data.duration": [
+          "== '-1'"
+        ],
+        "visual.path_hash": [
+          "v == prop('nh-1-0.000-76-0', 'visual.path_hash')"
+        ],
+        "visual.color": [
+          "== 'rgb(80.0000%, 0.0000%, 0.0000%)'"
+        ],
+        "visual.bbox.w": [
+          "abs(v - (prop('nh-1-0.000-76-0', 'visual.bbox.w') + 1.5 + 1)) < 0.002"
+        ],
+        "visual.bbox.h": [
+          "abs(v - 1.776) < 0.002",
+          "v > prop('nh-1-0.000-76-0', 'visual.bbox.h') + 0.5"
+        ]
+      }
+    },
+    {
+      "id": "nh-5-0.000-76-0",
+      "description": "The breve, the dotted E5: one notehead, its first head the single head's path (outline and cutout) in black, the second's left edge 1 staff space after the first's right edge, so its hull is the single head's plus 1.5 + 1; the tie below takes its height to 1.776 (the tie's control-point hull, measured on 2.24 and 2.26)",
+      "expect": {
+        "data.duration": [
+          "== '-1'"
+        ],
+        "visual.path_hash": [
+          "v == prop('nh-1-0.000-76-0', 'visual.path_hash')"
+        ],
+        "visual.color": [
+          "== 'rgb(0.0000%, 0.0000%, 0.0000%)'"
+        ],
+        "visual.bbox.w": [
+          "abs(v - (prop('nh-1-0.000-76-0', 'visual.bbox.w') + 1.5 + 1)) < 0.002"
+        ],
+        "visual.bbox.h": [
+          "abs(v - 1.776) < 0.002",
+          "v > prop('nh-1-0.000-76-0', 'visual.bbox.h') + 0.5"
+        ]
+      }
+    },
+    {
+      "_comment": "=== SECTION 3: LEDGERS ==="
+    },
+    {
+      "id": "ll-1-0.000-0",
+      "description": "One ledger element spans the two ledgered breves' ledgers (B4 at position -1, C sharp 5 at position 1, from cnb:ledgers-by-semitone): its height is positions -1 and 1, a staff space apart, plus the 0.2 thickness; each breve's ledgers are 1.5 times the whole stencil's width (2 * 1.5 + 1), so the element is the distance between the two breves plus 1.5 x 2 * 1.5 + 1, and it starts 1.0 before the first one's hull (0.25 x the stencil width before its left edge); the breves on the staff have none",
+      "expect": {
+        "visual.bbox.h": [
+          "abs(v - 1.2) < 0.001"
+        ],
+        "visual.bbox.w": [
+          "abs(v - ((prop('nh-4-0.000-73-0', 'visual.bbox.x') - prop('nh-3-0.000-71-0', 'visual.bbox.x')) + 1.5 * (2 * 1.5 + 1))) < 0.005"
+        ],
+        "visual.bbox.x": [
+          "abs(v - (prop('nh-3-0.000-71-0', 'visual.bbox.x') - 1.0)) < 0.005",
+          "v > prop('nh-2-0.000-76-0', 'visual.bbox.x') + prop('nh-2-0.000-76-0', 'visual.bbox.w')",
+          "v + prop('ll-1-0.000-0', 'visual.bbox.w') < prop('nh-5-0.000-76-0', 'visual.bbox.x')"
+        ]
+      }
+    },
+    {
+      "_comment": "=== SECTION 4: THE DOT ==="
+    },
+    {
+      "id": "dt-5-0.000-76-0",
+      "description": "The dotted breve's dot stands after the whole stencil, close to it",
+      "expect": {
+        "visual.bbox.x": [
+          "v > prop('nh-5-0.000-76-0', 'visual.bbox.x') + prop('nh-5-0.000-76-0', 'visual.bbox.w')",
+          "v < prop('nh-5-0.000-76-0', 'visual.bbox.x') + prop('nh-5-0.000-76-0', 'visual.bbox.w') + 0.6"
+        ]
+      }
+    }
+  ]
+}
