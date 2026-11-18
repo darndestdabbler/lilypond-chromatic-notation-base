@@ -1191,8 +1191,13 @@ engraves as before.
    head. Any other value draws as `'single` with a warning naming
    `cnb:breve-style` and the value. (The brief asks for an error, "as the
    engine's other style settings do"; the engine's settings warn and fall
-   back, and none stops LilyPond, so this follows the engine. The operator
-   may choose an error instead before the session starts.)
+   back, and none stops LilyPond, so by the operator's decision of
+   2026-11-18 this follows the engine.) A longa or maxima engraved in
+   shape mode, under any style, gives one warning a run, not one a note:
+   it draws as the breve's one head, so it reads shorter than it is
+   (backlog section 7,
+   `docs/planning/configurator-coordination-backlog.md`). The warning
+   changes no output.
 3. **`'double`.** In `cnb/stencils.ly`, two copies of the notehead's
    stencil, its cutout and colour included, the second starting
    (1 - overlap) x w after the first, w one head's X width and the overlap
@@ -1216,7 +1221,8 @@ engraves as before.
    `'double` and `'tied` have the widths, head positions and tie ends the
    rules give, at overlaps 1/3, 0.25 and `#f`; repeat mode, a shape-mode
    semibreve and a shape-mode longa are as today under each style; an
-   unknown symbol draws as `'single`. Integration specs on LilyPond 2.24
+   unknown symbol draws as `'single`; a shape-mode longa warns once, and
+   a repeat-mode one does not. Integration specs on LilyPond 2.24
    and 2.26, both styles, on the default notehead (`crotchet-minim`,
    4 semitones a staff space, the 4-8 staff) and the tutorial's diamond
    (2 semitones a staff space, the 3-5-7-9 staff; the diamond path is in

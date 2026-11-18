@@ -277,6 +277,55 @@ on `pitchAxis.enabled` (no silent linear `.ly` for a compact config).
 
 ---
 
+## 7. Notes longer than a breve — *added 2026-11-18*
+
+Raised by the operator while planning session 45 (`cnb:breve-style`,
+engine 1.10.0). Not planned as a session yet; session 45 leaves the longa
+and maxima as they are and only warns (see 7.3).
+
+**The gap.** `cnb:duration-category` (`cnb/utils.ly`) clamps a breve and
+everything longer to category 0, so a notehead rule cannot tell a longa
+from a breve. In the Configurator's three notehead designs (its
+`docs/planning/notehead-duration-design.md`):
+
+| Design | A longa engraves as | Problem |
+|---|---|---|
+| A, conventional noteheads (shape mode) | the breve's shape | reads as half its length |
+| B.i, hollows (shape mode) | one hollow head | reads as a semibreve, and shorter than a `'double` or `'tied` breve |
+| B.ii, repeated heads (repeat mode) | 4 tied groups of 4 heads (a maxima 8 groups, 32 heads) | right, but very wide |
+
+### 7.1 An open tie with a count *(operator's idea, 2026-11-18)*
+For the designer's own notehead (B.i and B.ii): one semibreve (one head,
+or one group of four), a tie that opens into the air, and a number saying
+how many semibreves the note lasts: 4 for a longa, 8 for a maxima, 6 for a
+dotted longa. The number sits below a tie that curves down and above one
+that curves up. It is drawn inside the one NoteHead stencil, as the
+breve's tie is, so it needs no new grob.
+
+To settle first, from Configurator mock-ups, since its preview must draw
+it too:
+
+- whether the count starts at the longa, the breve keeping the forms
+  already chosen (two tied groups; `cnb:breve-style`). Recommended, so
+  nothing the operator has picked changes;
+- what chooses the tie's direction, since these notes have no stem (the
+  breve's tie is always below today);
+- the number's size, font and distance from the tie, and what it does to
+  dots, ledgers and spacing.
+
+### 7.2 A duration category for the longa and the maxima
+Design A wants the conventional longa and maxima shapes rather than a
+count, and conventional notation has both. That needs notehead rules that
+can name those durations, so the category must stop clamping at the breve,
+and the Configurator needs the two shapes as SVGs from the operator.
+Separate from 7.1, and small.
+
+### 7.3 Until then
+From engine 1.10.0 (session 45) a longa or maxima engraved in shape mode
+gives one warning a run and draws as before.
+
+---
+
 ## 5. Already resolved (for reference — do not re-do)
 
 ### §1 Clefs — set `005-clef-configurability` (2026-07-07)
