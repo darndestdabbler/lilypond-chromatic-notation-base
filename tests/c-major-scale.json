@@ -1,0 +1,718 @@
+{
+  "test_name": "C major scale — structural and visual validation",
+  "input_file": "c-major-scale.ly",
+  "description": "Validates that a C major ascending scale (C4-D4-E4-F4 | G4-A4-B4-C5) renders correctly in chromatic notation: pitch class data, vertical positioning, notehead shapes, horizontal ordering, staff geometry, and ledger lines.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: ELEMENT EXISTENCE AND COUNTS ==="},
+
+    {
+      "id": "staff-symbol",
+      "description": "Staff symbol exists",
+      "expect": {
+        "type": ["== 'staff-symbol'"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "Clef exists at start of score",
+      "expect": {
+        "type": ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {
+      "id": "ks-1",
+      "description": "Key signature exists at start of score",
+      "expect": {
+        "type": ["== 'key-signature'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {
+      "id": "ts-1",
+      "description": "Time signature exists at start of score",
+      "expect": {
+        "type": ["== 'time-signature'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {
+      "id": "bl-2",
+      "description": "Barline between measure 1 and 2",
+      "expect": {
+        "type": ["== 'barline'"],
+        "data.measure": ["== '2'"]
+      }
+    },
+
+    {
+      "id": "bl-3",
+      "description": "Final barline after measure 2",
+      "expect": {
+        "type": ["== 'barline'"],
+        "data.measure": ["== '3'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "8 noteheads total in the score",
+      "expect": {
+        "type": ["count('notehead') == 8"]
+      }
+    },
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "8 stems total in the score",
+      "expect": {
+        "type": ["count('stem') == 8"]
+      }
+    },
+
+    {
+      "id": "bl-2",
+      "description": "2 barlines total (no barline at start of first measure)",
+      "expect": {
+        "type": ["count('barline') == 2"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: PITCH CLASS AND MIDI DATA ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4: midi 60, pitch class 0, measure 1, quarter note",
+      "expect": {
+        "type":              ["== 'notehead'"],
+        "data.midi":         ["== '60'"],
+        "data.pitch-class":  ["== '0'"],
+        "data.measure":      ["== '1'"],
+        "data.beat":         ["== '0.000'"],
+        "data.duration":     ["== '2'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.250-62-0",
+      "description": "D4: midi 62, pitch class 2",
+      "expect": {
+        "data.midi":         ["== '62'"],
+        "data.pitch-class":  ["== '2'"],
+        "data.beat":         ["== '0.250'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-64-0",
+      "description": "E4: midi 64, pitch class 4",
+      "expect": {
+        "data.midi":         ["== '64'"],
+        "data.pitch-class":  ["== '4'"],
+        "data.beat":         ["== '0.500'"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4: midi 65, pitch class 5",
+      "expect": {
+        "data.midi":         ["== '65'"],
+        "data.pitch-class":  ["== '5'"],
+        "data.beat":         ["== '0.750'"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "G4: midi 67, pitch class 7, measure 2",
+      "expect": {
+        "data.midi":         ["== '67'"],
+        "data.pitch-class":  ["== '7'"],
+        "data.measure":      ["== '2'"],
+        "data.beat":         ["== '0.000'"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.250-69-0",
+      "description": "A4: midi 69, pitch class 9",
+      "expect": {
+        "data.midi":         ["== '69'"],
+        "data.pitch-class":  ["== '9'"],
+        "data.beat":         ["== '0.250'"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.500-71-0",
+      "description": "B4: midi 71, pitch class 11",
+      "expect": {
+        "data.midi":         ["== '71'"],
+        "data.pitch-class":  ["== '11'"],
+        "data.beat":         ["== '0.500'"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5: midi 72, pitch class wraps to 0",
+      "expect": {
+        "data.midi":         ["== '72'"],
+        "data.pitch-class":  ["== '0'"],
+        "data.measure":      ["== '2'"],
+        "data.beat":         ["== '0.750'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: VERTICAL POSITIONING ==="},
+    {"_comment": "Chromatic staff: 0.125 staff-relative units per semitone."},
+    {"_comment": "Bottom staff line = 0.0, top = 1.0."},
+    {"_comment": "C5 (midi 72) sits on middle line = 0.5."},
+    {"_comment": "All measure-1 notes are below the staff (negative vertical)."},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 vertical ≈ -1.0 (8 semitones below bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= -1.05", "<= -0.95"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.250-62-0",
+      "description": "D4 vertical ≈ -0.75 (6 semitones below bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= -0.80", "<= -0.70"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-64-0",
+      "description": "E4 vertical ≈ -0.50 (4 semitones below bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= -0.55", "<= -0.45"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 vertical ≈ -0.375 (3 semitones below bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= -0.42", "<= -0.32"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "G4 vertical ≈ -0.125 (1 semitone below bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= -0.17", "<= -0.07"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.250-69-0",
+      "description": "A4 vertical ≈ 0.125 (1 semitone above bottom line)",
+      "expect": {
+        "staff_relative.vertical": [">= 0.08", "<= 0.18"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.500-71-0",
+      "description": "B4 vertical ≈ 0.375 (between lines 2 and 3)",
+      "expect": {
+        "staff_relative.vertical": [">= 0.33", "<= 0.43"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5 vertical ≈ 0.5 (on middle staff line)",
+      "expect": {
+        "staff_relative.vertical": [">= 0.45", "<= 0.55"]
+      }
+    },
+
+    {"_comment": "=== SECTION 4: VERTICAL ORDERING (relational) ==="},
+    {"_comment": "Each ascending note must be strictly higher than the previous."},
+
+    {
+      "id": "nh-1-0.250-62-0",
+      "description": "D4 > C4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-1-0.000-60-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-64-0",
+      "description": "E4 > D4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-1-0.250-62-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 > E4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-1-0.500-64-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "G4 > F4 vertically (across measure boundary)",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-1-0.750-65-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.250-69-0",
+      "description": "A4 > G4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-2-0.000-67-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.500-71-0",
+      "description": "B4 > A4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-2-0.250-69-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5 > B4 vertically",
+      "expect": {
+        "staff_relative.vertical": [
+          "v > prop('nh-2-0.500-71-0', 'staff_relative.vertical')"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 5: CHROMATIC SPACING CONSISTENCY ==="},
+    {"_comment": "Each semitone should produce exactly 0.125 vertical change."},
+    {"_comment": "Whole steps (2 semitones) = 0.25, half steps (1 semitone) = 0.125."},
+
+    {
+      "id": "nh-1-0.250-62-0",
+      "description": "D4 - C4 = whole step ≈ 0.25 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.000-60-0', 'staff_relative.vertical') - 0.25) < 0.02"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-64-0",
+      "description": "E4 - D4 = whole step ≈ 0.25 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.250-62-0', 'staff_relative.vertical') - 0.25) < 0.02"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 - E4 = half step ≈ 0.125 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.500-64-0', 'staff_relative.vertical') - 0.125) < 0.02"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5 - B4 = half step ≈ 0.125 vertical",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-2-0.500-71-0', 'staff_relative.vertical') - 0.125) < 0.02"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5 - C4 = 12 semitones = 1.5 vertical (octave check)",
+      "expect": {
+        "staff_relative.vertical": [
+          "abs(v - prop('nh-1-0.000-60-0', 'staff_relative.vertical') - 1.5) < 0.02"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 6: NOTEHEAD SHAPE IDENTITY ==="},
+    {"_comment": "CNB uses two notehead shapes based on whole-tone set:"},
+    {"_comment": "  Set A (round): pitch classes 0, 2, 4 (C, D, E)"},
+    {"_comment": "  Set B (slashed): pitch classes 5, 7, 9, 11 (F, G, A, B)"},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 has a path hash (shape is rendered)",
+      "expect": {
+        "visual.path_hash": ["v is not None"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 and D4 same shape (both set A: pc 0, 2)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-1-0.250-62-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 and E4 same shape (both set A: pc 0, 4)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-1-0.500-64-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 and C5 same shape (same pitch class 0)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-2-0.750-72-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 and G4 same shape (both set B: pc 5, 7)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-2-0.000-67-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 and A4 same shape (both set B: pc 5, 9)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-2-0.250-69-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "F4 and B4 same shape (both set B: pc 5, 11)",
+      "expect": {
+        "visual.path_hash": [
+          "v == prop('nh-2-0.500-71-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Set A and set B use DIFFERENT shapes (C4 ≠ F4)",
+      "expect": {
+        "visual.path_hash": [
+          "v != prop('nh-1-0.750-65-0', 'visual.path_hash')"
+        ]
+      }
+    },
+
+    {"_comment": "=== SECTION 7: HORIZONTAL ORDERING ==="},
+    {"_comment": "Within each measure, notes should be left-to-right in beat order."},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 (beat 0) is left of D4 (beat 0.25) in measure 1",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-1-0.250-62-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.250-62-0",
+      "description": "D4 (beat 0.25) is left of E4 (beat 0.5) in measure 1",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-1-0.500-64-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.500-64-0",
+      "description": "E4 (beat 0.5) is left of F4 (beat 0.75) in measure 1",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-1-0.750-65-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "G4 (beat 0) is left of A4 (beat 0.25) in measure 2",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-2-0.250-69-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.250-69-0",
+      "description": "A4 (beat 0.25) is left of B4 (beat 0.5) in measure 2",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-2-0.500-71-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-2-0.500-71-0",
+      "description": "B4 (beat 0.5) is left of C5 (beat 0.75) in measure 2",
+      "expect": {
+        "staff_relative.horizontal": [
+          "v < prop('nh-2-0.750-72-0', 'staff_relative.horizontal')"
+        ]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "All measure 1 notes within measure bounds (0.0 to 1.0)",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.0", "<= 1.0"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.750-65-0",
+      "description": "Last beat of measure 1 within measure bounds",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.5", "<= 1.0"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.000-67-0",
+      "description": "First beat of measure 2 near left edge",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.0", "<= 0.3"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "Last beat of measure 2 within measure bounds",
+      "expect": {
+        "staff_relative.horizontal": [">= 0.5", "<= 1.0"]
+      }
+    },
+
+    {"_comment": "=== SECTION 8: VISUAL RENDERING ==="},
+    {"_comment": "All noteheads should have color and bounding boxes."},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 has a color (rendered, not invisible)",
+      "expect": {
+        "visual.color": ["v is not None", "isinstance(v, str)"]
+      }
+    },
+
+    {
+      "id": "nh-2-0.750-72-0",
+      "description": "C5 has a bounding box",
+      "expect": {
+        "visual.bbox": ["v is not None"]
+      }
+    },
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "C4 bbox width ≈ 1.0 (standard notehead size)",
+      "expect": {
+        "visual.bbox.w": [">= 0.5", "<= 1.5"]
+      }
+    },
+
+    {"_comment": "=== SECTION 9: STEM EXISTENCE ==="},
+    {"_comment": "Every notehead beat should have a matching stem."},
+
+    {
+      "id": "st-1-0.000-0",
+      "description": "Stem for C4 (measure 1, beat 0)",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.measure": ["== '1'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+
+    {
+      "id": "st-1-0.250-0",
+      "description": "Stem for D4",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.beat": ["== '0.250'"]
+      }
+    },
+
+    {
+      "id": "st-1-0.500-0",
+      "description": "Stem for E4",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.beat": ["== '0.500'"]
+      }
+    },
+
+    {
+      "id": "st-1-0.750-0",
+      "description": "Stem for F4",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.beat": ["== '0.750'"]
+      }
+    },
+
+    {
+      "id": "st-2-0.000-0",
+      "description": "Stem for G4",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.measure": ["== '2'"],
+        "data.beat": ["== '0.000'"]
+      }
+    },
+
+    {
+      "id": "st-2-0.750-0",
+      "description": "Stem for C5",
+      "expect": {
+        "type": ["== 'stem'"],
+        "data.beat": ["== '0.750'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 10: LEDGER LINES ==="},
+    {"_comment": "Notes below the staff need ledger lines."},
+    {"_comment": "The ledger-line spanner covers all notes in a voice."},
+
+    {
+      "id": "ll-1-0.000-0",
+      "description": "Ledger line element exists for measure 1",
+      "expect": {
+        "type": ["== 'ledger-line'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {
+      "id": "ll-1-0.000-0",
+      "description": "Ledger line has a bounding box (it is drawn)",
+      "expect": {
+        "visual.bbox": ["v is not None"],
+        "visual.bbox.w": ["> 0.0"],
+        "visual.bbox.h": ["> 0.0"]
+      }
+    },
+
+    {
+      "id": "ll-1-0.000-0",
+      "description": "Ledger lines extend below the staff (bbox.y > bottom staff line)",
+      "expect": {
+        "visual.bbox.y": ["> staff['bottom_line_y']"]
+      }
+    },
+
+    {"_comment": "=== SECTION 11: STAFF GEOMETRY ==="},
+
+    {
+      "id": "staff-symbol",
+      "description": "Staff has exactly 5 lines",
+      "expect": {
+        "type": ["staff['line_count'] == 5"]
+      }
+    },
+
+    {
+      "id": "staff-symbol",
+      "description": "Staff height is 4.0 (5 lines, 1.0 apart in chromatic notation)",
+      "expect": {
+        "type": ["abs(staff['staff_height'] - 4.0) < 0.1"]
+      }
+    },
+
+    {"_comment": "=== SECTION 12: PREAMBLE ORDERING ==="},
+    {"_comment": "Clef, key sig, time sig should be left-to-right in that order."},
+
+    {
+      "id": "cl-1",
+      "description": "Clef is left of key signature",
+      "expect": {
+        "absolute.x": [
+          "v < prop('ks-1', 'absolute.x')"
+        ]
+      }
+    },
+
+    {
+      "id": "ks-1",
+      "description": "Key signature is left of time signature",
+      "expect": {
+        "absolute.x": [
+          "v < prop('ts-1', 'absolute.x')"
+        ]
+      }
+    },
+
+    {
+      "id": "ts-1",
+      "description": "Time signature is left of first note",
+      "expect": {
+        "absolute.x": [
+          "v < prop('nh-1-0.000-60-0', 'absolute.x')"
+        ]
+      }
+    }
+
+  ]
+}

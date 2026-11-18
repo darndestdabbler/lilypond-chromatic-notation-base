@@ -1,0 +1,33 @@
+{
+  "test_name": "Key-signature ledgers from cnb:ledgers-by-semitone under 'marks on the default 4-8 staff (session 33)",
+  "input_file": "keysig-ledgers-marks.ly",
+  "description": "The default Configurator 4-8 staff (4 semitones per staff space, lines -4 -2 2 4) with the export's cnb:ledgers-by-semitone (semitones 0-24) and 'marks, with a C major entry of three heads and no bar: C (12) and B (23) in the first column, D (14) in the second. Each mark takes its semitone's entry: C its in-gap ledger on the middle position, D its ledgers on the middle position and one above, B none. The ledgers of both columns make the signature 2.334 staff spaces wide, and its height, 3.75, is C's head bottom to B's head top; the first note's left edge is 6.783 from the signature's. With the table removed (the engine's rule, before session 33) the same file gives B a ledger above the staff, inside its head's height, and C and D none: the signature is 2.167 wide (the first column's ledger alone), 3.75 high, and the first note 6.516 from its left edge. Measured on LilyPond 2.24 and 2.26 alike, to 0.001 staff spaces. Widths are staff spaces, from the harvest's control-point hulls.",
+
+  "assertions": [
+
+    {
+      "id": "ks-1",
+      "description": "C major's marks: one signature, 2.334 staff spaces wide (C and D's in-gap ledgers in both columns; the engine's rule gives 2.167) and 3.75 high",
+      "expect": {
+        "type":          ["== 'key-signature'", "count('key-signature') == 1"],
+        "visual.bbox.w": ["abs(v - 2.334) < 0.01"],
+        "visual.bbox.h": ["abs(v - 3.75) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-0.000-72-0",
+      "description": "The first note, c'', 6.783 staff spaces from the signature's left edge (6.516 by the engine's rule)",
+      "expect": {
+        "type":          ["== 'notehead'"],
+        "visual.bbox.x": ["abs(v - prop('ks-1', 'visual.bbox.x') - 6.783) < 0.01"]
+      }
+    },
+    {
+      "id": "nh-1-0.250-74-0",
+      "description": "All four notes render",
+      "expect": {
+        "type": ["== 'notehead'", "count('notehead') == 4"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 009 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 009 transcript</h1>
+<p class="stamp">Rendered 2026-10-31T09:12:17.873Z by dabbler-ai-router 3.27.0 at fa04600b3b36fcad1930e2b1fb3d4c1324eb76f8.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-10-31T04:53:31.494-04:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 9: Make the engine and the harvester work on LilyPond 2.26</h3>
+<ol><li>Register.</li><li>Fix the three 2.26 breaks found on 2026-10-31:</li></ol>
+<ul><li>**<code>duration-length</code>:** <code>cnb:duration-category</code> in <code>cnb/utils.ly</code> calls <code>duration-length</code>, which 2.26 removed in favour of <code>ly:duration-&gt;number</code>, which 2.24 lacks. Pick whichever is defined, once at load time and not on every call.</li><li><strong>Colours:</strong> 2.26 writes <code>rgba(R%, G%, B%, 100.0000%)</code> where 2.24 wrote <code>rgb(R%, G%, B%)</code>, and sometimes <code>0%</code> for <code>0.0000%</code>. <code>tools/harvest_svg.py</code> (<code>extract_color_deep</code>) normalises an opaque <code>rgba</code> to the 2.24 <code>rgb</code> form, with every component at four decimals. A colour that is not opaque keeps its alpha. Test this in a new <code>tools/test_harvest_svg.py</code>.</li><li><strong>Gutter test:</strong> <code>tests/clef-custom.json</code> asserts the first notehead at an absolute x of 14.762, measured on 2.24. On 2.26 the same note sits at 15.349. Restate the assertion so it proves the same 1.5-unit gutter on both versions, for example relative to the clef's right edge, or against a no-gutter twin spec. Do not widen the tolerance.</li></ul>
+<p>Prove nothing changed on 2.24: all three suites pass, and <code>git diff --exit-code -- &quot;tests/*.harvested.json&quot;</code> shows no drift.</p>
+<ol><li>Run <code>python tools/run_tests.py --lilypond-version 2.26 --update-baselines</code> to write <code>tests/lilypond-2.26/*.harvested.json</code>. Every spec assertion must pass before any baseline is written. Spot-check that the coordinate shifts against the 2.24 baselines are consistent layout changes, not misplaced glyphs, and record what changed in §7.7 of <code>docs/planning/project-plan.md</code>. Declare two suites in <code>dabbler.yaml</code>:</li></ol>
+<ul><li><code>engine-integration-2.26</code>: <code>python tools/run_tests.py --lilypond-version 2.26</code></li><li><code>engine-unit-2.26</code>: <code>python tools/run_unit.py --lilypond-version 2.26</code></li></ul>
+<p>Both take the same fields and covers as their 2.24 counterparts. Prove it by running both 2.26 suites: they pass, and <code>git status -- tests</code> shows only the new <code>tests/lilypond-2.26/</code> files.</p>
+<h2>Work Plan</h2>
+<p>Make the CNB engine and its SVG harvester work on LilyPond 2.26 without changing anything on 2.24. In cnb/utils.ly, cnb:duration-category picks ly:duration-&gt;number (2.26) or duration-length (2.24) once at load time. In tools/harvest_svg.py, extract_color_deep rewrites an opaque rgba(...) colour to the 2.24 rgb(R%, G%, B%) form with every component at four decimals, while a colour that is not opaque keeps its alpha. A new tools/test_harvest_svg.py tests this. The clef-custom gutter assertion is restated as the operator decided on 2026-10-31. Measured from a no-gutter twin, the 2-staff-space gutter moves the first notehead +1.5 on 2.24 but the full +2.0 on 2.26, so no assertion that ignores the version can keep the 0.1 tolerance. tools/run_tests.py therefore exposes the LilyPond version under test to spec expressions as <code>lilypond</code> (2.24 when no version is given), tested in tools/test_run_tests.py. tests/clef-custom.json then asserts the first notehead's distance from the clef's right edge per version (9.117 on 2.24, 9.704 on 2.26), with the tolerance unchanged. 2.24 is proved unchanged: all three suites pass and the tracked tests/*.harvested.json do not drift. Then the 2.26 baselines tests/lilypond-2.26/*.harvested.json are written with --update-baselines after every assertion passes. Their coordinate shifts against 2.24 are spot-checked and recorded in section 7.7 of docs/planning/project-plan.md. Finally, engine-integration-2.26 and engine-unit-2.26 are declared in dabbler.yaml with the same fields and covers as their 2.24 counterparts.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/1aba6cdf4fd3d1b6b2810e6ff40c3ba8e573f412"><code>1aba6cdf4fd3d1b6b2810e6ff40c3ba8e573f412</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Duration api</td><td><p>In cnb/utils.ly, have cnb:duration-category use ly:duration-&gt;number where it is defined (2.26) and duration-length otherwise (2.24), choosing once at load time (a top-level define bound to the chosen procedure), not on every call.</p></td><td><span class="mono">cnb/utils.ly</span></td><td><code>python tools/run_unit.py --lilypond-version 2.24</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))</code></td><td>yes</td></tr>
+<tr><td>Harvest colours</td><td><p>In tools/harvest_svg.py, make extract_color_deep normalise the colour it finds. An opaque rgba(R%, G%, B%, 100%) (with any decimals, including 0% for 0.0000%) becomes rgb(R%, G%, B%) with every component at four decimals, which is the 2.24 form. An rgba whose alpha is below 100% keeps its alpha, as rgba(...) with every component at four decimals. Any other colour string is returned unchanged. Add tools/test_harvest_svg.py (stdlib unittest) covering an opaque rgba, the 0% short form, a non-opaque rgba, and an unchanged 2.24 rgb string.</p></td><td><span class="mono">tools/harvest_svg.py</span><br><span class="mono">tools/test_harvest_svg.py</span></td><td><code>python -m unittest discover -s tools -p test_harvest_svg.py</code></td><td>yes</td></tr>
+<tr><td>Version in specs</td><td><p>In tools/run_tests.py, expose the LilyPond version under test to spec expressions as the name <code>lilypond</code> (an 'X.Y' string). run_single_test passes its version, or 2.24 (BASELINE_VERSION) when none is given, through check_element_assertions to make_eval_namespace. In tools/test_run_tests.py, test that an expression can read <code>lilypond</code> and that it defaults to 2.24.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code></td><td>yes</td></tr>
+<tr><td>Gutter assertion</td><td><p>In tests/clef-custom.json, restate the gutter assertion on nh-1-0.000-60-0. It should assert the first notehead's distance from the clef's right edge (prop('cl-1','visual.bbox.x') + prop('cl-1','visual.bbox.w')) against a per-version value: 9.117 on 2.24 and 9.704 on 2.26, keyed by <code>lilypond</code>, with the same 0.1 tolerance. Update the spec and assertion descriptions with what was measured: the no-gutter twin gaps are 7.617 and 7.704, so the gutter contributes +1.5 on 2.24 and its full +2.0 on 2.26. Then prove that nothing changed on 2.24: all three suites pass, and the tracked harvests do not drift.</p></td><td><span class="mono">tests/clef-custom.json</span></td><td><code>python tools/run_tests.py --lilypond-version 2.24</code><br><code>python tools/run_unit.py --lilypond-version 2.24</code><br><code>python -m unittest discover -s tools -p test_*.py</code><br><code>git diff --exit-code -- tests/*.harvested.json</code></td><td>yes</td></tr>
+<tr><td>Baselines 2 26</td><td><p>Run <code>python tools/run_tests.py --lilypond-version 2.26 --update-baselines</code> to write tests/lilypond-2.26/*.harvested.json, one per spec. Every spec assertion must pass before any baseline is kept.</p></td><td><span class="mono">tests/lilypond-2.26/c-major-scale.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-custom.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-none.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-size-dozenal.harvested.json</span><br><span class="mono">tests/lilypond-2.26/clef-text-size.harvested.json</span><br><span class="mono">tests/lilypond-2.26/example-notes.harvested.json</span><br><span class="mono">tests/lilypond-2.26/joy-to-the-world-configurator.harvested.json</span><br><span class="mono">tests/lilypond-2.26/joy-to-the-world.harvested.json</span><br><span class="mono">tests/lilypond-2.26/keysig-bar-style.harvested.json</span><br><span class="mono">tests/lilypond-2.26/keysig-none.harvested.json</span><br><span class="mono">tests/lilypond-2.26/off-key-coexistence.harvested.json</span></td><td><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']))</code><br><code>python -c import glob,os,sys; specs={os.path.basename(p)[:-5] for p in glob.glob('tests/*.json') if not p.endswith('.harvested.json')}; got={os.path.basename(p)[:-15] for p in glob.glob('tests/lilypond-2.26/*.harvested.json')}; sys.exit(0 if specs == got else 'missing or extra 2.26 baselines: %s' % sorted(specs ^ got))</code></td><td>yes</td></tr>
+<tr><td>Record 2 26 shifts</td><td><p>Spot-check the 2.26 baselines against the 2.24 ones: the coordinate shifts should be consistent layout changes, such as uniform vertical offsets of the system and spacing changes after the clef, and not misplaced glyphs. Record what changed, file by file in summary, under section 7.7 of docs/planning/project-plan.md, including the gutter's +1.5 / +2.0 finding and how the clef-custom assertion now handles it.</p></td><td><span class="mono">docs/planning/project-plan.md</span></td><td><code>python -c import sys; s=open('docs/planning/project-plan.md', encoding='utf-8').read(); sec=s[s.index('### 7.7'):]; sys.exit(0 if 'LilyPond 2.26' in sec and 'lilypond-2.26' in sec else 'section 7.7 does not record the 2.26 baselines')</code></td><td>yes</td></tr>
+<tr><td>Suites 2 26</td><td><p>In dabbler.yaml, declare engine-integration-2.26 (<code>python tools/run_tests.py --lilypond-version 2.26</code>) and engine-unit-2.26 (<code>python tools/run_unit.py --lilypond-version 2.26</code>). Each takes the same fields and covers as its 2.24 counterpart. Update the header comment to say the 2.26 suites prove 2.26 against tests/lilypond-2.26/. Prove it by running both 2.26 suites. They pass, and <code>git status -- tests</code> shows only the new tests/lilypond-2.26/ files besides this session's tests/clef-custom.json.</p></td><td><span class="mono">dabbler.yaml</span></td><td><code>python -c import sys,yaml; s={x['name']: x for x in yaml.safe_load(open('dabbler.yaml', encoding='utf-8'))['testing']['suites']}; ok=all(n+'-2.26' in s and s[n+'-2.26']['command'] == s[n]['command'].replace('2.24', '2.26') and {k: v for k, v in s[n+'-2.26'].items() if k not in ('name', 'command')} == {k: v for k, v in s[n].items() if k not in ('name', 'command')} for n in ('engine-integration', 'engine-unit')); sys.exit(0 if ok else 'the 2.26 suites do not mirror their 2.24 counterparts')</code><br><code>python -c import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']) or subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))</code><br><code>python -c import subprocess,sys; out=subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all', '--', 'tests'], capture_output=True, text=True, check=True).stdout.splitlines(); bad=[l for l in out if not (l[3:].startswith('tests/lilypond-2.26/') or l[3:] == 'tests/clef-custom.json')]; sys.exit('unexpected changes under tests: %s' % bad if bad else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No README, version.json or 1.1.0 documentation and version bump: that is session 10.</li><li>No release or packaging change: the release is a later session of its own.</li><li>No change to rendering on 2.24: no tracked tests/*.harvested.json or tests/*.svg changes, and no tolerance in any spec is widened.</li><li>No support for LilyPond versions beyond 2.24 and 2.26, and no change to how the runners resolve a LilyPond executable.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[08:53:31]</span> <span class="muted">run-started</span> session=009 mode=pull</div>
+<div class="line"><span class="at">[08:53:31]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[08:59:22]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[08:59:22]</span> <span class="muted">plan-accepted</span> steps=[&quot;duration-api&quot;,&quot;harvest-colours&quot;,&quot;version-in-specs&quot;,&quot;gutter-assertion&quot;,&quot;baselines-2-26&quot;,&quot;record-2-26-shifts&quot;,&quot;suites-2-26&quot;] non_goals=4</div>
+<div class="line"><span class="at">[08:59:25]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[08:59:25]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=duration-api</div>
+<div class="line"><span class="at">[09:00:07]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:00:14]</span> <span class="muted">check-passed</span> step=duration-api argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[09:00:18]</span> <span class="muted">check-passed</span> step=duration-api argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))&quot;]</div>
+<div class="line"><span class="at">[09:00:19]</span> <span class="muted">report-accepted</span> seq=2 step=duration-api files=[&quot;cnb/utils.ly&quot;] notes=cnb:duration-&gt;number binds ly:duration-&gt;number or duration-length once at load; cnb:duration-category calls it</div>
+<div class="line"><span class="at">[09:00:19]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=harvest-colours</div>
+<div class="line"><span class="at">[09:01:24]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:01:27]</span> <span class="muted">check-passed</span> step=harvest-colours argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_harvest_svg.py&quot;]</div>
+<div class="line"><span class="at">[09:01:28]</span> <span class="muted">report-accepted</span> seq=3 step=harvest-colours files=[&quot;tools/harvest_svg.py&quot;,&quot;tools/test_harvest_svg.py&quot;] notes=normalize_color rewrites 2.26 rgba to the 2.24 rgb form (alpha kept when not opaque); extract_color_deep applies it</div>
+<div class="line"><span class="at">[09:01:28]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=version-in-specs</div>
+<div class="line"><span class="at">[09:02:35]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:02:40]</span> <span class="muted">check-passed</span> step=version-in-specs argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[09:02:41]</span> <span class="muted">report-accepted</span> seq=4 step=version-in-specs files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=spec expressions see the version under test as lilypond ('2.24' when none given), threaded from run_single_test via check_element_assertions to make_eval_namespace</div>
+<div class="line"><span class="at">[09:02:41]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=gutter-assertion</div>
+<div class="line"><span class="at">[09:03:29]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:03:38]</span> <span class="muted">check-passed</span> step=gutter-assertion argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[09:03:41]</span> <span class="muted">check-passed</span> step=gutter-assertion argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;]</div>
+<div class="line"><span class="at">[09:03:42]</span> <span class="muted">check-passed</span> step=gutter-assertion argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_*.py&quot;]</div>
+<div class="line"><span class="at">[09:03:45]</span> <span class="muted">check-passed</span> step=gutter-assertion argv=[&quot;git&quot;,&quot;diff&quot;,&quot;--exit-code&quot;,&quot;--&quot;,&quot;tests/*.harvested.json&quot;]</div>
+<div class="line"><span class="at">[09:03:46]</span> <span class="muted">report-accepted</span> seq=5 step=gutter-assertion files=[&quot;tests/clef-custom.json&quot;] notes=gutter asserted as notehead distance from clef right edge per version (9.117 on 2.24, 9.704 on 2.26), tolerance 0.1 unchanged; 2.24 suites pass, no harvest drift</div>
+<div class="line"><span class="at">[09:03:46]</span> <span class="muted">instruction-issued</span> seq=6 kind=step step=baselines-2-26</div>
+<div class="line"><span class="at">[09:04:25]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:04:36]</span> <span class="muted">check-passed</span> step=baselines-2-26 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']))&quot;]</div>
+<div class="line"><span class="at">[09:04:37]</span> <span class="muted">check-passed</span> step=baselines-2-26 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob,os,sys; specs={os.path.basename(p)[:-5] for p in glob.glob('tests/*.json') if not p.endswith('.harvested.json')}; got={os.path.basename(p)[:-15] for p in glob.glob('tests/lilypond-2.26/*.harvested.json')}; sys.exit(0 if specs == got else 'missing or extra 2.26 baselines: %s' % sorted(specs ^ got))&quot;]</div>
+<div class="line"><span class="at">[09:04:37]</span> <span class="muted">report-accepted</span> seq=6 step=baselines-2-26 files=[&quot;tests/lilypond-2.26/c-major-scale.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-custom.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-none.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-size-dozenal.harvested.json&quot;,&quot;tests/lilypond-2.26/clef-text-size.harvested.json&quot;,&quot;tests/lilypond-2.26/example-notes.harvested.json&quot;,&quot;tests/lilypond-2.26/joy-to-the-world-configurator.harvested.json&quot;,&quot;tests/lilypond-2.26/joy-to-the-world.harvested.json&quot;,&quot;tests/lilypond-2.26/keysig-bar-style.harvested.json&quot;,&quot;tests/lilypond-2.26/keysig-none.harvested.json&quot;,&quot;tests/lilypond-2.26/off-key-coexistence.harvested.json&quot;] notes=all 259 tests / 365 assertions pass on 2.26.0; 11 baselines written to tests/lilypond-2.26/, rerun without --update-baselines shows no drift</div>
+<div class="line"><span class="at">[09:04:37]</span> <span class="muted">instruction-issued</span> seq=7 kind=step step=record-2-26-shifts</div>
+<div class="line"><span class="at">[09:06:29]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:06:34]</span> <span class="muted">check-passed</span> step=record-2-26-shifts argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s=open('docs/planning/project-plan.md', encoding='utf-8').read(); sec=s[s.index('### 7.7'):]; sys.exit(0 if 'LilyPond 2.26' in sec and 'lilypond-2.26' in sec else 'section 7.7 does not record the 2.26 baselines')&quot;]</div>
+<div class="line"><span class="at">[09:06:35]</span> <span class="muted">report-accepted</span> seq=7 step=record-2-26-shifts files=[&quot;docs/planning/project-plan.md&quot;] notes=section 7.7 records the 2.26 baselines: uniform per-score vertical offsets, post-prefatory horizontal shifts, changed time-signature/rest/flag/slur outlines, no misplaced glyphs or data changes; plus the +1.5/+2.0 gutter finding and the version-aware assertion</div>
+<div class="line"><span class="at">[09:06:35]</span> <span class="muted">instruction-issued</span> seq=8 kind=step step=suites-2-26</div>
+<div class="line"><span class="at">[09:07:29]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:07:36]</span> <span class="muted">check-passed</span> step=suites-2-26 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys,yaml; s={x['name']: x for x in yaml.safe_load(open('dabbler.yaml', encoding='utf-8'))['testing']['suites']}; ok=all(n+'-2.26' in s and s[n+'-2.26']['command'] == s[n]['command'].replace('2.24', '2.26') and {k: v for k, v in s[n+'-2.26'].items() if k not in ('name', 'command')} == {k: v for k, v in s[n].items() if k not in ('name', 'command')} for n in ('engine-integration', 'engine-unit')); sys.exit(0 if ok else 'the 2.26 suites do not mirror their 2.24 counterparts')&quot;]</div>
+<div class="line"><span class="at">[09:07:47]</span> <span class="muted">check-passed</span> step=suites-2-26 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']) or subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))&quot;]</div>
+<div class="line"><span class="at">[09:07:49]</span> <span class="muted">check-passed</span> step=suites-2-26 argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import subprocess,sys; out=subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all', '--', 'tests'], capture_output=True, text=True, check=True).stdout.splitlines(); bad=[l for l in out if not (l[3:].startswith('tests/lilypond-2.26/') or l[3:] == 'tests/clef-custom.json')]; sys.exit('unexpected changes under tests: %s' % bad if bad else 0)&quot;]</div>
+<div class="line"><span class="at">[09:07:49]</span> <span class="muted">report-accepted</span> seq=8 step=suites-2-26 files=[&quot;dabbler.yaml&quot;] notes=engine-integration-2.26 and engine-unit-2.26 declared, mirroring their 2.24 counterparts; both pass on 2.26.0 and tests/ shows only the new 2.26 baselines plus clef-custom.json</div>
+<div class="line"><span class="at">[09:07:49]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[09:07:49]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[09:07:52]</span> <span class="muted">job-started</span> name=verification pid=72468 log=.dabbler/runs/s9/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:08:49]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:08:49]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[09:08:49]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[09:08:49]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:08:50]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=68356 log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:09:02]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:09:03]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:09:04]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=42288 log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:09:09]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:09:10]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:09:11]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=24484 log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:09:19]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="bad">1</span> log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:09:19]</span> <span class="muted">tests-failed</span> command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:09:19]</span> <span class="muted">instruction-issued</span> seq=9 kind=step step=fix-run-of-record</div>
+<div class="line"><span class="at">[09:10:13]</span> <span class="muted">run-resumed</span> session=009 phase=<span class="milestone">run-of-record</span> mode=pull</div>
+<div class="line"><span class="at">[09:10:20]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=duration-api</div>
+<div class="line"><span class="at">[09:10:22]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))&quot;] owner=duration-api</div>
+<div class="line"><span class="at">[09:10:24]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_harvest_svg.py&quot;] owner=harvest-colours</div>
+<div class="line"><span class="at">[09:10:25]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=version-in-specs</div>
+<div class="line"><span class="at">[09:10:34]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;tools/run_tests.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=gutter-assertion</div>
+<div class="line"><span class="at">[09:10:35]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;tools/run_unit.py&quot;,&quot;--lilypond-version&quot;,&quot;2.24&quot;] owner=gutter-assertion</div>
+<div class="line"><span class="at">[09:10:36]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_*.py&quot;] owner=gutter-assertion</div>
+<div class="line"><span class="at">[09:10:38]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;git&quot;,&quot;diff&quot;,&quot;--exit-code&quot;,&quot;--&quot;,&quot;tests/*.harvested.json&quot;] owner=gutter-assertion</div>
+<div class="line"><span class="at">[09:10:47]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']))&quot;] owner=baselines-2-26</div>
+<div class="line"><span class="at">[09:10:49]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob,os,sys; specs={os.path.basename(p)[:-5] for p in glob.glob('tests/*.json') if not p.endswith('.harvested.json')}; got={os.path.basename(p)[:-15] for p in glob.glob('tests/lilypond-2.26/*.harvested.json')}; sys.exit(0 if specs == got else 'missing or extra 2.26 baselines: %s' % sorted(specs ^ got))&quot;] owner=baselines-2-26</div>
+<div class="line"><span class="at">[09:10:51]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; s=open('docs/planning/project-plan.md', encoding='utf-8').read(); sec=s[s.index('### 7.7'):]; sys.exit(0 if 'LilyPond 2.26' in sec and 'lilypond-2.26' in sec else 'section 7.7 does not record the 2.26 baselines')&quot;] owner=record-2-26-shifts</div>
+<div class="line"><span class="at">[09:10:52]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys,yaml; s={x['name']: x for x in yaml.safe_load(open('dabbler.yaml', encoding='utf-8'))['testing']['suites']}; ok=all(n+'-2.26' in s and s[n+'-2.26']['command'] == s[n]['command'].replace('2.24', '2.26') and {k: v for k, v in s[n+'-2.26'].items() if k not in ('name', 'command')} == {k: v for k, v in s[n].items() if k not in ('name', 'command')} for n in ('engine-integration', 'engine-unit')); sys.exit(0 if ok else 'the 2.26 suites do not mirror their 2.24 counterparts')&quot;] owner=suites-2-26</div>
+<div class="line"><span class="at">[09:11:03]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os,subprocess,sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); sys.exit(subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', '2.26']) or subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', '2.26']))&quot;] owner=suites-2-26</div>
+<div class="line"><span class="at">[09:11:05]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import subprocess,sys; out=subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all', '--', 'tests'], capture_output=True, text=True, check=True).stdout.splitlines(); bad=[l for l in out if not (l[3:].startswith('tests/lilypond-2.26/') or l[3:] == 'tests/clef-custom.json')]; sys.exit('unexpected changes under tests: %s' % bad if bad else 0)&quot;] owner=suites-2-26</div>
+<div class="line"><span class="at">[09:11:06]</span> <span class="muted">report-accepted</span> seq=9 step=fix-run-of-record files=[] notes=no tree change: the driver's process environment lacked CNB_LILYPOND_2_26 (set at user level after this session's host process started); the answer command now runs with it loaded from the user environment, so the suite can find LilyPond 2.26</div>
+<div class="line"><span class="at">[09:11:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[09:11:10]</span> <span class="muted">run-of-record-standing</span> suite=engine-integration reason=fresh, green, recorded 2026-10-31T05:09:01.894000-04:00</div>
+<div class="line"><span class="at">[09:11:11]</span> <span class="muted">run-of-record-standing</span> suite=engine-unit reason=fresh, green, recorded 2026-10-31T05:09:09.149000-04:00</div>
+<div class="line"><span class="at">[09:11:12]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:11:13]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=30172 log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:11:23]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:11:24]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:11:25]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=69616 log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:11:30]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:11:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[09:11:45]</span> <span class="muted">landed</span> commit=1aba6cdf4fd3d1b6b2810e6ff40c3ba8e573f412</div>
+<div class="line"><span class="at">[09:11:45]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[09:11:47]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[09:11:47]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[09:11:49]</span> <span class="muted">job-started</span> name=close pid=38980 log=.dabbler/runs/s9/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:12:17]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s9/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:12:17]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td>0</td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>9s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>2s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="bad">failed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>7s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "test_name": "Clef style 'text renders the configured label (set 005)",
+  "input_file": "clef-text-size.ly",
+  "description": "cnb:clef-style 'text renders the configured cnb:clef-text label in the clef slot instead of the computed dozenal numeral (the score also sets cnb:clef-size-semitones, exercising the text+size path end-to-end). OBSERVABILITY NOTE: a single-text stencil harvests as one SVG <text> anchor, so its bbox is 0x0 — the label's rendered SIZE is not harvest-observable here. The semitone size math is unit-tested (test-unit.ly, cnb:clef-target-height) and its flow into the stencil is integration-tested on the dozenal style (clef-size-dozenal.json), whose two-digit display yields a size-proportional bbox width.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE TEXT CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "A clef element is engraved in measure 1 (the text label)",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The clef sits left of the first notehead",
+      "expect": {
+        "visual.bbox.x": ["v < prop('nh-1-0.000-60-0', 'visual.bbox.x')"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the text clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4", "count('clef') == 1"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}

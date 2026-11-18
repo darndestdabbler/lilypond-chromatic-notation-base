@@ -1,0 +1,49 @@
+{
+  "test_name": "Text clef anchored by cnb:clef-anchor-semitones, linear staff (session 24)",
+  "input_file": "clef-text-anchor.ly",
+  "description": "A 'text clef whose label is a filled 1x2 path markup, sized at cnb:clef-size-semitones 4 (2 staff-spaces) and anchored at cnb:clef-anchor-semitones 15.5, on the default sps-2 staff with the treble context (middleCPosition -6). The anchor takes the 'custom clef's path: semitone 15.5 is (15.5 - 12) / 2 = +1.75 staff-spaces above the staff center, so the label's TOP edge must sit 1.75 staff-spaces above center_y (a quarter space under the top line) and its bottom edge 2 staff-spaces lower. A path label harvests its outline, where a string label harvests a 0x0 text anchor. Measured 2026-11-10 on 2.24: top edge y = 8.296 against center_y 10.05 (expected 8.30).",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE TEXT CLEF RENDERS ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The text clef is engraved in measure 1",
+      "expect": {
+        "type":         ["== 'clef'"],
+        "data.measure": ["== '1'"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: THE LABEL'S TOP EDGE AT THE ANCHOR SEMITONE ==="},
+
+    {
+      "id": "cl-1",
+      "description": "The label's TOP edge lands at semitone 15.5 = 1.75 staff-spaces above the staff center (fractional anchor, linear formula with middleCPosition)",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (staff['center_y'] - 1.75)) < 0.05"]
+      }
+    },
+
+    {
+      "id": "cl-1",
+      "description": "The label keeps its size: 4 semitones at sps-2 = 2 staff-spaces tall, 1 wide",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 2.0) < 0.05"],
+        "visual.bbox.w": ["abs(v - 1.0) < 0.05"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: THE REST OF THE SCORE IS UNAFFECTED ==="},
+
+    {
+      "id": "nh-1-0.000-60-0",
+      "description": "Noteheads render normally alongside the anchored text clef",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 4", "count('clef') == 1"],
+        "data.midi": ["== '60'"]
+      }
+    }
+  ]
+}

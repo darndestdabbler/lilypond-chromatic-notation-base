@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 022 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 022 transcript</h1>
+<p class="stamp">Rendered 2026-11-05T09:21:49.933Z by dabbler-ai-router 3.29.0 at f9cc2d9c7c39a6a18c7a1d5a6afc2032591e7253.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-05T04:12:59.283-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 22: Work around LilyPond issue 2383 (beam quanting on magnified staves)</h3>
+<p><strong>Why.</strong> Three smoke files (24c, 24d, 24e) log <code>programming error: No viable beam quanting found. Using unquanted y value.</code>, and <code>tests/musicxml/expect.json</code> allows it as &quot;engine, not yet triaged&quot;. It is LilyPond's own defect, open upstream since 2012 as [issue 2383](https://gitlab.com/lilypond/lilypond/-/work_items/2383). Plain LilyPond logs it whenever <code>StaffSymbol.staff-space</code> is about 1.75 or more (<code>\magnifyStaff #7/4</code> sets that), the stems point away from the staff, and the heads sit well outside it: <code>\new Staff \with { \magnifyStaff #7/4 } { \grace { a''16 a''16 } e'2 }</code> on 2.24.2 and 2.26.0. The cause is in <code>lily/beam-quanting.cc</code>. <code>quant_range_</code> is computed in global units, but the quants it filters are in staff spaces, so the bound is scaled by the staff-space and can rise above every candidate. The upstream fix goes to LilyPond as a merge request, outside this repository. It would land in 2.27 or later, not in 2.24 or 2.26, so CNB needs a workaround. Every CNB staff is magnified, by hand or by <code>cnb/score-defaults.ly</code>. <code>\override Beam.details.region-size = #4</code> (LilyPond's default is 2) makes the quanter generate candidates high enough to clear the inflated bound. On 2.24 that clears the error.</p>
+<ol><li>Register.</li><li>Apply <code>Beam.details.region-size = #4</code> where the engine sets its own layout (<code>cnb/layout.ly</code>), so it holds whether or not a score uses the score defaults. Keep it only if all of these hold:</li></ol>
+<ul><li>the three files engrave without the error on both versions;</li><li>the integration suites show no harvest drift on either version;</li><li>the beams it chooses for 24c–24e are no farther from the heads than LilyPond's unquanted fallback, measured from the harvested or rendered beam and stem ends and stated in the step notes. If any of these fails, add nothing to the engine. Instead re-label the three entries as LilyPond issue 2383 and go straight to step 3.</li></ul>
+<ol><li>Remove the three <code>allow</code> entries from <code>tests/musicxml/expect.json</code>, so the smoke tier enforces the workaround (or, without it, re-label them as LilyPond issue 2383). Add a CHANGELOG 1.2.0 line. Add a README Known Issues entry that links issue 2383 and names the workaround and when it can be dropped (a LilyPond release that carries the fix).</li></ol>
+<h2>Work Plan</h2>
+<p>Settle the three grace-note smoke allowances (24c, 24d, 24e: 'No viable beam quanting found') as LilyPond issue 2383, not an engine defect. Before this plan, a trial in a scratch copy of the repository applied the session plan's workaround, Beam.details.region-size = #4 in cnb/layout.ly. It cleared the error in all three files on 2.24 and 2.26, with no integration drift. But measured against the staff's top line, it placed every affected grace beam about 3.4 global units (about two staff spaces at 7/4) farther from the heads than LilyPond's unquanted fallback. The fallback is within 0.3 units of where a LilyPond master build carrying the upstream fix puts the same beam. The workaround fails the plan's third condition, so this session adds nothing to the engine. It re-labels the three expect.json entries as LilyPond issue 2383 with the trigger, keeping their allow lists so the smoke tier still passes. It adds a README Known Issues entry linking the issue: why there is no workaround, what the fallback looks like, and that the allowance can go once a LilyPond release carries the fix. It adds a CHANGELOG 1.2.0 line.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/563fae998c69788dc59cc9853ed251c20215436e"><code>563fae998c69788dc59cc9853ed251c20215436e</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Relabel expect</td><td><p>In tests/musicxml/expect.json, keep the 'allow' list of 24c-GraceNote-MeasureEnd.xml, 24d-AfterGrace.xml and 24e-GraceNote-StaffChange.xml, and replace each 'note' with: LilyPond's own defect, issue 2383 (https://gitlab.com/lilypond/lilypond/-/work_items/2383). Name the trigger: staff-space 7/4 from cnb:default-magnify, up-stem 16th grace beams above the staff, on 2.24 and 2.26. Say that LilyPond's unquanted fallback beam is the one engraved. Change no other entry.</p></td><td><span class="mono">tests/musicxml/expect.json</span></td><td><code>python -c import json, sys; d = json.load(open('tests/musicxml/expect.json', encoding='utf-8')); names = ['24c-GraceNote-MeasureEnd.xml', '24d-AfterGrace.xml', '24e-GraceNote-StaffChange.xml']; ok = all('2383' in d[n].get('note', '') and 'No viable beam quanting found' in d[n].get('allow', []) and 'defect' not in d[n] for n in names) and not any('not yet triaged' in str(v) for v in d.values()); sys.exit(0 if ok else 1)</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>Add a README.md Known Issues entry: grace-note beams on a magnified staff log 'No viable beam quanting found', which is LilyPond issue 2383 (linked). Give the cause in one sentence (LilyPond computes the beam's allowed range in the wrong units when staff-space is not 1), say the engraved fallback beam is within about a third of a staff space of the corrected position, and say why CNB carries no workaround (a wider region-size clears the message but lifts the beam about two staff spaces). Say the smoke-tier allowance can be dropped once a LilyPond release carries the fix. Add a matching one-line entry to CHANGELOG.md under 1.2.0.</p></td><td><span class="mono">README.md</span><br><span class="mono">CHANGELOG.md</span></td><td><code>python -c import sys; r = open('README.md', encoding='utf-8').read(); c = open('CHANGELOG.md', encoding='utf-8').read(); k = r[r.index('## Known Issues'):]; k = k[:k.index('\n## ', 4)] if '\n## ' in k[4:] else k; s = c[c.index('## 1.2.0'):c.index('## 1.1.1')]; ok = 'work_items/2383' in k and 'region-size' in k and '2383' in s; sys.exit(0 if ok else 1)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No engine change: the region-size workaround is rejected on the measurements above, and no other override is attempted.</li><li>No upstream change from this repository: the LilyPond merge request for issue 2383 is prepared outside it.</li><li>No release: packing and publishing 1.2.0 is session 23's.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[09:12:59]</span> <span class="muted">run-started</span> session=022 mode=pull</div>
+<div class="line"><span class="at">[09:12:59]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[09:18:27]</span> <span class="muted">run-resumed</span> session=022 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[09:18:27]</span> <span class="muted">plan-accepted</span> steps=[&quot;relabel-expect&quot;,&quot;document&quot;] non_goals=3</div>
+<div class="line"><span class="at">[09:18:28]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[09:18:28]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=relabel-expect</div>
+<div class="line"><span class="at">[09:18:57]</span> <span class="muted">run-resumed</span> session=022 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:18:58]</span> <span class="muted">check-passed</span> step=relabel-expect argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; d = json.load(open('tests/musicxml/expect.json', encoding='utf-8')); names = ['24c-GraceNote-MeasureEnd.xml', '24d-AfterGrace.xml', '24e-GraceNote-StaffChange.xml']; ok = all('2383' in d[n].get('note', '') and 'No viable beam quanting found' in d[n].get('allow', []) and 'defect' not in d[n] for n in names) and not any('not yet triaged' in str(v) for v in d.values()); sys.exit(0 if ok else 1)&quot;]</div>
+<div class="line"><span class="at">[09:18:58]</span> <span class="muted">report-accepted</span> seq=2 step=relabel-expect files=[&quot;tests/musicxml/expect.json&quot;] notes=24c/24d/24e notes now name LilyPond issue 2383 and its trigger (staff-space 7/4, up-stem 16th grace beams above the staff, 2.24 and 2.26; fallback beam engraved); allow lists kept. Workaround measurements: region-size 4 lifts every affected beam ~3.4 units vs the fallback, fallback within 0.3 of patched LilyPond master</div>
+<div class="line"><span class="at">[09:18:58]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=document</div>
+<div class="line"><span class="at">[09:19:30]</span> <span class="muted">run-resumed</span> session=022 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[09:19:30]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import sys; r = open('README.md', encoding='utf-8').read(); c = open('CHANGELOG.md', encoding='utf-8').read(); k = r[r.index('## Known Issues'):]; k = k[:k.index('\\n## ', 4)] if '\\n## ' in k[4:] else k; s = c[c.index('## 1.2.0'):c.index('## 1.1.1')]; ok = 'work_items/2383' in k and 'region-size' in k and '2383' in s; sys.exit(0 if ok else 1)&quot;]</div>
+<div class="line"><span class="at">[09:19:30]</span> <span class="muted">report-accepted</span> seq=3 step=document files=[&quot;README.md&quot;,&quot;CHANGELOG.md&quot;] notes=README Known Issues 3: grace-beam quanting message is LilyPond issue 2383 (linked), cause, fallback within ~1/3 staff space of fixed LilyPond, why no region-size workaround, drop the allowance once a release carries the fix; CHANGELOG 1.2.0 line</div>
+<div class="line"><span class="at">[09:19:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[09:19:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[09:19:31]</span> <span class="muted">job-started</span> name=verification pid=27656 log=.dabbler/runs/s22/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:19:53]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[09:19:53]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[09:19:53]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[09:19:53]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:19:53]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=44424 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:20:03]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[09:20:03]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:20:03]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=33160 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:20:04]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[09:20:04]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:20:04]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=44332 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:20:13]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[09:20:13]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:20:13]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=19476 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:20:15]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[09:20:15]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[09:20:15]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=28260 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[09:20:59]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[09:20:59]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[09:20:59]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=47000 log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[09:21:41]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[09:21:41]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[09:21:44]</span> <span class="muted">landed</span> commit=563fae998c69788dc59cc9853ed251c20215436e</div>
+<div class="line"><span class="at">[09:21:44]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[09:21:44]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[09:21:44]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[09:21:44]</span> <span class="muted">job-started</span> name=close pid=27116 log=.dabbler/runs/s22/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:21:49]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s22/driver/jobs/close.log</div>
+<div class="line"><span class="at">[09:21:49]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>1 finding</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** `README.md` describes the fallback as “within about a third of a staff space” of the fixed build, while the stated measurement is within `0.3` global units; at `staff-space = 7/4`, that is about `0.17` staff spaces, not one third. Use the recorded unit/measurement directly to avoid overstating the difference.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>9s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>8s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>1s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>44s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>41s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

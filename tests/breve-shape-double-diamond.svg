@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" width="210.00mm" height="297.00mm" viewBox="0.0000 -0.0000 119.5016 169.0094">
+<style type="text/css">
+<![CDATA[
+tspan { white-space: pre; }
+]]>
+</style>
+<g id="staff-symbol" data-type="staff-symbol">
+<g transform="translate(2.8453, 3.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 4.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 5.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 6.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 9.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 10.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 11.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+<g transform="translate(2.8453, 12.8953)">
+<line stroke-linejoin="round" stroke-linecap="round" stroke-width="0.1000" stroke="currentColor" x1="0.0500" y1="0" x2="57.7406" y2="0"/>
+</g>
+</g>
+<g id="bl-5" data-type="barline" data-measure="5">
+<g transform="translate(47.4241, 8.3953)">
+<rect x="0.0000" y="-4.5000" width="0.1900" height="9.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-2" data-type="barline" data-measure="2">
+<g transform="translate(20.0096, 8.3953)">
+<rect x="0.0000" y="-4.5000" width="0.1900" height="9.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-6" data-type="barline" data-measure="6">
+<g transform="translate(60.4458, 8.3953)">
+<rect x="0.0000" y="-4.5000" width="0.1900" height="9.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-4" data-type="barline" data-measure="4">
+<g transform="translate(38.2860, 8.3953)">
+<rect x="0.0000" y="-4.5000" width="0.1900" height="9.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="bl-3" data-type="barline" data-measure="3">
+<g transform="translate(29.1478, 8.3953)">
+<rect x="0.0000" y="-4.5000" width="0.1900" height="9.0000" ry="0.0000" fill="currentColor"/>
+</g>
+</g>
+<g id="dt-5-0.000-76-0" data-type="dots" data-measure="5" data-beat="0.000" data-midi="76" data-voice="0">
+<g transform="translate(54.8958, 6.3953)">
+<path transform="scale(0.0040, -0.0040)" d="M0 0c0 31 25 56 56 56s56 -25 56 -56s-25 -56 -56 -56s-56 25 -56 56z" fill="currentColor"/>
+</g>
+</g>
+<g id="ts-5" data-type="time-signature" data-measure="5">
+<g transform="translate(48.3641, 8.3953)">
+<path transform="scale(0.0040, -0.0040)" d="M150 477c-28 0 -57 -9 -57 -33c0 -22 35 -25 35 -47c0 -32 -25 -58 -57 -58s-58 26 -58 58c0 64 67 103 137 103c91 0 169 -33 169 -114c0 -43 -4 -82 -42 -100c-9 -4 -14 -12 -14 -21s5 -18 14 -22c41 -19 56 -57 56 -103c0 -92 -79 -140 -179 -140
+c-79 0 -154 42 -154 113c0 36 30 66 66 66s65 -30 65 -66c0 -25 -40 -28 -40 -53c0 -27 32 -37 63 -37c49 0 63 61 63 117v16c0 54 -2 94 -50 94h-80c-10 0 -14 8 -14 15s4 14 14 14h80c49 0 50 43 50 99v8c0 54 -18 91 -67 91z" fill="currentColor"/>
+</g>
+<g transform="translate(48.3983, 10.4673)">
+<path transform="scale(0.0040, -0.0040)" d="M175 487c18 0 58 31 58 -3v-367c0 -48 28 -94 73 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11c45 0 73 46 73 94v245c0 12 -9 19 -17 19c-4 0 -8 -3 -10 -7l-64 -136c-3 -6 -7 -9 -12 -9
+c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c3 6 10 3 16 0c13 -6 27 -13 42 -13z" fill="currentColor"/>
+</g>
+</g>
+<g transform="translate(2.7853, 8.3953)">
+<rect x="0.0000" y="-4.5500" width="0.1600" height="9.1000" ry="0.0500" fill="currentColor"/>
+</g>
+<g id="cl-1" data-type="clef" data-measure="1">
+<g transform="scale(1.0089, 1.3452)">
+<g transform="translate(4.7057, 6.9843)">
+<text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>0</tspan>
+</text>
+</g>
+</g>
+<g transform="scale(1.0089, 2.0178)">
+<g transform="translate(3.6131, 4.9040)">
+<text font-family="serif" font-weight="bold" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>5</tspan>
+</text>
+</g>
+</g>
+</g>
+<g id="ts-1" data-type="time-signature" data-measure="1">
+<g transform="translate(6.8453, 8.3953)">
+<path transform="scale(0.0040, -0.0040)" d="M102 135c9 2 18 3 27 3c33 0 70 -11 105 -36c21 -15 46 -23 66 -23c21 0 39 9 44 29c2 6 6 9 11 9c6 0 12 -5 12 -12c0 -67 -90 -105 -138 -105c-36 0 -71 14 -96 44c-13 16 -31 22 -48 22c-30 0 -59 -20 -62 -55c-1 -7 -6 -11 -11 -11c-6 0 -12 4 -12 11
+c0 174 232 166 232 344c0 59 -16 122 -67 122c-25 0 -49 -14 -49 -37c0 -27 35 -41 35 -68c0 -38 -31 -69 -69 -69s-69 31 -69 69c0 76 72 128 152 128c95 0 183 -57 183 -145c0 -151 -150 -159 -246 -220z" fill="currentColor"/>
+</g>
+<g transform="translate(6.9477, 10.4673)">
+<path transform="scale(0.0040, -0.0040)" d="M175 487c18 0 58 31 58 -3v-367c0 -48 28 -94 73 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11c45 0 73 46 73 94v245c0 12 -9 19 -17 19c-4 0 -8 -3 -10 -7l-64 -136c-3 -6 -7 -9 -12 -9
+c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c3 6 10 3 16 0c13 -6 27 -13 42 -13z" fill="currentColor"/>
+</g>
+</g>
+<g id="ll-1-0.000-0" data-type="ledger-line" data-measure="1" data-beat="0.000" data-voice="0">
+<g transform="translate(2.8453, 7.8953)">
+<rect x="36.1556" y="-0.1000" width="3.7503" height="0.2000" ry="0.1000" fill="currentColor"/>
+</g>
+<g transform="translate(2.8453, 8.8953)">
+<rect x="27.0174" y="-0.1000" width="3.7503" height="0.2000" ry="0.1000" fill="currentColor"/>
+</g>
+</g>
+<g id="nh-1-1.000-76-0" data-type="notehead" data-measure="1" data-beat="1.000" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="0">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(15.1615, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-3-0.000-71-0" data-type="notehead" data-measure="3" data-beat="0.000" data-midi="71" data-pitch-class="11" data-voice="0" data-duration="-1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(32.2379, 8.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(31.2378, 8.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-2-0.000-76-0" data-type="notehead" data-measure="2" data-beat="0.000" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="-1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(23.0997, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(22.0996, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-5-0.000-76-0" data-type="notehead" data-measure="5" data-beat="0.000" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="-1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(53.6958, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(52.6957, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-4-0.000-73-0" data-type="notehead" data-measure="4" data-beat="0.000" data-midi="73" data-pitch-class="1" data-voice="0" data-duration="-1">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(80.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(41.3760, 7.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+<g color="rgb(80.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(40.3760, 7.8953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g id="nh-1-0.000-76-0" data-type="notehead" data-measure="1" data-beat="0.000" data-midi="76" data-pitch-class="4" data-voice="0" data-duration="0">
+<g transform="scale(1.0000, 1.0000)">
+<g color="rgb(0.0000%, 0.0000%, 0.0000%)">
+<g transform="translate(10.3134, 6.3953)">
+<path stroke-width="0.0001" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="currentColor" d="M0 -0.5000L0.7500 0L0 0.5000L-0.7500 0zM-0.3750 0L0 0.3750L0.3750 0L0 -0.3750z"/>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<a xlink:href="https://lilypond.org/">
+<rect x="0.0000" y="-0.4748" width="50.3614" height="2.0024" fill="none" stroke="none" stroke-width="0.0"/>
+</a>
+</g>
+<g transform="translate(34.5701, 165.1202)">
+<text font-family="serif" font-size="2.2001" text-anchor="start" fill="currentColor">
+<tspan>Music engraving by LilyPond 2.24.2—www.lilypond.org</tspan>
+</text>
+</g>
+</svg>

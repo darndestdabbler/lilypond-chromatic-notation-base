@@ -1,0 +1,7 @@
+# Process records and editor settings, kept out of the release zip (git archive).
+/.vscode export-ignore
+/AGENTS.md export-ignore
+/CLAUDE.md export-ignore
+/docs/sessions export-ignore
+/docs/transcripts export-ignore
+/docs/planning export-ignore

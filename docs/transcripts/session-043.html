@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 043 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 043 transcript</h1>
+<p class="stamp">Rendered 2026-11-14T19:44:24.071Z by dabbler-ai-router 3.33.0 at 3b0e1e29032d79007623566fa260f1ee40e53113.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-14T14:19:51.691-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 43: A repeated minim's stem on one of its noteheads</h3>
+<p><strong>Why.</strong> In the Configurator's session-69 try-out (2026-11-14) the operator found that a repeated minim's stem misses its noteheads. With a centred stem, as on the Configurator tutorial's diamonds, it stops in the notch where the two heads meet, in the air. <code>cnb:stem-attachment</code> (<code>cnb/stems.ly</code>) hands LilyPond the head's attachment point, and LilyPond reads it across the whole stencil, which in repeat mode is the group of heads, so the point lands at the same share of the group as of one head. The operator's engravings show what reads right (<code>JoyToTheWorld-denici.svg</code>, Kite 4-369: the last note's up stem stands on the first of its two heads; <code>JoyToTheWorld.svg</code>, Oval 2-3579: on the right edge of the last), and from their study of stem placements they proposed the rule: the stem attaches to one head of the group, as a single head's stem does, the last head when the stem is up and the first when it is down. Configurator session 72 settles, from mock-ups, where a centred stem goes (by the same rule, or a side chosen once) and writes a brief for this session in its <code>docs/planning/</code>; its preview draws the rule and its export writes the setting below. Its engine round trip, in its session 73, waits on this session's release.</p>
+<p>Nothing changes unless the setting is set, so every export written today engraves as before.</p>
+<p><strong>The name (2026-11-14).</strong> Configurator session 72 had not yet run, so no brief was written; by the operator's decision of 2026-11-14 the engine named the setting <code>cnb:multinote-stem-on-head</code>, a boolean, with a centred stem following the same rule (no side chosen once). Configurator session 72 writes this name and value.</p>
+<ol><li>Register.</li><li><strong>The setting.</strong> A new variable in <code>cnb/config.ly</code>, <code>cnb:multinote-stem-on-head</code> (see above), default <code>#f</code> (today's placement). When it is set, <code>cnb:stem-attachment</code> maps the head's attachment point onto one head of a repeated group rather than across the group: for a group of n copies, each (1 − overlap) head widths after the last (<code>cnb:build-duration-stencil</code>, <code>cnb/stencils.ly</code>; or <code>cnb:multinote-padding</code> when the overlap is <code>#f</code>), the point's x is the head's own relative x placed on the chosen head and rewritten relative to the group's X extent; its y is unchanged. A single head (<code>repeat</code> <code>#f</code>, or a crotchet) is unchanged. Semibreves and longer have no stem.</li><li><strong>Specs.</strong> Unit specs: with the setting <code>#f</code> the attachment is as today; set, a minim group's up and down points, for a side stem and a centred one, at overlaps 1/3 and <code>#f</code>, are the values the rule gives. Integration specs on LilyPond 2.24 and 2.26: the stem of a repeated minim, up and down, on its chosen head. Regenerate the harvests and goldens that change on both versions (none is expected, since the default is <code>#f</code>).</li><li>A README line beside the stem attachment, a <code>CHANGELOG.md</code> 1.9.0 section, and <code>version.json</code> to <code>1.9.0</code>: a minor release, since a setting is added. Write <code>docs/session-sets/043-repeat-minim-stem/configurator-handoff.md</code>, in the form of the earlier handoffs. It gives, for the default Configurator notehead at 4 semitones per staff space, Kite 4-369 and the tutorial's diamonds, at an overlap of 1/3, each repeated minim's measured stem x and ends, up and down, and names session 44 as the release.</li></ol>
+<h2>Work Plan</h2>
+<p>Add cnb:multinote-stem-on-head (cnb/config.ly), default #f (today's placement), and release it as engine 1.9.0 in session 44. Configurator session 72 has not yet written its brief, so by the operator's decision (2026-11-14) the engine names the setting: a boolean, and Configurator 72 writes this name and value. When it is #t and a note's resolved config repeats its head (repeat not #f) and the note is a minim, cnb:stem-attachment (cnb/stems.ly) maps the captured attachment point onto one head of the group rather than across it: the last head when the stem is up, the first when it is down, and a centred stem follows the same rule. For a group of two copies, the second starting s = (1 - overlap) head widths after the first (cnb:build-duration-stencil, cnb/stencils.ly; s = w + cnb:multinote-padding when the overlap is #f), the point's x is the head's own relative x placed on the chosen head and rewritten relative to the group's X extent, x' = (2ks + w(1 + x)) / (s + w) - 1 with k = 1 for the last head and 0 for the first; y is unchanged. The repeat flag is captured on the grob at acknowledge time beside the attachment record, since the config cache is not current at layout time. A crotchet, a single head (repeat #f) and the setting #f are unchanged, so every existing file engraves as before. Unit specs in test-unit.ly, an integration spec on 2.24 and 2.26, a README line beside the stem attachment, a CHANGELOG.md 1.9.0 section, version.json 1.9.0 and a Configurator handoff with measured stems for the default notehead, Kite 4-369 and the tutorial's diamonds at an overlap of 1/3 finish the session.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/3b0a2c326c3a377dc1c883be4cfcd293bfb016bd"><code>3b0a2c326c3a377dc1c883be4cfcd293bfb016bd</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Setting</td><td><p>In cnb/config.ly, after cnb:multinote-overlap in the MULTI-NOTE section, define cnb:multinote-stem-on-head, default #f, with a comment: #f attaches a repeated minim's stem across the whole group of heads as today; #t attaches it to one head as a single head's stem is attached, the last head when the stem is up and the first when it is down (a centred stem too). In cnb/noteheads.ly declare a grob property cnb-repeat beside cnb-attachment and capture the resolved config's repeat field on the grob at acknowledge time when it is not #f, as the attachment record is captured. In cnb/stems.ly add a helper (cnb:stem-on-head point dir head-width) that returns POINT, an (x . y) in normalised head coordinates, mapped onto the chosen head of a two-copy group: s is the step between copies as cnb:build-duration-stencil computes it ((1 - cnb:multinote-overlap) x head-width when the overlap is a number, else head-width + cnb:multinote-padding), k is 1 when DIR is UP and 0 otherwise, x' = (2ks + head-width x (1 + x)) / (s + head-width) - 1, y unchanged. In cnb:stem-attachment, when cnb:multinote-stem-on-head is set, the grob carries cnb-repeat and its duration log is 1, return the helper's mapping of the minim point, with head-width the base head's unscaled width recovered from the grob's stencil X extent (divided by magstep of its font-size: W = 2 head-width + padding, or (2 - overlap) x head-width); otherwise return the point as today; update the file's comments. In test-unit.ly add a group for cnb:stem-on-head: the setting defaults to #f; with a head width of 1, a side point (1 . 0.3) up and (-1 . -0.3) down and a centred point (0 . 0) up and down, at an overlap of 1/3 and with the overlap #f and the padding -0.5, the mapped x is the value the rule gives and y is unchanged (restoring cnb:multinote-overlap afterwards). Run the whole unit and integration suites on both versions: every tracked harvest and SVG stays byte-identical, since the default is #f.</p></td><td><span class="mono">cnb/config.ly</span><br><span class="mono">cnb/noteheads.ly</span><br><span class="mono">cnb/stems.ly</span><br><span class="mono">test-unit.ly</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs] + [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Spec</td><td><p>Write tests/stem-repeat-minim.ly: on the Configurator's default staff of 4 semitones per staff space, lines -4 -2 2 4, repeat on, cnb:multinote-overlap 1/3 and #(set! cnb:multinote-stem-on-head #t), two heads chosen by pitch: the Configurator's default crotchet-minim head with its side attachment (as in tests/multinote-overlap.ly) and a centred-stem head attached at (0 . 0); each engraved as a crotchet and a minim, stem up and stem down. tests/stem-repeat-minim.json asserts, with values measured on 2.24 and 2.26, that each minim's up stem stands on its last head and its down stem on its first, at the same place on that head as the crotchet's stem on its single head (the stem's x relative to the head's left or right edge), and that the crotchets' stems are as without the setting. Generate its SVG and its 2.24 and 2.26 harvests. Run the whole integration suites on both versions: every other harvest stays as it is.</p></td><td><span class="mono">tests/stem-repeat-minim.ly</span><br><span class="mono">tests/stem-repeat-minim.json</span><br><span class="mono">tests/stem-repeat-minim.svg</span><br><span class="mono">tests/stem-repeat-minim.harvested.json</span><br><span class="mono">tests/lilypond-2.26/stem-repeat-minim.harvested.json</span><br><span class="mono">cnb/stems.ly</span></td><td><code>python -c import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\lilypond-2.26.0-mingw-x86_64\lilypond-2.26.0\bin\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))</code></td><td>yes</td></tr>
+<tr><td>Document</td><td><p>In README.md add a line beside the stem attachment paragraph, and a cnb:multinote-stem-on-head row in the settings table beside cnb:multinote-overlap (default #f; #t puts a repeated minim's stem on its last head when up and its first when down). Add a '## 1.9.0' section to CHANGELOG.md above '## 1.8.0': the setting, that it changes nothing unless set, the new spec, and that no golden or harvest changed. Set version.json to 1.9.0. Write docs/session-sets/043-repeat-minim-stem/configurator-handoff.md in the form of the earlier handoffs: the setting's name and values, the rule and the formula, what did not change, and that a file setting it needs engine 1.9.0; for the default Configurator notehead at 4 semitones per staff space, Kite 4-369 (kite-4-369-from-configurator.ly) and the tutorial's diamonds (the Configurator's docs/playbook/tutorial/downloads/tutorial.ly), at an overlap of 1/3, each repeated minim's measured stem x and ends, up and down, in staff spaces and semitones, measured on 2.24 and 2.26; and session 44 as the release. In docs/sessions/session-plan.md, in session 43's section, record that the engine named the setting cnb:multinote-stem-on-head (a boolean, a centred stem following the same rule) by the operator's decision of 2026-11-14, since Configurator session 72 had not yet written its brief.</p></td><td><span class="mono">README.md</span><br><span class="mono">CHANGELOG.md</span><br><span class="mono">version.json</span><br><span class="mono">docs/session-sets/043-repeat-minim-stem/configurator-handoff.md</span><br><span class="mono">docs/sessions/session-plan.md</span></td><td><code>python -c import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); h = open('docs/session-sets/043-repeat-minim-stem/configurator-handoff.md', encoding='utf-8').read(); p = open('docs/sessions/session-plan.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.9.0'):c.index('## 1.8.0')]; checks = [('CHANGELOG', top, 'cnb:multinote-stem-on-head'), ('README', r, 'cnb:multinote-stem-on-head'), ('handoff', h, 'cnb:multinote-stem-on-head'), ('handoff', h, '1/3'), ('handoff', h, 'Kite 4-369'), ('handoff', h, 'diamond'), ('handoff', h, '1.9.0'), ('handoff', h, 'session 44'), ('plan', p, 'cnb:multinote-stem-on-head'), ('version', v, '1.9.0')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>No release or publish: session 44 releases 1.9.0; no packaging change.</li><li>No Configurator change: its session 72 draws the rule in its preview and writes cnb:multinote-stem-on-head in its export, and its session 73 runs the engine round trip; its LY export spec is authored Configurator-side from the handoff.</li><li>No side chosen once for a centred stem and no per-shape or per-direction choice: one boolean, and a centred stem follows the same rule as a side stem.</li><li>No change to the stem attachment of crotchets, of single heads (repeat #f), of any note with the setting #f, to the stem's y, its length or its far end, or to the repeated stencils, their overlap, padding or cache; semibreves and longer have no stem and are not touched.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[19:19:51]</span> <span class="muted">run-started</span> session=043 mode=pull</div>
+<div class="line"><span class="at">[19:19:51]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[19:23:27]</span> <span class="muted">run-resumed</span> session=043 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[19:23:27]</span> <span class="muted">plan-accepted</span> steps=[&quot;setting&quot;,&quot;spec&quot;,&quot;document&quot;] non_goals=4</div>
+<div class="line"><span class="at">[19:23:30]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[19:23:30]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=setting</div>
+<div class="line"><span class="at">[19:26:10]</span> <span class="muted">run-resumed</span> session=043 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[19:27:08]</span> <span class="muted">check-passed</span> step=setting argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_unit.py', '--lilypond-version', v]) for v in vs] + [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[19:27:09]</span> <span class="muted">report-accepted</span> seq=2 step=setting files=[&quot;cnb/config.ly&quot;,&quot;cnb/noteheads.ly&quot;,&quot;cnb/stems.ly&quot;,&quot;test-unit.ly&quot;] notes=cnb:multinote-stem-on-head (default #f), cnb-repeat captured at acknowledge, cnb:stem-on-head and cnb:repeated-minim-head-width in stems.ly with unit specs; unit 530/530 and integration 431/431 on 2.24 and 2.26, no harvest drift</div>
+<div class="line"><span class="at">[19:27:09]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=spec</div>
+<div class="line"><span class="at">[19:31:05]</span> <span class="muted">run-resumed</span> session=043 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[19:32:00]</span> <span class="muted">check-passed</span> step=spec argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import os, subprocess, sys; os.environ.setdefault('CNB_LILYPOND_2_26', r'D:\\lilypond-2.26.0-mingw-x86_64\\lilypond-2.26.0\\bin\\lilypond.exe'); os.environ['PYTHONIOENCODING'] = 'utf-8'; vs = ('2.24', '2.26'); rc = [subprocess.call([sys.executable, 'tools/run_tests.py', '--lilypond-version', v]) for v in vs]; sys.exit(max(rc))&quot;]</div>
+<div class="line"><span class="at">[19:32:01]</span> <span class="muted">report-accepted</span> seq=3 step=spec files=[&quot;tests/stem-repeat-minim.ly&quot;,&quot;tests/stem-repeat-minim.json&quot;,&quot;tests/stem-repeat-minim.svg&quot;,&quot;tests/stem-repeat-minim.harvested.json&quot;,&quot;tests/lilypond-2.26/stem-repeat-minim.harvested.json&quot;,&quot;cnb/stems.ly&quot;] notes=New spec stem-repeat-minim (default side head and centred diamond, up and down, overlap 1/3); cnb:stem-attachment cancels LilyPond's half-thickness stem shift for a centred point mapped off 0 (amended step files); unit 530/530 and integration 441/441 on 2.24 and 2.26, no other harvest drift</div>
+<div class="line"><span class="at">[19:32:01]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=document</div>
+<div class="line"><span class="at">[19:36:51]</span> <span class="muted">run-resumed</span> session=043 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[19:36:55]</span> <span class="muted">check-passed</span> step=document argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, sys; c = open('CHANGELOG.md', encoding='utf-8').read(); r = open('README.md', encoding='utf-8').read(); h = open('docs/session-sets/043-repeat-minim-stem/configurator-handoff.md', encoding='utf-8').read(); p = open('docs/sessions/session-plan.md', encoding='utf-8').read(); v = json.load(open('version.json', encoding='utf-8'))['version']; top = c[c.index('## 1.9.0'):c.index('## 1.8.0')]; checks = [('CHANGELOG', top, 'cnb:multinote-stem-on-head'), ('README', r, 'cnb:multinote-stem-on-head'), ('handoff', h, 'cnb:multinote-stem-on-head'), ('handoff', h, '1/3'), ('handoff', h, 'Kite 4-369'), ('handoff', h, 'diamond'), ('handoff', h, '1.9.0'), ('handoff', h, 'session 44'), ('plan', p, 'cnb:multinote-stem-on-head'), ('version', v, '1.9.0')]; missing = [(f, n) for f, t, n in checks if n not in t]; print('missing:', missing) if missing else None; sys.exit(1 if missing else 0)&quot;]</div>
+<div class="line"><span class="at">[19:36:56]</span> <span class="muted">report-accepted</span> seq=4 step=document files=[&quot;README.md&quot;,&quot;CHANGELOG.md&quot;,&quot;version.json&quot;,&quot;docs/session-sets/043-repeat-minim-stem/configurator-handoff.md&quot;,&quot;docs/sessions/session-plan.md&quot;] notes=README line and settings row, CHANGELOG 1.9.0, version 1.9.0, Configurator handoff with stems probed on 2.24 and 2.26 (identical) for the default head, Kite 4-369 and the tutorial diamond at overlap 1/3, and session-plan.md records the operator's naming decision</div>
+<div class="line"><span class="at">[19:36:56]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[19:36:56]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[19:36:59]</span> <span class="muted">job-started</span> name=verification pid=30496 log=.dabbler/runs/s43/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[19:38:45]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[19:38:45]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[19:38:45]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[19:38:46]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[19:38:48]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=69540 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[19:39:21]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[19:39:23]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[19:39:24]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=61140 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[19:39:29]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[19:39:30]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[19:39:31]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=68932 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[19:40:02]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[19:40:03]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[19:40:04]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=45032 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[19:40:11]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[19:40:12]</span> <span class="muted">run-of-record</span> suite=engine-musicxml stage=final-full why=engine-musicxml declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[19:40:13]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml pid=43360 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[19:42:10]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-musicxml.log</div>
+<div class="line"><span class="at">[19:42:10]</span> <span class="muted">run-of-record</span> suite=engine-musicxml-2.26 stage=final-full why=engine-musicxml-2.26 declares whole_at_close command=python tools/run_musicxml.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[19:42:12]</span> <span class="muted">job-started</span> name=run of record: engine-musicxml-2.26 pid=42044 log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[19:43:29]</span> <span class="muted">job-finished</span> name=run of record: engine-musicxml-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/run-of-record-engine-musicxml-2-26.log</div>
+<div class="line"><span class="at">[19:43:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[19:43:47]</span> <span class="muted">landed</span> commit=3b0a2c326c3a377dc1c883be4cfcd293bfb016bd</div>
+<div class="line"><span class="at">[19:43:47]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[19:43:48]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[19:43:48]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[19:43:51]</span> <span class="muted">job-started</span> name=close pid=43248 log=.dabbler/runs/s43/driver/jobs/close.log</div>
+<div class="line"><span class="at">[19:44:24]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s43/driver/jobs/close.log</div>
+<div class="line"><span class="at">[19:44:24]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>8 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** The stated “padding is not scaled” model is internally inconsistent for non-default notehead `font-size` when `cnb:multinote-overlap` is `#f`.</td><td>not answered</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>**Location:** `cnb/stems.ly`, `cnb:repeated-minim-head-width` and its caller in `cnb:stem-attachment`.</td><td>not answered</td></tr>
+<tr><td>2</td><td><strong>minor</strong></td><td>**Fix:** Keep the group width and padding in the same coordinate system. If rendered group width is `W`, magnification is `M`, and unscaled padding `P` is not magnified as the comment states, recover the physical head width as `(W - P) / 2` and calculate the step with that physical width; the current calculation `(W / M - P) / 2` is unequal whenever `M != 1` and `P != 0`.</td><td>not answered</td></tr>
+<tr><td>3</td><td><strong>minor</strong></td><td>**Case worth adding:** With `cnb:multinote-stem-on-head #t`, `repeat #t`, `cnb:multinote-overlap #f`, a centred attachment `(0 . 0)`, and a minim rendered at nonzero `font-size`, assert that its stem centre is the selected head’s centre. The current integration test uses overlap `1/3`, where padding is irrelevant, and the helper unit test supplies an already-normalized synthetic width, so neither exposes this case.</td><td>not answered</td></tr>
+<tr><td>4</td><td><strong>minor</strong></td><td>**Nit:** The promised default-placement unit behavior is not directly pinned. The new unit tests exercise `cnb:stem-on-head` and `cnb:repeated-minim-head-width`, but never invoke `cnb:stem-attachment` with `cnb:multinote-stem-on-head #f`.</td><td>not answered</td></tr>
+<tr><td>5</td><td><strong>minor</strong></td><td>**Location:** `test-unit.ly`; `tests/stem-repeat-minim.ly`.</td><td>not answered</td></tr>
+<tr><td>6</td><td><strong>minor</strong></td><td>**Fix:** Add a rendered or grob-level case with `repeat #t`, a repeated minim, and the setting `#f`, asserting that a centred attachment remains at the group centre rather than moving to the selected head.</td><td>not answered</td></tr>
+<tr><td>7</td><td><strong>minor</strong></td><td>**Case worth adding:** Start from the diamond minim fixture, set `cnb:multinote-stem-on-head #f`, and assert its up/down stem centres are at the repeated group centre. Today’s branch appears to return the pre-existing attachment point, so this is a regression guard rather than evidence of a current rendered failure.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>27s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>2s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>27s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>2s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-musicxml</td><td>final-full</td><td><span class="good">passed</span></td><td>113s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-musicxml-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>72s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_musicxml.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-musicxml</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

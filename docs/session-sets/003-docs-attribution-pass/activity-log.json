@@ -1,0 +1,17 @@
+{
+  "sessionSetName": "003-docs-attribution-pass",
+  "createdDate": "2026-07-04T20:14:17.965678+00:00",
+  "totalSessions": 1,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-04T20:14:17.986369+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    }
+  ]
+}

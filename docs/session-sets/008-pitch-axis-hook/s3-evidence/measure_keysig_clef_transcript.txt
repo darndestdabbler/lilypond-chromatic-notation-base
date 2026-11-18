@@ -1,0 +1,51 @@
+
+=== System 0 (score 1, axis anchor -4) ===
+  keysig marks found: 8 (expected 8)
+  PASS: sys0 keysig mark semi 7 at position 0: measured +0.009 expected +0.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 9 at position 1: measured +1.009 expected +1.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 11 at position 2: measured +2.009 expected +2.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 12 at position 3: measured +3.009 expected +3.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 14 at position 4: measured +4.009 expected +4.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 16 at position 5: measured +5.009 expected +5.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 18 at position 6: measured +6.009 expected +6.000 (delta +0.009, tol 0.15)
+  PASS: sys0 keysig mark semi 19 at position 7: measured +7.009 expected +7.000 (delta +0.009, tol 0.15)
+  PASS: sys0 clef top edge (fractional anchor 7.5): measured +0.510 expected +0.500 (delta +0.010, tol 0.05)
+  PASS: sys0 note semi 0 (nh-1-0.000-60-0): measured -3.991 expected -4.000 (delta +0.009, tol 0.05)
+  PASS: sys0 note semi 7 (nh-1-0.250-67-0): measured +0.009 expected +0.000 (delta +0.009, tol 0.05)
+  PASS: sys0 note semi 12 (nh-1-0.500-72-0): measured +3.009 expected +3.000 (delta +0.009, tol 0.05)
+  PASS: sys0 note semi 7 (nh-1-0.750-67-0): measured +0.009 expected +0.000 (delta +0.009, tol 0.05)
+
+=== System 1 (score 2, axis anchor -3) ===
+  keysig marks found: 8 (expected 8)
+  PASS: sys1 keysig mark semi 7 at position 1: measured +1.009 expected +1.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 9 at position 2: measured +2.009 expected +2.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 11 at position 3: measured +3.009 expected +3.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 12 at position 4: measured +4.009 expected +4.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 14 at position 5: measured +5.009 expected +5.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 16 at position 6: measured +6.009 expected +6.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 18 at position 7: measured +7.009 expected +7.000 (delta +0.009, tol 0.15)
+  PASS: sys1 keysig mark semi 19 at position 8: measured +8.009 expected +8.000 (delta +0.009, tol 0.15)
+  PASS: sys1 clef top edge (fractional anchor 7.5): measured +1.510 expected +1.500 (delta +0.010, tol 0.05)
+  PASS: sys1 note semi 0 (nh-1-0.000-60-0): measured -2.991 expected -3.000 (delta +0.009, tol 0.05)
+  PASS: sys1 note semi 7 (nh-1-0.250-67-0): measured +1.009 expected +1.000 (delta +0.009, tol 0.05)
+  PASS: sys1 note semi 12 (nh-1-0.500-72-0): measured +4.009 expected +4.000 (delta +0.009, tol 0.05)
+  PASS: sys1 note semi 7 (nh-1-0.750-67-0): measured +1.009 expected +1.000 (delta +0.009, tol 0.05)
+
+=== Differential system1 - system0 (must be +1.000) ===
+  PASS: keysig mark 0 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: keysig mark 1 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: keysig mark 2 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: keysig mark 3 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: keysig mark 4 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: keysig mark 5 shift: measured +1.000 expected +1.000 (delta +0.000, tol 0.02)
+  PASS: keysig mark 6 shift: measured +1.000 expected +1.000 (delta +0.000, tol 0.02)
+  PASS: keysig mark 7 shift: measured +1.000 expected +1.000 (delta +0.000, tol 0.02)
+  PASS: clef top edge shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: note 0 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: note 1 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: note 2 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+  PASS: note 3 shift: measured +1.000 expected +1.000 (delta -0.000, tol 0.02)
+
+============================================================
+RESULT: PASS (all keysig marks, clef anchors, noteheads, and +1 differentials exact)
+EXIT=0

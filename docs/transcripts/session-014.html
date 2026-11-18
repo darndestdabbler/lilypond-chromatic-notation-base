@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 014 transcript</title>
+<style>
+:root {
+  --page: #ffffff;
+  --ink: #1f1f1f;
+  --faint: #e4e4e4;
+  --panel: #f6f6f6;
+  --tone-milestone: #2a5db0;
+  --tone-good: #256029;
+  --tone-warn: #8a6100;
+  --tone-bad: #a31515;
+  --tone-muted: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1e1e1e;
+    --ink: #d4d4d4;
+    --faint: #3a3a3a;
+    --panel: #252526;
+  --tone-milestone: #3874db;
+  --tone-good: #54a33b;
+  --tone-warn: #b79427;
+  --tone-bad: #f14c4c;
+  --tone-muted: #8c8c8c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 64px;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 68rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; border-bottom: 1px solid var(--faint); padding-bottom: .3rem; }
+.stamp { color: var(--tone-muted); font-size: .85rem; margin: 0 0 .25rem; }
+.mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+.lines { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.line { white-space: pre-wrap; word-break: break-word; padding-left: 10.5ch; text-indent: -10.5ch; }
+.at { color: var(--tone-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--tone-muted); font-weight: 600; }
+details { margin: .5rem 0; }
+summary { cursor: pointer; }
+td details { margin: 0; }
+tr:has(details:not([open])) + tr.findings { display: none; }
+tr.findings > td { padding: 0 0 .5rem 1.5rem; }
+pre { background: var(--panel); padding: .75rem; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.stop, .cancelled { border-left: 3px solid var(--tone-bad); background: var(--panel); padding: .6rem .9rem; }
+.milestone { color: var(--tone-milestone); }
+.good { color: var(--tone-good); }
+.warn { color: var(--tone-warn); }
+.bad { color: var(--tone-bad); }
+.muted { color: var(--tone-muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Session 014 transcript</h1>
+<p class="stamp">Rendered 2026-11-03T07:12:48.345Z by dabbler-ai-router 3.27.0 at 75b4d3399226e43fb9b823011307cb35e3d4b8e6.</p>
+<p class="stamp">Engine cli, last phase <span class="milestone">log</span>, started 2026-11-03T01:14:23.559-05:00.</p>
+<h2>Session Plan</h2>
+<h3>Session 14: Harvest what is drawn, and claim only what works</h3>
+<ol><li>Register.</li><li>M2: <code>tools/harvest_svg.py</code> harvests the geometry of <code>circle</code>, <code>ellipse</code>, <code>polygon</code>, <code>polyline</code> and <code>text</code>, plus beam bounding boxes and shape hashes, so off-key rings and beams can drift. Add tests in <code>tools/test_harvest_svg.py</code>. Re-baseline both versions, and confirm the only changes are the newly harvested properties.</li><li>M6: the articulation correction never changes anything, and beam and stem compensation never apply on the engine's own staff. Either make each one work, with a spec that fails without it, or delete the dead code and its README claims. No half measures: what the README advertises must be tested.</li><li>M7, L1, L2: the README reports real counts (assertions, not <code>_comment</code> markers, for 2.24 and 2.26) and the real project tree; <code>docs/INTEGRATION-TESTING.md</code> describes per-version baselines and <code>--lilypond-version</code>; <code>--generate</code> refuses to overwrite a tracked baseline without <code>--update-baselines</code>; and <code>--keep-svg</code> works or is removed.</li></ol>
+<h2>Work Plan</h2>
+<p>Make the harvester see what LilyPond draws, and make the README claim only what works and is tested. M2: tools/harvest_svg.py adds the extents of circle (cx±r, cy±r), ellipse (cx±rx, cy±ry), polygon and polyline (their points) to an element's bbox, so beams get a real bounding box, and records a new visual.shape_hash over the geometry of an element's non-path primitives (circle r, ellipse rx/ry, polygon and polyline points, text string, font family, weight, size and anchor, each with its accumulated scale), so an added or removed off-key ring, a changed beam or a changed text clef drifts; path_hash, representative positions and text's anchor-only bbox contribution are unchanged. Tests go in tools/test_harvest_svg.py. Both versions' baselines are re-baselined, and a check proves against b1c8fa0 that only bbox and shape_hash changed, and bbox only on elements that now carry a shape_hash. M6: the articulation Y-offset correction (cnb/articulations.ly) and the beam and stem compressed-staff compensation (cnb/beams.ly, the compensation half of cnb/stems.ly) are deleted rather than repaired, since the engine never sets staff-space and the proximity rule never yields an articulation adjustment, so they do nothing on the engine's own staff; their overrides, includes and README claims go with them, and every render is unchanged. M7, L1, L2: the runner counts only assertions that have an id and reports harvest drift separately from assertion failures; --generate refuses to overwrite an existing baseline without --update-baselines; the never-read --keep-svg goes. The README states the real assertion counts for 2.24 and 2.26 and the real project tree, docs/INTEGRATION-TESTING.md describes per-version baselines, --lilypond-version, CNB_LILYPOND_X_Y, drift and --update-baselines, the --generate refusal and shape_hash, and the dabbler.yaml comment's counts are corrected.</p>
+<p>Landed <a href="https://github.com/darndestdabbler/lilypond-chromatic-notation-base/commit/44912224c4234d0e454266cb49eaaf1bd1931b66"><code>44912224c4234d0e454266cb49eaaf1bd1931b66</code></a>.</p>
+<table>
+<tr><th>Step</th><th>Ask</th><th>Files</th><th>Checks</th><th>Accepted</th></tr>
+<tr><td>Harvest drawn geometry</td><td><p>M2 in tools/harvest_svg.py. compute_bbox_deep adds the extents of circle (cx±r, cy±r), ellipse (cx±rx, cy±ry), and polygon and polyline (every point of their points attribute), each through its accumulated transform; text still contributes only its anchor point. A new hash_shapes(element) returns a 12-character hash, canonicalised like hash_path, over each non-path primitive in document order (circle, ellipse, polygon, polyline, text): its tag, its accumulated scale, and its geometry (r; rx and ry; points; the text string, font-family, font-weight, font-size and text-anchor), or None when there are none; harvest() writes it as visual.shape_hash. Tests in tools/test_harvest_svg.py: bbox of a scaled and translated circle, ellipse, polygon and polyline; text keeps its anchor-only bbox; shape_hash is None for paths only, and changes when a circle's radius, a polygon's points or a text's string change, and when a ring is added beside a path.</p></td><td><span class="mono">tools/harvest_svg.py</span><br><span class="mono">tools/test_harvest_svg.py</span></td><td><code>python -m unittest discover -s tools -p test_harvest_svg.py</code></td><td>yes</td></tr>
+<tr><td>Rebaseline both versions</td><td><p>Re-baseline with <code>python tools/run_tests.py --lilypond-version 2.24 --update-baselines</code> and the same for 2.26, then confirm against b1c8fa0 that the only changes are the newly harvested properties: visual.shape_hash, and visual.bbox on elements that now carry a shape_hash (beams, the off-key ring notehead, text clefs); no measure, system, staff, position or other element property moves. The tracked tests/*.svg must come out unchanged.</p></td><td></td><td><code>python -c import json, glob, subprocess, sys
+def occ(h):
+    seen = {}; out = {}
+    for e in h['elements']:
+        n = seen.get(e['id'], 0); seen[e['id']] = n + 1; out[(e['id'], n)] = e
+    return out
+def flat(d, p=''):
+    o = {}
+    for k, v in d.items():
+        if isinstance(v, dict) and v: o.update(flat(v, p + k + '.'))
+        else: o[p + k] = v
+    return o
+files = sorted(f.replace(chr(92), '/') for f in glob.glob('tests/*.harvested.json') + glob.glob('tests/lilypond-2.26/*.harvested.json'))
+bad = []; beams = []
+for f in files:
+    old = json.loads(subprocess.run(['git', 'show', 'b1c8fa0:' + f], capture_output=True, text=True, encoding='utf-8', check=True).stdout)
+    new = json.load(open(f, encoding='utf-8'))
+    if {k: v for k, v in old.items() if k != 'elements'} != {k: v for k, v in new.items() if k != 'elements'}: bad.append(f + ': top-level keys changed')
+    o, n = occ(old), occ(new)
+    if o.keys() != n.keys(): bad.append(f + ': element set changed')
+    for k in o.keys() &amp; n.keys():
+        a, b = flat(o[k]), flat(n[k])
+        for p in a.keys() | b.keys():
+            if a.get(p) != b.get(p) and not (p == 'visual.shape_hash' or (p.startswith('visual.bbox') and 'visual.shape_hash' in b)): bad.append(f'{f}: {k} {p}')
+    beams += [e for e in new['elements'] if e['type'] == 'beam']
+if not beams or any(e['visual'].get('bbox', {}).get('w', 0) &lt;= 0 or e['visual'].get('bbox', {}).get('h', 0) &lt;= 0 or 'shape_hash' not in e['visual'] for e in beams): bad.append('a beam lacks a real bbox or a shape_hash')
+print('\n'.join(bad)); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Delete dead corrections</td><td><p>M6: delete the articulation correction and the compressed-staff beam and stem compensation. Remove cnb/articulations.ly and cnb/beams.ly; remove the stem-length compensation (cnb:multiply-stem-details, cnb:compensate-stem-length and its header prose) from cnb/stems.ly, keeping stem attachment; remove the Beam.before-line-breaking and Script.Y-offset overrides from cnb/layout.ly and the compensation call from its Stem.before-line-breaking hook (which keeps cnb:apply-note-x-offsets); drop the two includes and their header lines from ChromaticNotationBase.ly; fix the comment in cnb/noteheads.ly that names the removed function; and take the claims out of README.md (the engraving-corrections feature line, the module list and load order, and the acknowledgments' list of files written after studying prior art). Every render must be unchanged: both integration suites pass with no drift and both unit suites pass.</p></td><td><span class="mono">cnb/articulations.ly</span><br><span class="mono">cnb/beams.ly</span><br><span class="mono">cnb/stems.ly</span><br><span class="mono">cnb/layout.ly</span><br><span class="mono">cnb/noteheads.ly</span><br><span class="mono">ChromaticNotationBase.ly</span><br><span class="mono">README.md</span></td><td><code>python -c import glob, os, sys
+gone = [f for f in ('cnb/articulations.ly', 'cnb/beams.ly') if os.path.exists(f)]
+names = ('cnb:script-y-offset-callback', 'cnb:compensate-beam', 'cnb:compensate-stem-length', 'cnb:multiply-stem-details', 'articulations.ly', 'beams.ly', 'articulation Y-offset', 'beam thickness/spacing compensation')
+left = [(f, n) for f in glob.glob('cnb/*.ly') + glob.glob('*.ly') + ['README.md'] for n in names if n in open(f, encoding='utf-8').read()]
+print(gone, left); sys.exit(1 if gone or left else 0)
+</code></td><td>yes</td></tr>
+<tr><td>Honest runner</td><td><p>M7, L2 in tools/run_tests.py. run_single_test counts only assertions that have an id (not _comment markers) and reports harvest drift apart from assertion failures; the summary reads <code>RESULTS: P passed, F failed (N assertions), D harvests drifted</code> and exits non-zero on any failure or drift. generate_golden refuses, with a message naming --update-baselines, to overwrite an existing baseline unless main passes update_baselines through. Remove the never-read --keep-svg option. Tests in tools/test_run_tests.py: comment markers are not counted, drift is reported separately and still fails, and --generate refuses an existing baseline and writes it with --update-baselines.</p></td><td><span class="mono">tools/run_tests.py</span><br><span class="mono">tools/test_run_tests.py</span></td><td><code>python -m unittest discover -s tools -p test_run_tests.py</code></td><td>yes</td></tr>
+<tr><td>Docs tell the truth</td><td><p>M7, L1, L2 in the docs. README.md: the status line states the real counts measured this session on 2.24 and 2.26 (unit assertions, and integration assertions with an id, their expressions, and the spec count), and the project-structure tree is regenerated from git ls-files (every cnb/*.ly file, joy-to-the-world.ly at the root, kite-4-369-from-configurator.ly, CHANGELOG.md, dabbler.yaml; no scores/ folder). docs/INTEGRATION-TESTING.md describes per-version baselines (tests/*.harvested.json for 2.24, tests/lilypond-2.26/ for 2.26) and render folders, --lilypond-version and CNB_LILYPOND_X_Y, the drift check and --update-baselines, the --generate refusal, the <code>lilypond</code> expression variable, and visual.shape_hash and the bbox of non-path primitives; its run examples name a version. The counts in dabbler.yaml's comment are corrected to the same figures.</p></td><td><span class="mono">README.md</span><br><span class="mono">docs/INTEGRATION-TESTING.md</span><br><span class="mono">dabbler.yaml</span></td><td><code>python -c import glob, json, os, sys
+n = sum(1 for f in glob.glob('tests/*.json') if not f.endswith('.harvested.json') for a in json.load(open(f, encoding='utf-8')).get('assertions', []) if 'id' in a)
+readme = open('README.md', encoding='utf-8').read(); doc = open('docs/INTEGRATION-TESTING.md', encoding='utf-8').read(); yml = open('dabbler.yaml', encoding='utf-8').read()
+bad = []
+if f'{n} integration assertions' not in readme: bad.append(f'README lacks {n} integration assertions')
+if '365' in readme or '365' in yml: bad.append('365 still claimed')
+if '── scores/' in readme: bad.append('scores/ folder in the README tree')
+bad += ['README tree lacks ' + os.path.basename(f) for f in glob.glob('cnb/*.ly') if os.path.basename(f) not in readme]
+bad += ['README tree lacks ' + f for f in ('kite-4-369-from-configurator.ly', 'CHANGELOG.md', 'dabbler.yaml') if f not in readme]
+bad += ['INTEGRATION-TESTING lacks ' + t for t in ('--lilypond-version', 'CNB_LILYPOND_', '--update-baselines', 'tests/lilypond-2.26/', 'shape_hash') if t not in doc]
+if '--keep-svg' in doc or '--keep-svg' in readme: bad.append('--keep-svg documented')
+print(bad); sys.exit(1 if bad else 0)
+</code></td><td>yes</td></tr>
+</table>
+<p>Non-goals:</p>
+<ul><li>Making the articulation correction or the beam and stem compensation work: this session takes the plan's other branch and deletes them with their README claims.</li><li>Estimating text glyph extents: an SVG carries no font metrics, so text keeps contributing only its anchor point to bbox; its string, font and size go into shape_hash instead.</li><li>Changing path_hash, representative positions, element ids, or how assertions and prop() look up a repeated id.</li><li>A CHANGELOG entry, the version bump to 1.1.1, and the release archive cleanup (L5) -- Session 15.</li><li>Rewriting dated planning records under docs/planning/ (project-plan.md's history and its §7.7 measurements) or the session-set records under docs/session-sets/.</li></ul>
+<h2>What the framework said</h2>
+<div class="lines"><div class="line"><span class="at">[06:14:23]</span> <span class="muted">run-started</span> session=014 mode=pull</div>
+<div class="line"><span class="at">[06:14:23]</span> <span class="muted">instruction-issued</span> seq=1 kind=step step=plan</div>
+<div class="line"><span class="at">[06:26:18]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">plan</span> mode=pull</div>
+<div class="line"><span class="at">[06:26:18]</span> <span class="muted">plan-accepted</span> steps=[&quot;harvest-drawn-geometry&quot;,&quot;rebaseline-both-versions&quot;,&quot;delete-dead-corrections&quot;,&quot;honest-runner&quot;,&quot;docs-tell-the-truth&quot;] non_goals=5</div>
+<div class="line"><span class="at">[06:26:57]</span> <span class="milestone">phase</span> phase=<span class="milestone">work</span></div>
+<div class="line"><span class="at">[06:26:57]</span> <span class="muted">instruction-issued</span> seq=2 kind=step step=harvest-drawn-geometry</div>
+<div class="line"><span class="at">[06:31:18]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:31:44]</span> <span class="muted">check-passed</span> step=harvest-drawn-geometry argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_harvest_svg.py&quot;]</div>
+<div class="line"><span class="at">[06:32:00]</span> <span class="muted">report-accepted</span> seq=2 step=harvest-drawn-geometry files=[&quot;tools/harvest_svg.py&quot;,&quot;tools/test_harvest_svg.py&quot;] notes=bbox now spans circle/ellipse radii and polygon/polyline points (polyline added to DRAWING_TAGS); new hash_shapes -&gt; visual.shape_hash over non-path primitives (tag, scale, geometry, verbatim text string); text bbox stays anchor-only</div>
+<div class="line"><span class="at">[06:32:00]</span> <span class="muted">instruction-issued</span> seq=3 kind=step step=rebaseline-both-versions</div>
+<div class="line"><span class="at">[06:37:22]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:39:07]</span> <span class="muted">check-passed</span> step=rebaseline-both-versions argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, glob, subprocess, sys\ndef occ(h):\n    seen = {}; out = {}\n    for e in h['elements']:\n        n = seen.get(e['id'], 0); seen[e['id']] = n + 1; out[(e['id'], n)] = e\n    return out\ndef flat(d, p=''):\n    o = {}\n    for k, v in d.items():\n        if isinstance(v, dict) and v: o.update(flat(v, p + k + '.'))\n        else: o[p + k] = v\n    return o\nfiles = sorted(f.replace(chr(92), '/') for f in glob.glob('tests/*.harvested.json') + glob.glob('tests/lilypond-2.26/*.harvested.json'))\nbad = []; beams = []\nfor f in files:\n    old = json.loads(subprocess.run(['git', 'show', 'b1c8fa0:' + f], capture_output=True, text=True, encoding='utf-8', check=True).stdout)\n    new = json.load(open(f, encoding='utf-8'))\n    if {k: v for k, v in old.items() if k != 'elements'} != {k: v for k, v in new.items() if k != 'elements'}: bad.append(f + ': top-level keys changed')\n    o, n = occ(old), occ(new)\n    if o.keys() != n.keys(): bad.append(f + ': element set changed')\n    for k in o.keys() &amp; n.keys():\n        a, b = flat(o[k]), flat(n[k])\n        for p in a.keys() | b.keys():\n            if a.get(p) != b.get(p) and not (p == 'visual.shape_hash' or (p.startswith('visual.bbox') and 'visual.shape_hash' in b)): bad.append(f'{f}: {k} {p}')\n    beams += [e for e in new['elements'] if e['type'] == 'beam']\nif not beams or any(e['visual'].get('bbox', {}).get('w', 0) &lt;= 0 or e['visual'].get('bbox', {}).get('h', 0) &lt;= 0 or 'shape_hash' not in e['visual'] for e in beams): bad.append('a beam lacks a real bbox or a shape_hash')\nprint('\\n'.join(bad)); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[06:39:12]</span> <span class="muted">report-accepted</span> seq=3 step=rebaseline-both-versions files=[] notes=Re-baselined 2.24 and 2.26 with --update-baselines (both 303 passed, 0 failed); exactly the 24 declared baselines changed, tracked tests/*.svg unchanged; the b1c8fa0 comparison shows only visual.shape_hash and visual.bbox on elements carrying a shape_hash changed, and every beam now has a real bbox</div>
+<div class="line"><span class="at">[06:39:12]</span> <span class="muted">instruction-issued</span> seq=4 kind=step step=delete-dead-corrections</div>
+<div class="line"><span class="at">[06:46:00]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:46:12]</span> <span class="muted">check-passed</span> step=delete-dead-corrections argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob, os, sys\ngone = [f for f in ('cnb/articulations.ly', 'cnb/beams.ly') if os.path.exists(f)]\nnames = ('cnb:script-y-offset-callback', 'cnb:compensate-beam', 'cnb:compensate-stem-length', 'cnb:multiply-stem-details', 'articulations.ly', 'beams.ly', 'articulation Y-offset', 'beam thickness/spacing compensation')\nleft = [(f, n) for f in glob.glob('cnb/*.ly') + glob.glob('*.ly') + ['README.md'] for n in names if n in open(f, encoding='utf-8').read()]\nprint(gone, left); sys.exit(1 if gone or left else 0)\n&quot;]</div>
+<div class="line"><span class="at">[06:46:23]</span> <span class="muted">report-accepted</span> seq=4 step=delete-dead-corrections files=[&quot;cnb/articulations.ly&quot;,&quot;cnb/beams.ly&quot;,&quot;cnb/stems.ly&quot;,&quot;cnb/layout.ly&quot;,&quot;cnb/noteheads.ly&quot;,&quot;ChromaticNotationBase.ly&quot;,&quot;README.md&quot;] notes=Deleted articulations.ly, beams.ly and stems.ly's length compensation with their overrides, includes and README claims (feature line now names only dot avoidance; acknowledgments now name only ledgers.ly); Stem.before-line-breaking is cnb:apply-note-x-offsets alone. Renders unchanged: integration 2.24/2.26 303 passed with no drift, unit 2.24/2.26 325 passed, no tracked SVG changed</div>
+<div class="line"><span class="at">[06:46:23]</span> <span class="muted">instruction-issued</span> seq=5 kind=step step=honest-runner</div>
+<div class="line"><span class="at">[06:53:06]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[06:53:45]</span> <span class="muted">check-passed</span> step=honest-runner argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;]</div>
+<div class="line"><span class="at">[06:54:03]</span> <span class="muted">report-accepted</span> seq=5 step=honest-runner files=[&quot;tools/run_tests.py&quot;,&quot;tools/test_run_tests.py&quot;] notes=run_single_test returns (passed, failed, assertions, drifted) counting only id'd assertions; summary is 'RESULTS: P passed, F failed (N assertions), D harvests drifted' and drift alone fails the run; generate_golden exits before rendering over an existing baseline unless --update-baselines; --keep-svg removed. Real runs: 2.24 and 2.26 each '303 passed, 0 failed (303 assertions), 0 harvests drifted'</div>
+<div class="line"><span class="at">[06:54:03]</span> <span class="muted">instruction-issued</span> seq=6 kind=step step=docs-tell-the-truth</div>
+<div class="line"><span class="at">[07:00:42]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">work</span> mode=pull</div>
+<div class="line"><span class="at">[07:01:11]</span> <span class="muted">check-passed</span> step=docs-tell-the-truth argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob, json, os, sys\nn = sum(1 for f in glob.glob('tests/*.json') if not f.endswith('.harvested.json') for a in json.load(open(f, encoding='utf-8')).get('assertions', []) if 'id' in a)\nreadme = open('README.md', encoding='utf-8').read(); doc = open('docs/INTEGRATION-TESTING.md', encoding='utf-8').read(); yml = open('dabbler.yaml', encoding='utf-8').read()\nbad = []\nif f'{n} integration assertions' not in readme: bad.append(f'README lacks {n} integration assertions')\nif '365' in readme or '365' in yml: bad.append('365 still claimed')\nif '── scores/' in readme: bad.append('scores/ folder in the README tree')\nbad += ['README tree lacks ' + os.path.basename(f) for f in glob.glob('cnb/*.ly') if os.path.basename(f) not in readme]\nbad += ['README tree lacks ' + f for f in ('kite-4-369-from-configurator.ly', 'CHANGELOG.md', 'dabbler.yaml') if f not in readme]\nbad += ['INTEGRATION-TESTING lacks ' + t for t in ('--lilypond-version', 'CNB_LILYPOND_', '--update-baselines', 'tests/lilypond-2.26/', 'shape_hash') if t not in doc]\nif '--keep-svg' in doc or '--keep-svg' in readme: bad.append('--keep-svg documented')\nprint(bad); sys.exit(1 if bad else 0)\n&quot;]</div>
+<div class="line"><span class="at">[07:01:20]</span> <span class="muted">report-accepted</span> seq=6 step=docs-tell-the-truth files=[&quot;README.md&quot;,&quot;docs/INTEGRATION-TESTING.md&quot;,&quot;dabbler.yaml&quot;] notes=README states the measured counts (325 unit; 303 integration assertions, 620 expressions, 14 specs, on 2.24 and 2.26), the tree regenerated from git ls-files (16 cnb files incl. test-ids.ly, root scores, no scores/), the version-less run as it now behaves, and the golden comparison as 195/195; INTEGRATION-TESTING covers versions, CNB_LILYPOND_X_Y, render folders and baselines, drift and --update-baselines, the --generate refusal, the lilypond variable, shape_hash and bbox, with versioned examples; dabbler.yaml comment counts corrected. Check amended: its bare 'scores/' test matched an external URL</div>
+<div class="line"><span class="at">[07:01:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">preverify</span></div>
+<div class="line"><span class="at">[07:01:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">verify</span></div>
+<div class="line"><span class="at">[07:01:31]</span> <span class="muted">job-started</span> name=verification pid=77388 log=.dabbler/runs/s14/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[07:04:29]</span> <span class="muted">job-finished</span> name=verification exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/verification.log</div>
+<div class="line"><span class="at">[07:04:29]</span> <span class="muted">verification-passed</span></div>
+<div class="line"><span class="at">[07:04:29]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[07:04:33]</span> <span class="muted">run-of-record</span> suite=engine-integration stage=final-full why=engine-integration declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[07:04:34]</span> <span class="muted">job-started</span> name=run of record: engine-integration pid=61468 log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[07:05:11]</span> <span class="muted">job-finished</span> name=run of record: engine-integration exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration.log</div>
+<div class="line"><span class="at">[07:05:20]</span> <span class="muted">run-of-record</span> suite=engine-unit stage=final-full why=engine-unit declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.24</div>
+<div class="line"><span class="at">[07:05:23]</span> <span class="muted">job-started</span> name=run of record: engine-unit pid=15588 log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[07:05:43]</span> <span class="muted">job-finished</span> name=run of record: engine-unit exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-unit.log</div>
+<div class="line"><span class="at">[07:05:46]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[07:05:48]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=13412 log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[07:06:04]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="bad">1</span> log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[07:06:04]</span> <span class="muted">tests-failed</span> command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[07:06:04]</span> <span class="muted">instruction-issued</span> seq=7 kind=step step=fix-run-of-record</div>
+<div class="line"><span class="at">[07:06:59]</span> <span class="muted">run-resumed</span> session=014 phase=<span class="milestone">run-of-record</span> mode=pull</div>
+<div class="line"><span class="at">[07:07:10]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_harvest_svg.py&quot;] owner=harvest-drawn-geometry</div>
+<div class="line"><span class="at">[07:08:02]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import json, glob, subprocess, sys\ndef occ(h):\n    seen = {}; out = {}\n    for e in h['elements']:\n        n = seen.get(e['id'], 0); seen[e['id']] = n + 1; out[(e['id'], n)] = e\n    return out\ndef flat(d, p=''):\n    o = {}\n    for k, v in d.items():\n        if isinstance(v, dict) and v: o.update(flat(v, p + k + '.'))\n        else: o[p + k] = v\n    return o\nfiles = sorted(f.replace(chr(92), '/') for f in glob.glob('tests/*.harvested.json') + glob.glob('tests/lilypond-2.26/*.harvested.json'))\nbad = []; beams = []\nfor f in files:\n    old = json.loads(subprocess.run(['git', 'show', 'b1c8fa0:' + f], capture_output=True, text=True, encoding='utf-8', check=True).stdout)\n    new = json.load(open(f, encoding='utf-8'))\n    if {k: v for k, v in old.items() if k != 'elements'} != {k: v for k, v in new.items() if k != 'elements'}: bad.append(f + ': top-level keys changed')\n    o, n = occ(old), occ(new)\n    if o.keys() != n.keys(): bad.append(f + ': element set changed')\n    for k in o.keys() &amp; n.keys():\n        a, b = flat(o[k]), flat(n[k])\n        for p in a.keys() | b.keys():\n            if a.get(p) != b.get(p) and not (p == 'visual.shape_hash' or (p.startswith('visual.bbox') and 'visual.shape_hash' in b)): bad.append(f'{f}: {k} {p}')\n    beams += [e for e in new['elements'] if e['type'] == 'beam']\nif not beams or any(e['visual'].get('bbox', {}).get('w', 0) &lt;= 0 or e['visual'].get('bbox', {}).get('h', 0) &lt;= 0 or 'shape_hash' not in e['visual'] for e in beams): bad.append('a beam lacks a real bbox or a shape_hash')\nprint('\\n'.join(bad)); sys.exit(1 if bad else 0)\n&quot;] owner=rebaseline-both-versions</div>
+<div class="line"><span class="at">[07:08:09]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob, os, sys\ngone = [f for f in ('cnb/articulations.ly', 'cnb/beams.ly') if os.path.exists(f)]\nnames = ('cnb:script-y-offset-callback', 'cnb:compensate-beam', 'cnb:compensate-stem-length', 'cnb:multiply-stem-details', 'articulations.ly', 'beams.ly', 'articulation Y-offset', 'beam thickness/spacing compensation')\nleft = [(f, n) for f in glob.glob('cnb/*.ly') + glob.glob('*.ly') + ['README.md'] for n in names if n in open(f, encoding='utf-8').read()]\nprint(gone, left); sys.exit(1 if gone or left else 0)\n&quot;] owner=delete-dead-corrections</div>
+<div class="line"><span class="at">[07:08:19]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-m&quot;,&quot;unittest&quot;,&quot;discover&quot;,&quot;-s&quot;,&quot;tools&quot;,&quot;-p&quot;,&quot;test_run_tests.py&quot;] owner=honest-runner</div>
+<div class="line"><span class="at">[07:08:28]</span> <span class="muted">check-passed</span> step=fix-run-of-record argv=[&quot;python&quot;,&quot;-c&quot;,&quot;import glob, json, os, sys\nn = sum(1 for f in glob.glob('tests/*.json') if not f.endswith('.harvested.json') for a in json.load(open(f, encoding='utf-8')).get('assertions', []) if 'id' in a)\nreadme = open('README.md', encoding='utf-8').read(); doc = open('docs/INTEGRATION-TESTING.md', encoding='utf-8').read(); yml = open('dabbler.yaml', encoding='utf-8').read()\nbad = []\nif f'{n} integration assertions' not in readme: bad.append(f'README lacks {n} integration assertions')\nif '365' in readme or '365' in yml: bad.append('365 still claimed')\nif '── scores/' in readme: bad.append('scores/ folder in the README tree')\nbad += ['README tree lacks ' + os.path.basename(f) for f in glob.glob('cnb/*.ly') if os.path.basename(f) not in readme]\nbad += ['README tree lacks ' + f for f in ('kite-4-369-from-configurator.ly', 'CHANGELOG.md', 'dabbler.yaml') if f not in readme]\nbad += ['INTEGRATION-TESTING lacks ' + t for t in ('--lilypond-version', 'CNB_LILYPOND_', '--update-baselines', 'tests/lilypond-2.26/', 'shape_hash') if t not in doc]\nif '--keep-svg' in doc or '--keep-svg' in readme: bad.append('--keep-svg documented')\nprint(bad); sys.exit(1 if bad else 0)\n&quot;] owner=docs-tell-the-truth</div>
+<div class="line"><span class="at">[07:08:36]</span> <span class="muted">report-accepted</span> seq=7 step=fix-run-of-record files=[] notes=No change: the cause is outside the tree. The run-of-record shell lacked CNB_LILYPOND_2_26 (log: 'LilyPond 2.26 not found: set CNB_LILYPOND_2_26'); the variable is set at User scope and is now loaded into the shell that runs this answer command</div>
+<div class="line"><span class="at">[07:08:54]</span> <span class="milestone">phase</span> phase=<span class="milestone">run-of-record</span></div>
+<div class="line"><span class="at">[07:09:01]</span> <span class="muted">run-of-record-standing</span> suite=engine-integration reason=fresh, green, recorded 2026-11-03T02:05:11.377000-05:00</div>
+<div class="line"><span class="at">[07:09:10]</span> <span class="muted">run-of-record-standing</span> suite=engine-unit reason=fresh, green, recorded 2026-11-03T02:05:42.910000-05:00</div>
+<div class="line"><span class="at">[07:09:15]</span> <span class="muted">run-of-record</span> suite=engine-integration-2.26 stage=final-full why=engine-integration-2.26 declares whole_at_close command=python tools/run_tests.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[07:09:17]</span> <span class="muted">job-started</span> name=run of record: engine-integration-2.26 pid=60804 log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[07:09:55]</span> <span class="muted">job-finished</span> name=run of record: engine-integration-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-integration-2-26.log</div>
+<div class="line"><span class="at">[07:09:58]</span> <span class="muted">run-of-record</span> suite=engine-unit-2.26 stage=final-full why=engine-unit-2.26 declares whole_at_close command=python tools/run_unit.py --lilypond-version 2.26</div>
+<div class="line"><span class="at">[07:10:00]</span> <span class="muted">job-started</span> name=run of record: engine-unit-2.26 pid=26500 log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[07:10:20]</span> <span class="muted">job-finished</span> name=run of record: engine-unit-2.26 exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/run-of-record-engine-unit-2-26.log</div>
+<div class="line"><span class="at">[07:10:20]</span> <span class="milestone">phase</span> phase=<span class="milestone">land</span></div>
+<div class="line"><span class="at">[07:11:08]</span> <span class="muted">landed</span> commit=44912224c4234d0e454266cb49eaaf1bd1931b66</div>
+<div class="line"><span class="at">[07:11:08]</span> <span class="milestone">phase</span> phase=<span class="milestone">publish</span></div>
+<div class="line"><span class="at">[07:11:11]</span> <span class="muted">publish-skipped</span> reason=an ordinary session never publishes</div>
+<div class="line"><span class="at">[07:11:11]</span> <span class="milestone">phase</span> phase=<span class="milestone">close</span></div>
+<div class="line"><span class="at">[07:11:15]</span> <span class="muted">job-started</span> name=close pid=55108 log=.dabbler/runs/s14/driver/jobs/close.log</div>
+<div class="line"><span class="at">[07:12:48]</span> <span class="muted">job-finished</span> name=close exit=<span class="good">0</span> log=.dabbler/runs/s14/driver/jobs/close.log</div>
+<div class="line"><span class="at">[07:12:48]</span> <span class="milestone">phase</span> phase=<span class="milestone">log</span></div></div>
+<h2>Verification</h2>
+<table>
+<tr><th>Round</th><th>Phase</th><th>Verdict</th><th>Reviewer</th><th>Provider</th><th>Transport</th><th>Findings</th></tr>
+<tr><td>1</td><td>full</td><td><span class="good">VERIFIED</span></td><td>gpt-5.6-terra</td><td>openai</td><td>api</td><td><details><summary>7 findings</summary></details></td></tr><tr class="findings"><td colspan="7"><table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Response</th></tr>
+<tr><td>0</td><td><strong>minor</strong></td><td>**Nit:** `hash_shapes()` does not resolve inherited or CSS-provided text presentation properties.</td><td>not answered</td></tr>
+<tr><td>1</td><td><strong>minor</strong></td><td>**Location:** `tools/harvest_svg.py` (`hash_shapes`)</td><td>not answered</td></tr>
+<tr><td>2</td><td><strong>minor</strong></td><td>A `&lt;g font-size=&quot;12&quot;&gt;&lt;text&gt;4&lt;/text&gt;&lt;/g&gt;` and `&lt;g font-size=&quot;18&quot;&gt;&lt;text&gt;4&lt;/text&gt;&lt;/g&gt;` produce the same hash because only attributes directly on `&lt;text&gt;` are read. This is low-impact for the LilyPond SVGs evidenced by the baselines, but it does not fully cover SVG inheritance behind the documented “font family, weight, size and anchor” behavior.</td><td>not answered</td></tr>
+<tr><td>3</td><td><strong>minor</strong></td><td>**Nit:** The added hash tests do not pin every promised primitive or accumulated-scale sensitivity.</td><td>not answered</td></tr>
+<tr><td>4</td><td><strong>minor</strong></td><td>**Location:** `tools/test_harvest_svg.py`</td><td>not answered</td></tr>
+<tr><td>5</td><td><strong>minor</strong></td><td>Case to add: with otherwise identical tagged groups containing `&lt;ellipse rx=&quot;1&quot; ry=&quot;0.5&quot;/&gt;` or `&lt;polyline points=&quot;0,0 1,1&quot;/&gt;`, change `ry` or a point and assert `hash_shapes()` differs.</td><td>not answered</td></tr>
+<tr><td>6</td><td><strong>minor</strong></td><td>Case to add: hash the same `&lt;circle r=&quot;1&quot;/&gt;` beneath `scale(2)` and `scale(3)` and assert the hashes differ. Current code appears to satisfy these cases, but the visible tests would not detect regressions that omit ellipse/polyline geometry or accumulated scale from `shape_hash`.</td><td>not answered</td></tr>
+</table></td></tr>
+</table>
+<h2>Test runs</h2>
+<table>
+<tr><th>Suite</th><th>Stage</th><th>Outcome</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Command</th></tr>
+<tr><td>engine-integration</td><td>final-full</td><td><span class="good">passed</span></td><td>26s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-unit</td><td>final-full</td><td><span class="good">passed</span></td><td>7s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.24</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="bad">failed</span></td><td>2s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-integration-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>22s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_tests.py --lilypond-version 2.26</span></td></tr>
+<tr><td>engine-unit-2.26</td><td>final-full</td><td><span class="good">passed</span></td><td>5s</td><td></td><td></td><td></td><td><span class="mono">python tools/run_unit.py --lilypond-version 2.26</span></td></tr>
+</table>
+<h2>Jobs</h2>
+<div><strong>close</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-integration</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit-2-26</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>run-of-record-engine-unit</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+<div><strong>verification</strong> exit <span class="good">0</span> <span class="muted">(passed -- output not carried; dabbler transcript --full carries it)</span></div>
+</main>
+</body>
+</html>

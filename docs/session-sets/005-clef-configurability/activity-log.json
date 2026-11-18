@@ -1,0 +1,89 @@
+{
+  "sessionSetName": "005-clef-configurability",
+  "createdDate": "2026-07-07T08:20:40.636225+00:00",
+  "totalSessions": 3,
+  "entries": [
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/verification-mode",
+      "dateTime": "2026-07-07T08:20:40.656926+00:00",
+      "description": "Operator set verificationMode: out-of-band-or-none.",
+      "status": "complete",
+      "kind": "verification_mode",
+      "choice": "out-of-band-or-none"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 1,
+      "stepKey": "session-001/preflight-verified",
+      "dateTime": "2026-07-07T04:24:50.380412-04:00",
+      "description": "Pre-flight: all six backlog engine facts re-verified against cnb/clefs.ly, cnb/layout.ly, cnb/config.ly with zero drift (engraver replaces every Clef grob via middleCPosition+ottava, clefs.ly:151-162; unconditional Staff install, layout.ly:46; zero clef settings in config.ly; no path hook; size hard-coded (* 3 mag)/height at clefs.ly:124; cache keyed (middleCPosition . ottava) at clefs.ly:108). Configurator 009 s1 record does not request a standard-glyph escape hatch (its clef kinds are glyph/text only). Noted: test-unit.ly does not currently include cnb/clefs.ly - will be added for the new assertions.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 2,
+      "stepKey": "session-001/clef-style-and-text",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Added cnb:clef-style (dozenal default / text / none; unknown values warn and fall back to dozenal) and cnb:clef-text (string renders bold, markup as-is, zero-height guard) to cnb/config.ly; cnb/clefs.ly restructured into cnb:build-dozenal-clef-stencil + cnb:build-text-clef-stencil with a none branch in the engraver setting stencil #f. standard escape hatch deliberately omitted (not requested by Configurator 009 record).",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 3,
+      "stepKey": "session-001/clef-size-semitones",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Added cnb:clef-size-semitones (default #f = legacy 3 staff-spaces; number N = N semitones tall regardless of cnb:semitones-per-staff-space) via pure helper cnb:clef-target-height. Cache key reworked from (middleCPosition . ottava) to (style, mcp, ottava, text[text-style only], size, sps, mag) - also fixes latent font-size staleness.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 1,
+      "stepNumber": 4,
+      "stepKey": "session-001/tests-green",
+      "dateTime": "2026-07-07T04:35:15.554382-04:00",
+      "description": "Unit suite 209/209 (was 179; +30 clef assertions, cnb/clefs.ly now included in test-unit.ly). Integration suite 239/239 (332 expressions, 8 specs) incl. new clef-none, clef-text-size, clef-size-dozenal specs and both golden joy-to-the-world specs; regenerated golden SVGs/harvests byte-identical (zero drift with defaults). README Engine Settings table updated.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 1,
+      "stepKey": "session-002/register-clef-hook",
+      "dateTime": "2026-07-07T05:15:44.842784-04:00",
+      "description": "Added cnb:register-clef! (name def) to cnb/clefs.ly mirroring cnb:register-path! (two-arg deviation from the backlog single-list shape, recorded for the S3 handoff): def alist with required path (notehead-path command format) + anchor-semitones (float), optional height-semitones and color. New cnb:clef-defs table; invalid defs warn and are not registered. Selection via cnb:clef-style custom + new cnb:clef-name setting; cnb:clef-effective-style degrades a missing registration to dozenal with a warning.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 2,
+      "stepKey": "session-002/anchor-contract-implemented",
+      "dateTime": "2026-07-07T05:15:44.842784-04:00",
+      "description": "Anchor contract per Configurator 009 s1: anchor-semitones is the FLOAT semitone of the glyph TOP edge in the notehead engraver pitch coordinate (middle C = 0); placement reuses the notehead formula (anchor + 2*mcp)/sps * staff-space via pure helper cnb:clef-anchor-y-offset; stencil built with top edge at y=0. Size precedence: cnb:clef-size-semitones > def height-semitones > native path scale. New cnb:clef-gutter-semitones (default #f) widens the right X-extent by N/sps staff-spaces, all rendered styles. Cache key grew name+gutter fields; cnb:register-clef! clears the stencil cache.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 2,
+      "stepNumber": 3,
+      "stepKey": "session-002/tests-green",
+      "dateTime": "2026-07-07T05:15:44.842784-04:00",
+      "description": "Unit suite 254/254 (was 209; +45 assertions: registration/lookup incl. pinned FLOAT-anchor test, invalid-def rejections, custom style resolution/fallback, anchor math at sps-1/2/3, size precedence, gutter math, real stencil geometry via make-path-stencil). Integration suite 245/245 (343 assertions, 9 specs) incl. new tests/clef-custom.json (bbox top edge on the top staff line, height 4 staff-spaces, uniform width, gutter-shifted notehead x) and both golden joy-to-the-world specs; zero golden-baseline drift. README updated.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 1,
+      "stepKey": "session-003/handoff-recorded",
+      "dateTime": "2026-07-07T18:40:00.000000-04:00",
+      "description": "Wrote docs/session-sets/005-clef-configurability/configurator-handoff.md: the engine-side mirror of the Configurator 009 s1 record. Enumerates every new cnb: setting (name/type/default/semantics/file-line), the two-arg cnb:register-clef! deviation, the def alist fields, and the anchor contract as implemented (anchor-semitones = FLOAT top edge on the notehead middle-C=0 axis). Cross-checked against d:/Projects/chromatic-notation-configurator/docs/session-sets/009-custom-clefs (via subagent): field mapping table (enabled:false -> 'none, kind:glyph -> 'custom, kind:text -> 'text, dozenal = engine-native default) plus SIX explicitly flagged reconciliation points for the Configurator author - (A) anchorSemi origin must be emitted on the middle-C=0 axis, (B) gutter unit+sidedness divergence (px both-sides vs semitones right-only), (C) engine consumes only the lilypondPath command-list format not svgPath, and self-measures extent so naturalHeight/viewBox need not be exported, (D) text color/font need a markup cnb:clef-text, (E) no 'standard escape hatch - consistent, (F) no preview-vs-engine placement divergence.",
+      "status": "complete"
+    },
+    {
+      "sessionNumber": 3,
+      "stepNumber": 2,
+      "stepKey": "session-003/backlog-updated",
+      "dateTime": "2026-07-07T18:45:00.000000-04:00",
+      "description": "Marked backlog items 1.1-1.4 resolved in docs/planning/configurator-coordination-backlog.md: added a RESOLVED banner to the S1 header, a scheduling-table checkmark, and a new S5 subsection enumerating the four deliverables with a pointer to configurator-handoff.md and the still-owed Configurator-side follow-ons (lift the exports-nothing pin, LY-spec addendum, emit-if-changed lines). Re-ran the FULL suites once more: unit 254/254, integration 245/245 (343 assertions, 9 specs); git status shows zero modified golden SVGs/harvests - baseline byte-stable with defaults. Per the spec, docs/CNB-LY-EXPORT-SPEC-v1_2.md NOT bumped (addendum synced Configurator-side later).",
+      "status": "complete"
+    }
+  ]
+}

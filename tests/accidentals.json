@@ -1,0 +1,49 @@
+{
+  "test_name": "No accidental is drawn: plain, cautionary or forced (session 20)",
+  "input_file": "accidentals.ly",
+  "description": "cnb/layout.ly blanks the stencils of Accidental, AccidentalCautionary and AccidentalSuggestion. LilyPond draws a cautionary accidental (d?) with AccidentalCautionary, so before session 20, when only Accidental was blanked, it printed as a parenthesised traditional glyph. Measure 1 has a plain cis, a cautionary d? and a forced es!: none of them may be drawn. Measure 2's fis re-enables its Accidental stencil with \\once as the control, so exactly one accidental is drawn, which proves the harvester would see the others.",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: THE CONTROL IS DRAWN, AND NOTHING ELSE ==="},
+
+    {
+      "id": "ac-2-0.000-66-0",
+      "description": "Control: the fis with its Accidental stencil re-enabled is drawn, and it is the only accidental",
+      "expect": {
+        "type": ["== 'accidental'", "count('accidental') == 1"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: PLAIN, CAUTIONARY AND FORCED ACCIDENTALS ARE NOT DRAWN ==="},
+
+    {
+      "id": "ac-1-0.250-61-0",
+      "description": "Plain sharp on cis (Accidental) is not drawn",
+      "absent": true
+    },
+
+    {
+      "id": "ac-1-0.500-62-0",
+      "description": "Cautionary natural on d? (AccidentalCautionary) is not drawn",
+      "absent": true
+    },
+
+    {
+      "id": "ac-1-0.750-63-0",
+      "description": "Forced flat on es! (Accidental) is not drawn",
+      "absent": true
+    },
+
+    {"_comment": "=== SECTION 3: THE NOTES THEMSELVES RENDER ==="},
+
+    {
+      "id": "nh-1-0.500-62-0",
+      "description": "All eight noteheads render, the cautionary d among them",
+      "expect": {
+        "type":      ["== 'notehead'", "count('notehead') == 8"],
+        "data.midi": ["== '62'"]
+      }
+    }
+  ]
+}

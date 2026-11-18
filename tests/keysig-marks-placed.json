@@ -1,0 +1,76 @@
+{
+  "test_name": "Mark-list marks placed by at, coloured signs and layered symbols (session 37)",
+  "input_file": "keysig-marks-placed.ly",
+  "description": "The default 4-8 staff (4 semitones a staff space), cnb:keysig-style 'marks, no bars. m1 D major, columns 0.5 1.5 2.5: a default head on B (-1), below the staff, at (0.1 . 0), with its ledger; a test-dot head on D (14) at (-0.25 . -0.25) with a test-tail symbol layered on it at (0.25 . -0.05); a hollow test-dot symbol on F sharp (18) at (-0.25 . -0.25); a red sharp on C sharp (13), scale 1, at (-0.35 . 0.25). m2 B flat major, columns 0.5 1.5: a red flat on B flat (10), scale 0.6473, at (-0.3 . 0); a blue flat on E flat (15), scale 1, at (-0.46 . 0.25). Measured on 2.24 and 2.26 (the same on both): D major 3.169 wide and 5.826 tall, B flat major 1.641 wide and 3.761 tall. The same file with every at removed gives D major 3.069 x 5.75 (its left edge, the head's ledger, 0.1 further left; its top the hollow square's, centred on its column with its origin at F sharp) and B flat major 1.681 x 3.511. D major's left edge is the B head's ledger, which follows the head: the head's left (0.5 + 0.1 - 0.5) less a sixth of its width. Its right edge is the sharp's ink, which reaches 0.952 right of the sharp's origin (2.5 - 0.35); without at the sharp is centred, its origin at 2.5 - 0.55. Its top is the sharp's, raised 0.25 by its at, 1.576 above C sharp's height, and its bottom the B head's, half a staff space below B's height: the ledger, at the staff position of semitone 0, is above it. B flat major's top is the blue flat's, raised 0.25, 1.86 above E flat's height; its bottom the red flat's, 0.6473 of the flat's 0.62 below B flat's height. The semitones are found from the first notes: d'' (semitone 14) in m1 and b flat' (semitone 10) in m2, each centre half a staff space below its bbox top. The harvest records a signature's first colour: B flat major's is its first mark's, the red flat's (no bar or ledger is drawn before it).",
+
+  "assertions": [
+
+    {"_comment": "=== SECTION 1: TWO SIGNATURES ==="},
+
+    {
+      "id": "ks-1",
+      "description": "Each system opens with its signature",
+      "expect": {
+        "type": ["== 'key-signature'", "count('key-signature') == 2"]
+      }
+    },
+
+    {"_comment": "=== SECTION 2: D MAJOR, PLACED HEAD, LAYERED DOT AND TAIL, HOLLOW SYMBOL, RED SHARP ==="},
+
+    {
+      "id": "ks-1",
+      "description": "D major is 3.169 wide (3.069 without at): from the placed head's ledger to the placed sharp's ink",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 3.169) < 0.005",
+                          "abs(v - ((2.5 - 0.35 + 0.952) - (0.5 + 0.1 - 0.5 - 1.0 / 6))) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-1",
+      "description": "D major's top is the sharp's, raised a quarter staff space by its at: 1.576 above C sharp (13), a quarter below d''",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (prop('nh-1-0.000-74-0', 'visual.bbox.y') + 0.5 + 0.25 - 0.25 - 1.576)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-1",
+      "description": "D major's bottom is the B head's (semitone -1, 3.75 staff spaces below d''), half a staff space below its height: 5.826 tall (5.75 without at)",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 5.826) < 0.005",
+                          "abs(prop('ks-1', 'visual.bbox.y') + v - (prop('nh-1-0.000-74-0', 'visual.bbox.y') + 0.5 + 3.75 + 0.5)) < 0.005"]
+      }
+    },
+
+    {"_comment": "=== SECTION 3: B FLAT MAJOR, RED AND BLUE FLATS PLACED BY AT ==="},
+
+    {
+      "id": "ks-2",
+      "description": "B flat major is 1.641 wide (1.681 without at)",
+      "expect": {
+        "visual.bbox.w": ["abs(v - 1.641) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "B flat major's top is the blue flat's, raised a quarter staff space by its at: 1.86 above E flat (15), 1.25 above b flat'",
+      "expect": {
+        "visual.bbox.y": ["abs(v - (prop('nh-2-0.000-70-0', 'visual.bbox.y') + 0.5 - 1.25 - 0.25 - 1.86)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "B flat major's bottom is the red flat's at scale 0.6473: 0.6473 of the flat's 0.62 below b flat': 3.761 tall (3.511 without at)",
+      "expect": {
+        "visual.bbox.h": ["abs(v - 3.761) < 0.005",
+                          "abs(prop('ks-2', 'visual.bbox.y') + v - (prop('nh-2-0.000-70-0', 'visual.bbox.y') + 0.5 + 0.6473 * 0.62)) < 0.005"]
+      }
+    },
+    {
+      "id": "ks-2",
+      "description": "B flat major's first mark, the red flat, draws in red-cc0000",
+      "expect": {
+        "visual.color": ["== 'rgb(80.0000%, 0.0000%, 0.0000%)'"]
+      }
+    }
+  ]
+}
